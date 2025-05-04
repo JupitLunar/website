@@ -73,7 +73,7 @@ function Home() {
       <Header />
       
       {/* Hero Section */}
-      <section id="home" className="pt-16 pb-12 relative overflow-hidden">
+      <section id="home" className="pt-24 pb-12 relative overflow-hidden">
         <CenteredContainer className="container mx-auto px-6">
           <div className="w-full px-8 mx-auto">
             <div className="grid md:grid-cols-2 gap-8 items-center justify-items-center">
