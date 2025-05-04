@@ -116,8 +116,8 @@ function Home() {
               </CenteredContainer>
 
               {/* Hero Section Image */}
-              <div className="relative flex items-center justify-center h-full w-full">
-                <div className="relative z-10 w-[660px] aspect-[4/3] translate-x-[66px] translate-y-7 mx-auto overflow-hidden">
+              <div className="relative flex items-center justify-center h-full w-full mt-12">
+                <div className="relative z-10 w-full max-w-xs sm:max-w-md md:max-w-lg aspect-[4/3] mx-auto overflow-hidden">
                   <motion.div 
                     className="absolute inset-0 flex items-center justify-center"
                     initial={{ opacity: 0, y: 20 }}
@@ -133,14 +133,14 @@ function Home() {
                     viewport={{ once: true, margin: "-100px" }}
                   >
                     <motion.div 
-                      className="w-full h-full overflow-hidden rounded-lg flex items-center justify-center transform scale-110"
+                      className="w-full h-full overflow-hidden rounded-lg flex items-center justify-center transform scale-100"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.3, ease: "easeOut" }}
                     >
                       <img 
                         src={screenshotImage}
                         alt="AI Parenting Assistant"
-                        className="w-full h-full object-cover object-center"
+                        className="w-full h-full object-cover object-center max-w-full"
                       />
                     </motion.div>
                   </motion.div>
@@ -211,21 +211,21 @@ function Home() {
                 imagePosition: "right",
               }
             ].map((feature, index) => {
-              let scaleClass = "scale-[1]";
-              if (feature.title === "Daily Dashboard") scaleClass = "scale-[0.6]";
-              else if (feature.title === "Smart Insights") scaleClass = "scale-[0.8]";
-              else if (feature.title === "Task Assistant") scaleClass = "scale-[0.8]";
-              else if (feature.title === "Activity Planner") scaleClass = "scale-[0.6]";
+              let scaleClass = "scale-100";
+              if (feature.title === "Daily Dashboard") scaleClass = "scale-[0.7]";
+              else if (feature.title === "Smart Insights") scaleClass = "scale-[0.9]";
+              else if (feature.title === "Task Assistant") scaleClass = "scale-[0.9]";
+              else if (feature.title === "Activity Planner") scaleClass = "scale-[0.7]";
 
               return (
                 <div
                   key={index}
-                  className={`flex flex-col md:flex-row gap-8 items-center justify-center w-full ${
+                  className={`flex flex-col md:flex-row gap-4 items-center justify-center w-full ${
                     feature.imagePosition === 'right' ? 'md:flex-row-reverse' : ''
                   }`}
                 >
                   <motion.div 
-                    className="w-full md:w-[660px] flex justify-center items-center"
+                    className="w-full max-w-xs sm:max-w-md md:max-w-lg flex justify-center items-center"
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ 
                       opacity: 1, 
@@ -238,7 +238,7 @@ function Home() {
                     }}
                     viewport={{ once: true, margin: "-100px" }}
                   >
-                    <div className={`transform ${scaleClass} origin-center w-full max-w-2xl mx-auto flex justify-center items-center`}>
+                    <div className={`transform ${scaleClass} origin-center w-full flex justify-center items-center`}>
                       <motion.div 
                         className="rounded-lg overflow-hidden w-full flex justify-center items-center"
                         whileHover={{ scale: 1.02 }}
@@ -247,14 +247,14 @@ function Home() {
                         <img 
                           src={feature.image} 
                           alt={feature.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover max-w-full"
                         />
                       </motion.div>
                     </div>
                   </motion.div>
 
                   <motion.div
-                    className={`w-full md:w-[660px] flex flex-col text-left space-y-4 text-lg ${
+                    className={`w-full flex flex-col text-left space-y-4 text-lg ${
                       feature.title === "Smart Insights" || feature.title === "Activity Planner" ? 'md:pl-16' : ''
                     }`}
                     initial={{ opacity: 0, y: 20 }}
