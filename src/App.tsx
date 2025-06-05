@@ -1,14 +1,16 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
+import Complete from './pages/momaiagent/complete';
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="App">
-        <Home />
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/momaiagent/complete" element={<Complete />} />
+      </Routes>
     </BrowserRouter>
   );
 }
