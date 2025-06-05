@@ -9,7 +9,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/momaiagent/complete" element={<Complete />} />
+        {/* <Route path="/momaiagent/complete" element={<Complete />} /> */}
+        <Route path="/complete" element={<Complete />} />
       </Routes>
     </BrowserRouter>
   );
