@@ -597,7 +597,7 @@ function Home() {
                       </div>
                       <div className="text-left">
                         <h4 className="font-medium text-gray-900">Email</h4>
-                        <p className="text-gray-600">contact@momai.com</p>
+                        <p className="text-gray-600">momaiagent@gmail.com</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-4">
