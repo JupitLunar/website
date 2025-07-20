@@ -615,7 +615,7 @@ function Home() {
                       </div>
                       <div className="text-left">
                         <h4 className="font-medium text-gray-900">Address</h4>
-                        <p className="text-gray-600">Zhangjiang Hi-Tech Park, Pudong, Shanghai</p>
+                        <p className="text-gray-600">Edmonton, Canada</p>
                       </div>
                     </div>
                   </div>
@@ -636,7 +636,7 @@ function Home() {
             <div className="flex gap-6 justify-center w-full md:w-auto">
               <a href="/privacy" className="text-gray-600 hover:text-purple-600 text-center">Privacy Policy</a>
               <a href="/terms" className="text-gray-600 hover:text-purple-600 text-center">Terms of Service</a>
-              <a href="mailto:contact@momai.com" className="text-gray-600 hover:text-purple-600 text-center">Contact</a>
+              <a href="mailto:momaiagent@gmail.com" className="text-gray-600 hover:text-purple-600 text-center">Contact</a>
             </div>
           </div>
         </div>
