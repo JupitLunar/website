@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Header from '../components/Header';
 import CenteredContainer from '../components/CenteredContainer';
@@ -6,12 +6,19 @@ import { createClient } from '@supabase/supabase-js';
 
 // 使用正确的 Assets 目录路径（大写）
 const logoImage = require('../Assets/Logo.png');
-const IMG_3939 = require('../Assets/home.png');
-const IMG_3940 = require('../Assets/task.png');
-const IMG_3941 = require('../Assets/summary.png');
-const IMG_3942 = require('../Assets/event.png');
-const screenshotImage = require('../Assets/sunset.png');
+const babydashboard = require('../Assets/babydashboard.png');
+const smart_task = require('../Assets/smarttask.png');
+const health_prediction = require('../Assets/healthprediction.png');
+const explore_event = require('../Assets/exploreevent.png');
+const baby_development = require('../Assets/growthchart.png');
+const mom_health_analysis = require('../Assets/mom_health_analysis.png');
+const babygpt = require('../Assets/babygpt1.png');
+const screenshotImage = require('../Assets/sunset1.png');
 const screenshotStory = require('../Assets/story.png');
+const welcomeImage = require('../Assets/dearbaby.png');
+const scanmeImage = require('../Assets/scanme.png');
+const welcomeFoxImage = require('../Assets/welcomefox.png');
+const welcomebearImage = require('../Assets/welcomebear.png');
 
 // 使用环境变量初始化 supabase client
 const supabase = createClient(
@@ -26,6 +33,105 @@ function Home() {
     email: '',
     message: ''
   });
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  
+  const featuresScrollRef = useRef<HTMLDivElement>(null);
+  const [canFeaturesScrollLeft, setCanFeaturesScrollLeft] = useState(false);
+  const [canFeaturesScrollRight, setCanFeaturesScrollRight] = useState(true);
+
+  // 评论滚动控制函数
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -280, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 280, behavior: 'smooth' });
+    }
+  };
+
+  // Features滚动控制函数
+  const featuresScrollLeft = () => {
+    if (featuresScrollRef.current) {
+      featuresScrollRef.current.scrollBy({ left: -380, behavior: 'smooth' });
+      // 立即更新状态
+      setTimeout(() => checkFeaturesScrollButtons(), 100);
+    }
+  };
+
+  const featuresScrollRight = () => {
+    if (featuresScrollRef.current) {
+      featuresScrollRef.current.scrollBy({ left: 380, behavior: 'smooth' });
+      // 立即更新状态
+      setTimeout(() => checkFeaturesScrollButtons(), 100);
+    }
+  };
+
+  // 检查评论滚动状态
+  const checkScrollButtons = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
+    }
+  };
+
+  // 检查Features滚动状态
+  const checkFeaturesScrollButtons = () => {
+    if (featuresScrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = featuresScrollRef.current;
+      
+      // 简化逻辑：如果有很多卡片，scrollWidth应该大于clientWidth
+      const hasMoreContent = scrollWidth > clientWidth + 50; // 给一点缓冲
+      
+      setCanFeaturesScrollLeft(scrollLeft > 10);
+      setCanFeaturesScrollRight(hasMoreContent && scrollLeft < scrollWidth - clientWidth - 50);
+      
+      // 添加调试信息
+      console.log('Features scroll state:', {
+        scrollLeft,
+        scrollWidth,
+        clientWidth,
+        hasMoreContent,
+        canScrollLeft: scrollLeft > 10,
+        canScrollRight: hasMoreContent && scrollLeft < scrollWidth - clientWidth - 50
+      });
+    }
+  };
+
+  // 页面加载时检查初始状态
+  useEffect(() => {
+    // 延迟一点让内容渲染完成
+    const timer = setTimeout(() => {
+      checkScrollButtons();
+      checkFeaturesScrollButtons();
+      
+      // 如果还是没有内容，强制设置右箭头可用（因为我们知道有5个卡片）
+      if (featuresScrollRef.current) {
+        const { scrollWidth, clientWidth } = featuresScrollRef.current;
+        if (scrollWidth > clientWidth) {
+          setCanFeaturesScrollRight(true);
+        }
+      }
+    }, 800); // 增加更多延迟时间
+    
+    // 添加resize监听器
+    const handleResize = () => {
+      checkScrollButtons();
+      checkFeaturesScrollButtons();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // 加入等待名单
   async function submitWaitlist(email: string) {
@@ -68,478 +174,739 @@ function Home() {
     setContactForm({ name: '', email: '', message: '' });
   };
 
+  // 在Home组件内添加弹窗状态和弹窗Card
+  const [showBetaModal, setShowBetaModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8] relative overflow-hidden text-center">
       <Header />
       
-      {/* Hero Section */}
-      <section id="home" className="pt-24 pb-12 relative overflow-hidden">
-        <CenteredContainer className="container mx-auto px-6">
-          <div className="w-full px-8 mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 items-center justify-items-center">
-              <CenteredContainer className="space-y-6 max-w-2xl mx-auto">
-                <div className="space-y-4">
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium leading-tight">
-                    <span className="whitespace-nowrap text-gray-800 block">Motherhood is complex</span>
-                    <div className="h-2"></div>
-                    <span className="whitespace-nowrap bg-gradient-to-r from-indigo-500/80 to-purple-500/80 bg-clip-text text-transparent block">
-                      Mom AI is here to help
+      {/* Hero Section - Full Width Banner */}
+      <section 
+        id="home" 
+        className="relative h-screen flex items-center overflow-hidden px-4 sm:px-8 hero-bg"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3)), url(${screenshotImage})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {/* Desktop Layout */}
+        <div className="hidden md:block relative z-10 text-left text-white max-w-4xl" style={{ marginLeft: '10%' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 whitespace-nowrap -ml-4 text-gray-800 leading-tight">
+              <span className="block">AI-Powered Health Intelligence</span>
+              <span className="block text-3xl md:text-4xl lg:text-5xl font-light mt-4 opacity-90 text-gray-700">
+                &nbsp;&nbsp;For Mom & Baby Wellness
                     </span>
                   </h1>
-                  <div className="h-2"></div>
-                  <div className="space-y-2 max-w-2xl mx-auto">
-                    <p className="text-base text-gray-600 italic">
-                      Sleepless nights, endless worries, constant multitasking—we get it.
-                    </p>
-                    <p className="text-base text-gray-600 italic">
-                      Let AI help you manage tasks, understand your baby, and care for yourself.
+
+            <div className="space-y-4 mb-12 max-w-3xl pl-4">
+              <p className="text-lg md:text-xl opacity-90 font-medium text-gray-700">
+                Biometric analysis, stress & sleep monitoring
+              </p>
+              <p className="text-lg md:text-xl opacity-90 text-gray-700">
+                Personalized insights for maternal & infant wellness
+              </p>
+              <p className="text-lg md:text-xl opacity-90 text-gray-700">
+                Tailored Predictive Insights for Maternal and Infant Care
                     </p>
                   </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-lg">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Get early access"
+                className="flex-1 px-6 py-4 text-base rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30 transition-all duration-300"
+                required
+              />
+              <button
+                type="submit"
+                className="px-8 py-4 bg-gradient-to-r from-indigo-400 to-purple-400 text-white rounded-full text-base font-semibold shadow-none hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 whitespace-nowrap"
+              >
+                Join Beta
+              </button>
+            </form>
+          </motion.div>
                 </div>
                 
-                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-xl mt-24 mx-auto w-full items-center justify-center">
+        {/* Mobile Layout */}
+        <div className="md:hidden relative z-10 text-center text-white w-full px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-6 text-black">
+              <span className="block">AI-Powered Health Intelligence</span>
+              <span className="block text-2xl sm:text-3xl font-light mt-3 opacity-90 text-black">
+                For Mom & Baby Wellness
+              </span>
+            </h1>
+
+            <div className="space-y-2 mb-8 max-w-sm mx-auto">
+              <p className="text-base opacity-90 text-black">
+                Advanced AI-Powered Health Intelligence
+              </p>
+              <p className="text-base opacity-90 text-black">
+                For Moms & Babies Across North America
+              </p>
+              <p className="text-base opacity-90 text-black">
+                Biometric analysis, stress & sleep monitoring
+              </p>
+              <p className="text-base opacity-90 text-black">
+                Personalized insights for maternal & infant wellness
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-sm mx-auto">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Get early access"
-                    className="flex-1 px-6 py-3 text-base rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-300 text-center w-full"
+                className="w-full px-5 py-3 text-base rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30 transition-all duration-300"
                     required
                   />
                   <button
                     type="submit"
-                    className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl text-base font-medium shadow-sm hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 whitespace-nowrap text-center w-full sm:w-auto"
+                className="w-full px-6 py-3 bg-gradient-to-r from-indigo-400 to-purple-400 text-white rounded-full text-base font-semibold shadow-none hover:from-indigo-500 hover:to-purple-500 transition-all duration-300"
                   >
                     Join Beta
                   </button>
                 </form>
-              </CenteredContainer>
-
-              {/* Hero Section Image */}
-              <div className="relative flex items-center justify-center h-full w-full mt-12">
-                <div className="relative z-10 w-full max-w-xs sm:max-w-md md:max-w-lg aspect-[4/3] mx-auto overflow-hidden">
-                  <motion.div 
-                    className="absolute inset-0 flex items-center justify-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ 
-                      opacity: 1, 
-                      y: 0,
-                      transition: {
-                        type: "spring",
-                        bounce: 0.4,
-                        duration: 1.2
-                      }
-                    }}
-                    viewport={{ once: true, margin: "-100px" }}
-                  >
-                    <motion.div 
-                      className="w-full h-full overflow-hidden rounded-lg flex items-center justify-center transform scale-100"
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                    >
-                      <img 
-                        src={screenshotImage}
-                        alt="AI Parenting Assistant"
-                        className="w-full h-full object-cover object-center max-w-full"
-                      />
-                    </motion.div>
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CenteredContainer>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="pt-0 pb-8 bg-white text-center">
-        <div className="container mx-auto px-6 flex flex-col items-center">
-          <div className="max-w-full mx-auto space-y-0 w-full flex flex-col items-center">
-            {[
-              {
-                title: "Daily Dashboard",
-                pain: <em className="text-gray-600 italic">"What does my baby need now? Did I sleep enough? What should I do next?" — overwhelmed moms face constant overload.</em>,
-                solution: "Real-time dashboard for both baby & mom, with gentle nudges and personalized recommendations.",
-                tech: [
-                  'Gentle nudges like "You deserve extra rest" generated by Emotion Agent',
-                  'Backed by HealthKit sync + LLM-triggered recommendations'
-                ],
-                summary: "Built for empathy. Trained on real experience.",
-                image: IMG_3939,
-                imagePosition: "left",
-              },
-              {
-                title: "Smart Insights",
-                pain: <em className="text-gray-600 block text-left">"I log everything—feeds, diapers, sleep—but still feel lost. I don't know if my baby's doing well, or if I'm okay."</em>,
-                solution: "MomAI connects the dots—turning your manual logs and health signals into clear, personalized wellness summaries.",
-                tech: [
-                  'LLM-generated insights',
-                  'Time-series trend analysis',
-                  'HealthKit integration',
-                  'Multi-agent data fusion'
-                ],
-                summary: "Smart summaries for moms.",
-                image: IMG_3941,
-                imagePosition: "right",
-              },
-              {
-                title: "Task Assistant",
-                pain: <em className="text-gray-600">"There's too much to do—and I can't even think straight. I forget things, or do them too late."</em>,
-                solution: "MomAI plans your day for you. It generates and prioritizes tasks based on your energy, baby's state, and what truly matters.",
-                tech: [
-                  "LangGraph multi-agent planner",
-                  "Context-aware task generation",
-                  "Baby + mom state fusion",
-                  "Adaptive to time, fatigue, and routine"
-                ],
-                summary: "AI that gets things done.",
-                image: IMG_3940,
-                imagePosition: "left",
-              },
-              {
-                title: "Activity Planner",
-                pain: <em className="text-gray-600 block text-left">"I want to do more than just survive the day, but I don't have the time or energy to search for things to do with my baby."</em>,
-                solution: "MomAI finds enriching, age-appropriate events near you—so you can connect, explore, and create memories without the mental load.",
-                tech: [
-                  "Semantic search engine",
-                  "Location-based filtering",
-                  "Baby age & interest matching",
-                  "Personalized event curation"
-                ],
-                summary: "Find joy in every moment.",
-                image: IMG_3942,
-                imagePosition: "right",
-              }
-            ].map((feature, index) => {
-              let scaleClass = "scale-100";
-              if (feature.title === "Daily Dashboard") scaleClass = "scale-[0.7]";
-              else if (feature.title === "Smart Insights") scaleClass = "scale-[0.9]";
-              else if (feature.title === "Task Assistant") scaleClass = "scale-[0.9]";
-              else if (feature.title === "Activity Planner") scaleClass = "scale-[0.7]";
-
-              return (
-                <div
-                  key={index}
-                  className={`flex flex-col md:flex-row gap-4 items-center justify-center w-full ${
-                    feature.imagePosition === 'right' ? 'md:flex-row-reverse' : ''
-                  }`}
-                >
-                  <motion.div 
-                    className="w-full max-w-xs sm:max-w-md md:max-w-lg flex justify-center items-center"
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ 
-                      opacity: 1, 
-                      x: 0,
-                      transition: {
-                        type: "spring",
-                        bounce: 0.4,
-                        duration: 1.2
-                      }
-                    }}
-                    viewport={{ once: true, margin: "-100px" }}
-                  >
-                    <div className={`transform ${scaleClass} origin-center w-full flex justify-center items-center`}>
-                      <motion.div 
-                        className="rounded-lg overflow-hidden w-full flex justify-center items-center"
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                      >
-                        <img 
-                          src={feature.image} 
-                          alt={feature.title}
-                          className="w-full h-full object-cover max-w-full"
-                        />
-                      </motion.div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    className={`w-full flex flex-col text-left space-y-4 text-lg ${
-                      feature.title === "Smart Insights" || feature.title === "Activity Planner" ? 'md:pl-16' : ''
-                    }`}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    <h3 className="text-3xl font-bold mb-2 text-center w-full">{feature.title}</h3>
-                    <div className="text-gray-600 italic">{feature.pain}</div>
-                    <div>
-                      <div className="text-indigo-600 font-semibold mb-1">Solution:</div>
-                      <div className="text-gray-800">{feature.solution}</div>
-                    </div>
-                    <div>
-                      <div className="text-indigo-600 font-semibold mb-1">Tech:</div>
-                      <ul className="space-y-1">
-                        {feature.tech.map((point, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <span className="text-indigo-500 mr-2">•</span>
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="text-indigo-700 font-medium mt-2 italic text-xl">{feature.summary}</div>
-                  </motion.div>
-                </div>
-              );
-            })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Social Proof Section */}
-      <section className="py-12 bg-gray-50 text-center">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-8">
-                <div className="flex items-start space-x-4 mb-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-r from-indigo-200 to-purple-200 p-[2px]">
-                      <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                        <img 
-                          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
-                          alt="Sarah" 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900">Sarah Chen</h4>
-                    <p className="text-sm text-gray-500">First-time mom, Product Designer</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex text-amber-400">
-                    {"★★★★★".split("").map((star, i) => (
-                      <span key={i}>{star}</span>
-                    ))}
-                  </div>
-                  <p className="text-gray-600">
-                    "From sleepless anxiety to peaceful nights, MomAI has been like having an experienced mentor by my side. It's incredible how it understands exactly what I need, when I need it."
-                  </p>
-                </div>
-              </div>
 
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-8">
-                <div className="flex items-start space-x-4 mb-6">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-r from-indigo-200 to-purple-200 p-[2px]">
-                      <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                        <img 
-                          src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
-                          alt="Emily" 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900">Emily Zchi</h4>
-                    <p className="text-sm text-gray-500">Mom of two, Software Engineer</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex text-amber-400">
-                    {"★★★★★".split("").map((star, i) => (
-                      <span key={i}>{star}</span>
-                    ))}
-                  </div>
-                  <p className="text-gray-600">
-                    "What amazes me is how it truly understands both me and my babies. It's not just an AI, it's become my trusted companion through every milestone and challenge."
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* AI Inside Section */}
-      <section id="ai-inside" className="py-12 bg-white text-center">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-medium mb-4">AI Inside</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Built with state-of-the-art AI for motherhood, combining advanced technology with deep empathy.
+      {/* Premium Products Showcase */}
+      <section id="products" className="py-16 bg-gradient-to-br from-rose-50/30 via-pink-50/20 to-orange-50/30 relative overflow-hidden">
+        {/* Soft background decoration */}
+        <div className="absolute top-0 right-1/3 w-80 h-80 bg-gradient-to-br from-pink-100/40 to-rose-100/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-gradient-to-br from-orange-100/40 to-yellow-100/30 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+                  <motion.div 
+              className="text-center mb-12"
+                    initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-semibold text-[#6d5dd3] mb-4">
+                Our Family of <span className="bg-gradient-to-r from-[#a18aff] to-[#e0c3fc] bg-clip-text text-transparent">AI Solutions</span>
+              </h2>
+              <p className="text-lg text-[#a18aff] max-w-2xl mx-auto leading-relaxed font-light">
+                Gentle technology that grows with your family's journey
               </p>
-            </div>
+            </motion.div>
 
-            {/* Core Features */}
-            <div className="grid grid-cols-1 gap-8">
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="bg-white rounded-xl p-8 shadow-sm flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center mb-4 transform rotate-12">
-                    <span className="text-2xl transform -rotate-12">✨</span>
-                  </div>
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Multi-Agent System</h3>
-                  <p className="text-gray-600">
-                    Powered by LangGraph with specialized agents for emotional support, baby analysis, and health monitoring
-                  </p>
-                </div>
-
-                <div className="bg-white rounded-xl p-8 shadow-sm flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center mb-4 transform -rotate-12">
-                    <span className="text-2xl transform rotate-12">🌟</span>
-                  </div>
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Real-time Analysis</h3>
-                  <p className="text-gray-600">
-                    Continuous monitoring of baby patterns and maternal well-being through advanced AI processing
-                  </p>
-                </div>
-
-                <div className="bg-white rounded-xl p-8 shadow-sm flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center mb-4">
-                    <span className="text-2xl">💫</span>
-                  </div>
-                  <h3 className="text-lg font-medium mb-3 text-gray-900">Emotional Support</h3>
-                  <p className="text-gray-600">
-                    Personalized guidance with postpartum sensitivity, adapting to your unique journey
-                  </p>
-                </div>
-              </div>
-
-              {/* Detailed Features */}
-              <div className="grid md:grid-cols-2 gap-8 mt-8">
-                <div className="bg-white rounded-xl p-8 shadow-sm">
-                  <h3 className="text-xl font-medium mb-6 text-gray-900 text-left">Smart Technology</h3>
-                  <ul className="space-y-4">
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">Fine-tuned LLMs for maternal and infant care</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">HealthKit integration for vital signs monitoring</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">Advanced pattern recognition for baby behavior</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">Adaptive learning from daily interactions</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-white rounded-xl p-8 shadow-sm">
-                  <h3 className="text-xl font-medium mb-6 text-gray-900 text-left">Key Benefits</h3>
-                  <ul className="space-y-4">
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">Stress detection through HRV analysis</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">Personalized daily task planning</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">Intelligent sleep and feeding insights</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-indigo-500 mr-4 mt-1">•</span>
-                      <span className="text-gray-600">24/7 emotional companionship</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Bottom Quote */}
-              <div className="text-center mt-12">
-                <p className="text-lg text-gray-600 italic max-w-2xl mx-auto">
-                  "Your always-there, never-tired co-pilot through the most precious moments of motherhood."
-                </p>
-                <div className="mt-6 flex items-center justify-center space-x-4">
-                  <div className="flex items-center text-indigo-600">
-                    <span className="text-2xl mr-2"></span>
-                    <span className="font-medium"></span>
-                  </div>
-                  <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                  <div className="flex items-center text-indigo-600">
-                    <span className="text-2xl mr-2"></span>
-                    <span className="font-medium"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Story Section */}
-      <section id="story" className="py-12 bg-white text-center">
-        <div className="container mx-auto px-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-12 items-center">
-              <motion.div 
-                className="w-full md:w-3/5 flex justify-center"
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ 
-                  opacity: 1, 
-                  x: 0,
-                  transition: {
-                    type: "spring",
-                    bounce: 0.4,
-                    duration: 1.2
-                  }
+            {/* Products Grid - 3 Large Cards */}
+            <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+              
+            {/* MomAI */}
+                    <motion.div 
+              className="group relative"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <div
+                className="relative w-full max-w-[370px] sm:max-w-[420px] 
+                          h-[480px] sm:h-[460px]     /* ← 固定高度 */
+                          bg-white/80 backdrop-blur-sm rounded-3xl p-6 lg:p-8
+                          shadow-sm hover:shadow-md border-0 transition-all
+                          duration-500 group-hover:bg-white/90 group-hover:scale-[1.02]"
+                style={{
+                  backgroundImage: `linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.3)),url(${welcomeImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
                 }}
-                viewport={{ once: true, margin: "-100px" }}
               >
-                <div className="w-full max-w-xl mx-auto transform scale-[0.9]">
-                  <motion.div 
-                    className="rounded-lg overflow-hidden shadow-lg"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                  >
-                    <img 
-                      src={screenshotStory}
-                      alt="Our Story"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
+                {/* 抽象背景元素 */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl translate-x-8 -translate-y-8" />
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-300 rounded-full blur-2xl -translate-x-4 translate-y-4" />
+                  <div className="absolute top-1/2 left-1/2 w-20 h-20 bg-indigo-300 rounded-full blur-xl -translate-x-10 -translate-y-10" />
                 </div>
-              </motion.div>
-              <motion.div 
-                className="w-full md:w-3/5 space-y-6 md:px-6 text-left"
+
+                {/* Status Badge */}
+                <div className="absolute top-1.5 left-6 z-20">
+                  <span className="px-3 py-1.5 bg-white/20 backdrop-blur-sm
+                                  text-white text-xs font-medium rounded-full shadow-sm
+                                  border border-white/30">
+                    Available on iOS
+                  </span>
+                </div>
+
+                {/* Header */}
+                <div className="relative z-10 text-white pt-6 text-center">
+                  <h3 className="text-3xl sm:text-4xl font-bold mb-3">DearBaby</h3>
+                  <p className="text-white/90 text-base sm:text-lg font-light">
+                    Your Ultimate AI Health<br />Partner
+                  </p>
+                </div>
+
+                {/* ——二维码固定贴底—— */}
+                <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2
+                                flex flex-col items-center z-10">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2
+                                  border border-white/30">
+                    <img
+                      src={scanmeImage}
+                      alt="Download QR Code"
+                      className="w-20 h-20 sm:w-20 sm:h-20"
+                    />
+                  </div>
+                  <span className="text-white/80 text-xs mt-2">
+                    Scan&nbsp;to&nbsp;Download
+                  </span>
+                </div>
+              </div>
+                    </motion.div>
+
+              {/* Baby SolidStart */}
+                      <motion.div 
+                className="group relative"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-3xl font-medium text-left">Built by moms, for moms.</h2>
-                <div className="space-y-4 text-left">
-                  <p className="text-gray-600 text-lg leading-relaxed text-left">
-                    JupitLunar understands the invisible workload of motherhood. Our mission? Provide gentle, intelligent support—so you're never alone.
-                  </p>
+                <div
+                  className="relative w-full max-w-[370px] sm:max-w-[420px] h-[480px] sm:h-[460px] bg-white/80 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-sm hover:shadow-md border-0 transition-all duration-500 group-hover:bg-white/90 group-hover:scale-[1.02]"
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.3)),url(${welcomeFoxImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                  }}
+                >
+                  {/* 抽象背景元素 */}
+                  <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl translate-x-8 -translate-y-8" />
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-orange-200 rounded-full blur-2xl -translate-x-4 translate-y-4" />
+                    <div className="absolute top-1/2 left-1/2 w-20 h-20 bg-yellow-200 rounded-full blur-xl -translate-x-10 -translate-y-10" />
+                  </div>
+                  {/* Status Badge */}
+                  <div className="absolute top-1.5 left-6 z-20">
+                    <span className="px-3 py-1.5 bg-gradient-to-r from-orange-400 to-amber-400 text-white text-xs font-medium rounded-full shadow-sm border border-white/30">
+                      Beta Testing
+                    </span>
+                  </div>
+                  {/* Header */}
+                  <div className="relative z-10 text-white pt-6 text-center">
+                    <h3 className="text-3xl sm:text-4xl font-bold mb-3">Baby SolidStart</h3>
+                    <p className="text-white/90 text-base sm:text-lg font-light">
+                      Thoughtful nutrition guidance for your little one's first food adventures,<br />backed by trusted research.
+                    </p>
+                  </div>
+                  {/* 按钮区底部居中 */}
+                  <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-row items-center justify-center space-x-3 z-10">
+                    <a 
+                      href="/solidstart"
+                      className="bg-white text-orange-600 px-4 py-2 rounded-xl font-semibold text-center hover:bg-orange-50 transition-all duration-300 text-xs shadow-sm whitespace-nowrap"
+                    >
+                      Learn More
+                    </a>
+                    <button
+                      onClick={() => setShowBetaModal(true)}
+                      className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl font-medium hover:bg-white/30 transition-colors duration-300 text-xs border border-white/30 whitespace-nowrap"
+                    >
+                      Join Beta
+                    </button>
+                  </div>
+                </div>
+                  </motion.div>
+
+              {/* BabyGPT */}
+              <motion.div 
+                className="group relative"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <div
+                  className="relative w-full max-w-[370px] sm:max-w-[420px] h-[480px] sm:h-[460px] bg-white/80 backdrop-blur-sm rounded-3xl p-6 lg:p-8 shadow-sm hover:shadow-md border-0 transition-all duration-500 group-hover:bg-white/90 group-hover:scale-[1.02]"
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.3)),url(${welcomebearImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                  }}
+                >
+                  {/* 抽象背景元素 */}
+                  <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl translate-x-8 -translate-y-8" />
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-200 rounded-full blur-2xl -translate-x-4 translate-y-4" />
+                    <div className="absolute top-1/2 left-1/2 w-20 h-20 bg-indigo-200 rounded-full blur-xl -translate-x-10 -translate-y-10" />
+                </div>
+                  {/* Status Badge */}
+                  <div className="absolute top-1.5 left-6 z-20">
+                    <span className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-medium rounded-full shadow-sm border border-white/30">
+                      Coming Soon
+                    </span>
+              </div>
+                  {/* Header */}
+                  <div className="relative z-10 text-white pt-6 text-center">
+                    <h3 className="text-3xl sm:text-4xl font-bold mb-3">DearBabyGPT</h3>
+                    <p className="text-white/90 text-base sm:text-lg font-light">
+                      Advanced AI-powered assistant specifically trained for baby.
+                    </p>
+              
+                   
+            </div>
+                  
+                  {/* Coming Soon 按钮 */}
+                  <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex justify-center z-10">
+                    <div className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl font-medium cursor-default text-xs border border-white/30 whitespace-nowrap">
+                      Coming Soon
+          </div>
+                  </div>
                 </div>
               </motion.div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-12 bg-white">
+        <div className="w-full flex justify-start px-4">
+          <div className="max-w-full w-full pl-8">
+            <div className="text-center mb-8 pl-4">
+              <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-[#6d5dd3]">
+                Core <span className="bg-gradient-to-r from-[#a18aff] to-[#e0c3fc] bg-clip-text text-transparent">Features</span>
+              </h2>
+              <p className="text-lg text-[#a18aff]">
+                Advanced AI technology for comprehensive family health intelligence
+              </p>
+            </div>
+
+            {/* Navigation Arrows */}
+            <div className="relative">
+              {/* Left Arrow Button */}
+              <button
+                onClick={featuresScrollLeft}
+                disabled={!canFeaturesScrollLeft}
+                className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center transition-all duration-300 ${
+                  canFeaturesScrollLeft
+                    ? 'text-gray-700 hover:bg-gray-50 hover:shadow-xl cursor-pointer'
+                    : 'text-gray-300 cursor-not-allowed opacity-50'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Right Arrow Button */}
+              <button
+                onClick={featuresScrollRight}
+                disabled={!canFeaturesScrollRight}
+                className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center transition-all duration-300 ${
+                  canFeaturesScrollRight
+                    ? 'text-gray-700 hover:bg-gray-50 hover:shadow-xl cursor-pointer'
+                    : 'text-gray-300 cursor-not-allowed opacity-50'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {/* Scrolling Content */}
+              <div 
+                ref={featuresScrollRef}
+                onScroll={checkFeaturesScrollButtons}
+                className="flex overflow-x-auto gap-4 pb-4 px-12 hide-scrollbar"
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none'
+                }}
+              >
+                  {/* Feed · Sleep · Diaper Alerts */}
+                      <motion.div 
+                    className="min-w-[320px] w-[360px] bg-white rounded-xl p-3 shadow-sm hover:shadow-lg transition-all duration-300 flex-shrink-0 border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="h-[700px] mb-3 overflow-hidden rounded-lg relative">
+                      <img
+                        src={babydashboard}
+                        alt="Feed · Sleep · Diaper Reminders"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-center px-2">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900">Feed · Sleep · Diaper Reminders</h3>
+                      <p className="text-sm text-gray-600 max-w-[280px] mx-auto text-center leading-relaxed">
+                        AI‑timed reminder for every feed, nap & diaper change—auto‑logged in your baby tracker for growth‑trend analysis.
+                      </p>
+                    </div>
+                      </motion.div>
+
+                  {/* Health Intelligence */}
+                      <motion.div 
+                    className="min-w-[320px] w-[360px] bg-white rounded-xl p-3 shadow-sm hover:shadow-lg transition-all duration-300 flex-shrink-0 border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="h-[700px] mb-3 overflow-hidden rounded-lg relative">
+                      <img
+                        src={health_prediction}
+                        alt="Health Intelligence"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-center px-2">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900">Health Intelligence</h3>
+                      <p className="text-sm text-gray-600 max-w-[280px] mx-auto text-center leading-relaxed">
+                        AI‑driven HRV & sleep‑stage analytics that detect stress patterns and circadian drift straight from your Apple Watch data.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* SmartTask Reminders */}
+                  <motion.div
+                    className="min-w-[320px] w-[360px] bg-white rounded-xl p-3 shadow-sm hover:shadow-lg transition-all duration-300 flex-shrink-0 border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="h-[700px] mb-3 overflow-hidden rounded-lg relative">
+                      <img
+                        src={smart_task}
+                        alt="SmartTask Reminders"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-center px-2">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900">SmartTask Reminders</h3>
+                      <p className="text-sm text-gray-600 max-w-[280px] mx-auto text-center leading-relaxed">
+                        GPT‑generated subtasks with feed, sleep & diaper alerts—nudging you precisely when your baby needs care.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* mom health */}
+                  <motion.div
+                    className="min-w-[320px] w-[360px] bg-white rounded-xl p-3 shadow-sm hover:shadow-lg transition-all duration-300 flex-shrink-0 border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="h-[700px] mb-3 overflow-hidden rounded-lg relative">
+                      <img
+                        src={mom_health_analysis}
+                        alt="Story & Community"
+                        className="w-full h-full object-cover"
+                        />
+                </div>
+                    <div className="text-center px-2">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900">Mom Health Analytics</h3>
+                      <p className="text-sm text-gray-600 max-w-[280px] mx-auto text-center leading-relaxed">
+                        Unified dashboard fusing post‑partum HRV, deep‑sleep minutes & recovery scores, spotlighting fatigue and stress trends for busy moms.
+                      </p>
+          </div>
+                  </motion.div>
+                  {/* Baby Development Tracking */}
+                  <motion.div
+                    className="min-w-[320px] w-[360px] bg-white rounded-xl p-3 shadow-sm hover:shadow-lg transition-all duration-300 flex-shrink-0 border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="h-[700px] mb-3 overflow-hidden rounded-lg relative">
+                      <img
+                        src={baby_development}
+                        alt="Baby Development Tracking"
+                        className="w-full h-full object-cover"
+                      />
+        </div>
+                    <div className="text-center px-2">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900">Baby Development Tracking</h3>
+                      <p className="text-sm text-gray-600 max-w-[280px] mx-auto text-center leading-relaxed">
+                        Log feeds, naps and tummy‑time, then get AI milestone forecasts & WHO‑benchmarked growth curves.
+                  </p>
+                </div>
+                  </motion.div>
+
+                  
+
+                  {/* Events & Milestones */}
+                  <motion.div
+                    className="min-w-[320px] w-[360px] bg-white rounded-xl p-3 shadow-sm hover:shadow-lg transition-all duration-300 flex-shrink-0 border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="h-[700px] mb-3 overflow-hidden rounded-lg relative">
+                      <img
+                        src={explore_event}
+                        alt="Events & Milestones"
+                        className="w-full h-full object-cover"
+                        />
+                      </div>
+                    <div className="text-center px-2">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900">Events & Milestones</h3>
+                      <p className="text-sm text-gray-600 max-w-[280px] mx-auto text-center leading-relaxed">
+                        Auto‑log vaccinations and doctor visits, with personalised iOS calendar nudges so nothing slips through the cracks.
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* DearBabyGPT */}
+                  <motion.div
+                    className="min-w-[320px] w-[360px] bg-white rounded-xl p-3 shadow-sm hover:shadow-lg transition-all duration-300 flex-shrink-0 border border-gray-100"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="h-[700px] mb-3 overflow-hidden rounded-lg relative">
+                      <img
+                        src={babygpt}
+                        alt="DearBabyGPT"
+                        className="w-full h-full object-cover"
+                      />
+                  </div>
+                    <div className="text-center px-2">
+                      <h3 className="text-lg font-semibold mb-2 text-gray-900">DearBabyGPT</h3>
+                  </div>
+                  </motion.div>
+                </div>
+                  </div>
+                </div>
+              </div>
+      </section>
+
+
+      {/* Social Proof Section - Horizontal Scroll */}
+      <section id="testimonials" className="py-12 bg-gray-50 text-center">
+        <div className="container mx-auto px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-2">Trusted by Real Families</h2>
+              <p className="text-gray-600 font-light">Hear from parents using our AI solutions</p>
+            </div>
+            {/* Arrow-Controlled Scrolling Container */}
+            <div className="relative">
+              {/* Left Arrow Button */}
+              <button
+                onClick={scrollLeft}
+                disabled={!canScrollLeft}
+                className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center transition-all duration-300 ${
+                  canScrollLeft
+                    ? 'text-gray-700 hover:bg-gray-50 hover:shadow-xl cursor-pointer'
+                    : 'text-gray-300 cursor-not-allowed opacity-50'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              {/* Right Arrow Button */}
+              <button
+                onClick={scrollRight}
+                disabled={!canScrollRight}
+                className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center transition-all duration-300 ${
+                  canScrollRight
+                    ? 'text-gray-700 hover:bg-gray-50 hover:shadow-xl cursor-pointer'
+                    : 'text-gray-300 cursor-not-allowed opacity-50'
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              {/* Scrolling Content */}
+              <div 
+                ref={scrollRef}
+                onScroll={checkScrollButtons}
+                className="flex overflow-x-auto gap-6 pb-4 px-12 hide-scrollbar"
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none'
+                }}
+              >
+                {/* 新的10条GEO优化quote */}
+                {[
+                  {
+                    name: 'Jennifer Martinez',
+                    role: 'Working Mom',
+                    avatar: 'https://randomuser.me/api/portraits/women/32.jpg',
+                    quote: '"DearBaby flagged a 28 % HRV stress spike and coached a 5‑minute breathing drill; my recovery score bounced back the same afternoon.”'
+                  },
+                  {
+                    name: 'Lisa Thompson',
+                    role: 'New Mom',
+                    avatar: 'https://randomuser.me/api/portraits/women/47.jpg',
+                    quote: '“DearBaby detected an HRV pattern linked to postpartum anxiety; one week of guided breathwork dropped my resting HR by 7 bpm.”'
+                  },
+                  {
+                    name: 'David Chen',
+                    role: 'Beta Tester',
+                    avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
+                    quote: '“SolidStart built a peanut introduction plan from our history—7 new foods in 10 days and zero allergy flare‑ups.”'
+                  },
+                  {
+                    name: 'Sarah Kim',
+                    role: 'Mom of Twins',
+                    avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
+                    quote: '“With twins, chaos ruled—DearBaby automatically moved six low‑priority tasks, saving us ~40 minutes every night.”'
+                  },
+                  {
+                    name: 'Michael Rodriguez',
+                    role: 'First-time Dad',
+                    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+                    quote: '“SolidStart’s 3‑step egg protocol kept us calm; once cleared, it suggested iron‑rich lentils next.”'
+                  },
+                  {
+                    name: 'Anna Williams',
+                    role: 'Mom & Nurse',
+                    avatar: 'https://randomuser.me/api/portraits/women/25.jpg',
+                    quote: '“I compared DearBaby’s HRV readings with the ECG in my clinic—95 % accuracy. Trustworthy data for health pros.”'
+                  },
+                  {
+                    name: 'Grace Lee',
+                    role: 'Night‑shift Nurse',
+                    avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
+                    quote: '“DearBaby syncs my Apple Watch sleep stages and alerts me if my baby’s nap overlaps—helped me gain 30 extra minutes of rest per shift.”'
+                  },
+                  {
+                    name: 'Carlos Mendez',
+                    role: 'Allergy‑Concerned Dad',
+                    avatar: 'https://randomuser.me/api/portraits/men/44.jpg',
+                    quote: '“SolidStart flagged sesame in a hummus jar and instantly offered 3 safe substitutes—no ER visits this time.”'
+                  },
+                  {
+                    name: 'Emily Brown',
+                    role: 'Second‑time Mom',
+                    avatar: 'https://randomuser.me/api/portraits/women/50.jpg',
+                    quote: '“The twin‑schedule view let me log feeds for both babies; weekly summary email shortened our pediatric check‑in to under 5 minutes.”'
+                  },
+                  {
+                    name: 'Nina Patel',
+                    role: 'Diet‑Tech Blogger',
+                    avatar: 'https://randomuser.me/api/portraits/women/60.jpg',
+                    quote: '“I fed SolidStart only pantry items; the AI generated 21 balanced weaning recipes and highlighted top‑9 allergen risks.”'
+                  }
+                ].map(({ name, role, avatar, quote }, i) => (
+                  <div key={name} className="min-w-[240px] w-[240px] md:min-w-[280px] md:w-[280px] bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-300 flex-shrink-0">
+                    <div className="flex items-start space-x-3 mb-3">
+                  <div className="flex-shrink-0">
+                        <div className="w-10 h-10 rounded-full overflow-hidden">
+                        <img 
+                            src={avatar} 
+                            alt={name} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                      <div className="text-left min-w-0 flex-1">
+                        <h4 className="font-medium text-gray-900 text-sm truncate">{name}</h4>
+                        <p className="text-xs text-gray-500">{role}</p>
+                  </div>
+                  </div>
+                    <div className="space-y-2 text-left">
+                      <div className="flex text-amber-400 text-sm">
+                    {"★★★★★".split("").map((star, i) => (
+                      <span key={i}>{star}</span>
+                    ))}
+                  </div>
+                      <p className="text-gray-600 text-xs leading-relaxed break-words">
+                        {quote}
+                  </p>
+                </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-12 bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8] text-center">
-        <div className="container mx-auto px-6 flex flex-col items-center">
-          <div className="max-w-4xl mx-auto w-full">
-            <div className="text-center mb-16 flex flex-col items-center">
-              <h2 className="text-3xl font-medium mb-4 text-center">Contact Us</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto text-center">
-                Have questions or suggestions? We'd love to hear from you.
-              </p>
-            </div>
 
-            <div className="grid md:grid-cols-2 gap-12 justify-items-center">
+      {/* Story Section */}
+      <section id="story" className="py-16 bg-white">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <h2 className="text-3xl md:text-4xl font-semibold text-center mb-8 text-gray-900">
+            About JupitLunar
+          </h2>
+
+          <p className="text-gray-600 text-lg leading-relaxed mb-6">
+            JupitLunar builds <strong>AI baby‑care tools for modern mothers</strong>,
+            combining wearable data, feeding logs and sleep patterns to deliver real‑time
+            insights on postpartum recovery, newborn sleep and safe solid‑food
+            introduction. Our all‑female product team—spanning software engineers,
+            pediatric diet‑tech specialists and long‑time moms—designs every feature
+            with ease‑of‑use and <strong>data privacy</strong> at its core.
+          </p>
+
+          <p className="text-gray-600 text-lg leading-relaxed">
+            With <strong>DearBaby</strong> you can track HRV‑based stress, nursing
+            sessions and twin schedules in one place; <strong>SolidStart</strong> turns
+            the ingredients already in your kitchen into
+            <strong> allergy‑aware weaning recipes</strong> and meal plans. The result:
+            AI that not only records feeds, naps and milestones, but guides you through
+            the first‑year journey—helping moms sleep better and babies eat smarter.
+          </p>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-16 bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8]">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto">
+              <motion.div 
+              className="text-center mb-16"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+              <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-gray-900">
+                Contact Us
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Ready to revolutionize your family's health journey? Get in touch with our team.
+              </p>
+              </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-12">
               {/* Contact Form */}
-              <div className="bg-white rounded-xl p-8 shadow-sm w-full">
+              <motion.div 
+                className="bg-white rounded-xl p-8 shadow-sm"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
                 <form onSubmit={handleContactSubmit} className="space-y-6">
-                  <div className="w-full">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                       Name
                     </label>
                     <input
@@ -547,12 +914,12 @@ function Home() {
                       id="name"
                       value={contactForm.name}
                       onChange={(e) => setContactForm({...contactForm, name: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-300 text-left"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-300"
                       placeholder="Enter your name"
                     />
                   </div>
-                  <div className="w-full">
-                    <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                  <div>
+                    <label htmlFor="contact-email" className="block text-sm font-medium text-gray-700 mb-2">
                       Email
                     </label>
                     <input
@@ -560,12 +927,12 @@ function Home() {
                       id="contact-email"
                       value={contactForm.email}
                       onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-300 text-left"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-300"
                       placeholder="Enter your email"
                     />
                   </div>
-                  <div className="w-full">
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2 text-left">
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                       Message
                     </label>
                     <textarea
@@ -573,8 +940,8 @@ function Home() {
                       rows={4}
                       value={contactForm.message}
                       onChange={(e) => setContactForm({...contactForm, message: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-300 text-left"
-                      placeholder="Enter your message"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-300"
+                      placeholder="Tell us about your interest in our AI health platforms"
                     ></textarea>
                   </div>
                   <button
@@ -584,63 +951,104 @@ function Home() {
                     Send Message
                   </button>
                 </form>
-              </div>
+              </motion.div>
 
               {/* Contact Info */}
-              <div className="space-y-8 w-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm w-full">
-                  <h3 className="text-xl font-medium mb-6 text-gray-900 text-left">Contact Information</h3>
+              <motion.div 
+                className="space-y-8"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <div className="bg-white rounded-xl p-8 shadow-sm">
+                  <h3 className="text-xl font-medium mb-6">Contact Information</h3>
                   <div className="space-y-6">
                     <div className="flex items-start space-x-4">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xl">📧</span>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex-shrink-0">
                       </div>
-                      <div className="text-left">
+                      <div>
                         <h4 className="font-medium text-gray-900">Email</h4>
-                        <p className="text-gray-600">momaiagent@gmail.com</p>
+                        <p className="text-gray-600">hello@momaiagent.com</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-4">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xl">📱</span>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex-shrink-0">
                       </div>
-                      <div className="text-left">
-                        <h4 className="font-medium text-gray-900">WeChat Official</h4>
-                        <p className="text-gray-600">MomAI</p>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Business Inquiries</h4>
+                        <p className="text-gray-600">support@@momaiagent.com</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-4">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xl">🏢</span>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex-shrink-0">
                       </div>
-                      <div className="text-left">
-                        <h4 className="font-medium text-gray-900">Address</h4>
-                        <p className="text-gray-600">Edmonton, Canada</p>
+                      <div>
+                        <h4 className="font-medium text-gray-900">Headquarters</h4>
+                        <p className="text-gray-600">Edmonton, Alberta, Canada</p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-6 bg-gray-50 text-center">
-        <div className="container mx-auto px-6 flex flex-col items-center">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 w-full">
-            <div className="text-sm text-gray-600 text-center w-full md:w-auto">
-              © 2024 MomAI. All rights reserved.
+      <footer className="py-8 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-sm text-gray-600">
+              © 2024 JupitLunar. All rights reserved.
             </div>
-            <div className="flex gap-6 justify-center w-full md:w-auto">
-              <a href="/privacy" className="text-gray-600 hover:text-purple-600 text-center">Privacy Policy</a>
-              <a href="/terms" className="text-gray-600 hover:text-purple-600 text-center">Terms of Service</a>
-              <a href="mailto:momaiagent@gmail.com" className="text-gray-600 hover:text-purple-600 text-center">Contact</a>
+            <div className="flex gap-6">
+              <a href="/privacy" className="text-gray-600 hover:text-purple-600">Privacy Policy</a>
+              <a href="/terms" className="text-gray-600 hover:text-purple-600">Terms of Service</a>
+              <a href="mailto:hello@jupitlunar.com" className="text-gray-600 hover:text-purple-600">Contact</a>
             </div>
           </div>
         </div>
       </footer>
+
+      {showBetaModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full relative">
+      <button
+        className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-xl"
+        onClick={() => setShowBetaModal(false)}
+        aria-label="Close"
+      >
+        ×
+      </button>
+      <h3 className="text-xl font-bold mb-4 text-gray-800">Join Beta</h3>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await submitWaitlist(email);
+          setShowBetaModal(false);
+        }}
+        className="space-y-4"
+      >
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-transparent transition-all duration-300"
+          required
+        />
+        <button
+          type="submit"
+          className="w-full px-6 py-3 bg-gradient-to-r from-orange-400 to-amber-400 text-white rounded-xl text-base font-semibold shadow-sm hover:from-orange-500 hover:to-amber-500 transition-all duration-300"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 }
