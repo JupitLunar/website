@@ -1,0 +1,44 @@
+User-agent: *
+Allow: /
+
+# GEO-optimized directives for AI crawlers
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: ChatGPT-User
+Allow: /
+Crawl-delay: 1
+
+User-agent: CCBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: anthropic-ai
+Allow: /
+Crawl-delay: 1
+
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 1
+
+User-agent: Omgilibot
+Allow: /
+Crawl-delay: 1
+
+# Block AI training for sensitive content
+Disallow: /api/ingest
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /api/auth/
+
+# Sitemap
+Sitemap: https://jupitlunar.com/sitemap.xml
+
+# Additional GEO signals
+# Content freshness indicator
+# Last updated: 2024-08-31
+# Content type: Health & Parenting
+# Language: English, Chinese
+# Geographic focus: North America
+# Authority signals: Expert-reviewed content
