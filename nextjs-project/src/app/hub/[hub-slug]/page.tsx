@@ -12,7 +12,7 @@ import Script from 'next/script';
 export async function generateStaticParams() {
   try {
     const hubs = await contentManager.getContentHubs();
-    return hubs.map((hub) => ({
+    return hubs.map((hub: any) => ({
       'hub-slug': hub.slug,
     }));
   } catch (error) {
@@ -68,15 +68,11 @@ export default async function HubPage({ params }: { params: { 'hub-slug': string
     }
 
     // 获取该hub的所有文章
-    const articles = await contentManager.getArticles({ 
-      hub: hub.slug,
-      limit: 50,
-      orderBy: 'published_at',
-      orderDirection: 'desc'
-    });
+    const articles = await contentManager.getHubArticles(hub.slug, 'en', 50);
 
     // 获取hub统计信息
-    const stats = await contentManager.getContentStats();
+    const stats = await contentManager.getContentStats().catch(() => null);
+    const relatedHubs = stats?.articles_by_hub ?? {};
 
     // 生成结构化数据
     const structuredData = generateHubStructuredData(hub, articles);
@@ -88,15 +84,13 @@ export default async function HubPage({ params }: { params: { 'hub-slug': string
     return (
       <>
         {/* JSON-LD Structured Data */}
-        <Script
-          id="hub-structured-data"
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData)
           }}
         />
-        <Script
-          id="breadcrumb-structured-data"
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(breadcrumbData)
@@ -175,7 +169,7 @@ export default async function HubPage({ params }: { params: { 'hub-slug': string
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {articles.map((article) => (
+                  {articles.map((article: any) => (
                     <ArticleCard key={article.id} article={article} />
                   ))}
                 </div>
@@ -219,39 +213,10 @@ export default async function HubPage({ params }: { params: { 'hub-slug': string
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {stats.hubs
-                .filter((relatedHub) => relatedHub.slug !== hub.slug)
-                .slice(0, 6)
-                .map((relatedHub) => (
-                  <Link
-                    key={relatedHub.id}
-                    href={`/hub/${relatedHub.slug}`}
-                    className="block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg flex items-center justify-center">
-                        {relatedHub.icon && (
-                          <Image
-                            src={relatedHub.icon}
-                            alt={relatedHub.name}
-                            width={24}
-                            height={24}
-                            className="w-6 h-6"
-                          />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-1">
-                          {relatedHub.name}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {relatedHub.article_count} articles
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+            <div className="text-center py-8">
+              <p className="text-gray-500">
+                More content hubs coming soon. Explore our main topics above.
+              </p>
             </div>
           </div>
         </section>

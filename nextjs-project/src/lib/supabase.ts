@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { clientCache, cacheKeys, withCache } from './cache';
 import type { 
   ContentHub, 
   ContentType, 
@@ -10,7 +11,12 @@ import type {
   ContentStats,
   AIFeedItem,
   LLMAnswer,
-  ContentBundle
+  ContentBundle,
+  KnowledgeLocale,
+  KnowledgeRule,
+  KnowledgeFood,
+  KnowledgeGuide,
+  KnowledgeSource
 } from '@/types/content';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -37,6 +43,10 @@ export const createAdminClient = () => {
 export const contentManager = {
   // Get all articles for a specific hub
   async getHubArticles(hub: ContentHub, lang: Language = 'en', limit: number = 20) {
+    const cacheKey = cacheKeys.articles({ hub, lang, limit });
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
     const { data, error } = await supabase
       .from('articles')
       .select(`
@@ -54,11 +64,18 @@ export const contentManager = {
       .limit(limit);
     
     if (error) throw error;
+    
+    // 缓存5分钟
+    clientCache.set(cacheKey, data, 5 * 60 * 1000);
     return data;
   },
 
   // Get a single article by slug
   async getArticle(slug: string, lang: Language = 'en') {
+    const cacheKey = cacheKeys.article(slug);
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
     const { data, error } = await supabase
       .from('articles')
       .select(`
@@ -74,7 +91,17 @@ export const contentManager = {
       .eq('status', 'published')
       .single();
     
-    if (error) throw error;
+    if (error) {
+      if ((error as any).code === 'PGRST116') {
+        return null;
+      }
+      throw error;
+    }
+
+    if (!data) return null;
+
+    // 缓存10分钟
+    clientCache.set(cacheKey, data, 10 * 60 * 1000);
     return data;
   },
 
@@ -91,7 +118,13 @@ export const contentManager = {
       .eq('slug', slug)
       .single();
     
-    if (error) throw error;
+    if (error) {
+      if ((error as any).code === 'PGRST116') {
+        return null;
+      }
+      throw error;
+    }
+
     return data;
   },
 
@@ -101,12 +134,37 @@ export const contentManager = {
   async getAllArticles() {
     const { data, error } = await supabase
       .from('articles')
-      .select('slug, hub, lang, type, date_modified')
+      .select('slug, hub, lang, type, date_published, date_modified')
       .eq('status', 'published')
       .order('date_published', { ascending: false });
     
     if (error) throw error;
     return data;
+  },
+
+  async getArticlesPublishedSince(isoDate: string, limit: number = 100) {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('slug, title, hub, lang, type, date_published, date_modified, one_liner')
+      .eq('status', 'published')
+      .gte('date_published', isoDate)
+      .order('date_published', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getArticlesForFeed(limit: number = 25) {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('slug, title, one_liner, body_md, entities, hub, lang, date_published, date_modified')
+      .eq('status', 'published')
+      .order('date_published', { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
   },
 
   // Get articles by type
@@ -238,12 +296,19 @@ export const contentManager = {
 
   // Get content hubs with article counts
   async getContentHubs() {
+    const cacheKey = cacheKeys.hubs();
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
     const { data, error } = await supabase
       .from('content_hubs')
       .select('*')
       .order('id');
     
     if (error) throw error;
+    
+    // 缓存30分钟（内容中心很少变化）
+    clientCache.set(cacheKey, data, 30 * 60 * 1000);
     return data;
   },
 
@@ -268,8 +333,13 @@ export const contentManager = {
       .eq('id', articleId)
       .single();
     
-    if (currentError) throw currentError;
-    
+    if (currentError) {
+      if ((currentError as any).code === 'PGRST116') {
+        return [];
+      }
+      throw currentError;
+    }
+
     let queryBuilder = supabase
       .from('articles')
       .select('*')
@@ -289,7 +359,228 @@ export const contentManager = {
   }
 };
 
+// Knowledge base accessors
+export const knowledgeBase = {
+  async getSources(ids?: string[]): Promise<KnowledgeSource[]> {
+    if (!ids || ids.length === 0) {
+      const cachedAll = clientCache.get(cacheKeys.kbSources());
+      if (cachedAll) return cachedAll as KnowledgeSource[];
+
+      const { data, error } = await supabase
+        .from('kb_sources')
+        .select('*')
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+
+      if (data) {
+        data.forEach((source) => {
+          clientCache.set(cacheKeys.kbSource(source.id), source, 60 * 60 * 1000);
+        });
+        clientCache.set(cacheKeys.kbSources(), data, 60 * 60 * 1000);
+      }
+
+      return (data || []) as KnowledgeSource[];
+    }
+
+    const uniqueIds = Array.from(new Set(ids));
+    const results: KnowledgeSource[] = [];
+    const missing: string[] = [];
+
+    uniqueIds.forEach((id) => {
+      const cached = clientCache.get(cacheKeys.kbSource(id));
+      if (cached) {
+        results.push(cached as KnowledgeSource);
+      } else {
+        missing.push(id);
+      }
+    });
+
+    if (missing.length > 0) {
+      const { data, error } = await supabase
+        .from('kb_sources')
+        .select('*')
+        .in('id', missing);
+
+      if (error) throw error;
+
+      data?.forEach((source) => {
+        clientCache.set(cacheKeys.kbSource(source.id), source, 60 * 60 * 1000);
+        results.push(source as KnowledgeSource);
+      });
+    }
+
+    // Maintain the order of requested IDs when returning
+    const map = new Map(results.map((item) => [item.id, item]));
+    return uniqueIds
+      .map((id) => map.get(id))
+      .filter((item): item is KnowledgeSource => Boolean(item));
+  },
+
+  async getSourcesMap(ids?: string[]): Promise<Map<string, KnowledgeSource>> {
+    const sources = await this.getSources(ids);
+    return new Map(sources.map((source) => [source.id, source]));
+  },
+  async getRules(locale?: KnowledgeLocale): Promise<KnowledgeRule[]> {
+    const cacheKey = cacheKeys.kbRules(locale);
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    let query = supabase
+      .from('kb_rules')
+      .select('*')
+      .eq('status', 'published')
+      .order('title', { ascending: true });
+
+    if (locale) {
+      if (locale === 'Global') {
+        query = query.eq('locale', 'Global');
+      } else {
+        query = query.in('locale', [locale, 'Global']);
+      }
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    clientCache.set(cacheKey, data, 15 * 60 * 1000);
+    return data as KnowledgeRule[];
+  },
+
+  async getRuleBySlug(slug: string): Promise<KnowledgeRule | null> {
+    const cacheKey = cacheKeys.kbRule(slug);
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await supabase
+      .from('kb_rules')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single();
+
+    if (error) {
+      if ((error as any).code === 'PGRST116') return null;
+      throw error;
+    }
+
+    if (data) {
+      clientCache.set(cacheKey, data, 30 * 60 * 1000);
+    }
+    return data as KnowledgeRule | null;
+  },
+
+  async getFoods(locale?: KnowledgeLocale): Promise<KnowledgeFood[]> {
+    const cacheKey = cacheKeys.kbFoods(locale);
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    let query = supabase
+      .from('kb_foods')
+      .select('*')
+      .eq('status', 'published')
+      .order('name', { ascending: true });
+
+    if (locale) {
+      if (locale === 'Global') {
+        query = query.eq('locale', 'Global');
+      } else {
+        query = query.in('locale', [locale, 'Global']);
+      }
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    clientCache.set(cacheKey, data, 15 * 60 * 1000);
+    return data as KnowledgeFood[];
+  },
+
+  async getFoodBySlug(slug: string): Promise<KnowledgeFood | null> {
+    const cacheKey = cacheKeys.kbFood(slug);
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await supabase
+      .from('kb_foods')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single();
+
+    if (error) {
+      if ((error as any).code === 'PGRST116') return null;
+      throw error;
+    }
+
+    if (data) {
+      clientCache.set(cacheKey, data, 30 * 60 * 1000);
+    }
+    return data as KnowledgeFood | null;
+  },
+
+  async getGuides(filters?: { locale?: KnowledgeLocale; guideType?: KnowledgeGuide['guide_type'] }): Promise<KnowledgeGuide[]> {
+    const locale = filters?.locale;
+    const guideType = filters?.guideType;
+    const cacheKey = cacheKeys.kbGuides(locale, guideType);
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    let query = supabase
+      .from('kb_guides')
+      .select('*')
+      .eq('status', 'published')
+      .order('title', { ascending: true });
+
+    if (locale) {
+      if (locale === 'Global') {
+        query = query.eq('locale', 'Global');
+      } else {
+        query = query.in('locale', [locale, 'Global']);
+      }
+    }
+
+    if (guideType) {
+      query = query.eq('guide_type', guideType);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    clientCache.set(cacheKey, data, 15 * 60 * 1000);
+    return data as KnowledgeGuide[];
+  },
+
+  async getGuideBySlug(slug: string): Promise<KnowledgeGuide | null> {
+    const cacheKey = cacheKeys.kbGuide(slug);
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await supabase
+      .from('kb_guides')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single();
+
+    if (error) {
+      if ((error as any).code === 'PGRST116') return null;
+      throw error;
+    }
+
+    if (data) {
+      clientCache.set(cacheKey, data, 30 * 60 * 1000);
+    }
+    return data as KnowledgeGuide | null;
+  }
+};
+
+
 // AI Feed functions for GEO optimization
+
 export const aiFeedManager = {
   // Generate AI feed in NDJSON format
   async generateAIFeed(): Promise<AIFeedItem[]> {
