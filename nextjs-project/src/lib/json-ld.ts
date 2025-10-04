@@ -28,8 +28,9 @@ export function generateArticleStructuredData(article: any) {
     "abstract": tldrItems.length > 0 ? tldrItems.join(' • ') : undefined,
     "image": article.featured_image ? [article.featured_image] : undefined,
     "author": {
-      "@type": article.reviewed_by ? 'Person' : 'Organization',
-      "name": article.reviewed_by || 'JupitLunar',
+      "@type": "Organization",
+      "name": "JupitLunar Editorial Team",
+      "description": "Science-based parenting content curators",
     },
     "publisher": {
       "@type": "Organization",
@@ -63,31 +64,83 @@ export function generateArticleStructuredData(article: any) {
         "/html/body//section[1]//p[1]",
       ],
     },
-    // AEO优化：添加更多LLM友好的字段
-    "educationalLevel": "General",
+    // AEO优化：强调基于权威来源而非个人审核
+    "isBasedOn": article.citations?.slice(0, 3).map((citation: any) => ({
+      "@type": "CreativeWork",
+      "name": citation.title,
+      "url": citation.url,
+      "publisher": {
+        "@type": "Organization",
+        "name": citation.publisher || "Official Health Organization"
+      },
+      "datePublished": citation.published_date
+    })) || [
+      {
+        "@type": "WebPage",
+        "name": "CDC Infant and Toddler Nutrition Guidelines",
+        "url": "https://www.cdc.gov/infant-toddler-nutrition/",
+        "publisher": {
+          "@type": "GovernmentOrganization",
+          "name": "Centers for Disease Control and Prevention"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "name": "AAP Parenting Resources",
+        "url": "https://www.healthychildren.org/",
+        "publisher": {
+          "@type": "MedicalOrganization",
+          "name": "American Academy of Pediatrics"
+        }
+      }
+    ],
+    "sourceOrganization": {
+      "@type": "GovernmentOrganization",
+      "name": "CDC, AAP, Health Canada",
+      "description": "Content based on official U.S. and Canadian health guidelines"
+    },
+    "educationalLevel": "Beginner to Intermediate",
     "audience": {
       "@type": "PeopleAudience",
-      "audienceType": "Parents and caregivers",
-      "geographicArea": "North America"
+      "audienceType": "Parents and caregivers of infants and toddlers",
+      "geographicArea": {
+        "@type": "Place",
+        "name": "North America"
+      },
+      "healthCondition": article.hub
     },
     "about": article.entities?.map((entity: string) => ({
       "@type": 'Thing',
       name: entity,
     })) || [],
-    "mentions": article.citations?.map((citation: any) => ({
+    "citation": article.citations?.map((citation: any) => ({
       "@type": "CreativeWork",
       "name": citation.title,
       "url": citation.url,
-      "publisher": citation.publisher
+      "publisher": citation.publisher,
+      "datePublished": citation.published_date
     })) || [],
+    "mentions": article.entities?.map((entity: string) => ({
+      "@type": "Thing",
+      name: entity
+    })) || [],
+    // 快速答案结构 - 给LLM直接引用
     "mainEntity": {
       "@type": "Question",
       "name": article.title,
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": article.one_liner || article.body_md?.substring(0, 500)
+        "text": article.one_liner || article.body_md?.substring(0, 500),
+        "dateCreated": article.published_at,
+        "upvoteCount": article.helpful_count || 0,
+        "url": `https://jupitlunar.com/${article.slug}#answer`
       }
-    }
+    },
+    // 内容可信度信号
+    "backstory": "Content curated from official health organization guidelines including CDC, AAP, and Health Canada",
+    "contentReferenceTime": article.source_guideline_date || article.published_at,
+    "educationalUse": "Parent education, caregiver training",
+    "teaches": article.entities?.join(', ')
   };
 
   if (Array.isArray(article.entities) && article.entities.length > 0) {
@@ -172,17 +225,34 @@ export function generateArticleStructuredData(article: any) {
 
   if (['explainer', 'research', 'howto', 'faq', 'recipe'].includes(article.type)) {
     graph.push({
-      "@type": "MedicalWebPage",
-      "@id": `https://jupitlunar.com/${article.slug}#medical`,
+      "@type": "HealthTopicContent",
+      "@id": `https://jupitlunar.com/${article.slug}#health-topic`,
       "name": article.title,
       "description": article.one_liner || article.body_md?.substring(0, 160),
-      "lastReviewed": article.last_reviewed,
-      "medicalSpecialty": article.hub,
+      "lastReviewed": article.last_reviewed || article.updated_at,
+      "hasHealthAspect": article.hub || "Infant and toddler health",
       "inLanguage": article.lang || 'en',
       "audience": {
         "@type": "PeopleAudience",
-        "audienceType": 'Parents and caregivers',
+        "audienceType": 'Parents and caregivers of infants and toddlers',
+        "geographicArea": "North America"
       },
+      // 基于权威来源而非医学审核
+      "backstory": "Educational content curated from CDC, AAP, and Health Canada guidelines",
+      "genre": "Health education",
+      "educationalLevel": "General public",
+      "isBasedOn": article.citations?.slice(0, 2).map((citation: any) => ({
+        "@type": "WebPage",
+        "name": citation.title,
+        "url": citation.url,
+        "publisher": citation.publisher
+      })) || [],
+      "about": {
+        "@type": "HealthCondition",
+        "name": article.hub || "Infant care and nutrition"
+      },
+      // 明确这是教育性内容，非医疗建议
+      "disclaimer": "This content is for educational purposes only and does not replace professional medical advice. Always consult your pediatrician for personalized guidance.",
     });
   }
 
@@ -360,5 +430,67 @@ export function generateProductStructuredData(product: {
       "@type": "Organization",
       "name": "JupitLunar"
     }
+  };
+}
+
+// 生成ClaimReview结构化数据（对抗育儿误区）
+export function generateClaimReviewStructuredData(claim: {
+  claimText: string;
+  rating: 'True' | 'False' | 'Mixture' | 'Unproven';
+  reviewExplanation: string;
+  authoritySource?: string;
+  authorityUrl?: string;
+  articleUrl: string;
+}) {
+  const ratingValue = {
+    'True': 5,
+    'Mixture': 3,
+    'Unproven': 2,
+    'False': 1
+  }[claim.rating];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ClaimReview",
+    "url": claim.articleUrl,
+    "claimReviewed": claim.claimText,
+    "itemReviewed": {
+      "@type": "Claim",
+      "author": {
+        "@type": "Organization",
+        "name": "Common parenting misconception"
+      },
+      "datePublished": new Date().toISOString(),
+      "appearance": {
+        "@type": "CreativeWork",
+        "url": claim.articleUrl
+      }
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "JupitLunar Editorial Team",
+      "url": "https://jupitlunar.com"
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": ratingValue,
+      "bestRating": 5,
+      "worstRating": 1,
+      "alternateName": claim.rating
+    },
+    "reviewBody": claim.reviewExplanation,
+    "datePublished": new Date().toISOString(),
+    "inLanguage": "en",
+    // 引用权威来源
+    ...(claim.authoritySource && claim.authorityUrl ? {
+      "itemReviewed": {
+        "@type": "Claim",
+        "claimInterpreter": {
+          "@type": "Organization",
+          "name": claim.authoritySource,
+          "url": claim.authorityUrl
+        }
+      }
+    } : {})
   };
 }

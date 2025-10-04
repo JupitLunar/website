@@ -37,13 +37,33 @@ This is the Next.js frontend for the JupitLunar GEO Content Engine, designed to 
    # Edit .env.local with your actual Supabase credentials
    ```
 
-3. **Run development server:**
+3. **Provision Supabase schema:**
+   ```bash
+   cd nextjs-project
+   node setup-database.js
+   ```
+   This creates all tables, indexes, triggers, and RPC functions in your Supabase project.
+
+4. **(Optional) Seed knowledge base sample data:**
+   ```bash
+   npm run seed:kb
+   ```
+   Populates demo sources, rules, foods, and guides from `supabase/seed/knowledge_base.json`.
+
+5. **Run development server:**
    ```bash
    npm run dev
    ```
 
-4. **Open your browser:**
+6. **Open your browser:**
    Navigate to [http://localhost:3002](http://localhost:3002)
+
+## 🛰️ GEO / AEO Enhancements
+
+- **Machine-readable discovery**: `sitemap.xml`, `news-sitemap.xml`, and `feed.json` are generated from Supabase content so AI crawlers receive fresh URLs within minutes; all major AI bots (GPTBot, Perplexity, Applebot-Extended, Claude) are explicitly allowed via `public/robots.txt` while sensitive paths remain blocked.
+- **Structured answers**: Article pages now surface TL;DR bullets, reviewer metadata, FAQ cards, and enriched JSON-LD (`Speakable`, `FAQPage`, `MedicalWebPage`) to supply citation-ready snippets for AI Overviews and LLM search interfaces.
+- **IndexNow workflow**: Run `npm run ping:indexnow -- https://yourdomain.com/slug` after publishing to notify Bing/Copilot instantly. Configure `INDEXNOW_KEY`, optional `INDEXNOW_KEY_LOCATION`, and `INDEXNOW_ENDPOINT` in `.env.local`.
+- **Analytics alignment**: Feed and sitemap endpoints send cache-friendly headers suitable for Search Console/Bing Webmaster ingestion; monitor referrals from perplexity.ai, copilot.microsoft.com, and bing.com in your analytics stack to evaluate AI-driven traffic.
 
 ## 🏗️ Project Structure
 
@@ -89,12 +109,29 @@ src/
 The Supabase database is optimized for GEO with the following structure:
 
 ### **Core Tables**
-- `articles` - Main content with full-text search
-- `content_hubs` - 6 major content categories
-- `citations` - Reference and source management
-- `qas` - Q&A content for LLMs
-- `user_management` - Newsletter and waitlist
-- `ingestion_logs` - Content ingestion tracking
+- `content_hubs`, `articles`, `qas`, `citations` - Primary editorial content model
+- `how_to_steps`, `recipe_ingredients`, `recipe_steps`, `images` - Structured enrichments for articles
+- `newsletter_subscribers`, `waitlist_users`, `user_feedback`, `ingestion_logs` - Audience and ingestion management
+
+### **Knowledge Base Tables**
+- `kb_sources` - Authority/source whitelist with grading and review metadata
+- `kb_rules` - Safety、饮品、食品安全等规则库，带风险级与合规提示
+- `kb_foods` - 食物形态/月龄/营养要点档案，支持 BLW 与泥喂路径
+- `kb_guides` - 场景化与阶段性指南，可关联规则与食物条目
+
+> Authoring reference: see `docs/kb-guidelines.md` for field definitions, naming conventions, and review flow.
+
+**预览 & 校验流程**
+- `npm run validate:kb` 在入库前检查 JSON 字段、枚举、日期格式。
+- `npm run dev` 后访问 `http://localhost:3002/test/kb` 预览 Rule/Food/Guide 卡片与来源徽章。
+- 主题页示例：`/topics/safety-and-hygiene` 聚合噎食、储存、旅行等规则卡片；`/topics/allergen-readiness` 展示过敏原引入与维持；`/topics/feeding-foundations` 说明 readiness 与质地进阶。
+
+**RAG / Embedding 导出**
+- `npm run export:kb` 生成 `exports/kb-knowledge.ndjson`，每行一条记录，包含 `content` 字段，可直接送入向量索引。
+- 可自定义格式和路径：`npm run export:kb -- --format=json --output=exports/custom.json`。
+
+### **Analytics**
+- `analytics_events` - 自建事件、性能与错误日志，支撑运营分析
 
 ### **GEO Optimizations**
 - Generated columns for full-text search
@@ -108,6 +145,10 @@ The Supabase database is optimized for GEO with the following structure:
 - `POST /api/ingest` - Protected endpoint for content ingestion
 - `GET /api/ai-feed` - Machine-readable content feed (NDJSON)
 - `GET /api/llm/answers` - Q&A data for LLMs (JSON)
+- `GET /api/kb/rules` - 财团式规则库，支持 locale 过滤
+- `GET /api/kb/foods` - 食物档案，支持 locale、risk、method、age 过滤
+- `GET /api/kb/guides` - 指南/场景内容，支持 locale 与类型筛选
+- `GET /api/kb/feed` - 汇总规则/食物/指南的 LLM 专用 NDJSON feed
 
 ### **Usage Examples**
 ```bash
@@ -116,6 +157,9 @@ curl http://localhost:3002/api/ai-feed
 
 # Get LLM answers
 curl http://localhost:3002/api/llm/answers
+
+# Knowledge base NDJSON feed
+curl http://localhost:3002/api/kb/feed?format=json
 
 # Ingest content (requires authentication)
 curl -X POST http://localhost:3002/api/ingest \
@@ -133,6 +177,8 @@ curl -X POST http://localhost:3002/api/ingest \
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 - `npm run type-check` - Run TypeScript type checking
+- `npm run seed:kb` - Seed sample knowledge base content
+- `npm run validate:kb` - Validate knowledge base JSON before import
 - `npm run test:simple` - Test database connection
 
 ### Code Quality

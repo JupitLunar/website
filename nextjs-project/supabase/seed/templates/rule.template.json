@@ -1,0 +1,32 @@
+{
+  "id": "REPLACE_WITH_UUID",
+  "slug": "rule-slug",
+  "title": "Rule headline",
+  "locale": "US",
+  "category": "food-safety",
+  "risk_level": "high",
+  "summary": "One paragraph summary explaining the rule.",
+  "do_list": [
+    "Actionable step parents should take.",
+    "Another supportive action."
+  ],
+  "dont_list": [
+    "Behavior to avoid.",
+    "Additional warning."
+  ],
+  "why": "Mechanism or evidence explaining the rule.",
+  "how_to": [
+    {
+      "title": "Step title",
+      "description": "Detailed instruction to execute the rule."
+    }
+  ],
+  "compliance_notes": "Disclaimer or legal note if required.",
+  "source_ids": [
+    "UUID_FROM_KB_SOURCES"
+  ],
+  "reviewed_by": "Reviewer Name, Credential",
+  "last_reviewed_at": "2024-01-01",
+  "expires_at": "2026-01-01",
+  "status": "draft"
+}

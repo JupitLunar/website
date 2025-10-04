@@ -1,0 +1,329 @@
+{
+  "sources": [
+    {
+      "id": "aafb4c36-33e8-4db4-8a1f-5f24ad644d5b",
+      "name": "HealthyChildren.org – Honey Guidance",
+      "organization": "American Academy of Pediatrics",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Honey.aspx",
+      "grade": "A",
+      "retrieved_at": "2025-08-30",
+      "notes": "AAP reiteration that infants under 12 months should not consume honey due to botulism spores."
+    },
+    {
+      "id": "0d1e94d3-6be8-4cf9-9d73-0f09fa3bdab5",
+      "name": "CDC – When, What, and How to Introduce Solid Foods",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html",
+      "grade": "A",
+      "retrieved_at": "2025-08-25",
+      "notes": "Primary readiness cues, texture progression, and beverage guidance."
+    },
+    {
+      "id": "ea4ea2f0-19a9-48ae-9ad8-0cbfae9da5fb",
+      "name": "Health Canada – Nutrition for Healthy Term Infants: 6–24 Months",
+      "organization": "Health Canada / Canadian Paediatric Society",
+      "url": "https://www.canada.ca/en/health-canada/services/canada-food-guide/resources/nutrition-healthy-term-infants/6-24-months.html",
+      "grade": "A",
+      "retrieved_at": "2025-08-22",
+      "notes": "Canadian complementary feeding guidance, iron-rich foods, responsive feeding."
+    },
+    {
+      "id": "10bca6dc-8795-4f81-9a61-3a59ad949015",
+      "name": "FDA/EPA – Advice About Eating Fish",
+      "organization": "U.S. Food and Drug Administration & Environmental Protection Agency",
+      "url": "https://www.fda.gov/food/metals-and-your-food/advice-about-eating-fish",
+      "grade": "A",
+      "retrieved_at": "2025-07-18",
+      "notes": "Portion and frequency chart for low-mercury selections across age groups."
+    },
+    {
+      "id": "ed5d7d8b-2433-4f0b-9b4e-178e6c1ae0c8",
+      "name": "NIAID Addendum Guidelines for the Prevention of Peanut Allergy",
+      "organization": "National Institute of Allergy and Infectious Diseases",
+      "url": "https://www.niaid.nih.gov/diseases-conditions/guidelines-clinicians-and-patients-food-allergy",
+      "grade": "A",
+      "retrieved_at": "2025-08-01",
+      "notes": "Risk-stratified peanut introduction timing and maintenance frequency."
+    }
+  ],
+  "rules": [
+    {
+      "id": "1b3f80da-6bdf-4d34-aa2e-7a3cbecc5a68",
+      "slug": "no-honey-before-12-months",
+      "title": "Do not offer honey to infants under 12 months",
+      "locale": "US",
+      "category": "food-safety",
+      "risk_level": "high",
+      "summary": "Honey may contain Clostridium botulinum spores that an infant gut cannot neutralise, creating a life-threatening neurotoxin risk.",
+      "do_list": [
+        "Use pasteurised fruit purées or breast milk/formula as natural sweeteners in recipes for infants.",
+        "Scan labels for honey in cereals, yogurts, teething biscuits, or glazes before serving to babies.",
+        "Educate caregivers and grandparents about the 12-month rule during meal handoffs."
+      ],
+      "dont_list": [
+        "No raw or cooked honey, including in baked goods, herbal remedies, or honey-lemon drinks before 12 months.",
+        "Avoid honey powder, honey-based cough syrups, and honey graham crackers aimed at toddlers when feeding infants."
+      ],
+      "why": "Infant gut flora and bile acids are immature; spores can germinate and produce botulinum toxin, leading to hypotonia and respiratory compromise.",
+      "how_to": [
+        {
+          "title": "Label audit",
+          "description": "Create a shared grocery list noting honey-containing brands to avoid for the family’s infant." 
+        },
+        {
+          "title": "Caregiver briefing",
+          "description": "Include the honey restriction on childcare handover cards alongside allergen notes." 
+        }
+      ],
+      "compliance_notes": "Re-evaluate at 12 months adjusted age for preterm infants with clinician guidance.",
+      "source_ids": [
+        "aafb4c36-33e8-4db4-8a1f-5f24ad644d5b",
+        "0d1e94d3-6be8-4cf9-9d73-0f09fa3bdab5"
+      ],
+      "reviewed_by": "Laura Singh, RD, CSP",
+      "last_reviewed_at": "2025-09-10",
+      "expires_at": "2027-09-10",
+      "status": "published"
+    },
+    {
+      "id": "2c5ae3b1-8b50-4f9f-8caa-8f40c7b6de41",
+      "slug": "powder-formula-safe-prep",
+      "title": "Mix powdered infant formula with water ≥158°F/70°C for safety",
+      "locale": "Global",
+      "category": "feeding-environment",
+      "risk_level": "medium",
+      "summary": "Using hot water inactivates Cronobacter sakazakii and other pathogens that may survive in powdered formula.",
+      "do_list": [
+        "Boil water and cool for no more than 30 minutes before mixing, ensuring it stays ≥158°F/70°C.",
+        "Cool prepared bottles quickly under running cold water or in an ice bath until body temperature.",
+        "Discard any unfinished feed within 2 hours of preparation (1 hour if kept at room temperature)."
+      ],
+      "dont_list": [
+        "Do not use bottled or room-temperature water for newborns or medically fragile infants unless directed by a clinician.",
+        "Avoid storing mixed formula in the refrigerator for more than 24 hours." 
+      ],
+      "why": "Cronobacter infection carries high morbidity in infants under two months; hot water reduces pathogen load before feeding.",
+      "how_to": [
+        {
+          "title": "Thermal check",
+          "description": "Use a kettle with a built-in thermometer or an instant-read probe to confirm the mixing temperature." 
+        },
+        {
+          "title": "Cooling protocol",
+          "description": "Place sealed bottles in an ice bath to reach feeding temperature within 10 minutes and prevent bacterial growth." 
+        }
+      ],
+      "compliance_notes": "Preterm and immunocompromised infants may need additional sterilisation steps per NICU discharge instructions.",
+      "source_ids": [
+        "0d1e94d3-6be8-4cf9-9d73-0f09fa3bdab5"
+      ],
+      "reviewed_by": "Maya Ortega, MPH, IBCLC",
+      "last_reviewed_at": "2025-09-12",
+      "expires_at": "2027-09-12",
+      "status": "published"
+    },
+    {
+      "id": "93a384af-4729-4c52-87f1-8bf1188788c2",
+      "slug": "early-peanut-introduction",
+      "title": "Introduce peanut by 4–6 months for high-risk infants under clinical guidance",
+      "locale": "US",
+      "category": "allergen",
+      "risk_level": "medium",
+      "summary": "Early, supervised peanut introduction can reduce the risk of IgE-mediated allergy by up to 81% in high-risk infants.",
+      "do_list": [
+        "Arrange an evaluation for infants with severe eczema or egg allergy before first peanut exposure.",
+        "Offer 2 grams of peanut protein (e.g., thinned peanut butter or peanut powder) three times per week during maintenance.",
+        "Document reaction signs and share an action plan with caregivers." 
+      ],
+      "dont_list": [
+        "Avoid whole peanuts or chunky spreads that pose choking risk.",
+        "Do not delay beyond 6 months for high-risk infants unless advised by an allergist." 
+      ],
+      "why": "Immunologic tolerance develops when allergenic proteins are presented during the window of immune plasticity in infancy.",
+      "how_to": [
+        {
+          "title": "Clinic-supervised feeding",
+          "description": "Schedule the first feeding in a controlled setting with epinephrine available for high-risk infants." 
+        },
+        {
+          "title": "Maintenance schedule",
+          "description": "Set calendar reminders for thrice-weekly peanut servings to maintain tolerance." 
+        }
+      ],
+      "compliance_notes": "Families need individualized dosing if the child has additional food allergies or growth restrictions.",
+      "source_ids": [
+        "ed5d7d8b-2433-4f0b-9b4e-178e6c1ae0c8"
+      ],
+      "reviewed_by": "Katherine Liu, MD, FAAP",
+      "last_reviewed_at": "2025-09-14",
+      "expires_at": "2027-09-14",
+      "status": "published"
+    }
+  ],
+  "foods": [
+    {
+      "id": "e0b7ef91-0de3-49ee-9ab1-5c873d482adc",
+      "slug": "peanut-butter-thinned",
+      "name": "Peanut butter (thinned)",
+      "locale": "US",
+      "age_range": ["4-6m", "6-8m", "9-12m", "12-24m"],
+      "feeding_methods": ["puree", "mixed", "blw"],
+      "serving_forms": [
+        {
+          "age_range": "4-6m",
+          "form": "2 tsp smooth peanut butter mixed with 2-3 tsp warm breast milk, formula, or purée until pourable",
+          "prep": "Stir until no clumps remain; test temperature before offering on spoon." 
+        },
+        {
+          "age_range": "6-8m",
+          "form": "Peanut powder whisked into oatmeal or yogurt; texture should coat the spoon but drip slowly",
+          "notes": "Offer in seated high chair with close supervision." 
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Thin layer of smooth peanut butter spread on toast strips or soft pancakes",
+          "texture": "Smooshable between fingers" 
+        }
+      ],
+      "risk_level": "medium",
+      "nutrients_focus": ["protein", "healthy-fat"],
+      "do_list": [
+        "Pair with vitamin C fruit purées to support iron absorption when mixed into cereals.",
+        "Keep water nearby and pause if wet, rattly cough develops." 
+      ],
+      "dont_list": [
+        "Avoid crunchy or chunky peanut butter until safe chewing is established.",
+        "Do not offer peanut-containing snacks in the car seat." 
+      ],
+      "why": "Peanuts supply plant protein and introduce allergenic proteins during the immune tolerance window.",
+      "how_to": [
+        {
+          "title": "Emergency readiness",
+          "description": "Review symptoms of mild vs severe reactions with caregivers and store epinephrine where indicated." 
+        }
+      ],
+      "portion_hint": "Aim for ~2 grams peanut protein per serving during maintenance (about 2 tsp peanut butter).",
+      "source_ids": [
+        "ed5d7d8b-2433-4f0b-9b4e-178e6c1ae0c8"
+      ],
+      "reviewed_by": "Samuel Rios, MSc, RDN",
+      "last_reviewed_at": "2025-09-13",
+      "expires_at": "2027-03-13",
+      "status": "published"
+    },
+    {
+      "id": "9bd38fc4-ec80-4d3a-8b96-e3d370beac16",
+      "slug": "salmon-flaked",
+      "name": "Salmon (steamed & flaked)",
+      "locale": "US",
+      "age_range": ["6-8m", "9-12m", "12-24m"],
+      "feeding_methods": ["puree", "blw"],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Steam or bake boneless fillet until opaque; mash with fork and thin with breast milk, formula, or water.",
+          "notes": "Check for pin bones by running fingers along the grain before serving." 
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Offer pea-sized flakes mixed with mashed avocado or yogurt.",
+          "texture": "Soft, easily squished between fingers." 
+        },
+        {
+          "age_range": "12-24m",
+          "form": "Fork-flaked salmon cakes baked without added salt; serve beside whole grains and vegetables.",
+          "prep": "Use eggs or mashed sweet potato as binder; cut into bite-sized pieces." 
+        }
+      ],
+      "risk_level": "low",
+      "nutrients_focus": ["omega-3", "protein", "vitamin-d"],
+      "do_list": [
+        "Rotate between salmon, trout, sardines, and pollock to diversify omega-3 intake.",
+        "Serve with iron-rich sides such as lentils or fortified cereals." 
+      ],
+      "dont_list": [
+        "Avoid high-mercury fish such as king mackerel, shark, or swordfish for toddlers.",
+        "Do not add honey glazes until after 12 months." 
+      ],
+      "why": "Low-mercury fatty fish provide DHA for neurodevelopment and vitamin D for bone health.",
+      "how_to": [
+        {
+          "title": "Batch cook",
+          "description": "Prepare multiple portions, cool rapidly, and store refrigerated (≤40°F) for up to 2 days." 
+        }
+      ],
+      "portion_hint": "Serve 1–2 toddler-sized ounces once or twice weekly per FDA/EPA guidance.",
+      "source_ids": [
+        "10bca6dc-8795-4f81-9a61-3a59ad949015",
+        "ea4ea2f0-19a9-48ae-9ad8-0cbfae9da5fb"
+      ],
+      "reviewed_by": "Priya Patel, RD, LDN",
+      "last_reviewed_at": "2025-09-11",
+      "expires_at": "2027-09-11",
+      "status": "published"
+    }
+  ],
+  "guides": [
+    {
+      "id": "27ec0834-3f72-4d5d-b1c3-286276f4e5a3",
+      "slug": "starting-solids-framework",
+      "title": "Starting Solids: 4-Week Evidence Framework",
+      "locale": "Global",
+      "guide_type": "framework",
+      "age_range": ["6-8m"],
+      "summary": "Week-by-week roadmap covering readiness cues, iron-rich starter foods, allergen rotation, and responsive feeding setup.",
+      "body_md": "## Overview\nFollow the infant’s developmental cues while layering iron-rich foods and early allergen exposure.\n\n### Week 1: Skills & Iron\n- Observe head control, interest in food, and ability to sit with support.\n- Offer iron-fortified oatmeal mixed with breast milk/formula once daily.\n\n### Week 2: Textures\n- Add smooshable vegetables and fruits; progress from smooth to lightly mashed.\n- Encourage open cup sips of water (1–2 oz/day).\n\n### Week 3: Allergen Rotation\n- Introduce peanut (per allergen rule) and cooked egg on separate days.\n- Repeat tolerated allergens at least twice weekly.\n\n### Week 4: Family Foods\n- Bring baby to table meals; offer soft strips of family foods with minimal salt/sugar.\n- Journal reactions, stool changes, and appetite cues for clinician review.",
+      "checklist": [
+        { "label": "Confirm readiness cues with paediatrician", "type": "action" },
+        { "label": "Prepare 6–8 iron-forward meals/week", "type": "tip" },
+        { "label": "Log allergen exposures in shared tracker", "type": "action" }
+      ],
+      "related_food_ids": [
+        "e0b7ef91-0de3-49ee-9ab1-5c873d482adc",
+        "9bd38fc4-ec80-4d3a-8b96-e3d370beac16"
+      ],
+      "related_rule_ids": [
+        "2c5ae3b1-8b50-4f9f-8caa-8f40c7b6de41",
+        "93a384af-4729-4c52-87f1-8bf1188788c2"
+      ],
+      "source_ids": [
+        "0d1e94d3-6be8-4cf9-9d73-0f09fa3bdab5",
+        "ea4ea2f0-19a9-48ae-9ad8-0cbfae9da5fb",
+        "ed5d7d8b-2433-4f0b-9b4e-178e6c1ae0c8"
+      ],
+      "reviewed_by": "Helena Morris, PhD, RD",
+      "last_reviewed_at": "2025-09-15",
+      "expires_at": "2027-09-15",
+      "status": "published"
+    },
+    {
+      "id": "34f3cafa-49fb-4f03-b3b0-2ce1f508d57f",
+      "slug": "allergen-maintenance-pathway",
+      "title": "Allergen Maintenance & Caregiver Playbook",
+      "locale": "US",
+      "guide_type": "pathway",
+      "age_range": ["6-8m", "9-12m", "12-24m"],
+      "summary": "Create and operationalise an allergen rotation across home, childcare, and extended family settings to sustain tolerance.",
+      "body_md": "## Step 1: Baseline Assessment\nList confirmed allergens, pending challenges, and emergency medications.\n\n## Step 2: Rotation Calendar\nPlan weekly servings for peanut, egg, dairy, tree nuts, soy, wheat, sesame, and finned fish.\n\n## Step 3: Caregiver Training\nShare reaction action plan, storage instructions, and cross-contact precautions.\n\n## Step 4: Data Review\nSync logs monthly with clinician; adjust for illness, travel, or feeding regressions.",
+      "checklist": [
+        { "label": "Upload action plan to shared drive", "type": "action" },
+        { "label": "Set SMS reminders for allergen days", "type": "tip" },
+        { "label": "Audit childcare menus quarterly", "type": "warning" }
+      ],
+      "related_food_ids": [
+        "e0b7ef91-0de3-49ee-9ab1-5c873d482adc",
+        "9bd38fc4-ec80-4d3a-8b96-e3d370beac16"
+      ],
+      "related_rule_ids": [
+        "93a384af-4729-4c52-87f1-8bf1188788c2"
+      ],
+      "source_ids": [
+        "ed5d7d8b-2433-4f0b-9b4e-178e6c1ae0c8"
+      ],
+      "reviewed_by": "Olivia Grant, MSN, CPNP",
+      "last_reviewed_at": "2025-09-16",
+      "expires_at": "2027-06-16",
+      "status": "published"
+    }
+  ]
+}

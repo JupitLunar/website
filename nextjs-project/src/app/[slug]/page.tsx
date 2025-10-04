@@ -10,7 +10,7 @@ import Script from 'next/script';
 // 生成静态路径
 export async function generateStaticParams() {
   try {
-    const articles = await contentManager.getArticles({ limit: 100 });
+    const articles = await contentManager.getAllArticles();
     return articles.map((article) => ({
       slug: article.slug,
     }));
@@ -85,6 +85,15 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       { name: article.title, url: `https://jupitlunar.com/${article.slug}` }
     ]);
 
+    const tldrItems = Array.isArray(article.key_facts) ? article.key_facts.slice(0, 5) : [];
+    const faqItems = Array.isArray((article as any).qas)
+      ? (article as any).qas.filter((qa: any) => qa.question && qa.answer)
+      : [];
+    const citationItems = Array.isArray(article.citations) ? article.citations : [];
+    const publishedAt = article.published_at ? new Date(article.published_at) : null;
+    const updatedAt = article.updated_at ? new Date(article.updated_at) : null;
+    const lastReviewedAt = article.last_reviewed ? new Date(article.last_reviewed) : null;
+
     return (
       <>
         {/* JSON-LD Structured Data */}
@@ -145,14 +154,21 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               )}
               
               {/* Article Meta */}
-              <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
-                <span>Published: {new Date(article.published_at).toLocaleDateString()}</span>
-                {article.updated_at && article.updated_at !== article.published_at && (
-                  <span>Updated: {new Date(article.updated_at).toLocaleDateString()}</span>
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500">
+                {publishedAt && <span>Published: {publishedAt.toLocaleDateString()}</span>}
+                {updatedAt && (!publishedAt || updatedAt.getTime() !== publishedAt.getTime()) && (
+                  <span>Updated: {updatedAt.toLocaleDateString()}</span>
+                )}
+                {article.reviewed_by && (
+                  <span>Reviewed by {article.reviewed_by}</span>
+                )}
+                {lastReviewedAt && (
+                  <span>Last review: {lastReviewedAt.toLocaleDateString()}</span>
                 )}
                 {article.reading_time && (
                   <span>{article.reading_time} min read</span>
                 )}
+                {article.region && <span>Region: {article.region}</span>}
               </div>
             </div>
 
@@ -175,17 +191,52 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-4xl mx-auto">
             <div className="prose prose-lg max-w-none">
-              {/* Key Facts */}
-              {article.key_facts && article.key_facts.length > 0 && (
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400 p-6 rounded-r-lg mb-8">
-                  <h3 className="text-lg font-semibold text-green-800 mb-4">Key Facts</h3>
-                  <ul className="space-y-2">
-                    {article.key_facts.map((fact, index) => (
-                      <li key={index} className="text-green-700">• {fact}</li>
+              {/* TL;DR */}
+              {tldrItems.length > 0 && (
+                <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-400 p-6 rounded-r-lg mb-8">
+                  <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <div>
+                      <h3 className="text-lg font-semibold text-emerald-900 mb-2">TL;DR</h3>
+                      <p className="text-sm text-emerald-700">Top takeaways suitable for AI summaries & quick caregiver reference.</p>
+                    </div>
+                    {article.last_reviewed && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-white text-emerald-700 text-xs font-semibold border border-emerald-200">
+                        Verified {new Date(article.last_reviewed).toLocaleDateString()}
+                      </span>
+                    )}
+                  </div>
+                  <ul className="mt-4 space-y-2 text-emerald-900">
+                    {tldrItems.map((item: string, index: number) => (
+                      <li key={index} className="flex gap-2">
+                        <span className="mt-1 h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+                        <span>{item}</span>
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
+
+              {/* Evidence Deck */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+                {publishedAt && (
+                  <div className="rounded-2xl border border-purple-100 bg-purple-50/60 p-4">
+                    <p className="text-xs uppercase tracking-wide text-purple-600">Published</p>
+                    <p className="mt-1 text-base font-semibold text-purple-900">{publishedAt.toLocaleDateString()}</p>
+                  </div>
+                )}
+                {article.reviewed_by && (
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-4">
+                    <p className="text-xs uppercase tracking-wide text-blue-600">Reviewed by</p>
+                    <p className="mt-1 text-base font-semibold text-blue-900">{article.reviewed_by}</p>
+                  </div>
+                )}
+                {article.region && (
+                  <div className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4">
+                    <p className="text-xs uppercase tracking-wide text-amber-600">Region scope</p>
+                    <p className="mt-1 text-base font-semibold text-amber-900">{article.region}</p>
+                  </div>
+                )}
+              </div>
 
               {/* Main Content */}
               <div className="mb-8">
@@ -199,7 +250,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               {/* Entities/Tags */}
               {article.entities && article.entities.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-8">
-                  {article.entities.map((entity, index) => (
+                  {article.entities.map((entity: string, index: number) => (
                     <span
                       key={index}
                       className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm"
@@ -211,13 +262,47 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               )}
 
               {/* Citations */}
-              {article.citations && article.citations.length > 0 && (
+              {/* FAQ */}
+              {faqItems.length > 0 && (
+                <div className="bg-gradient-to-r from-indigo-50 to-violet-50 border-l-4 border-indigo-400 p-6 rounded-r-lg mb-8">
+                  <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <h3 className="text-lg font-semibold text-indigo-900">FAQ</h3>
+                    <span className="text-xs text-indigo-600">Evidence-backed responses for quick retrieval</span>
+                  </div>
+                  <div className="mt-4 space-y-4">
+                    {faqItems.map((qa: any) => (
+                      <div key={qa.id || qa.question} className="rounded-xl border border-indigo-100 bg-white/70 p-4">
+                        <h4 className="font-semibold text-indigo-900">{qa.question}</h4>
+                        <p className="mt-2 text-sm text-indigo-800 leading-relaxed">{qa.answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Citations */}
+              {citationItems.length > 0 && (
                 <div className="bg-gradient-to-r from-orange-50 to-amber-50 border-l-4 border-orange-400 p-6 rounded-r-lg mb-8">
-                  <h3 className="text-lg font-semibold text-orange-800 mb-4">References</h3>
-                  <ol className="space-y-2">
-                    {article.citations.map((citation, index) => (
-                      <li key={index} className="text-orange-700">
-                        {citation}
+                  <h3 className="text-lg font-semibold text-orange-900 mb-4">References</h3>
+                  <ol className="space-y-3 text-sm text-orange-900">
+                    {citationItems.map((citation: any, index: number) => (
+                      <li key={citation.id || index}>
+                        {citation.title ? <strong>{citation.title}</strong> : null}
+                        {citation.publisher && <span className="ml-1">({citation.publisher})</span>}
+                        {citation.date && <span className="ml-2 text-orange-700">{new Date(citation.date).toLocaleDateString()}</span>}
+                        {citation.url && (
+                          <div>
+                            <a
+                              href={citation.url}
+                              className="text-orange-700 underline break-all"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >
+                              {citation.url}
+                            </a>
+                          </div>
+                        )}
+                        {citation.claim && <p className="mt-1 text-orange-800">{citation.claim}</p>}
                       </li>
                     ))}
                   </ol>

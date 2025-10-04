@@ -264,7 +264,7 @@ export interface ContentExport {
   fields?: (keyof BaseContent)[];
 }
 
-// AI Feed Types
+// AI Feed Types with AEO optimization
 export interface AIFeedItem {
   id: string;
   url: string;
@@ -277,9 +277,21 @@ export interface AIFeedItem {
   date_modified: string;
   hub: ContentHub;
   type: ContentType;
+
+  // AEO-enhanced fields
+  trustworthiness_score: number; // 0-1 scale, based on source quality
+  evidence_level: 'A' | 'B' | 'C'; // Evidence strength classification
+  source_quality: 'government' | 'curated' | 'community';
+  last_verified: string; // ISO date when content sources were last checked
+  freshness_days: number; // Days since last review
+  key_takeaways: string[]; // TL;DR bullets for LLMs
+  citation_count: number;
+  primary_sources: string[]; // e.g., ["CDC", "AAP"]
+  beginner_friendly: boolean;
+  content_category: string; // e.g., "health_education"
 }
 
-// LLM Answers Types
+// LLM Answers Types with AEO optimization
 export interface LLMAnswer {
   q: string;
   a: string;
@@ -289,4 +301,157 @@ export interface LLMAnswer {
   lang: Language;
   hub: ContentHub;
   type: ContentType;
+
+  // AEO-enhanced fields
+  trustworthiness_score: number;
+  evidence_level: 'A' | 'B' | 'C';
+  source_quality: 'government' | 'curated' | 'community';
+  last_verified: string;
+  freshness_days: number;
+  primary_sources: string[];
+  beginner_friendly: boolean;
+  answer_type: string; // e.g., "expert_curated"
+  disclaimer: string; // Legal/medical disclaimer
+}
+
+// Knowledge base shared types
+export type RiskLevel = 'none' | 'low' | 'medium' | 'high';
+export type KnowledgeStatus = 'draft' | 'published' | 'archived';
+export type SourceGrade = 'A' | 'B' | 'C' | 'D';
+export type KnowledgeLocale = Region;
+
+export interface MediaAsset {
+  url: string;
+  alt?: string;
+  type?: 'image' | 'video';
+  caption?: string;
+}
+
+export interface ServingForm {
+  age_range: string;
+  form: string;
+  texture?: string;
+  prep?: string;
+  notes?: string;
+}
+
+export interface KnowledgeAction {
+  title: string;
+  description?: string;
+  step?: number;
+}
+
+export interface KnowledgeChecklistItem {
+  label: string;
+  detail?: string;
+  type?: 'tip' | 'action' | 'warning';
+}
+
+export interface KnowledgeSource {
+  id: string;
+  name: string;
+  organization?: string;
+  url: string;
+  grade: SourceGrade;
+  retrieved_at?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface KnowledgeRule {
+  id: string;
+  slug: string;
+  title: string;
+  locale: KnowledgeLocale;
+  category: string;
+  risk_level: RiskLevel;
+  summary?: string;
+  do_list: string[];
+  dont_list: string[];
+  why?: string;
+  how_to: KnowledgeAction[];
+  compliance_notes?: string;
+  source_ids: string[];
+  reviewed_by?: string;
+  last_reviewed_at?: string;
+  expires_at?: string;
+  status: KnowledgeStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface KnowledgeFood {
+  id: string;
+  slug: string;
+  name: string;
+  locale: KnowledgeLocale;
+  age_range: string[];
+  feeding_methods: string[];
+  serving_forms: ServingForm[];
+  risk_level: RiskLevel;
+  nutrients_focus: string[];
+  do_list: string[];
+  dont_list: string[];
+  why?: string;
+  how_to: KnowledgeAction[];
+  portion_hint?: string;
+  media: MediaAsset[];
+  source_ids: string[];
+  reviewed_by?: string;
+  last_reviewed_at?: string;
+  expires_at?: string;
+  status: KnowledgeStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface KnowledgeGuide {
+  id: string;
+  slug: string;
+  title: string;
+  locale: KnowledgeLocale;
+  guide_type: 'framework' | 'scenario' | 'nutrition' | 'allergen' | 'pathway' | 'other';
+  age_range: string[];
+  summary?: string;
+  body_md?: string;
+  checklist: KnowledgeChecklistItem[];
+  related_food_ids: string[];
+  related_rule_ids: string[];
+  source_ids: string[];
+  reviewed_by?: string;
+  last_reviewed_at?: string;
+  expires_at?: string;
+  status: KnowledgeStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export type FAQCategory = 'feeding' | 'sleep' | 'health-safety' | 'development' | 'behavior' | 'daily-care';
+
+export interface KnowledgeFAQ {
+  id: string;
+  slug: string;
+  question: string;
+  answer: string; // Markdown
+  answer_html?: string; // Pre-rendered HTML
+  category: FAQCategory;
+  subcategory?: string;
+  age_range: string[];
+  locale: KnowledgeLocale;
+  source_ids: string[];
+  related_food_ids: string[];
+  related_rule_ids: string[];
+  related_guide_ids: string[];
+  related_topic_slugs: string[];
+  priority: number; // Lower = higher priority
+  views_count: number;
+  helpful_count: number;
+  last_reviewed_at?: string;
+  expires_at?: string;
+  status: KnowledgeStatus;
+  created_at: string;
+  updated_at: string;
+  // Joined data
+  kb_sources?: KnowledgeSource[];
 }

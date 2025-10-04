@@ -1,0 +1,35 @@
+{
+  "id": "REPLACE_WITH_UUID",
+  "slug": "ingredient-slug",
+  "name": "Ingredient name",
+  "locale": "Global",
+  "age_range": ["6-8m", "9-12m"],
+  "feeding_methods": ["puree", "blw"],
+  "serving_forms": [
+    {
+      "age_range": "6-8m",
+      "form": "Describe texture and shape.",
+      "texture": "Soft mashable",
+      "prep": "Cooking method and time.",
+      "notes": "Extra caregiver guidance."
+    }
+  ],
+  "risk_level": "low",
+  "nutrients_focus": ["iron"],
+  "do_list": ["Practical reminder"],
+  "dont_list": ["What to avoid"],
+  "why": "Key nutritional benefit.",
+  "how_to": [
+    {
+      "title": "Preparation step",
+      "description": "Detailed prep instruction."
+    }
+  ],
+  "portion_hint": "Responsive feeding note.",
+  "media": [],
+  "source_ids": ["UUID_FROM_KB_SOURCES"],
+  "reviewed_by": "Reviewer Name, Credential",
+  "last_reviewed_at": "2024-01-01",
+  "expires_at": "2026-01-01",
+  "status": "draft"
+}

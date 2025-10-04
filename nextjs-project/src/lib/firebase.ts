@@ -11,8 +11,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let app;
-let storage;
+let app: any;
+let storage: any;
 
 try {
   app = initializeApp(firebaseConfig);
