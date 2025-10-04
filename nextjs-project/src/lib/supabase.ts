@@ -1,12 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 import { clientCache, cacheKeys, withCache } from './cache';
-import type { 
-  ContentHub, 
-  ContentType, 
-  Language, 
+import type {
+  ContentHub,
+  ContentType,
+  Language,
   ContentStatus,
-  ContentFilter, 
-  SearchQuery, 
+  ContentFilter,
+  SearchQuery,
   PaginatedResponse,
   ContentStats,
   AIFeedItem,
@@ -16,7 +16,8 @@ import type {
   KnowledgeRule,
   KnowledgeFood,
   KnowledgeGuide,
-  KnowledgeSource
+  KnowledgeSource,
+  KnowledgeFAQ
 } from '@/types/content';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -575,6 +576,92 @@ export const knowledgeBase = {
       clientCache.set(cacheKey, data, 30 * 60 * 1000);
     }
     return data as KnowledgeGuide | null;
+  },
+
+  // FAQ functions
+  async getFAQs(filters?: {
+    category?: string;
+    locale?: KnowledgeLocale;
+    topicSlug?: string;
+    foodId?: string;
+  }): Promise<KnowledgeFAQ[]> {
+    const { category, locale, topicSlug, foodId } = filters || {};
+    const cacheKey = `faqs-${category || 'all'}-${locale || 'all'}-${topicSlug || 'all'}-${foodId || 'all'}`;
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    let query = supabase
+      .from('kb_faqs')
+      .select('*')
+      .eq('status', 'published')
+      .order('priority', { ascending: true });
+
+    if (category) {
+      query = query.eq('category', category);
+    }
+
+    if (locale) {
+      if (locale === 'Global') {
+        query = query.eq('locale', 'Global');
+      } else {
+        query = query.in('locale', [locale, 'Global']);
+      }
+    }
+
+    if (topicSlug) {
+      query = query.contains('related_topic_slugs', [topicSlug]);
+    }
+
+    if (foodId) {
+      query = query.contains('related_food_ids', [foodId]);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    clientCache.set(cacheKey, data, 15 * 60 * 1000);
+    return data as KnowledgeFAQ[];
+  },
+
+  async getFAQBySlug(slug: string): Promise<KnowledgeFAQ | null> {
+    const cacheKey = `faq-${slug}`;
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await supabase
+      .from('kb_faqs')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single();
+
+    if (error) {
+      if ((error as any).code === 'PGRST116') return null;
+      throw error;
+    }
+
+    if (data) {
+      clientCache.set(cacheKey, data, 30 * 60 * 1000);
+    }
+    return data as KnowledgeFAQ | null;
+  },
+
+  // Get FAQs with source details joined
+  async getFAQsWithSources(filters?: {
+    category?: string;
+    locale?: KnowledgeLocale;
+    topicSlug?: string;
+  }): Promise<Array<{ faq: KnowledgeFAQ; sources: KnowledgeSource[] }>> {
+    const faqs = await this.getFAQs(filters);
+    const sourceMap = await this.getSourcesMap();
+
+    return faqs.map((faq) => ({
+      faq,
+      sources: faq.source_ids
+        .map((id: string) => sourceMap.get(id))
+        .filter(Boolean) as KnowledgeSource[],
+    }));
   }
 };
 
@@ -582,58 +669,136 @@ export const knowledgeBase = {
 // AI Feed functions for GEO optimization
 
 export const aiFeedManager = {
-  // Generate AI feed in NDJSON format
+  // Generate AI feed in NDJSON format with AEO-optimized metadata
   async generateAIFeed(): Promise<AIFeedItem[]> {
     const { data: articles, error } = await supabase
       .from('articles')
       .select(`
         id, slug, title, one_liner, entities, date_modified, hub, type, lang,
+        last_reviewed, key_facts, date_published,
         qas(question, answer),
-        citations(url)
+        citations(url, publisher, title)
       `)
       .eq('status', 'published')
       .order('date_modified', { ascending: false });
-    
+
     if (error) throw error;
-    
-    return articles.map(article => ({
-      id: `${article.slug}-${article.id}`,
-      url: `/${article.type}/${article.hub}/${article.slug}`,
-      title: article.title,
-      lang: article.lang,
-      summary: article.one_liner,
-      bullets: article.qas?.map(qa => qa.question) || [],
-      entities: article.entities,
-      citations: article.citations?.map(c => c.url) || [],
-      date_modified: article.date_modified,
-      hub: article.hub,
-      type: article.type
-    }));
+
+    return articles.map(article => {
+      // 计算可信度分数 (基于引用来源质量)
+      const citationCount = article.citations?.length || 0;
+      const hasGovernmentSource = article.citations?.some(c =>
+        ['CDC', 'AAP', 'Health Canada', 'FDA', 'NIH'].some(org =>
+          c.publisher?.includes(org)
+        )
+      ) || false;
+
+      const trustworthiness = Math.min(0.95,
+        0.5 + // 基础分
+        (hasGovernmentSource ? 0.3 : 0) + // 政府来源加成
+        (citationCount * 0.05) // 每个引用+0.05
+      );
+
+      // 判断证据等级
+      const evidenceLevel = hasGovernmentSource && citationCount >= 3 ? 'A' :
+                            citationCount >= 2 ? 'B' : 'C';
+
+      // 内容新鲜度（天数）
+      const lastReviewedDate = article.last_reviewed || article.date_modified;
+      const daysSinceReview = lastReviewedDate ?
+        Math.floor((Date.now() - new Date(lastReviewedDate).getTime()) / (1000 * 60 * 60 * 24)) :
+        999;
+
+      return {
+        id: `${article.slug}-${article.id}`,
+        url: `/${article.type}/${article.hub}/${article.slug}`,
+        title: article.title,
+        lang: article.lang,
+        summary: article.one_liner,
+        bullets: article.qas?.map(qa => qa.question) || [],
+        entities: article.entities,
+        citations: article.citations?.map(c => c.url) || [],
+        date_modified: article.date_modified,
+        hub: article.hub,
+        type: article.type,
+
+        // AEO增强字段
+        trustworthiness_score: parseFloat(trustworthiness.toFixed(2)),
+        evidence_level: evidenceLevel,
+        source_quality: hasGovernmentSource ? 'government' : 'curated',
+        last_verified: lastReviewedDate,
+        freshness_days: daysSinceReview,
+        key_takeaways: article.key_facts || [],
+        citation_count: citationCount,
+        primary_sources: article.citations?.map(c => c.publisher).filter(Boolean) || [],
+        beginner_friendly: true,
+        content_category: 'health_education'
+      };
+    });
   },
 
-  // Generate LLM answers feed
+  // Generate LLM answers feed with enhanced metadata
   async generateLLMAnswers(): Promise<LLMAnswer[]> {
     const { data: qas, error } = await supabase
       .from('qas')
       .select(`
         question, answer, url, last_updated, lang,
-        articles!inner(hub, type, slug)
+        articles!inner(
+          hub, type, slug, last_reviewed, date_modified,
+          citations(url, publisher, title)
+        )
       `)
       .order('last_updated', { ascending: false });
-    
+
     if (error) throw error;
-    
+
     return qas.map(qa => {
-      const article = qa.articles as any; // Type assertion for nested select
+      const article = qa.articles as any;
+      const citations = article.citations || [];
+
+      // 计算可信度
+      const citationCount = citations.length;
+      const hasGovernmentSource = citations.some((c: any) =>
+        ['CDC', 'AAP', 'Health Canada', 'FDA', 'NIH'].some(org =>
+          c.publisher?.includes(org)
+        )
+      );
+
+      const trustworthiness = Math.min(0.95,
+        0.5 +
+        (hasGovernmentSource ? 0.3 : 0) +
+        (citationCount * 0.05)
+      );
+
+      const evidenceLevel = hasGovernmentSource && citationCount >= 3 ? 'A' :
+                            citationCount >= 2 ? 'B' : 'C';
+
+      // 新鲜度
+      const lastReviewed = article.last_reviewed || qa.last_updated;
+      const daysSinceReview = lastReviewed ?
+        Math.floor((Date.now() - new Date(lastReviewed).getTime()) / (1000 * 60 * 60 * 24)) :
+        999;
+
       return {
         q: qa.question,
         a: qa.answer,
         url: `/${article.type}/${article.hub}/${article.slug}${qa.url || ''}`,
-        citations: [], // Could be enhanced to include citations
+        citations: citations.map((c: any) => c.url).filter(Boolean),
         last_updated: qa.last_updated,
         lang: qa.lang,
         hub: article.hub,
-        type: article.type
+        type: article.type,
+
+        // AEO增强字段
+        trustworthiness_score: parseFloat(trustworthiness.toFixed(2)),
+        evidence_level: evidenceLevel,
+        source_quality: hasGovernmentSource ? 'government' : 'curated',
+        last_verified: lastReviewed,
+        freshness_days: daysSinceReview,
+        primary_sources: citations.map((c: any) => c.publisher).filter(Boolean),
+        beginner_friendly: true,
+        answer_type: 'expert_curated',
+        disclaimer: 'Educational content based on official health guidelines. Consult your pediatrician for personalized advice.'
       };
     });
   }
@@ -729,6 +894,152 @@ export const ingestionManager = {
     
     if (error) throw error;
     return data;
+  }
+};
+
+// Food database functions
+export interface FoodFilters {
+  ageRange?: string; // e.g., "6m+", "9m+", "12m+"
+  riskLevel?: string[]; // ['none', 'low', 'medium', 'high']
+  feedingMethods?: string[]; // ['BLW', 'puree', 'both']
+  allergens?: string[]; // Filter by allergen presence
+  nutrients?: string[]; // ['iron-rich', 'vitamin C', etc.]
+  searchQuery?: string;
+}
+
+export const foodManager = {
+  // Get all foods with optional filters
+  async getFoods(filters?: FoodFilters, limit: number = 50, offset: number = 0) {
+    let query = supabase
+      .from('kb_foods')
+      .select('*')
+      .eq('status', 'published');
+
+    // Apply filters
+    if (filters?.ageRange) {
+      query = query.contains('age_range', [filters.ageRange]);
+    }
+
+    if (filters?.riskLevel && filters.riskLevel.length > 0) {
+      query = query.in('risk_level', filters.riskLevel);
+    }
+
+    if (filters?.feedingMethods && filters.feedingMethods.length > 0) {
+      query = query.overlaps('feeding_methods', filters.feedingMethods);
+    }
+
+    if (filters?.nutrients && filters.nutrients.length > 0) {
+      query = query.overlaps('nutrients_focus', filters.nutrients);
+    }
+
+    if (filters?.searchQuery) {
+      query = query.ilike('name', `%${filters.searchQuery}%`);
+    }
+
+    query = query
+      .order('name', { ascending: true })
+      .range(offset, offset + limit - 1);
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Get single food by slug
+  async getFoodBySlug(slug: string) {
+    const { data, error } = await supabase
+      .from('kb_foods')
+      .select(`
+        *,
+        kb_sources(*)
+      `)
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single();
+
+    if (error) {
+      if ((error as any).code === 'PGRST116') {
+        return null;
+      }
+      throw error;
+    }
+
+    return data;
+  },
+
+  // Search foods by name
+  async searchFoods(query: string, limit: number = 20) {
+    const { data, error } = await supabase
+      .from('kb_foods')
+      .select('id, slug, name, age_range, risk_level, nutrients_focus')
+      .eq('status', 'published')
+      .ilike('name', `%${query}%`)
+      .limit(limit);
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Get related foods (same age range or similar nutrients)
+  async getRelatedFoods(foodId: string, limit: number = 6) {
+    // First get the current food
+    const { data: currentFood, error: currentError } = await supabase
+      .from('kb_foods')
+      .select('age_range, nutrients_focus')
+      .eq('id', foodId)
+      .single();
+
+    if (currentError) throw currentError;
+    if (!currentFood) return [];
+
+    // Find foods with overlapping age ranges or nutrients
+    const { data, error } = await supabase
+      .from('kb_foods')
+      .select('*')
+      .eq('status', 'published')
+      .neq('id', foodId)
+      .limit(limit);
+
+    if (error) throw error;
+
+    // Sort by relevance (foods with more overlapping attributes)
+    return (data || []).sort((a, b) => {
+      const aOverlap = (
+        (a.age_range?.filter((age: string) => currentFood.age_range?.includes(age))?.length || 0) +
+        (a.nutrients_focus?.filter((nut: string) => currentFood.nutrients_focus?.includes(nut))?.length || 0)
+      );
+      const bOverlap = (
+        (b.age_range?.filter((age: string) => currentFood.age_range?.includes(age))?.length || 0) +
+        (b.nutrients_focus?.filter((nut: string) => currentFood.nutrients_focus?.includes(nut))?.length || 0)
+      );
+      return bOverlap - aOverlap;
+    }).slice(0, limit);
+  },
+
+  // Get food count by filters (for pagination)
+  async getFoodCount(filters?: FoodFilters): Promise<number> {
+    let query = supabase
+      .from('kb_foods')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'published');
+
+    if (filters?.ageRange) {
+      query = query.contains('age_range', [filters.ageRange]);
+    }
+
+    if (filters?.riskLevel && filters.riskLevel.length > 0) {
+      query = query.in('risk_level', filters.riskLevel);
+    }
+
+    if (filters?.searchQuery) {
+      query = query.ilike('name', `%${filters.searchQuery}%`);
+    }
+
+    const { count, error } = await query;
+
+    if (error) throw error;
+    return count || 0;
   }
 };
 

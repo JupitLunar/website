@@ -1,0 +1,2024 @@
+{
+  "sources": [
+    {
+      "id": "00000000-0000-4000-a000-000000000001",
+      "name": "HealthyChildren.org - Honey Guidance",
+      "organization": "American Academy of Pediatrics",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/No-Honey.aspx",
+      "grade": "A",
+      "retrieved_at": "2024-01-15",
+      "notes": "AAP consumer guidance on botulism risk from honey"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000002",
+      "name": "HealthyChildren.org - Juice Recommendations",
+      "organization": "American Academy of Pediatrics",
+      "url": "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/Juice-and-Your-Child.aspx",
+      "grade": "A",
+      "retrieved_at": "2024-01-15",
+      "notes": "AAP statement on juice limits for infants and toddlers"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000003",
+      "name": "Canada.ca - Feeding Your Baby 6 to 12 months",
+      "organization": "Health Canada",
+      "url": "https://www.canada.ca/en/health-canada/services/infant-care/infant-feeding/infant-nutrition.html",
+      "grade": "A",
+      "retrieved_at": "2024-01-20",
+      "notes": "Canadian national guidance on introducing solids and iron-rich foods"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000004",
+      "name": "CDC - When, What, and How to Introduce Solid Foods",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nutrition/infantandtoddlernutrition/foods-and-drinks/when-to-introduce-solid-foods.html",
+      "grade": "A",
+      "retrieved_at": "2024-02-01",
+      "notes": "CDC guidance on readiness signs and gradual solid introduction"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000005",
+      "name": "HealthyChildren.org - Choking Prevention",
+      "organization": "American Academy of Pediatrics",
+      "url": "https://www.healthychildren.org/English/safety-prevention/at-home/Pages/Choking-Prevention.aspx",
+      "grade": "A",
+      "retrieved_at": "2024-02-05",
+      "notes": "AAP choking hazard list and seating recommendations"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000006",
+      "name": "HealthyChildren.org - Cow's Milk and Your Child",
+      "organization": "American Academy of Pediatrics",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Cows-Milk-and-Your-Child.aspx",
+      "grade": "A",
+      "retrieved_at": "2024-02-10",
+      "notes": "AAP guidance on introducing whole cow's milk after 12 months"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000007",
+      "name": "FoodSafety.gov - The 2-Hour Rule",
+      "organization": "FoodSafety.gov",
+      "url": "https://www.foodsafety.gov/food-safety-charts/cold-food-storage-charts",
+      "grade": "A",
+      "retrieved_at": "2024-02-12",
+      "notes": "Federal food safety timeline for refrigeration and reheating"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000008",
+      "name": "FDA/EPA - Advice about Eating Fish",
+      "organization": "U.S. Food and Drug Administration",
+      "url": "https://www.fda.gov/food/consumers/advice-about-eating-fish",
+      "grade": "A",
+      "retrieved_at": "2024-02-14",
+      "notes": "Low mercury fish choices and weekly portions for children"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000009",
+      "name": "Caring for Kids (CPS) - Peanut allergy prevention",
+      "organization": "Canadian Paediatric Society",
+      "url": "https://caringforkids.cps.ca/handouts/childhood-allergies/peanut-allergy",
+      "grade": "A",
+      "retrieved_at": "2024-02-18",
+      "notes": "CPS recommendations for early peanut introduction"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000010",
+      "name": "HealthyChildren.org - Vitamin D for Babies",
+      "organization": "American Academy of Pediatrics",
+      "url": "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/Vitamin-D-On-the-Double.aspx",
+      "grade": "A",
+      "retrieved_at": "2024-02-20",
+      "notes": "AAP dosing guidance for vitamin D supplementation"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000011",
+      "name": "CDC - When, What & How to Introduce Solid Foods",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html",
+      "grade": "A",
+      "retrieved_at": "2024-02-28",
+      "notes": "Readiness cues, timing and sequence for introducing complementary foods"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000012",
+      "name": "CDC - Fingers, Spoons, Forks, and Cups",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/infant-toddler-nutrition/mealtime/fingers-spoons-forks-and-cups.html",
+      "grade": "A",
+      "retrieved_at": "2024-02-28",
+      "notes": "Cup transition, utensils, responsive feeding tips"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000013",
+      "name": "CDC - Foods and Drinks to Avoid or Limit",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/foods-and-drinks-to-avoid-or-limit.html",
+      "grade": "A",
+      "retrieved_at": "2024-02-28",
+      "notes": "Avoid before age one, choking hazards, added sugar limitations"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000014",
+      "name": "CDC - Vitamin D for Babies",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/infant-toddler-nutrition/vitamins-minerals/vitamin-d.html",
+      "grade": "A",
+      "retrieved_at": "2024-02-28",
+      "notes": "Vitamin D dosing for breastfed/partially breastfed infants"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000015",
+      "name": "USDA FSIS - Danger Zone 40°F-140°F",
+      "organization": "USDA Food Safety and Inspection Service",
+      "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/danger-zone-40f-140f",
+      "grade": "A",
+      "retrieved_at": "2024-03-01",
+      "notes": "Two-hour/one-hour rule and safe holding temperatures"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000016",
+      "name": "TSA - Traveling with Children",
+      "organization": "Transportation Security Administration",
+      "url": "https://www.tsa.gov/travel/special-procedures/traveling-children",
+      "grade": "A",
+      "retrieved_at": "2024-03-01",
+      "notes": "Allowances for breast milk, formula, ice packs in carry-on luggage"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000017",
+      "name": "NIAID Guidelines for the Prevention of Peanut Allergy in the United States (2017)",
+      "organization": "National Institute of Allergy and Infectious Diseases",
+      "url": "https://www.niaid.nih.gov/diseases-conditions/guidelines-clinicians-and-patients-food-allergy",
+      "grade": "B",
+      "retrieved_at": "2024-03-01",
+      "notes": "Peanut introduction timing based on eczema/egg allergy risk"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000018",
+      "name": "AAAAI/ACAAI 2023 Anaphylaxis Practice Parameter Update",
+      "organization": "Journal of Allergy and Clinical Immunology",
+      "url": "https://www.jacionline.org/article/S0091-6749(23)00034-0/fulltext",
+      "grade": "B",
+      "retrieved_at": "2024-03-01",
+      "notes": "Updated EMS guidance after epinephrine, action plan reinforcement"
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000019",
+      "name": "Guideline: Complementary feeding of infants and young children 6–23 months of age",
+      "organization": "World Health Organization",
+      "url": "https://www.who.int/publications/i/item/9789240079186",
+      "grade": "A",
+      "retrieved_at": "2024-03-02",
+      "notes": "Meal frequency, fortified foods, and responsive feeding standards for 6–23 months."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000020",
+      "name": "Vitamin D supplementation for Canadian infants",
+      "organization": "Canadian Paediatric Society",
+      "url": "https://cps.ca/documents/position/vitamin-d",
+      "grade": "A",
+      "retrieved_at": "2024-03-02",
+      "notes": "Recommends 400 IU vitamin D during the first year; reassess 600 IU targets after age one."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000021",
+      "name": "Iron requirements in the first two years of life",
+      "organization": "Canadian Paediatric Society",
+      "url": "https://cps.ca/documents/position/iron-requirements",
+      "grade": "A",
+      "retrieved_at": "2024-03-02",
+      "notes": "Details iron intake goals, screening triggers, and supplementation criteria."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000022",
+      "name": "Randomized Trial of Peanut Consumption in Infants at Risk for Peanut Allergy (LEAP)",
+      "organization": "New England Journal of Medicine",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa1414850",
+      "grade": "B",
+      "retrieved_at": "2024-03-02",
+      "notes": "Early peanut introduction reduced allergy incidence by 81% in high-risk infants."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000023",
+      "name": "Postpartum depression: Information for parents",
+      "organization": "Public Health Agency of Canada",
+      "url": "https://www.canada.ca/en/public-health/services/publications/healthy-living/postpartum-depression.html",
+      "grade": "A",
+      "retrieved_at": "2024-03-02",
+      "notes": "Screening signs, urgent care pathways, and family support recommendations."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000024",
+      "name": "Expressing and storing breast milk safely",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/breastfeeding/recommendations/handling_breastmilk.htm",
+      "grade": "A",
+      "retrieved_at": "2024-03-02",
+      "notes": "Storage limits for expressed milk, cooling and reheating best practices."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000025",
+      "name": "Calcium Fact Sheet for Health Professionals",
+      "organization": "NIH Office of Dietary Supplements",
+      "url": "https://ods.od.nih.gov/factsheets/Calcium-HealthProfessional/",
+      "grade": "A",
+      "retrieved_at": "2024-03-02",
+      "notes": "Dietary reference intakes and upper limits for calcium in 1–3 year olds."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000026",
+      "name": "CDC - Iron: Babies and Toddlers",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nutrition/infantandtoddlernutrition/vitaminsminerals/iron.html",
+      "grade": "A",
+      "retrieved_at": "2025-09-18",
+      "notes": "U.S. guidance on iron-rich foods, supplementation, and anemia screening triggers in the first two years."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000027",
+      "name": "CDC - Fluoride: Babies and Toddlers",
+      "organization": "Centers for Disease Control and Prevention",
+      "url": "https://www.cdc.gov/nutrition/infantandtoddlernutrition/vitaminsminerals/fluoride.html",
+      "grade": "A",
+      "retrieved_at": "2025-09-18",
+      "notes": "Explains fluoride supplement timing based on community water levels and cavity risk."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000028",
+      "name": "Dietary Guidelines for Americans 2020–2025",
+      "organization": "U.S. Department of Agriculture & HHS",
+      "url": "https://www.dietaryguidelines.gov/",
+      "grade": "A",
+      "retrieved_at": "2025-09-18",
+      "notes": "National nutrition recommendations covering beverages, added sugars, and seafood portions for toddlers."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000029",
+      "name": "Dietitians of Canada – Feeding Your Vegetarian Baby",
+      "organization": "Dietitians of Canada",
+      "url": "https://www.unlockfood.ca/en/Articles/Babies-and-Toddlers/Feeding-Your-Vegetarian-Baby.aspx",
+      "grade": "B",
+      "retrieved_at": "2025-09-18",
+      "notes": "Plant-based protein, iron, and vitamin B12 strategies for vegetarian infants."
+    },
+    {
+      "id": "00000000-0000-4000-a000-000000000030",
+      "name": "Health Canada – Fluoride and Oral Health",
+      "organization": "Health Canada",
+      "url": "https://www.canada.ca/en/public-health/services/health-promotion/oral-health/fluoride.html",
+      "grade": "A",
+      "retrieved_at": "2025-09-18",
+      "notes": "Canadian public health guidance on fluoride in water, supplements, and infant oral health."
+    }
+  ],
+  "rules": [
+    {
+      "id": "10000000-0000-4000-a000-000000000001",
+      "slug": "no-honey-before-12-months",
+      "title": "No honey before 12 months",
+      "locale": "Global",
+      "category": "food-safety",
+      "risk_level": "high",
+      "summary": "Avoid honey and honey-containing foods during the first year to prevent infant botulism.",
+      "do_list": [
+        "Choose pasteurized alternative sweeteners if needed",
+        "Remind all caregivers and childcare providers about the honey restriction"
+      ],
+      "dont_list": [
+        "Do not feed raw or processed honey to infants under one year",
+        "Do not coat pacifiers or bottles with honey"
+      ],
+      "why": "Honey can contain Clostridium botulinum spores. Infant intestines cannot block toxin production, leading to potentially fatal paralysis.",
+      "how_to": [
+        {
+          "title": "Check ingredient labels",
+          "description": "Review packaged foods, cough syrups, and baked goods for honey, honey powder, or raw honey before serving."
+        },
+        {
+          "title": "Caregiver briefing",
+          "description": "Share the no-honey rule with grandparents, babysitters, and daycare staff."
+        }
+      ],
+      "compliance_notes": "Summarizes CDC food safety guidance; for educational use only.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000001"
+      ],
+      "reviewed_by": "Pediatrician Review Team",
+      "last_reviewed_at": "2024-01-20",
+      "expires_at": "2026-01-20",
+      "status": "published"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000002",
+      "slug": "juice-guidelines-12-36-months",
+      "title": "Fruit juice limits for 12–36 months",
+      "locale": "US",
+      "category": "beverages",
+      "risk_level": "medium",
+      "summary": "Do not serve juice before the first birthday. Limit 100% fruit juice to 4 oz (120 mL) per day for ages 12–36 months and offer only in a cup with meals.",
+      "do_list": [
+        "Prioritize whole fruit and water",
+        "If offering juice, choose 100% fruit juice and serve in an open or straw cup",
+        "Pair juice with meals or snacks rather than between meals"
+      ],
+      "dont_list": [
+        "Avoid juice in bottles or sippy cups for constant sipping",
+        "Do not serve sugar-sweetened beverages or juice cocktails"
+      ],
+      "why": "Excess juice contributes to dental caries, diarrhea, and displacement of nutrient-dense foods.",
+      "how_to": [
+        {
+          "title": "逐步引入",
+          "description": "12 个月后可在餐后提供 1–2 oz，并观察大便情况。"
+        }
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000002"
+      ],
+      "reviewed_by": "Registered Dietitian",
+      "last_reviewed_at": "2024-01-22",
+      "expires_at": "2026-01-22",
+      "status": "published",
+      "compliance_notes": "Educational summary; always consult your pediatrician for personalised advice."
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000003",
+      "slug": "choking-prevention-mealtime-basics",
+      "title": "Maintain 90-90-90 posture and avoid high-risk foods",
+      "locale": "Global",
+      "category": "feeding-environment",
+      "risk_level": "high",
+      "summary": "Seat infants upright with hips, knees, and ankles at 90 degrees and avoid round, firm foods such as whole grapes or hot dogs. Supervise meals without distractions.",
+      "do_list": [
+        "Use a high chair that provides trunk support and footrest contact",
+        "Slice grapes, cherry tomatoes, and hot dogs lengthwise before cutting into small pieces",
+        "Keep mealtimes calm—sit with the child and supervise actively"
+      ],
+      "dont_list": [
+        "Do not allow children to walk, run, or ride in a car while eating",
+        "Avoid hard, round, sticky foods that cannot be mashed easily"
+      ],
+      "why": "Proper seating and food preparation reduce airway obstruction risk, the leading cause of feeding-related injury in infants.",
+      "how_to": [
+        {
+          "title": "Prep high-risk foods",
+          "description": "Cut cylindrical foods into thin strips before chopping; offer shredded or mashed alternatives when possible."
+        }
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000005"
+      ],
+      "reviewed_by": "Pediatrician Review Team",
+      "last_reviewed_at": "2024-02-21",
+      "expires_at": "2026-02-21",
+      "status": "published",
+      "compliance_notes": "Based on CDC choking prevention tips; educational use only."
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000004",
+      "slug": "whole-cow-milk-after-12-months",
+      "title": "Introduce whole cow’s milk after 12 months (16–24 oz/day)",
+      "locale": "US",
+      "category": "beverages",
+      "risk_level": "medium",
+      "summary": "Do not substitute cow’s milk for breast milk or formula before 12 months. After the first birthday, offer whole cow’s milk in cups and limit to 16–24 oz (480–720 mL) daily alongside iron-rich meals.",
+      "do_list": [
+        "Transition to whole cow’s milk gradually after 12 months using cups",
+        "Keep total daily milk 16–24 oz to protect iron absorption and appetite",
+        "Discuss fortified alternatives with a clinician if dairy intake is low"
+      ],
+      "dont_list": [
+        "Do not replace breast milk or formula with cow’s milk before 12 months",
+        "Avoid sending the child to bed with a bottle of milk"
+      ],
+      "why": "Cow’s milk lacks the iron infants need and excessive intake can cause iron deficiency and dental caries.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000006"
+      ],
+      "reviewed_by": "Registered Dietitian",
+      "last_reviewed_at": "2024-02-22",
+      "expires_at": "2026-02-22",
+      "status": "published",
+      "compliance_notes": "Summarizes AAP/CDC beverage recommendations; not a substitute for individualized medical advice.",
+      "how_to": [
+        {
+          "title": "Stepwise transition",
+          "description": "Swap one bottle for a cup of whole milk every few days after the first birthday while monitoring stooling and appetite."
+        }
+      ]
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000005",
+      "slug": "two-hour-cold-storage-rule",
+      "title": "Follow the 2-hour/1-hour cold storage rule",
+      "locale": "Global",
+      "category": "storage",
+      "risk_level": "medium",
+      "summary": "Discard prepared foods left at room temperature beyond 2 hours—or 1 hour if above 90°F (32°C)—and reheat leftovers to an internal temperature of 165°F (74°C).",
+      "do_list": [
+        "Refrigerate cooked foods within 2 hours (1 hour in hot weather)",
+        "Use coolers and ice packs when travelling with expressed milk or prepared foods",
+        "Reheat leftovers thoroughly and stir to distribute heat evenly"
+      ],
+      "dont_list": [
+        "Do not refreeze thawed purées or formula once warmed",
+        "Avoid leaving perishable foods in the “danger zone” (40–140°F)"
+      ],
+      "why": "Bacteria multiply rapidly in the danger zone, increasing risk of foodborne illness in infants.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000007"
+      ],
+      "reviewed_by": "Food Safety Specialist",
+      "last_reviewed_at": "2024-02-23",
+      "expires_at": "2026-02-23",
+      "status": "published",
+      "compliance_notes": "Derived from USDA FSIS/FoodSafety.gov guidelines; informational only.",
+      "how_to": [
+        {
+          "title": "Travel safety",
+          "description": "Pack a thermometer with coolers; discard perishable items after 2 hours without refrigeration."
+        }
+      ]
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000006",
+      "slug": "vitamin-d-supplement-breastfed",
+      "title": "Supplement breastfed infants with 400 IU vitamin D daily",
+      "locale": "Global",
+      "category": "supplement",
+      "risk_level": "low",
+      "summary": "Provide 400 IU of vitamin D daily from birth for breastfed or partially breastfed infants; reassess after 12 months when the target increases to 600 IU.",
+      "do_list": [
+        "Start vitamin D drops soon after birth for exclusively or partially breastfed infants",
+        "Review dosing at well-child visits once the child reaches 12 months",
+        "Demonstrate proper administration (onto nipple or inside cheek)"
+      ],
+      "dont_list": [
+        "Do not exceed recommended doses without clinician guidance",
+        "Do not assume formula-fed infants need supplementation if intake already provides 400 IU"
+      ],
+      "why": "Vitamin D supports bone and immune health; breast milk alone does not meet the requirement.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000010"
+      ],
+      "reviewed_by": "Pediatrician Review Team",
+      "last_reviewed_at": "2024-02-24",
+      "expires_at": "2026-02-24",
+      "status": "published",
+      "compliance_notes": "Summarizes CDC vitamin D guidance; confirm dosing with the child’s clinician."
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000007",
+      "slug": "no-juice-before-12-months",
+      "title": "No juice before 12 months; limit to 4 oz/day at 12–24 months",
+      "locale": "Global",
+      "category": "beverages",
+      "risk_level": "medium",
+      "summary": "Infants under one year should not drink fruit juice. Toddlers 12–24 months may have up to 4 oz/day of 100% juice served in a cup with meals only.",
+      "do_list": [
+        "Offer breast milk or formula as primary fluids before 12 months",
+        "From 12 months, prioritize whole fruit and water",
+        "If serving juice, choose 100% fruit juice and limit to meal or snack times"
+      ],
+      "dont_list": [
+        "Do not give juice in bottles or allow continuous sipping",
+        "Avoid sweetened beverages and juice drinks"
+      ],
+      "why": "High sugar beverages displace nutrient-rich feeds and increase risk of dental caries and diarrhea.",
+      "how_to": [
+        {
+          "title": "Transition plan",
+          "description": "Introduce sips of water in a cup around 6–9 months; delay juice until the first birthday and continue offering water and milk as main beverages."
+        }
+      ],
+      "compliance_notes": "Summarizes AAP/HealthyChildren policy on juice; retains educational purpose only.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000002",
+        "00000000-0000-4000-a000-000000000013"
+      ],
+      "reviewed_by": "Registered Dietitian",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000008",
+      "slug": "wean-bottles-by-18-months",
+      "title": "Transition off bottles by 12–18 months",
+      "locale": "Global",
+      "category": "feeding-environment",
+      "risk_level": "medium",
+      "summary": "Introduce cups around 6–9 months and plan to stop routine bottle use between 12 and 18 months to protect oral health and appetite regulation.",
+      "do_list": [
+        "Practice with open or straw cups starting around 6–9 months",
+        "Offer water in a cup with meals once solids begin",
+        "Gradually replace bottle feeds with cup feeds after 12 months"
+      ],
+      "dont_list": [
+        "Avoid sending infants to bed with a bottle",
+        "Do not allow continuous bottle sipping throughout the day"
+      ],
+      "why": "Continued bottle use beyond 18 months increases risk of dental caries and interferes with appetite self-regulation.",
+      "how_to": [
+        {
+          "title": "Cup training",
+          "description": "Offer small sips of water in an open or straw cup daily; after the first birthday, switch one bottle feed at a time to a cup."
+        }
+      ],
+      "compliance_notes": "Derived from CDC mealtime guidance; educational use only.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000012"
+      ],
+      "reviewed_by": "Pediatric Dentist",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000009",
+      "slug": "low-mercury-fish-best-choices",
+      "title": "Choose low-mercury fish 1–2 times per week",
+      "locale": "Global",
+      "category": "supplement",
+      "risk_level": "low",
+      "summary": "Offer low-mercury fish such as salmon, sardines, trout, pollock, tilapia, or shrimp in age-appropriate portions 1–2 times per week to provide DHA and protein.",
+      "do_list": [
+        "Use the FDA/EPA Best Choices list for infants and toddlers",
+        "Serve cooked fish with bones removed and texture matched to the child",
+        "Rotate species to provide diverse nutrients"
+      ],
+      "dont_list": [
+        "Avoid high-mercury species (shark, swordfish, king mackerel, tilefish)",
+        "Do not serve raw or undercooked fish to infants or toddlers"
+      ],
+      "why": "Low-mercury fish provides essential omega-3 fatty acids while minimizing neurotoxic mercury exposure.",
+      "how_to": [
+        {
+          "title": "Portion guidance",
+          "description": "For toddlers, offer 1–2 ounces per serving, twice per week. Flake fish thoroughly and remove bones before serving."
+        }
+      ],
+      "compliance_notes": "Based on FDA/EPA 2022 fish advice for families.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000008"
+      ],
+      "reviewed_by": "Registered Dietitian",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000010",
+      "slug": "maintain-weekly-allergen-exposure",
+      "title": "Maintain tolerated allergens in the diet weekly",
+      "locale": "Global",
+      "category": "allergen",
+      "risk_level": "medium",
+      "summary": "After successfully introducing allergens such as peanut or egg, maintain exposure at least once per week (often several times per week) to support tolerance, per NIAID and CPS guidance.",
+      "do_list": [
+        "Create a weekly rotation that includes each tolerated allergen",
+        "Adjust portion sizes to age and consistency (e.g., thinned peanut butter)",
+        "Consult an allergist for high-risk infants or if maintenance is difficult"
+      ],
+      "dont_list": [
+        "Do not rely on a single exposure and then stop for weeks",
+        "Avoid whole nuts or thick nut butter lumps in children under 4 years"
+      ],
+      "why": "Regular ingestion helps maintain tolerance established by early introduction trials (LEAP, PETIT).",
+      "how_to": [
+        {
+          "title": "Weekly planner",
+          "description": "Schedule peanut, egg, dairy, wheat, soy, and sesame on different days; pair with responsive feeding meals."
+        }
+      ],
+      "compliance_notes": "Summarizes CPS and NIAID guidance; final decisions should involve the child’s allergist.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000009",
+        "00000000-0000-4000-a000-000000000017"
+      ],
+      "reviewed_by": "Allergist",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000011",
+      "slug": "offer-iron-rich-foods-daily",
+      "title": "Offer iron-rich foods daily from 6 months",
+      "locale": "Global",
+      "category": "nutrition",
+      "risk_level": "medium",
+      "summary": "Serve iron-rich animal or fortified plant foods every day starting with first solids to preserve iron stores and prevent anemia.",
+      "do_list": [
+        "Rotate heme iron options (beef, dark poultry, salmon) two to three times weekly",
+        "Pair plant sources like lentils or beans with vitamin C fruits or vegetables",
+        "Keep iron-fortified infant cereal or legumes in the meal rotation if accepted"
+      ],
+      "dont_list": [
+        "Do not let dairy displace iron-rich foods at mealtimes",
+        "Avoid delaying iron-rich foods until teeth erupt"
+      ],
+      "why": "Infant iron stores are depleted by 6 months; daily heme and non-heme sources maintain growth and cognitive development.",
+      "compliance_notes": "Summarizes Health Canada, WHO, and CPS practice point guidance; incorporate pediatric screening plans for high-risk infants.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003",
+        "00000000-0000-4000-a000-000000000019",
+        "00000000-0000-4000-a000-000000000021"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000012",
+      "slug": "spread-calcium-servings",
+      "title": "Spread calcium-rich servings across the day (700 mg target)",
+      "locale": "Global",
+      "category": "nutrition",
+      "risk_level": "low",
+      "summary": "Toddlers 12–24 months need roughly 700 mg calcium daily; offer two to three portions of dairy or fortified alternatives spaced between iron-rich meals.",
+      "do_list": [
+        "Serve 120–180 mL (4–6 oz) portions of milk, yogurt, or fortified soy beverage with meals or snacks",
+        "Check plant-based beverages provide vitamin D and at least 300 mg calcium per cup",
+        "Pair calcium foods with snacks so iron-rich main meals stay the focus"
+      ],
+      "dont_list": [
+        "Avoid sweetened or unfortified plant drinks as a primary milk source",
+        "Do not exceed 24 oz (710 mL) of milk daily without medical guidance"
+      ],
+      "why": "Calcium supports bone mineralization, but excess dairy can crowd out iron; spreading servings balances both needs.",
+      "compliance_notes": "References CPS, AAP/HealthyChildren, and NIH dietary reference data; tailor volumes for children with medical needs.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000006",
+        "00000000-0000-4000-a000-000000000020",
+        "00000000-0000-4000-a000-000000000025"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000013",
+      "slug": "rice-cereal-not-required-first-food",
+      "title": "Rice cereal is optional—lead with iron-rich variety",
+      "locale": "Global",
+      "category": "nutrition",
+      "risk_level": "low",
+      "summary": "Choose any iron-rich first foods—meat, legumes, fortified cereals—and rotate grains to limit arsenic exposure from rice.",
+      "do_list": [
+        "Offer smooth meat or legume purées alongside fortified cereals",
+        "Rotate oat, barley, or multigrain cereals instead of serving rice cereal daily",
+        "Watch infant cues and adjust textures gradually"
+      ],
+      "dont_list": [
+        "Do not add cereal to bottles without clinician advice",
+        "Avoid serving rice cereal multiple times per day"
+      ],
+      "why": "CDC and CPS emphasize iron density and variety; rice cereal can be part of the rotation but is not mandatory and contributes more arsenic than other grains.",
+      "compliance_notes": "Use with regional arsenic advisories; recommend fortified cereals that meet local safety standards.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000011",
+        "00000000-0000-4000-a000-000000000019",
+        "00000000-0000-4000-a000-000000000021"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "10000000-0000-4000-a000-000000000014",
+      "slug": "safe-transport-expressed-milk",
+      "title": "Transport expressed milk with cold-chain safeguards",
+      "locale": "Global",
+      "category": "storage",
+      "risk_level": "medium",
+      "summary": "When commuting or traveling, keep expressed milk at 4\tC or colder with ice packs and label containers with pump time before handing off to caregivers.",
+      "do_list": [
+        "Pack milk in an insulated bag with at least two frozen ice packs",
+        "Label each container with infant name, pump date, and time",
+        "Transfer to a refrigerator (4\tC/39\tF) or freezer within 24 hours"
+      ],
+      "dont_list": [
+        "Do not leave expressed milk at room temperature beyond four hours",
+        "Avoid partially thawing and refreezing milk"
+      ],
+      "why": "USDA, TSA, and CDC guidance stress continuous cold chain to prevent bacterial growth and maintain nutrient quality.",
+      "compliance_notes": "Adapt for workplace or daycare policies; document chain of custody when required.",
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000015",
+        "00000000-0000-4000-a000-000000000016",
+        "00000000-0000-4000-a000-000000000024"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    }
+  ],
+  "foods": [
+    {
+      "id": "20000000-0000-4000-a000-000000000001",
+      "slug": "carrot",
+      "name": "Carrot",
+      "locale": "Global",
+      "age_range": [
+        "6-8m",
+        "9-12m"
+      ],
+      "feeding_methods": [
+        "puree",
+        "blw"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Steam until very soft and mash or puree until smooth.",
+          "texture": "Soft mashable purée",
+          "prep": "Peel, slice, steam 8–10 minutes until a fork goes through easily, then mash.",
+          "notes": "For BLW, cut into thick batons and lightly coat with oil to reduce sticking."
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Serve as pea-sized cubes or soft finger strips.",
+          "texture": "Tender, easily squashed between fingers",
+          "prep": "Continue steaming until fork-tender before dicing.",
+          "notes": "Pair with iron-rich foods such as egg yolk or lentils."
+        }
+      ],
+      "risk_level": "low",
+      "nutrients_focus": [
+        "vitamin-a",
+        "fiber"
+      ],
+      "do_list": [
+        "Add a small amount of fat (e.g., oil) to enhance carotenoid absorption"
+      ],
+      "dont_list": [
+        "Avoid offering raw, hard carrot slices that present choking risk"
+      ],
+      "why": "Carrots provide beta-carotene to support vision and immune health.",
+      "how_to": [
+        {
+          "title": "蒸煮",
+          "description": "削皮切段后蒸煮至可以用手轻易捏扁。"
+        }
+      ],
+      "portion_hint": "响应式喂养，初期每餐提供 1-2 大勺即可。",
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003"
+      ],
+      "reviewed_by": "Pediatric Dietitian",
+      "last_reviewed_at": "2024-01-22",
+      "expires_at": "2026-01-22",
+      "status": "published"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000002",
+      "slug": "salmon",
+      "name": "Salmon",
+      "locale": "Global",
+      "age_range": [
+        "6-8m",
+        "9-12m"
+      ],
+      "feeding_methods": [
+        "puree",
+        "blw"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Flake cooked salmon and mix with breast milk, formula, or vegetable purée to form a soft mash.",
+          "texture": "Soft, moist flakes that mash easily",
+          "prep": "Bake or steam 10–12 minutes until fully cooked; check for pin bones.",
+          "notes": "Retain natural oils to provide DHA."
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Serve as soft fish cakes or loose flakes.",
+          "texture": "Tender, breaks apart readily",
+          "prep": "Combine with sweet potato or oats for fish cakes; pan-sear lightly.",
+          "notes": "Offer once or twice weekly as part of the low-mercury fish rotation."
+        }
+      ],
+      "risk_level": "medium",
+      "nutrients_focus": [
+        "protein",
+        "iron",
+        "omega-3"
+      ],
+      "do_list": [
+        "Check carefully for bones and skin before serving"
+      ],
+      "dont_list": [
+        "Avoid smoked or heavily salted salmon for infants"
+      ],
+      "why": "Salmon is a low-mercury fish rich in DHA, protein, and vitamin D.",
+      "how_to": [
+        {
+          "title": "检查鱼刺",
+          "description": "烹饪后逐块触摸，确保无细小鱼刺残留。"
+        }
+      ],
+      "portion_hint": "每周 1-2 次，每次约 1-2 汤匙起步。",
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003"
+      ],
+      "reviewed_by": "Pediatric Dietitian",
+      "last_reviewed_at": "2024-01-24",
+      "expires_at": "2026-01-24",
+      "status": "published"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000003",
+      "slug": "grape",
+      "name": "Grape",
+      "locale": "Global",
+      "age_range": [
+        "9-12m",
+        "12-24m"
+      ],
+      "feeding_methods": [
+        "blw"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "9-12m",
+          "form": "Peel, deseed, and cut lengthwise into four thin strips.",
+          "texture": "Soft, juicy strips that squish easily",
+          "prep": "Wash thoroughly, remove seeds, slice lengthwise then again into quarters.",
+          "notes": "Feed while the child is upright and supervised."
+        },
+        {
+          "age_range": "12-24m",
+          "form": "Quarter or eighth lengthwise into bite-sized pieces.",
+          "texture": "Soft but still squishable",
+          "prep": "Continue cutting lengthwise to maintain narrow shapes.",
+          "notes": "Never serve whole grapes or crosswise coins."
+        }
+      ],
+      "risk_level": "high",
+      "nutrients_focus": [
+        "vitamin-c",
+        "fiber"
+      ],
+      "do_list": [
+        "Peel grapes for younger infants if the skin is tough"
+      ],
+      "dont_list": [
+        "Do not offer whole grapes or circular slices"
+      ],
+      "why": "Whole grapes match the size of a child’s airway and are a leading choking hazard.",
+      "how_to": [
+        {
+          "title": "去皮技巧",
+          "description": "可先在热水中烫 10 秒后浸入冷水，再撕去薄皮。"
+        }
+      ],
+      "portion_hint": "作为餐后水果，每次提供 2-4 小块并观察咀嚼能力。",
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000005"
+      ],
+      "reviewed_by": "Feeding Therapist",
+      "last_reviewed_at": "2024-02-25",
+      "expires_at": "2026-02-25",
+      "status": "published"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000004",
+      "slug": "peanut-butter",
+      "name": "Peanut butter",
+      "locale": "Global",
+      "age_range": [
+        "6-8m",
+        "9-12m"
+      ],
+      "feeding_methods": [
+        "puree",
+        "blw"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Thin peanut butter with breast milk, formula, or warm water to a runny consistency and offer in small amounts.",
+          "texture": "Smooth, pourable paste",
+          "prep": "Mix 2 tsp peanut butter with 2–3 tsp warm liquid until thin.",
+          "notes": "Offer first exposure at home during the day and observe for 2 hours."
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Spread a thin layer on toast fingers or soft oat bars.",
+          "texture": "Thin coating that dissolves easily",
+          "prep": "Apply a 1–2 mm layer and serve with water or milk.",
+          "notes": "Continue offering at least 3 times per week to maintain tolerance."
+        }
+      ],
+      "risk_level": "medium",
+      "nutrients_focus": [
+        "protein",
+        "healthy-fat"
+      ],
+      "do_list": [
+        "Keep emergency plan ready for high-risk infants"
+      ],
+      "dont_list": [
+        "Do not serve whole peanuts or thick spoonfuls of peanut butter"
+      ],
+      "why": "Peanut butter is an allergen that should be introduced in safe forms to build tolerance.",
+      "how_to": [
+        {
+          "title": "首次尝试流程",
+          "description": "给宝宝先尝 1/4 茶匙，间隔 10 分钟观察，再给剩余量。"
+        }
+      ],
+      "portion_hint": "每次 2 茶匙稀释花生酱，至少每周 3 次。",
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000009"
+      ],
+      "reviewed_by": "Allergist",
+      "last_reviewed_at": "2024-02-26",
+      "expires_at": "2026-02-26",
+      "status": "published"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000005",
+      "slug": "egg",
+      "name": "Egg",
+      "locale": "Global",
+      "age_range": [
+        "6-8m",
+        "9-12m"
+      ],
+      "feeding_methods": [
+        "puree",
+        "blw"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Serve fully cooked mashed egg yolk mixed with breast milk or vegetable purée.",
+          "texture": "Smooth mash",
+          "prep": "Hard-boil for 10 minutes, mash yolk thoroughly.",
+          "notes": "Offer a small amount for the first exposure and watch for reactions."
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Offer scrambled egg or steamed egg cut into strips.",
+          "texture": "Soft curds or custard-like strips",
+          "prep": "Cook without added salt; slice into finger-length pieces.",
+          "notes": "Maintain exposure several times per week once tolerated."
+        }
+      ],
+      "risk_level": "medium",
+      "nutrients_focus": [
+        "protein",
+        "choline",
+        "iron"
+      ],
+      "do_list": [
+        "Serve eggs fully cooked to avoid Salmonella"
+      ],
+      "dont_list": [
+        "Avoid runny yolks or undercooked eggs for infants"
+      ],
+      "why": "Eggs provide protein and choline; regular intake supports early allergen tolerance.",
+      "how_to": [
+        {
+          "title": "蒸蛋做法",
+          "description": "鸡蛋与等量水搅匀，过筛后蒸 10 分钟，冷却切条。"
+        }
+      ],
+      "portion_hint": "6-8 月每餐 1/4 个蛋黄起步，逐渐增加至半个蛋。",
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000004",
+        "00000000-0000-4000-a000-000000000009"
+      ],
+      "reviewed_by": "Registered Dietitian",
+      "last_reviewed_at": "2024-02-27",
+      "expires_at": "2026-02-27",
+      "status": "published"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000006",
+      "slug": "shrimp",
+      "name": "Shrimp",
+      "locale": "Global",
+      "age_range": [
+        "9-12m",
+        "12-24m"
+      ],
+      "feeding_methods": [
+        "blw",
+        "mixed"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "9-12m",
+          "form": "Steam and chop into pea-sized pieces or fine shreds.",
+          "texture": "Tender, easy to mash",
+          "prep": "Remove shell and vein; steam 3–4 minutes until pink before chopping.",
+          "notes": "Offer first exposure at home with an allergy action plan."
+        },
+        {
+          "age_range": "12-24m",
+          "form": "Serve as soft finger pieces or mixed into fried rice/pasta.",
+          "texture": "Soft with slight chew",
+          "prep": "Ensure fully cooked and remove firm tail ends.",
+          "notes": "Rotate with other low-mercury seafood."
+        }
+      ],
+      "risk_level": "medium",
+      "nutrients_focus": [
+        "protein",
+        "omega-3",
+        "iodine"
+      ],
+      "do_list": [
+        "Include shrimp as part of the low-mercury seafood rotation 1–2 times per week"
+      ],
+      "dont_list": [
+        "Do not serve raw or breaded-and-hard-fried shrimp to young children"
+      ],
+      "why": "Shrimp offers lean protein and omega-3s but is a common allergen requiring careful introduction.",
+      "how_to": [
+        {
+          "title": "低汞轮换",
+          "description": "与其他 Best Choices 海鲜交替供应，每周总量 1-2 次。"
+        }
+      ],
+      "portion_hint": "9-12 月每餐 1-2 汤匙；12-24 月可逐渐增加至 1-2 盎司。",
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000008"
+      ],
+      "reviewed_by": "Registered Dietitian",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000007",
+      "slug": "lentils",
+      "name": "Lentils",
+      "locale": "Global",
+      "age_range": [
+        "6-8m",
+        "9-12m",
+        "12-24m"
+      ],
+      "feeding_methods": [
+        "puree",
+        "mixed"
+      ],
+      "risk_level": "low",
+      "nutrients_focus": [
+        "iron",
+        "fiber",
+        "protein"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Cook red or yellow lentils until very soft and blend with breast milk, formula, or broth for a smooth purée.",
+          "prep": "Simmer lentils in water or sodium-free broth for 15–20 minutes until they mash easily.",
+          "texture": "Smooth purée",
+          "notes": "Add a teaspoon of canola or olive oil to boost calories."
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Serve as thick mash or shape into soft patties for self-feeding.",
+          "prep": "Combine cooked lentils with mashed sweet potato or oat flour to bind, then pan-sear lightly.",
+          "texture": "Soft mashable patties",
+          "notes": "Offer alongside vitamin C produce to aid absorption."
+        },
+        {
+          "age_range": "12-24m",
+          "form": "Mix into soups, stews, or dal with finely chopped vegetables.",
+          "prep": "Continue cooking until lentils keep their shape but squash between fingers.",
+          "texture": "Tender lentils in sauce",
+          "notes": "Serve with whole grains to create a complete protein."
+        }
+      ],
+      "do_list": [
+        "Rinse dried lentils thoroughly before cooking",
+        "Pair with citrus, tomato, or berries to enhance iron absorption",
+        "Freeze extra portions in small containers for quick meals"
+      ],
+      "dont_list": [
+        "Do not offer crunchy, undercooked lentils",
+        "Avoid added salt until after 12 months"
+      ],
+      "why": "Lentils provide non-heme iron, folate, and fiber for infants with vegetarian or mixed diets.",
+      "portion_hint": "Start with 2–3 tablespoons and follow appetite cues.",
+      "how_to": [],
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000019",
+        "00000000-0000-4000-a000-000000000021"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000008",
+      "slug": "beef",
+      "name": "Beef",
+      "locale": "Global",
+      "age_range": [
+        "6-8m",
+        "9-12m",
+        "12-24m"
+      ],
+      "feeding_methods": [
+        "puree",
+        "blw"
+      ],
+      "risk_level": "medium",
+      "nutrients_focus": [
+        "iron",
+        "zinc",
+        "protein"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Blend slow-cooked beef with broth or breast milk to a thin purée or offer meat broth on a spoon.",
+          "prep": "Pressure cook or braise boneless beef until shreddable, then blend with cooking liquid.",
+          "texture": "Silky purée",
+          "notes": "Skim excess fat and avoid added salt."
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Offer very soft shredded beef strands or finely minced patties.",
+          "prep": "Shred along the grain and moisten with broth to prevent dryness.",
+          "texture": "Moist, shreddable",
+          "notes": "Serve with mashed beans or vegetables."
+        },
+        {
+          "age_range": "12-24m",
+          "form": "Serve tender meatballs or slow-cooked cubes cut into pea-sized pieces.",
+          "prep": "Cook ground beef with breadcrumbs or oats for softer texture.",
+          "texture": "Tender, easy to chew",
+          "notes": "Drain grease and pat dry to remove excess fat."
+        }
+      ],
+      "do_list": [
+        "Choose lean cuts like chuck or sirloin and cook until very tender",
+        "Serve with mashed vegetables to keep bites moist",
+        "Offer water and watch for chewing fatigue"
+      ],
+      "dont_list": [
+        "Do not serve steak strips that require tearing",
+        "Avoid cured meats high in sodium"
+      ],
+      "why": "Beef delivers heme iron and zinc, which have higher bioavailability than plant sources.",
+      "portion_hint": "Start with 1–2 tablespoons of purée; toddlers may take 30–60 g per meal.",
+      "how_to": [],
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003",
+        "00000000-0000-4000-a000-000000000019",
+        "00000000-0000-4000-a000-000000000021"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "20000000-0000-4000-a000-000000000009",
+      "slug": "yogurt",
+      "name": "Plain Yogurt",
+      "locale": "Global",
+      "age_range": [
+        "6-8m",
+        "9-12m",
+        "12-24m"
+      ],
+      "feeding_methods": [
+        "spoon",
+        "mixed"
+      ],
+      "risk_level": "low",
+      "nutrients_focus": [
+        "calcium",
+        "protein",
+        "probiotics"
+      ],
+      "serving_forms": [
+        {
+          "age_range": "6-8m",
+          "form": "Offer plain, full-fat yogurt on a pre-loaded spoon or let the infant self-feed with caregiver assistance.",
+          "prep": "Use pasteurized yogurt without added sugar; stir in pumped milk to thin if needed.",
+          "texture": "Smooth and spoonable",
+          "notes": "Avoid honey-sweetened yogurt before 12 months."
+        },
+        {
+          "age_range": "9-12m",
+          "form": "Swirl in mashed fruit or nut-free seed butter for additional nutrients.",
+          "prep": "Use mashed berries or fruit purée; add iron-fortified cereal for texture.",
+          "texture": "Thick, scoopable",
+          "notes": "Offer with cup of water and an iron-rich side."
+        },
+        {
+          "age_range": "12-24m",
+          "form": "Serve as part of breakfast bowls with oats, chia, or sliced fruit.",
+          "prep": "Portion 1/2 cup servings and keep chilled until serving.",
+          "texture": "Thick, spoonable",
+          "notes": "Choose unsweetened or <6 g added sugar per serving."
+        }
+      ],
+      "do_list": [
+        "Look for full-fat, unsweetened yogurt with live cultures",
+        "Offer alongside iron-rich foods to balance calcium",
+        "Introduce small amounts of nut or seed butter after allergen clearance"
+      ],
+      "dont_list": [
+        "Avoid yogurts with honey or artificial sweeteners for infants",
+        "Do not use plant-based yogurt lacking calcium or vitamin D without supplementation"
+      ],
+      "why": "Yogurt supplies calcium and probiotics that support gut and bone health in infants and toddlers.",
+      "portion_hint": "Start with 2–4 tablespoons and work toward 1/2 cup portions by toddlerhood.",
+      "how_to": [],
+      "media": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000006",
+        "00000000-0000-4000-a000-000000000020",
+        "00000000-0000-4000-a000-000000000025"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    }
+  ],
+  "guides": [
+    {
+      "id": "30000000-0000-4000-a000-000000000001",
+      "slug": "starting-solids-framework",
+      "title": "Complementary feeding framework (6–12 months)",
+      "locale": "Global",
+      "guide_type": "framework",
+      "age_range": [
+        "6-8m",
+        "9-12m"
+      ],
+      "summary": "Four-stage plan covering readiness, nutrient targets, and transition toward family meals for 6–12 month-olds.",
+      "body_md": "## Staged approach\n- **Stage 1 (6–8 months):** Prioritize iron/zinc foods; start with smooth purées.\n- **Stage 2 (8–10 months):** Add soft finger foods and open-cup practice; expand allergens.\n- **Stage 3 (10–12 months):** Offer modified family meals with soft textures; encourage self-feeding.\n\n## Caregiver reminders\n- Breast milk/formula remain primary nutrition until 12 months.\n- Aim for each meal to include an iron source, fruit/vegetable, and fat.",
+      "checklist": [
+        {
+          "label": "Confirm the baby can sit upright with minimal support",
+          "type": "tip"
+        },
+        {
+          "label": "Offer iron-rich foods twice per day in Stage 1",
+          "type": "action"
+        }
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000001",
+        "20000000-0000-4000-a000-000000000002"
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000001",
+        "10000000-0000-4000-a000-000000000002"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003"
+      ],
+      "reviewed_by": "Lead Pediatric Nutritionist",
+      "last_reviewed_at": "2024-01-25",
+      "expires_at": "2026-01-25",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000002",
+      "slug": "blw-and-puree-mixed-path",
+      "title": "Hybrid BLW + spoon-feeding pathway",
+      "locale": "Global",
+      "guide_type": "pathway",
+      "age_range": [
+        "6-8m",
+        "9-12m"
+      ],
+      "summary": "Blend self-feeding with spoon-feeding so infants practice oral-motor skills while meeting nutrition goals.",
+      "body_md": "## Why combine approaches?\n- BLW fosters chewing and self-regulation; spoon-feeding ensures nutrient-dense foods.\n\n## Implementation\n1. Prepare two textures per meal: a soft finger food and an iron-rich purée.\n2. Allow self-exploration first, then offer purée responsively.\n3. Maintain 90-90-90 seating and choking precautions.",
+      "checklist": [
+        {
+          "label": "Offer mashable finger foods at every lunch or dinner",
+          "type": "tip"
+        },
+        {
+          "label": "Preload spoons to support self-feeding",
+          "type": "action"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000003",
+        "10000000-0000-4000-a000-000000000005"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000001",
+        "20000000-0000-4000-a000-000000000005"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000004"
+      ],
+      "reviewed_by": "Feeding Therapist",
+      "last_reviewed_at": "2024-02-28",
+      "expires_at": "2026-02-28",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000003",
+      "slug": "allergen-introduction-plan",
+      "title": "Allergen introduction and maintenance plan",
+      "locale": "Global",
+      "guide_type": "allergen",
+      "age_range": [
+        "6-12m"
+      ],
+      "summary": "Introduce major allergens around 6 months under clinician guidance and maintain weekly exposure thereafter.",
+      "body_md": "## 步骤\n1. 确认宝宝健康，无严重湿疹或已知过敏（如有请先咨询专科）。\n2. 按顺序尝试花生、鸡蛋、牛奶制品、鱼、芝麻。\n3. 每种食物首次少量，间隔 2 小时观察，再补足当天量。\n4. 一周 3 次维持，避免超过两周未接触。",
+      "checklist": [
+        {
+          "label": "首次尝试安排在白天，家中备有紧急联系人",
+          "type": "warning"
+        },
+        {
+          "label": "记录每次引入的时间与反应",
+          "type": "action"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000006"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000004",
+        "20000000-0000-4000-a000-000000000005"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000009"
+      ],
+      "reviewed_by": "Allergist",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000004",
+      "slug": "travel-feeding-checklist",
+      "title": "Travel feeding checklist",
+      "locale": "Global",
+      "guide_type": "scenario",
+      "age_range": [
+        "6-24m"
+      ],
+      "summary": "Quick checklist for travel and outings, covering safe packing and emergency contacts.",
+      "body_md": "## Packing essentials\n- Ready-to-feed formula or pre-measured powder with safe water.\n- Cooler with ice packs, thermometer, disposable bibs, wipes, spare clothing.\n- Travel-safe foods such as shelf-stable pouches, soft pre-cut fruit, crackers, yogurt.\n\n## On the road\n- Follow the 2-hour/1-hour rule for perishables.\n- Keep cold foods at or below 40°F (4°C).\n\n## Communication\n- Share feeding instructions and allergy information with all caregivers.\n- Include pediatrician and emergency contacts on a handoff card.",
+      "checklist": [
+        {
+          "label": "Pack insulated cooler and ice packs",
+          "type": "tip"
+        },
+        {
+          "label": "Carry printed allergy and feeding plan",
+          "type": "action"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000005",
+        "10000000-0000-4000-a000-000000000003"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000001",
+        "20000000-0000-4000-a000-000000000003"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000007"
+      ],
+      "reviewed_by": "Food Safety Specialist",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000005",
+      "slug": "feeding-readiness-checklist",
+      "title": "Feeding readiness checklist (around 6 months)",
+      "locale": "Global",
+      "guide_type": "framework",
+      "age_range": [
+        "6-8m"
+      ],
+      "summary": "Validate physical and oral-motor readiness before offering solids.",
+      "body_md": "## Observation checklist\n- Sits upright with head and neck control.\n- Tongue-thrust reflex diminished; can move food from front to back.\n- Shows interest in family meals; opens mouth for a spoon.\n- Transfers toys/food to mouth with hands.\n\n## When to consult the clinician\n- Early introduction before 4 months for allergy prevention should be supervised.\n- Premature infants or those with chronic conditions and swallowing concerns require individualized guidance.",
+      "checklist": [
+        {
+          "label": "Stable head and neck control",
+          "type": "tip"
+        },
+        {
+          "label": "Able to sit in a high chair for 10–15 minutes",
+          "type": "action"
+        },
+        {
+          "label": "Tongue-thrust reflex largely diminished",
+          "type": "tip"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000007"
+      ],
+      "related_food_ids": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000011"
+      ],
+      "reviewed_by": "Pediatrician Review Team",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000006",
+      "slug": "texture-progression-roadmap",
+      "title": "Texture progression roadmap (6–12 months)",
+      "locale": "Global",
+      "guide_type": "pathway",
+      "age_range": [
+        "6-12m"
+      ],
+      "summary": "Move from smooth purées to soft family foods while supporting chewing and self-feeding.",
+      "body_md": "## Stage guidance\n- 6–7 months: smooth purées and thin mashes.\n- 7–8 months: thicker mashes and small soft lumps.\n- 8–10 months: soft finger foods cut into safe shapes.\n- 10–12 months: modified family meals with manageable textures.\n\n## Tips\n- Maintain upright seating and supervise.\n- Introduce one new texture at a time and observe response.",
+      "checklist": [
+        {
+          "label": "Trial 1–2 new textures each week",
+          "type": "action"
+        },
+        {
+          "label": "Ensure foods are smooshable between fingers",
+          "type": "warning"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000003"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000001",
+        "20000000-0000-4000-a000-000000000005"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000011"
+      ],
+      "reviewed_by": "Feeding Therapist",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000007",
+      "slug": "cup-transition-plan",
+      "title": "Cup transition plan (6–18 months)",
+      "locale": "Global",
+      "guide_type": "pathway",
+      "age_range": [
+        "6-18m"
+      ],
+      "summary": "Introduce open or straw cups early and phase out bottles by 18 months.",
+      "body_md": "## Timeline\n- 6–9 months: offer sips of water via open or straw cup daily.\n- 9–12 months: replace daytime bottles with cups gradually.\n- 12–18 months: discontinue bottles entirely, reserving cups for all beverages.\n\n## Tips\n- Replace one bottle feed at a time each week.\n- Keep beverages at the table to limit mindless sipping.",
+      "checklist": [
+        {
+          "label": "Select age-appropriate open and straw cups",
+          "type": "tip"
+        },
+        {
+          "label": "Track number of bottles replaced each week",
+          "type": "action"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000008"
+      ],
+      "related_food_ids": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000012"
+      ],
+      "reviewed_by": "Pediatric Dentist",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000008",
+      "slug": "travel-feeding-checklist-expanded",
+      "title": "Travel feeding checklist (extended)",
+      "locale": "Global",
+      "guide_type": "scenario",
+      "age_range": [
+        "6-24m"
+      ],
+      "summary": "Combine TSA allowances with food safety rules for road trips and flights.",
+      "body_md": "## Packing essentials\n- Cooler bag, ice packs, thermometer, ready-to-feed formula or pre-measured powder.\n- Cutting board/knife, wipes, disposable bibs, spare outfits.\n- Printed feeding instructions and allergy cards.\n\n## Air travel\n- TSA permits breast milk, formula, and baby food in reasonable quantities—declare at screening.\n- Ice packs or frozen gel packs are allowed to keep items cold.\n\n## Food safety\n- Follow the 2-hour/1-hour rule; discard items that exceed safe time/temperature.\n- Verify refrigerator temperature upon arrival.",
+      "checklist": [
+        {
+          "label": "Pack pump power supplies and adapters",
+          "type": "tip"
+        },
+        {
+          "label": "Check fridge temperature when arriving",
+          "type": "action"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000005"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000006"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000015",
+        "00000000-0000-4000-a000-000000000016"
+      ],
+      "reviewed_by": "Food Safety Specialist",
+      "last_reviewed_at": "2024-03-01",
+      "expires_at": "2026-03-01",
+      "status": "draft"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000009",
+      "slug": "iron-and-vitamin-d-playbook",
+      "title": "Iron + vitamin D playbook (6–24 months)",
+      "locale": "Global",
+      "guide_type": "nutrition",
+      "age_range": [
+        "6-12m",
+        "12-24m"
+      ],
+      "summary": "Map out daily iron foods and vitamin D supplementation so toddlers hit both targets without overreliance on dairy.",
+      "body_md": "## Daily targets\n- Offer at least two iron-rich servings (heme or fortified plant) every day.\n- Keep vitamin D drops at 400 IU until the first birthday, then reassess 600 IU needs.\n- Space dairy or fortified alternatives between iron meals.\n\n## Weekly rhythm\n- Plan 2 meat/fish meals, 2 legume meals, and 3 fortified cereal servings.\n- Use sunlight and outdoor time alongside supplements when possible.\n\n## Troubleshooting\n- Check for constipation or refusal and adjust textures.\n- Ask for bloodwork if appetite drops or pallor is noted.",
+      "checklist": [
+        {
+          "label": "Log iron-rich foods offered each day",
+          "type": "action"
+        },
+        {
+          "label": "Set a reminder for daily vitamin D drops",
+          "type": "tip"
+        },
+        {
+          "label": "Review portion sizes with pediatrician if growth falters",
+          "type": "warning"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000011",
+        "10000000-0000-4000-a000-000000000006",
+        "10000000-0000-4000-a000-000000000012"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000008",
+        "20000000-0000-4000-a000-000000000007",
+        "20000000-0000-4000-a000-000000000002",
+        "20000000-0000-4000-a000-000000000009"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003",
+        "00000000-0000-4000-a000-000000000019",
+        "00000000-0000-4000-a000-000000000020",
+        "00000000-0000-4000-a000-000000000021",
+        "00000000-0000-4000-a000-000000000025"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000010",
+      "slug": "faq-rice-cereal-first",
+      "title": "FAQ: Does rice cereal have to be first?",
+      "locale": "Global",
+      "guide_type": "other",
+      "age_range": [
+        "6-12m"
+      ],
+      "summary": "Rice cereal is optional—prioritize iron-rich variety and rotate grains to reduce arsenic exposure.",
+      "body_md": "### Key points\n- Any iron-rich food can be a first food.\n- Rotate grains (oat, barley, multigrain) to diversify nutrients.\n- Puréed meats or legumes meet iron goals immediately.\n\n### Safety\n- Keep textures smooth at first, then thicken as readiness cues progress.\n- Never add cereal to bottles unless prescribed for reflux.\n\n### Further reading\nSee CPS and CDC guidance on iron needs and solid readiness.",
+      "checklist": [
+        {
+          "label": "Offer two different iron foods in the first week",
+          "type": "action"
+        },
+        {
+          "label": "Swap rice cereal for oat or barley options every few days",
+          "type": "tip"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000013",
+        "10000000-0000-4000-a000-000000000011"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000007",
+        "20000000-0000-4000-a000-000000000008",
+        "20000000-0000-4000-a000-000000000001"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000011",
+        "00000000-0000-4000-a000-000000000019",
+        "00000000-0000-4000-a000-000000000021"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000011",
+      "slug": "pumping-while-traveling-checklist",
+      "title": "Pumping while traveling checklist",
+      "locale": "Global",
+      "guide_type": "scenario",
+      "age_range": [
+        "0-6m",
+        "6-12m"
+      ],
+      "summary": "Plan power adapters, screening conversations, and cold-chain logistics for travel days.",
+      "body_md": "## Before departure\n- Confirm power voltage and pack backup pump parts.\n- Freeze milk flat for efficient packing.\n\n## In transit\n- Declare breast milk and ice packs at security; request visual inspection if needed.\n- Keep milk in an insulated bag with frozen packs; add hotel ice if travel exceeds 24 hours.\n\n## On arrival\n- Transfer milk to a fridge or freezer immediately.\n- Log pump times and volumes for daycare communication.",
+      "checklist": [
+        {
+          "label": "Print TSA/airline breast milk policy",
+          "type": "action"
+        },
+        {
+          "label": "Pack two sets of pump parts to rotate",
+          "type": "tip"
+        },
+        {
+          "label": "Carry a small thermometer for cooler checks",
+          "type": "warning"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000005",
+        "10000000-0000-4000-a000-000000000014"
+      ],
+      "related_food_ids": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000015",
+        "00000000-0000-4000-a000-000000000016",
+        "00000000-0000-4000-a000-000000000024"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000012",
+      "slug": "daycare-milk-hand-off",
+      "title": "Daycare milk hand-off guide",
+      "locale": "Global",
+      "guide_type": "scenario",
+      "age_range": [
+        "0-12m"
+      ],
+      "summary": "Establish labeling, storage, and communication routines when sending expressed milk to childcare.",
+      "body_md": "## Night before\n- Portion milk into 60–120 mL containers and label with date/time.\n- Pack a dedicated cooler bag and ice packs in the fridge overnight.\n\n## At drop-off\n- Hand cooler directly to staff and confirm fridge temperature log.\n- Share feeding plan (volumes, pace feeding notes).\n\n## End of day\n- Discard milk that exceeded storage limits; sanitize containers and repack.",
+      "checklist": [
+        {
+          "label": "Print daycare feeding plan with emergency contacts",
+          "type": "action"
+        },
+        {
+          "label": "Review storage logs weekly",
+          "type": "tip"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000014",
+        "10000000-0000-4000-a000-000000000005"
+      ],
+      "related_food_ids": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000024"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000013",
+      "slug": "postpartum-mental-health-plan",
+      "title": "Postpartum mental health plan",
+      "locale": "Global",
+      "guide_type": "other",
+      "age_range": [
+        "0-6m"
+      ],
+      "summary": "Recognize postpartum mood changes, map crisis resources, and enlist support partners.",
+      "body_md": "## Know the signs\n- Persistent sadness, irritability, or anxiety beyond two weeks postpartum.\n- Intrusive thoughts or difficulty bonding with baby.\n\n## Build your circle\n- Identify two support people to check in weekly.\n- Share feeding plans so night help is informed.\n\n## Seek help early\n- Contact your family doctor, public health nurse, or crisis line when symptoms escalate.\n- If thoughts of self-harm appear, seek emergency care immediately.",
+      "checklist": [
+        {
+          "label": "Add perinatal mental health hotline numbers to your phone",
+          "type": "action"
+        },
+        {
+          "label": "Schedule a six-week mood check with your clinician",
+          "type": "tip"
+        },
+        {
+          "label": "Create a shared calendar for respite care",
+          "type": "action"
+        }
+      ],
+      "related_rule_ids": [],
+      "related_food_ids": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000023"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2025-09-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000014",
+      "slug": "holiday-meal-strategies",
+      "title": "Holiday meal strategies for infants & toddlers",
+      "locale": "Global",
+      "guide_type": "scenario",
+      "age_range": [
+        "6-24m"
+      ],
+      "summary": "Keep routines, prevent choking, and manage leftovers during holiday gatherings.",
+      "body_md": "## Protect the routine\n- Keep naps and feeding windows close to normal.\n- Offer a familiar meal or snack before parties to reduce hanger.\n\n## Buffet safety\n- Plate toddler portions yourself and cut foods to pea-size.\n- Skip whole nuts, popcorn, marshmallows, and raw veggies.\n\n## Leftovers\n- Refrigerate within two hours (one hour if >32\tC/90\tF).\n- Reheat leftovers to 74\tC/165\tF before serving.",
+      "checklist": [
+        {
+          "label": "Pack safe snacks and toddler utensils",
+          "type": "action"
+        },
+        {
+          "label": "Confirm fridge space with hosts ahead of time",
+          "type": "tip"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000003",
+        "10000000-0000-4000-a000-000000000005"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000001",
+        "20000000-0000-4000-a000-000000000009"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000005",
+        "00000000-0000-4000-a000-000000000015"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2026-03-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000015",
+      "slug": "holiday-allergen-checklist",
+      "title": "Holiday allergen safety checklist",
+      "locale": "Global",
+      "guide_type": "allergen",
+      "age_range": [
+        "6-24m"
+      ],
+      "summary": "Prevent cross-contact and keep epinephrine close during shared meals.",
+      "body_md": "## Before the gathering\n- Share allergen list and safe recipes with hosts.\n- Prepare a separate serving spoon for your child.\n\n## During the meal\n- Serve from unopened packages or a reserved plate.\n- Maintain weekly allergen exposure schedule even during travel.\n\n## Emergency readiness\n- Carry two epinephrine auto-injectors.\n- Review action plan with caregivers and babysitters.",
+      "checklist": [
+        {
+          "label": "Pack safe backup meal",
+          "type": "action"
+        },
+        {
+          "label": "Confirm location of nearest urgent care",
+          "type": "warning"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000009",
+        "10000000-0000-4000-a000-000000000010"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000004",
+        "20000000-0000-4000-a000-000000000005",
+        "20000000-0000-4000-a000-000000000006"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000017",
+        "00000000-0000-4000-a000-000000000018",
+        "00000000-0000-4000-a000-000000000022"
+      ],
+      "reviewed_by": "JupitLunar Research Team (awaiting external review)",
+      "last_reviewed_at": "2024-03-02",
+      "expires_at": "2025-12-02",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000016",
+      "slug": "north-america-feeding-tldr",
+      "title": "North America Infant Feeding TL;DR",
+      "locale": "Global",
+      "guide_type": "other",
+      "age_range": [
+        "0-6m",
+        "6-8m",
+        "9-12m",
+        "12-24m"
+      ],
+      "summary": "Five-bullet evidence snapshot covering solids timing, allergen cadence, beverage limits, and supplement guardrails for 0–24 months.",
+      "body_md": "### Quick takeaways\n- **Start solids around 6 months** once developmental cues are met; maintain breast milk/formula as primary nutrition through the first year.\n- **Progress textures steadily** toward smooshable finger foods by 9–12 months while supervising upright, calm meals.\n- **Introduce peanut, egg, and other priority allergens early** (4–6 months for high-risk infants under clinical guidance) and keep exposures weekly.\n- **Hydration & drinks:** offer water via open/straw cups from 6–9 months; no juice before 12 months; limit 100% juice to ≤4 oz/day at 12–24 months.\n- **Micronutrients:** daily vitamin D (400 IU infancy, 600 IU after 12 months) plus iron- and fluoride-aware feeding plans tailored with clinicians.",
+      "checklist": [
+        {
+          "label": "Confirm solids readiness signs with your clinician before 6 months",
+          "type": "tip"
+        },
+        {
+          "label": "Schedule weekly allergen exposures once tolerated",
+          "type": "action"
+        },
+        {
+          "label": "Log vitamin D, iron, and fluoride plans in the child's health record",
+          "type": "action"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000001",
+        "10000000-0000-4000-a000-000000000006",
+        "10000000-0000-4000-a000-000000000007"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000001",
+        "20000000-0000-4000-a000-000000000009"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003",
+        "00000000-0000-4000-a000-000000000004",
+        "00000000-0000-4000-a000-000000000009",
+        "00000000-0000-4000-a000-000000000002",
+        "00000000-0000-4000-a000-000000000014",
+        "00000000-0000-4000-a000-000000000026",
+        "00000000-0000-4000-a000-000000000027"
+      ],
+      "reviewed_by": "Helena Morris, PhD, RD",
+      "last_reviewed_at": "2025-09-22",
+      "expires_at": "2027-09-22",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000017",
+      "slug": "north-america-age-feeding-matrix",
+      "title": "Age-by-Age Feeding Matrix (0–24 months)",
+      "locale": "Global",
+      "guide_type": "framework",
+      "age_range": [
+        "0-6m",
+        "6-8m",
+        "9-12m",
+        "12-24m"
+      ],
+      "summary": "Structured matrix aligning primary nutrition, complementary foods, skill development, and safety watch-outs for each stage.",
+      "body_md": "| Age window | Primary nutrition focus | Complementary foods | Skills to support | Safety watch-outs |\n|---|---|---|---|---|\n| **0–5 months** | Cue-based breast milk and/or formula (8–12 feeds/day newborn) | None unless clinician-directed | Responsive feeding, tummy time | No water/juice; start 400 IU vitamin D for breastfed infants |\n| **~6 months** | Breast milk/formula remain majority | Iron-rich purées/mashes; 1–2 new foods/day | Upright seating, spoon or BLW attempts | Confirm readiness cues; avoid honey; thin nut/seed spreads only |\n| **6–9 months** | Breast milk/formula + daily solids | Smooshable finger foods, allergen rotation, water sips in cups | Chewing practice, hand-to-mouth transfer, cup intro | Maintain supervision; avoid round/firm foods; clean pump/feeding gear |\n| **9–12 months** | Breast milk/formula with table foods ramping | Soft family foods with safe cuts, protein/iron at most meals, low-mercury fish | Pincer grasp, self-feeding, family meals | Continue allergen maintenance; monitor sodium/sugar; portion to hunger cues |\n| **12–24 months** | Family meals + whole milk (or fortified alt) | 3 meals + 2 snacks, diverse textures, legumes, grains, produce | Independent cup drinking, utensil practice | Bottle wean by 18 months; limit juice ≤4 oz; uphold 2-hour/1-hour food safety rule |",
+      "checklist": [
+        {
+          "label": "Update the matrix at each well-child visit with clinician notes",
+          "type": "action"
+        },
+        {
+          "label": "Print and post near the feeding area for caregiver handoff",
+          "type": "tip"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000003",
+        "10000000-0000-4000-a000-000000000004",
+        "10000000-0000-4000-a000-000000000007",
+        "10000000-0000-4000-a000-000000000008"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000001",
+        "20000000-0000-4000-a000-000000000009"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000003",
+        "00000000-0000-4000-a000-000000000004",
+        "00000000-0000-4000-a000-000000000007",
+        "00000000-0000-4000-a000-000000000028"
+      ],
+      "reviewed_by": "Helena Morris, PhD, RD",
+      "last_reviewed_at": "2025-09-22",
+      "expires_at": "2027-09-22",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000018",
+      "slug": "north-america-safety-guardrails",
+      "title": "Critical Safety Guardrails for Feeding 0–24 Months",
+      "locale": "Global",
+      "guide_type": "scenario",
+      "age_range": [
+        "0-6m",
+        "6-8m",
+        "9-12m",
+        "12-24m"
+      ],
+      "summary": "Consolidated safety checklist covering choking prevention, food-borne illness control, allergen planning, and beverage hygiene.",
+      "body_md": "1. **Seat + supervise:** Use 90-90-90 posture with foot support and remain at the table to respond quickly.\n2. **Prep high-risk foods:** Slice grapes/hot dogs lengthwise, shred firm produce, and offer only smooshable textures.\n3. **Hot/cold chain:** Mix powdered formula at ≥70°C (158°F), refrigerate within 2 hours, and discard leftovers held >2 hours (1 hour if >32°C/90°F).\n4. **Honey & raw items:** Skip honey and unpasteurised dairy/juice until after 12 months.\n5. **Allergen readiness:** Share action plans, carry two epinephrine auto-injectors when prescribed, and keep weekly allergen exposures on schedule.\n6. **Smart beverages:** Stick to breast milk/formula under 12 months; after the first birthday prioritise water and whole milk, limiting juice to 4 oz in cups with meals.",
+      "checklist": [
+        {
+          "label": "Audit high chair posture and foot support before each meal",
+          "type": "tip"
+        },
+        {
+          "label": "Share allergen action plan and epinephrine location with all caregivers",
+          "type": "action"
+        },
+        {
+          "label": "Refresh food safety timers on travel days",
+          "type": "warning"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000001",
+        "10000000-0000-4000-a000-000000000003",
+        "10000000-0000-4000-a000-000000000005",
+        "10000000-0000-4000-a000-000000000007"
+      ],
+      "related_food_ids": [],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000005",
+        "00000000-0000-4000-a000-000000000007",
+        "00000000-0000-4000-a000-000000000017",
+        "00000000-0000-4000-a000-000000000018"
+      ],
+      "reviewed_by": "JupitLunar Clinical Editorial Team",
+      "last_reviewed_at": "2025-09-22",
+      "expires_at": "2026-09-22",
+      "status": "published"
+    },
+    {
+      "id": "30000000-0000-4000-a000-000000000019",
+      "slug": "north-america-micronutrient-reference",
+      "title": "Micronutrient Quick Reference (0–24 months)",
+      "locale": "Global",
+      "guide_type": "nutrition",
+      "age_range": [
+        "6-8m",
+        "9-12m",
+        "12-24m"
+      ],
+      "summary": "At-a-glance table covering vitamin D, iron, fluoride, omega-3, vitamin B12, and calcium targets with practical implementation tips.",
+      "body_md": "| Nutrient | Guideline summary | Practical implementation | Key sources |\n|---|---|---|---|\n| **Vitamin D** | 400 IU/day for infants, 600 IU/day after first birthday | Provide drops for breastfed/partially breastfed infants; reassess after 12 months | CDC vitamin D, CPS vitamin D |\n| **Iron** | 11 mg/day (6–12 m); 7 mg/day (1–3 y) | Offer iron-rich foods twice daily and pair with vitamin C; screen high-risk infants | CPS iron requirements, CDC iron |\n| **Fluoride** | Supplement only if drinking water <0.3 ppm | Check municipal reports; consult clinician before prescribing drops | CDC fluoride, Health Canada fluoride |\n| **Omega-3 (DHA)** | Serve low-mercury fish 1–2×/week | Rotate salmon, sardines, trout, pollock; use fortified alternatives if fish refused | FDA/EPA fish advice |\n| **Vitamin B12** | Ensure reliable source in vegetarian diets | Use fortified foods or clinician-guided supplements if animal products limited | Dietitians of Canada vegetarian baby |\n| **Calcium** | 700 mg/day at 1–3 y | Offer pasteurised dairy or fortified alternatives; monitor added sugar | Dietary Guidelines for Americans, NIH ODS calcium |",
+      "checklist": [
+        {
+          "label": "Discuss supplementation needs (vitamin D, iron, fluoride) during routine visits",
+          "type": "action"
+        },
+        {
+          "label": "Log omega-3 and iron-rich meals in weekly menu planners",
+          "type": "tip"
+        }
+      ],
+      "related_rule_ids": [
+        "10000000-0000-4000-a000-000000000006",
+        "10000000-0000-4000-a000-000000000007"
+      ],
+      "related_food_ids": [
+        "20000000-0000-4000-a000-000000000009"
+      ],
+      "source_ids": [
+        "00000000-0000-4000-a000-000000000010",
+        "00000000-0000-4000-a000-000000000014",
+        "00000000-0000-4000-a000-000000000020",
+        "00000000-0000-4000-a000-000000000021",
+        "00000000-0000-4000-a000-000000000026",
+        "00000000-0000-4000-a000-000000000027",
+        "00000000-0000-4000-a000-000000000028",
+        "00000000-0000-4000-a000-000000000029",
+        "00000000-0000-4000-a000-000000000025",
+        "00000000-0000-4000-a000-000000000030"
+      ],
+      "reviewed_by": "Helena Morris, PhD, RD",
+      "last_reviewed_at": "2025-09-22",
+      "expires_at": "2027-09-22",
+      "status": "published"
+    }
+  ]
+}

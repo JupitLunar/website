@@ -7,22 +7,27 @@ import Image from 'next/image';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isContentOpen, setIsContentOpen] = useState(false);
+  const [isFoodsOpen, setIsFoodsOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [showNewsletterModal, setShowNewsletterModal] = useState(false);
   const [email, setEmail] = useState('');
-  const contentMenuRef = useRef<HTMLDivElement>(null);
+  const foodsMenuRef = useRef<HTMLDivElement>(null);
+  const aboutMenuRef = useRef<HTMLDivElement>(null);
 
-  // 点击外部关闭Content菜单
+  // Close dropdowns when clicking outside
   useEffect(() => {
-    if (!isContentOpen) return;
+    if (!isFoodsOpen && !isAboutOpen) return;
     function handleClickOutside(event: MouseEvent) {
-      if (contentMenuRef.current && !contentMenuRef.current.contains(event.target as Node)) {
-        setIsContentOpen(false);
+      if (foodsMenuRef.current && !foodsMenuRef.current.contains(event.target as Node)) {
+        setIsFoodsOpen(false);
+      }
+      if (aboutMenuRef.current && !aboutMenuRef.current.contains(event.target as Node)) {
+        setIsAboutOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isContentOpen]);
+  }, [isFoodsOpen, isAboutOpen]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -61,84 +66,175 @@ function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors">Home</Link>
-            
-            {/* Content Dropdown */}
-            <div className="relative" ref={contentMenuRef}>
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              Home
+            </Link>
+
+            {/* Foods Mega Menu */}
+            <div className="relative" ref={foodsMenuRef}>
               <button
-                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1"
-                onClick={() => setIsContentOpen((v) => !v)}
+                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
+                onClick={() => setIsFoodsOpen((v) => !v)}
                 aria-haspopup="true"
-                aria-expanded={isContentOpen}
+                aria-expanded={isFoodsOpen}
               >
-                <span>Content</span>
-                <svg className={`w-4 h-4 transition-transform duration-200 ${isContentOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span>Foods</span>
+                <svg className={`w-4 h-4 transition-transform duration-200 ${isFoodsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              {isContentOpen && (
+
+              {isFoodsOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: -8, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute top-full left-0 mt-3 w-48 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 py-2 overflow-hidden"
+                  className="absolute top-full left-0 mt-3 w-[600px] bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 p-6 overflow-hidden"
                 >
-                  <Link 
-                    href="/learn/feeding" 
-                    onClick={() => setIsContentOpen(false)}
+                  <div className="grid grid-cols-3 gap-6">
+                    {/* By Age */}
+                    <div>
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">By Starting Age</h3>
+                      <div className="space-y-2">
+                        <Link href="/foods?age=6m+" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          6+ Months
+                        </Link>
+                        <Link href="/foods?age=9m+" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          9+ Months
+                        </Link>
+                        <Link href="/foods?age=12m+" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          12+ Months
+                        </Link>
+                        <Link href="/foods?age=18m+" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          18+ Months
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* By Risk Level */}
+                    <div>
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">By Risk Level</h3>
+                      <div className="space-y-2">
+                        <Link href="/foods?risk=none" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          ✓ No Risk
+                        </Link>
+                        <Link href="/foods?risk=low" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          🟢 Low Risk
+                        </Link>
+                        <Link href="/foods?risk=medium" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          🟡 Medium Risk
+                        </Link>
+                        <Link href="/foods?risk=high" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          🔴 High Risk
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* By Nutrition */}
+                    <div>
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">By Nutrition</h3>
+                      <div className="space-y-2">
+                        <Link href="/foods?nutrient=Iron-rich" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          Iron-Rich Foods
+                        </Link>
+                        <Link href="/foods?nutrient=Protein" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          High Protein
+                        </Link>
+                        <Link href="/foods?nutrient=Healthy Fats" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          Healthy Fats
+                        </Link>
+                        <Link href="/foods?nutrient=Vitamin C" onClick={() => setIsFoodsOpen(false)} className="block text-sm text-gray-700 hover:text-purple-600 hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+                          Vitamin C
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Browse All */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <Link
+                      href="/foods"
+                      onClick={() => setIsFoodsOpen(false)}
+                      className="flex items-center justify-between px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-xl transition-colors group"
+                    >
+                      <span className="font-semibold text-purple-600">Browse All 400+ Foods</span>
+                      <svg className="w-5 h-5 text-purple-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            <Link href="/topics" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              Topics
+            </Link>
+            <Link href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              FAQ
+            </Link>
+
+            {/* About Dropdown */}
+            <div className="relative" ref={aboutMenuRef}>
+              <button
+                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
+                onClick={() => setIsAboutOpen((v) => !v)}
+                aria-haspopup="true"
+                aria-expanded={isAboutOpen}
+              >
+                <span>About</span>
+                <svg className={`w-4 h-4 transition-transform duration-200 ${isAboutOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isAboutOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute top-full right-0 mt-3 w-56 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 py-2 overflow-hidden"
+                >
+                  <Link
+                    href="/trust"
+                    onClick={() => setIsAboutOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    Feeding & Nutrition
+                    Trust & Methods
                   </Link>
-                  <Link 
-                    href="/learn/sleep" 
-                    onClick={() => setIsContentOpen(false)}
+                  <Link
+                    href="/trust#sources"
+                    onClick={() => setIsAboutOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    Sleep & Routines
+                    Our Sources
                   </Link>
-                  <Link 
-                    href="/learn/mom-health" 
-                    onClick={() => setIsContentOpen(false)}
+                  <Link
+                    href="/about"
+                    onClick={() => setIsAboutOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    Mom Health
-                  </Link>
-                  <Link 
-                    href="/learn/development" 
-                    onClick={() => setIsContentOpen(false)}
-                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
-                  >
-                    Baby Development
-                  </Link>
-                  <Link 
-                    href="/learn/safety" 
-                    onClick={() => setIsContentOpen(false)}
-                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
-                  >
-                    Safety & First Aid
-                  </Link>
-                  <Link 
-                    href="/learn/recipes" 
-                    onClick={() => setIsContentOpen(false)}
-                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
-                  >
-                    Recipes & Solid Start
+                    About Us
                   </Link>
                 </motion.div>
               )}
             </div>
-            
-            <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">About</Link>
-            <Link href="/blog" className="text-gray-600 hover:text-gray-900 transition-colors">Blog</Link>
-            <Link href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors">FAQ</Link>
-            
-            {/* Newsletter 按钮 */}
+
+            {/* Search & Newsletter */}
+            <Link href="/search" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </Link>
             <button
               onClick={() => setShowNewsletterModal(true)}
-              className="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-primary-600 hover:to-primary-700 transition-all duration-300"
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
             >
               Subscribe
             </button>
@@ -160,45 +256,106 @@ function Header() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="md:hidden py-4"
+            className="md:hidden py-4 border-t border-gray-200"
           >
-            <nav className="flex flex-col space-y-4">
-              <Link href="/" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Home
-              </Link>
-              <Link href="/learn/feeding" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Feeding & Nutrition
-              </Link>
-              <Link href="/learn/sleep" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Sleep & Routines
-              </Link>
-              <Link href="/learn/mom-health" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Mom Health
-              </Link>
-              <Link href="/learn/development" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Baby Development
-              </Link>
-              <Link href="/learn/safety" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Safety & First Aid
-              </Link>
-              <Link href="/learn/recipes" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Recipes & Solid Start
-              </Link>
-              <Link href="/about" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                About
-              </Link>
-              <Link href="/blog" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                Blog
-              </Link>
-              <Link href="/faq" className="text-left text-gray-600 hover:text-gray-900 transition-colors">
-                FAQ
-              </Link>
-              <button 
-                onClick={() => setShowNewsletterModal(true)}
-                className="text-left px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-primary-600 hover:to-primary-700 transition-all duration-300"
+            <nav className="flex flex-col space-y-3">
+              <Link
+                href="/"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
               >
-                Subscribe to Newsletter
-              </button>
+                🏠 Home
+              </Link>
+
+              {/* Foods Section */}
+              <div className="border-t border-gray-100 pt-3">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 px-2">Foods</div>
+                <Link
+                  href="/foods"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors px-2 py-2"
+                >
+                  Browse All Foods
+                </Link>
+                <Link
+                  href="/foods?age=6m+"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  6+ Months
+                </Link>
+                <Link
+                  href="/foods?age=9m+"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  9+ Months
+                </Link>
+                <Link
+                  href="/foods?age=12m+"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  12+ Months
+                </Link>
+              </div>
+
+              {/* Other Links */}
+              <div className="border-t border-gray-100 pt-3 space-y-2">
+                <Link
+                  href="/topics"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
+                >
+                  📚 Topics
+                </Link>
+                <Link
+                  href="/faq"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
+                >
+                  ❓ FAQ
+                </Link>
+                <Link
+                  href="/search"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
+                >
+                  🔍 Search
+                </Link>
+              </div>
+
+              {/* About Section */}
+              <div className="border-t border-gray-100 pt-3">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 px-2">About</div>
+                <Link
+                  href="/trust"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  Trust & Methods
+                </Link>
+                <Link
+                  href="/about"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  About Us
+                </Link>
+              </div>
+
+              {/* Newsletter Button */}
+              <div className="pt-3">
+                <button
+                  onClick={() => {
+                    setShowNewsletterModal(true);
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-center px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+                >
+                  Subscribe to Newsletter
+                </button>
+              </div>
             </nav>
           </motion.div>
         )}
@@ -230,12 +387,12 @@ function Header() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full px-5 py-3 rounded-xl border border-gray-100 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-transparent text-base transition-all duration-200 placeholder-gray-400"
+                className="w-full px-5 py-3 rounded-xl border border-gray-100 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-transparent text-base transition-all duration-200 placeholder-gray-400"
                 required
               />
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl text-base font-semibold shadow-none hover:from-primary-600 hover:to-primary-700 transition-all duration-200"
+                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-base font-semibold shadow-none hover:from-purple-700 hover:to-pink-700 transition-all duration-200"
               >
                 Subscribe
               </button>

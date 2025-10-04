@@ -1,0 +1,24 @@
+{
+  "id": "REPLACE_WITH_UUID",
+  "slug": "guide-slug",
+  "title": "Guide title",
+  "locale": "Global",
+  "guide_type": "framework",
+  "age_range": ["6-8m"],
+  "summary": "Overview of the guide.",
+  "body_md": "## Section\nDetail in markdown format.",
+  "checklist": [
+    {
+      "label": "Checklist item",
+      "detail": "Supporting detail",
+      "type": "tip"
+    }
+  ],
+  "related_rule_ids": ["UUID_FROM_KB_RULES"],
+  "related_food_ids": ["UUID_FROM_KB_FOODS"],
+  "source_ids": ["UUID_FROM_KB_SOURCES"],
+  "reviewed_by": "Reviewer Name, Credential",
+  "last_reviewed_at": "2024-01-01",
+  "expires_at": "2026-01-01",
+  "status": "draft"
+}

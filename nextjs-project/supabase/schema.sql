@@ -172,6 +172,137 @@ CREATE TABLE IF NOT EXISTS ingestion_logs (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Analytics events table
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_type TEXT NOT NULL,
+  event_data JSONB NOT NULL DEFAULT '{}'::jsonb,
+  user_id TEXT,
+  session_id TEXT,
+  ip_address TEXT,
+  user_agent TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Knowledge base sources and content tables
+CREATE TABLE IF NOT EXISTS kb_sources (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  organization TEXT,
+  url TEXT NOT NULL,
+  grade TEXT NOT NULL CHECK (grade IN ('A', 'B', 'C', 'D')),
+  retrieved_at DATE,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS kb_rules (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  locale TEXT NOT NULL DEFAULT 'US' CHECK (locale IN ('US', 'CA', 'Global')),
+  category TEXT NOT NULL,
+  risk_level TEXT NOT NULL DEFAULT 'none' CHECK (risk_level IN ('none', 'low', 'medium', 'high')),
+  summary TEXT,
+  do_list TEXT[] DEFAULT '{}',
+  dont_list TEXT[] DEFAULT '{}',
+  why TEXT,
+  how_to JSONB DEFAULT '[]',
+  compliance_notes TEXT,
+  source_ids UUID[] DEFAULT '{}',
+  reviewed_by TEXT,
+  last_reviewed_at DATE,
+  expires_at DATE,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS kb_foods (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  locale TEXT NOT NULL DEFAULT 'US' CHECK (locale IN ('US', 'CA', 'Global')),
+  age_range TEXT[] NOT NULL DEFAULT '{}',
+  feeding_methods TEXT[] DEFAULT '{}',
+  serving_forms JSONB DEFAULT '[]',
+  risk_level TEXT NOT NULL DEFAULT 'none' CHECK (risk_level IN ('none', 'low', 'medium', 'high')),
+  nutrients_focus TEXT[] DEFAULT '{}',
+  do_list TEXT[] DEFAULT '{}',
+  dont_list TEXT[] DEFAULT '{}',
+  why TEXT,
+  how_to JSONB DEFAULT '[]',
+  portion_hint TEXT,
+  media JSONB DEFAULT '[]',
+  source_ids UUID[] DEFAULT '{}',
+  reviewed_by TEXT,
+  last_reviewed_at DATE,
+  expires_at DATE,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS kb_guides (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  locale TEXT NOT NULL DEFAULT 'US' CHECK (locale IN ('US', 'CA', 'Global')),
+  guide_type TEXT NOT NULL CHECK (guide_type IN ('framework', 'scenario', 'nutrition', 'allergen', 'pathway', 'other')),
+  age_range TEXT[] DEFAULT '{}',
+  summary TEXT,
+  body_md TEXT,
+  checklist JSONB DEFAULT '[]',
+  related_food_ids UUID[] DEFAULT '{}',
+  related_rule_ids UUID[] DEFAULT '{}',
+  source_ids UUID[] DEFAULT '{}',
+  reviewed_by TEXT,
+  last_reviewed_at DATE,
+  expires_at DATE,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Knowledge Base FAQs (Frequently Asked Questions)
+CREATE TABLE IF NOT EXISTS kb_faqs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+
+  -- Core content
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  answer_html TEXT,
+
+  -- Categorization
+  category TEXT NOT NULL CHECK (category IN ('feeding', 'sleep', 'health-safety', 'development', 'behavior', 'daily-care')),
+  subcategory TEXT,
+  age_range TEXT[] DEFAULT '{}',
+  locale TEXT NOT NULL DEFAULT 'Global' CHECK (locale IN ('US', 'CA', 'Global')),
+
+  -- Relationships
+  source_ids UUID[] DEFAULT '{}',
+  related_food_ids UUID[] DEFAULT '{}',
+  related_rule_ids UUID[] DEFAULT '{}',
+  related_guide_ids UUID[] DEFAULT '{}',
+  related_topic_slugs TEXT[] DEFAULT '{}',
+
+  -- Metadata
+  priority INTEGER DEFAULT 100,
+  views_count INTEGER DEFAULT 0,
+  helpful_count INTEGER DEFAULT 0,
+
+  -- Quality control
+  last_reviewed_at DATE,
+  expires_at DATE,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_articles_slug ON articles(slug);
 CREATE INDEX IF NOT EXISTS idx_articles_hub ON articles(hub);
@@ -195,6 +326,33 @@ CREATE INDEX IF NOT EXISTS idx_images_article_id ON images(article_id);
 CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_email ON newsletter_subscribers(email);
 CREATE INDEX IF NOT EXISTS idx_waitlist_users_email ON waitlist_users(email);
 
+CREATE INDEX IF NOT EXISTS idx_analytics_events_type ON analytics_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_analytics_events_created_at ON analytics_events(created_at);
+
+CREATE INDEX IF NOT EXISTS idx_kb_rules_slug ON kb_rules(slug);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_kb_sources_url ON kb_sources(url);
+
+CREATE INDEX IF NOT EXISTS idx_kb_rules_locale ON kb_rules(locale);
+CREATE INDEX IF NOT EXISTS idx_kb_rules_status ON kb_rules(status);
+
+CREATE INDEX IF NOT EXISTS idx_kb_foods_slug ON kb_foods(slug);
+CREATE INDEX IF NOT EXISTS idx_kb_foods_locale ON kb_foods(locale);
+CREATE INDEX IF NOT EXISTS idx_kb_foods_status ON kb_foods(status);
+CREATE INDEX IF NOT EXISTS idx_kb_foods_age_range ON kb_foods USING GIN(age_range);
+
+CREATE INDEX IF NOT EXISTS idx_kb_guides_slug ON kb_guides(slug);
+CREATE INDEX IF NOT EXISTS idx_kb_guides_locale ON kb_guides(locale);
+CREATE INDEX IF NOT EXISTS idx_kb_guides_status ON kb_guides(status);
+CREATE INDEX IF NOT EXISTS idx_kb_guides_age_range ON kb_guides USING GIN(age_range);
+
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_slug ON kb_faqs(slug);
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_category ON kb_faqs(category);
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_locale ON kb_faqs(locale);
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_status ON kb_faqs(status);
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_priority ON kb_faqs(priority);
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_age_range ON kb_faqs USING GIN(age_range);
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_related_topics ON kb_faqs USING GIN(related_topic_slugs);
+
 -- Full-text search indexes (using generated columns for better performance)
 ALTER TABLE articles ADD COLUMN IF NOT EXISTS search_vector tsvector GENERATED ALWAYS AS (
   to_tsvector('english', 
@@ -205,14 +363,22 @@ ALTER TABLE articles ADD COLUMN IF NOT EXISTS search_vector tsvector GENERATED A
 ) STORED;
 
 ALTER TABLE qas ADD COLUMN IF NOT EXISTS search_vector tsvector GENERATED ALWAYS AS (
-  to_tsvector('english', 
-    coalesce(question, '') || ' ' || 
+  to_tsvector('english',
+    coalesce(question, '') || ' ' ||
+    coalesce(answer, '')
+  )
+) STORED;
+
+ALTER TABLE kb_faqs ADD COLUMN IF NOT EXISTS search_vector tsvector GENERATED ALWAYS AS (
+  to_tsvector('english',
+    coalesce(question, '') || ' ' ||
     coalesce(answer, '')
   )
 ) STORED;
 
 CREATE INDEX IF NOT EXISTS idx_articles_search ON articles USING GIN(search_vector);
 CREATE INDEX IF NOT EXISTS idx_qas_search ON qas USING GIN(search_vector);
+CREATE INDEX IF NOT EXISTS idx_kb_faqs_search ON kb_faqs USING GIN(search_vector);
 
 -- Triggers for updated_at timestamps
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -227,6 +393,21 @@ CREATE TRIGGER update_articles_updated_at BEFORE UPDATE ON articles
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_content_hubs_updated_at BEFORE UPDATE ON content_hubs
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_kb_sources_updated_at BEFORE UPDATE ON kb_sources
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_kb_rules_updated_at BEFORE UPDATE ON kb_rules
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_kb_foods_updated_at BEFORE UPDATE ON kb_foods
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_kb_guides_updated_at BEFORE UPDATE ON kb_guides
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_kb_faqs_updated_at BEFORE UPDATE ON kb_faqs
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Function to update content count in hubs
