@@ -115,12 +115,13 @@ Disallow: /api/analytics/
 Sitemap: https://jupitlunar.com/sitemap.xml
 Sitemap: https://jupitlunar.com/news-sitemap.xml
 Sitemap: https://jupitlunar.com/feed.json
+Sitemap: https://jupitlunar.com/sitemap-blog.xml
 
 # ============================================
 # AEO Metadata for LLM Understanding
 # ============================================
 # Content-Type: Health Education & Parenting
-# Primary-Language: English
+# Primary-Language: English (with some Chinese content)
 # Geographic-Focus: North America (US, Canada)
 # Target-Audience: Parents and caregivers of infants 0-24 months
 # Content-Authority: Based on CDC, AAP, Health Canada official guidelines
