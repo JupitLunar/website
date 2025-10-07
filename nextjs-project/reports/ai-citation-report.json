@@ -1,0 +1,187 @@
+{
+  "timestamp": "2025-10-07T01:21:37.584Z",
+  "totalArticles": 64,
+  "categoryStats": {
+    "development": 5,
+    "feeding-nutrition": 28,
+    "safety": 2,
+    "storage": 2,
+    "beverages": 2,
+    "nutrition": 4,
+    "feeding": 8,
+    "framework": 1,
+    "pathway": 1,
+    "allergen": 2,
+    "scenario": 4,
+    "other": 2,
+    "feeding-environment": 1,
+    "supplement": 1,
+    "food-safety": 1
+  },
+  "ageStats": {
+    "0-12 months": 3,
+    "6-12 months": 24,
+    "0-6 months": 19,
+    "12-24 months": 8,
+    "2-3 years": 1,
+    "3-6 years": 1,
+    "4-6 months": 1,
+    "9-12 months": 1,
+    "4-12 months": 1,
+    "6-12m": 4,
+    "12-24m": 5,
+    "6-8m": 9,
+    "9-12m": 10,
+    "6-24m": 3,
+    "0-6m": 2,
+    "0-12m": 1
+  },
+  "potentialStats": {
+    "high": 43,
+    "medium": 11,
+    "low": 10
+  },
+  "topArticles": [
+    {
+      "title": "What activities can help my baby develop motor skills?",
+      "category": "development",
+      "ageRange": [
+        "0-12 months"
+      ],
+      "score": 3,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜"
+      ]
+    },
+    {
+      "title": "How can I support my baby's language development from birth to 12 months?",
+      "category": "development",
+      "ageRange": [
+        "0-12 months"
+      ],
+      "score": 3,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜"
+      ]
+    },
+    {
+      "title": "What activities can I do with my baby to support cognitive development?",
+      "category": "development",
+      "ageRange": [
+        "0-12 months"
+      ],
+      "score": 3,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜"
+      ]
+    },
+    {
+      "title": "What are the key developmental milestones for babies 6-12 months?",
+      "category": "development",
+      "ageRange": [
+        "6-12 months"
+      ],
+      "score": 3,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜"
+      ]
+    },
+    {
+      "title": "What are the key developmental milestones for babies 0-6 months?",
+      "category": "development",
+      "ageRange": [
+        "0-6 months"
+      ],
+      "score": 3,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜"
+      ]
+    },
+    {
+      "title": "Vitamin D and Iron Supplements: Complete Guide for Breastfed Babies",
+      "category": "feeding-nutrition",
+      "ageRange": [
+        "0-6 months",
+        "6-12 months",
+        "12-24 months"
+      ],
+      "score": 3,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜"
+      ]
+    },
+    {
+      "title": "Should babies/toddlers drink juice? If yes, how much and when?",
+      "category": "feeding-nutrition",
+      "ageRange": [
+        "12-24 months",
+        "2-3 years",
+        "3-6 years"
+      ],
+      "score": 4,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜",
+        "问答式标题"
+      ]
+    },
+    {
+      "title": "How and when do we transition from bottle/breast to an open cup or straw cup?",
+      "category": "feeding-nutrition",
+      "ageRange": [
+        "6-12 months",
+        "12-24 months"
+      ],
+      "score": 4,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜",
+        "问答式标题"
+      ]
+    },
+    {
+      "title": "How do I tell a true food allergy from a normal reaction to new foods?",
+      "category": "safety",
+      "ageRange": [
+        "4-6 months",
+        "6-12 months",
+        "12-24 months"
+      ],
+      "score": 3,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜"
+      ]
+    },
+    {
+      "title": "How do I handle constipation, diarrhea, or gassiness when starting new foods?",
+      "category": "feeding-nutrition",
+      "ageRange": [
+        "6-12 months",
+        "12-24 months"
+      ],
+      "score": 4,
+      "reasons": [
+        "明确年龄范围",
+        "丰富标签",
+        "内容新鲜",
+        "问答式标题"
+      ]
+    }
+  ]
+}
