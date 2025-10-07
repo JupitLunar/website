@@ -1,0 +1,53 @@
+{
+  "version": "2025-01-15",
+  "length": [
+    {
+      "imperial": "inch",
+      "metric": "centimeter",
+      "ratio": 2.54,
+      "useCases": ["growth charts", "toy safety measurements"]
+    },
+    {
+      "imperial": "foot",
+      "metric": "meter",
+      "ratio": 0.3048,
+      "useCases": ["crib clearance", "room safety gating"]
+    }
+  ],
+  "volume": [
+    {
+      "imperial": "fluid_ounce",
+      "metric": "milliliter",
+      "ratio": 29.5735,
+      "useCases": ["formula prep", "medicine dosing"]
+    },
+    {
+      "imperial": "cup",
+      "metric": "milliliter",
+      "ratio": 236.588,
+      "useCases": ["meal planning", "puree storage"]
+    }
+  ],
+  "temperature": [
+    {
+      "imperial": "fahrenheit",
+      "metric": "celsius",
+      "convert": "(value - 32) * 5/9",
+      "useCases": ["nursery climate", "fever thresholds"]
+    }
+  ],
+  "weight": [
+    {
+      "imperial": "pound",
+      "metric": "kilogram",
+      "ratio": 0.453592,
+      "useCases": ["growth tracking", "medication dosing"]
+    },
+    {
+      "imperial": "ounce",
+      "metric": "gram",
+      "ratio": 28.3495,
+      "useCases": ["infant feeding", "solid food portions"]
+    }
+  ]
+}

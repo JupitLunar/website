@@ -1,0 +1,81 @@
+{
+  "policyVersion": "2025-01-15",
+  "contact": "mailto:support@momaiagent.com",
+  "notes": "Guidance for AI and search crawlers interacting with MomAI properties.",
+  "allowedAgents": [
+    {
+      "userAgent": "GPTBot",
+      "rateLimitPerMinute": 120,
+      "requirements": ["Respect If-Modified-Since", "Announce token usage in request headers"],
+      "acceptableUse": ["Indexing", "Answer generation"],
+      "prohibitedUse": ["Model training without explicit license"]
+    },
+    {
+      "userAgent": "OAI-SearchBot",
+      "rateLimitPerMinute": 120,
+      "requirements": ["Support HEAD freshness checks", "Include contact email in User-Agent"],
+      "acceptableUse": ["Indexing", "Answer generation"],
+      "prohibitedUse": ["Redistribution of proprietary assets"]
+    },
+    {
+      "userAgent": "Google-Extended",
+      "rateLimitPerMinute": 240,
+      "requirements": ["Adhere to Google Publisher Policies"],
+      "acceptableUse": ["AI preview snippets", "Search generative experience"],
+      "prohibitedUse": ["Training unrelated third-party models"]
+    },
+    {
+      "userAgent": "ClaudeBot",
+      "rateLimitPerMinute": 90,
+      "requirements": ["Honor Crawl-delay=1", "Use HTTPS"],
+      "acceptableUse": ["Indexing", "Answer generation"],
+      "prohibitedUse": ["Persistent storage of Supabase endpoints"]
+    },
+    {
+      "userAgent": "PerplexityBot",
+      "rateLimitPerMinute": 60,
+      "requirements": ["Disclose Perplexity-User fetches", "Respect geo fences"],
+      "acceptableUse": ["On-demand retrieval"],
+      "prohibitedUse": ["Background bulk mirroring"]
+    },
+    {
+      "userAgent": "Applebot-Extended",
+      "rateLimitPerMinute": 180,
+      "requirements": ["Request Applebot verification token"],
+      "acceptableUse": ["Generative training for Apple experiences"],
+      "prohibitedUse": ["Sharing datasets externally"]
+    },
+    {
+      "userAgent": "CCBot",
+      "rateLimitPerMinute": 60,
+      "requirements": ["Publish crawl IP ranges"],
+      "acceptableUse": ["Common Crawl snapshotting"],
+      "prohibitedUse": ["Derivative dataset resale"]
+    }
+  ],
+  "disallowedAgents": [
+    {
+      "userAgent": "Perplexity-User",
+      "reason": "User-triggered fetches are validated via WAF token before being served"
+    }
+  ],
+  "contentUsage": {
+    "attributionRequired": true,
+    "license": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "machineReadableFeeds": [
+      {
+        "path": "/ai-feed.ndjson",
+        "description": "Full corpus export for sanctioned partners"
+      },
+      {
+        "path": "/ai-feed-delta.ndjson",
+        "description": "Rolling 30 day changes"
+      }
+    ]
+  },
+  "security": {
+    "waf": "UA + IP double verification enforced",
+    "contactForAccess": "mailto:security@momaiagent.com",
+    "logsRetainedDays": 30
+  }
+}

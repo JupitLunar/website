@@ -3790,8 +3790,171 @@ const blogPostData = {
   }
 };
 
+const blogPostSummaries: Record<
+  string,
+  {
+    title: string;
+    items: { label: string; value: string }[];
+    sources?: { label: string; url: string }[];
+  }
+> = {
+  "safe-sleep-guidelines-newborns": {
+    title: "Safe sleep snapshot",
+    items: [
+      { label: "Primary question", value: "How to cut SIDS risk at home" },
+      { label: "Age focus", value: "Birth–12 months" },
+      {
+        label: "Key action",
+        value: "Back-to-sleep on a firm, bare crib with 6 months of room-sharing",
+      },
+      { label: "Regions covered", value: "United States · Canada · United Kingdom · European Union" },
+    ],
+    sources: [
+      {
+        label: "AAP 2022 Safe Sleep Policy",
+        url: "https://publications.aap.org/pediatrics/article/150/1/e2022057990/188843",
+      },
+      {
+        label: "Health Canada – Safe Sleep",
+        url: "https://www.canada.ca/en/public-health/services/publications/healthy-living/safe-infant-sleep.html",
+      },
+    ],
+  },
+  "gentle-sleep-training-baby": {
+    title: "Gentle sleep training at-a-glance",
+    items: [
+      { label: "Primary question", value: "How to lengthen night sleep without harsh methods" },
+      { label: "Age focus", value: "4–12 months (developmentally ready infants)" },
+      { label: "Method", value: "Graduated extinction with 3-minute check-ins, +2 minutes each round" },
+      { label: "Supportive habits", value: "Dark 20–22 °C rooms, ≤ 50 dB white noise, age-appropriate naps" },
+    ],
+    sources: [
+      {
+        label: "American Academy of Pediatrics – HealthyChildren Sleep Training",
+        url: "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/Getting-Your-Baby-to-Sleep.aspx",
+      },
+      {
+        label: "Cleveland Clinic – Sleep Training Evidence",
+        url: "https://health.clevelandclinic.org/sleep-training-methods",
+      },
+    ],
+  },
+  "newborn-feeding-schedule": {
+    title: "Newborn intake benchmarks",
+    items: [
+      { label: "Primary question", value: "How often and how much should newborns eat" },
+      { label: "Milk frequency", value: "8–12 feeds per 24 h (breast); 60–90 mL every 3 h (formula)" },
+      { label: "Hydration check", value: "≥ 6 wet diapers daily by day 5" },
+      { label: "Regions covered", value: "US · Canada · UK · EU" },
+    ],
+    sources: [
+      {
+        label: "HealthyChildren – Newborn Feeding",
+        url: "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Newborn-and-Baby-Feeding-Schedule.aspx",
+      },
+      {
+        label: "NHS – Feeding cues",
+        url: "https://www.nhs.uk/conditions/baby/breastfeeding-and-bottle-feeding/bottle-feeding/how-much-formula-does-my-baby-need/",
+      },
+    ],
+  },
+  "starting-solids-6-months": {
+    title: "Starting solids essentials",
+    items: [
+      { label: "Primary question", value: "How to introduce solids alongside milk" },
+      { label: "Readiness window", value: "Around 6 months when baby sits with support & has head control" },
+      { label: "First foods", value: "Iron-rich purées or soft BLW strips + repeated allergen exposure" },
+      { label: "Safety", value: "No honey < 12 months; continue breast/formula feeds" },
+    ],
+    sources: [
+      { label: "WHO Complementary Feeding", url: "https://www.who.int/health-topics/complementary-feeding" },
+      {
+        label: "HealthyChildren – Starting Solids",
+        url: "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Switching-To-Solid-Foods.aspx",
+      },
+    ],
+  },
+  "infant-vaccine-schedule-2025": {
+    title: "First-year vaccine roadmap",
+    items: [
+      { label: "Primary question", value: "Which vaccines are due at each well-visit" },
+      { label: "Birth", value: "Hepatitis B dose #1 within 24 h" },
+      { label: "2–6 months", value: "DTaP, Hib, IPV, PCV, Rotavirus series + seasonal flu ≥ 6 months" },
+      { label: "12 months", value: "MMR, Varicella, PCV booster, Hep A (US)" },
+    ],
+    sources: [
+      {
+        label: "CDC – 2025 Immunization Schedule",
+        url: "https://www.cdc.gov/vaccines/schedules/hcp/imz/child-adolescent.html",
+      },
+      {
+        label: "ECDC – EU Childhood Schedule Overview",
+        url: "https://vaccination-info.europa.eu/en",
+      },
+    ],
+  },
+  "sick-baby-fever-cold-care": {
+    title: "Fever & cold triage cues",
+    items: [
+      { label: "Primary question", value: "When to manage at home vs call the doctor" },
+      { label: "Seek urgent care", value: "Fever ≥ 100.4 °F (38 °C) under 3 months or breathing distress" },
+      { label: "Home comfort", value: "Saline drops + suction, humidifier, weight-based acetaminophen" },
+      { label: "Red-flag hydration", value: "< 3 wet diapers in 24 h" },
+    ],
+    sources: [
+      {
+        label: "AAP – Fever and Your Baby",
+        url: "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/Fevers.aspx",
+      },
+      {
+        label: "NHS – Caring for a Sick Baby",
+        url: "https://www.nhs.uk/conditions/baby/health/fever-in-babies/",
+      },
+    ],
+  },
+  "postpartum-depression-signs-help": {
+    title: "Postpartum mental health signals",
+    items: [
+      { label: "Primary question", value: "How to recognise and respond to PPD" },
+      { label: "When to get help", value: "Low mood > 2 weeks, intrusive thoughts, bonding difficulty" },
+      { label: "Evidence-based care", value: "CBT/IPT therapy, SSRI medication compatible with breastfeeding" },
+      { label: "24/7 support", value: "PSI +1-800-944-4773, NHS 111, EU 112" },
+    ],
+    sources: [
+      {
+        label: "CDC – Depression After Pregnancy",
+        url: "https://www.cdc.gov/reproductivehealth/features/postpartum-depression/index.html",
+      },
+      {
+        label: "NHS – Postnatal Depression",
+        url: "https://www.nhs.uk/mental-health/conditions/post-natal-depression/overview/",
+      },
+    ],
+  },
+  "babyproofing-home-safety": {
+    title: "Home safety checklist",
+    items: [
+      { label: "Primary question", value: "How to prevent the top household injuries" },
+      { label: "High-impact fixes", value: "Anchor furniture, install hardware stair gates, lock cabinets" },
+      { label: "Choking rule", value: "Remove any item that fits through a toilet-paper roll" },
+      { label: "Water safety", value: "Set heaters ≤ 120 °F (49 °C) and stay within arm's reach at bath time" },
+    ],
+    sources: [
+      {
+        label: "National Safety Council – Home Safety",
+        url: "https://www.nsc.org/community-safety/safety-topics/child-safety",
+      },
+      {
+        label: "Safe Kids Worldwide – Home Safety Checklist",
+        url: "https://www.safekids.org/safetytips/field_risks/home-safety",
+      },
+    ],
+  },
+};
+
 const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const summary = slug ? blogPostSummaries[slug] : undefined;
   const post = blogPostData[slug as keyof typeof blogPostData];
 
   if (!post) {
@@ -3811,7 +3974,7 @@ const BlogPost: React.FC = () => {
   }
 
   // 结构化数据
-  const blogPostingJsonLd = {
+  const blogPostingJsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": post.title,
@@ -3841,6 +4004,25 @@ const BlogPost: React.FC = () => {
       }
     }
   };
+
+  if (summary) {
+    blogPostingJsonLd.hasPart = [
+      {
+        "@type": "WebPageElement",
+        "name": summary.title,
+        "cssSelector": "#quick-fact-sheet",
+        "abstract": summary.items.map((item) => `${item.label}: ${item.value}`).join(" | ")
+      }
+    ];
+
+    if (summary.sources?.length) {
+      blogPostingJsonLd.isBasedOn = summary.sources.map((source) => ({
+        "@type": "CreativeWork",
+        "name": source.label,
+        "url": source.url
+      }));
+    }
+  }
 
   return (
     <>
@@ -3887,8 +4069,54 @@ const BlogPost: React.FC = () => {
               </div>
             </header>
 
+            {summary && (
+              <section
+                id="quick-fact-sheet"
+                aria-labelledby="quick-fact-sheet-title"
+                className="mb-12 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 shadow-sm"
+              >
+                <h2
+                  id="quick-fact-sheet-title"
+                  className="text-xl font-semibold text-indigo-900 mb-4 tracking-tight"
+                >
+                  {summary.title}
+                </h2>
+                <dl className="grid gap-4 md:grid-cols-2">
+                  {summary.items.map((item) => (
+                    <div key={item.label} className="space-y-1">
+                      <dt className="text-xs font-semibold uppercase tracking-wide text-indigo-600">
+                        {item.label}
+                      </dt>
+                      <dd className="text-base text-gray-900 leading-snug">{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                {summary.sources?.length ? (
+                  <div className="mt-6">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-indigo-600">
+                      Source references
+                    </h3>
+                    <ul className="mt-2 space-y-1 text-sm text-indigo-900">
+                      {summary.sources.map((source) => (
+                        <li key={source.url}>
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline decoration-dotted underline-offset-2 hover:text-indigo-700"
+                          >
+                            {source.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </section>
+            )}
+
             {/* Article Content */}
-            <div 
+            <div
               className="prose prose-lg max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-strong:text-gray-900 prose-blockquote:bg-blue-50 prose-blockquote:border-l-blue-400 prose-table:border-collapse prose-table:border prose-table:border-gray-300 prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6 prose-li:my-1 prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-6 prose-h3:mb-3 prose-p:leading-relaxed prose-p:mb-4 prose-blockquote:p-4 prose-blockquote:my-6 prose-blockquote:rounded-r-lg"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
