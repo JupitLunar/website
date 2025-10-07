@@ -1,4 +1,5 @@
 import type { ContentHub } from '@/types/content';
+import { generateMedicalWebPageSchema, generateCompleteAEOSchema } from './aeo-optimizations';
 
 // 生成文章的结构化数据
 export function generateArticleStructuredData(article: any) {
@@ -254,6 +255,11 @@ export function generateArticleStructuredData(article: any) {
       // 明确这是教育性内容，非医疗建议
       "disclaimer": "This content is for educational purposes only and does not replace professional medical advice. Always consult your pediatrician for personalized guidance.",
     });
+  }
+
+  // 添加MedicalWebPage schema（AEO优化）
+  if (['explainer', 'research', 'howto', 'faq'].includes(article.type)) {
+    graph.push(generateMedicalWebPageSchema(article));
   }
 
   return {
