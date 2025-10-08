@@ -1,0 +1,83 @@
+name: Web Scraper Cron Job
+
+on:
+  schedule:
+    # 每天凌晨2点运行（UTC时间）
+    # 相当于北美时间晚上6点或早上6点（取决于时区）
+    - cron: '0 2 * * *'
+  
+  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: '指定来源（用逗号分隔，如: CDC,AAP）'
+        required: false
+        default: ''
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 开始爬取
+        id: scrape
+        run: |
+          echo "🚀 开始运行Web Scraper"
+          echo "⏰ 时间: $(date)"
+          
+          # 构建请求体
+          if [ -n "${{ github.event.inputs.sources }}" ]; then
+            BODY='{"sources": ["${{ github.event.inputs.sources }}"]}'
+          else
+            BODY='{}'
+          fi
+          
+          # 调用API
+          response=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Authorization: Bearer ${{ secrets.SCRAPER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "$BODY" \
+            "${{ secrets.APP_URL }}/api/scraper/run")
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "HTTP Status: $http_code"
+          echo "Response: $body"
+          
+          if [ "$http_code" = "200" ]; then
+            echo "✅ 爬取成功"
+            echo "$body" | jq '.'
+            
+            # 提取统计信息
+            total=$(echo "$body" | jq -r '.data.total')
+            successful=$(echo "$body" | jq -r '.data.successful')
+            failed=$(echo "$body" | jq -r '.data.failed')
+            
+            echo "total=$total" >> $GITHUB_OUTPUT
+            echo "successful=$successful" >> $GITHUB_OUTPUT
+            echo "failed=$failed" >> $GITHUB_OUTPUT
+          else
+            echo "❌ 爬取失败"
+            echo "$body"
+            exit 1
+          fi
+      
+      - name: 生成总结
+        if: success()
+        run: |
+          echo "## 📊 爬取结果" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 总页面: ${{ steps.scrape.outputs.total }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 成功: ${{ steps.scrape.outputs.successful }} ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- 失败: ${{ steps.scrape.outputs.failed }} ❌" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⏰ 运行时间: $(date)" >> $GITHUB_STEP_SUMMARY
+      
+      - name: 失败通知
+        if: failure()
+        run: |
+          echo "⚠️ 爬虫运行失败！请检查日志。" >> $GITHUB_STEP_SUMMARY
+          # 这里可以添加Slack、Discord等通知
+

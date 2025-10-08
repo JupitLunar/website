@@ -95,3 +95,8 @@ dist
 # Temporary folders
 tmp/
 temp/
+
+# Web Scraper data
+data/scraped/
+cache/scraper/
+reports/scraper-stats.json

@@ -1,0 +1,98 @@
+name: Daily Content Update
+
+on:
+  schedule:
+    # 每天运行3次：上午9点、下午3点、晚上9点（UTC时间）
+    - cron: '0 1,7,13 * * *'  # 1am, 7am, 1pm UTC = 9am, 3pm, 9pm PST
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  update-content:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: nextjs-project/package-lock.json
+
+      - name: Create logs directory
+        run: mkdir -p nextjs-project/logs
+
+      - name: Install dependencies
+        run: |
+          cd nextjs-project
+          npm ci
+
+      - name: Run global scraper
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd nextjs-project
+          node scripts/global-auto-scraper.js | tee logs/scraper-$(date +%Y-%m-%d).log
+
+      - name: Update article regions
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd nextjs-project
+          node scripts/update-article-regions.js
+
+      - name: Get statistics
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd nextjs-project
+          node -e "
+          const { createClient } = require('@supabase/supabase-js');
+          const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY
+          );
+
+          (async () => {
+            const { count } = await supabase
+              .from('articles')
+              .select('*', { count: 'exact', head: true });
+
+            console.log('📊 Total articles:', count);
+
+            const { data: latest } = await supabase
+              .from('articles')
+              .select('title, created_at')
+              .order('created_at', { ascending: false })
+              .limit(3);
+
+            console.log('\n📝 Latest articles:');
+            latest.forEach((a, i) => {
+              console.log(\`  \${i+1}. \${a.title.substring(0, 60)}\`);
+            });
+          })();
+          "
+
+      - name: Trigger Vercel deployment (optional)
+        if: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: scraper-logs
+          path: nextjs-project/logs/*.log
+          retention-days: 30
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::Daily content update failed"
+          # 可以在这里添加Slack/Email通知

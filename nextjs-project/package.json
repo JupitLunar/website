@@ -24,7 +24,12 @@
     "seed:kb": "node scripts/seed-kb.js",
     "export:kb": "node scripts/export-kb.js",
     "validate:kb": "node scripts/validate-kb.js",
-    "correct:kb": "node scripts/correction-agent.js"
+    "correct:kb": "node scripts/correction-agent.js",
+    "scrape": "node scripts/web-scraper.js",
+    "scrape:test": "node scripts/web-scraper.js --test",
+    "scrape:review": "node scripts/review-scraped-content.js",
+    "scrape:stats": "node scripts/scraper-stats.js",
+    "scrape:report": "node scripts/scraper-stats.js --report"
   },
   "dependencies": {
     "next": "14.0.4",
@@ -37,7 +42,10 @@
     "zod": "^3.22.4",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.0.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "puppeteer": "^21.6.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
