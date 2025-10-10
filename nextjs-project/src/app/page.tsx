@@ -84,7 +84,7 @@ function HomePage() {
 
       <div className="min-h-screen bg-gradient-elegant">
         {/* Hero Section - 淡雅柔和风格 */}
-        <section className="relative py-16 px-4 sm:px-8 overflow-hidden bg-gradient-to-br from-slate-50/20 via-white to-violet-50/10">
+        <section className="relative py-8 px-4 sm:px-8 overflow-hidden bg-gradient-to-br from-slate-50/20 via-white to-violet-50/10">
           {/* 月相树背景图 */}
           <div className="absolute inset-0 opacity-[0.45] pointer-events-none">
             <Image
@@ -110,7 +110,7 @@ function HomePage() {
             >
               {/* 非常淡雅的产品标识 */}
               <motion.div
-                className="inline-flex items-center gap-3 mb-6 px-6 py-3 bg-gradient-to-r from-slate-50/90 to-violet-50/60 backdrop-blur-sm rounded-full shadow-sm border border-slate-200/30"
+                className="inline-flex items-center gap-3 mb-4 px-6 py-3 bg-gradient-to-r from-slate-50/90 to-violet-50/60 backdrop-blur-sm rounded-full shadow-sm border border-slate-200/30"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
@@ -125,7 +125,7 @@ function HomePage() {
 
               {/* 淡雅的主标题 */}
               <motion.h1
-                className="text-5xl md:text-6xl lg:text-7xl font-light text-slate-500 mb-4 leading-tight"
+                className="text-5xl md:text-6xl lg:text-7xl font-light text-slate-500 mb-3 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
@@ -138,7 +138,7 @@ function HomePage() {
               </motion.h1>
 
               <motion.p
-                className="text-xl md:text-2xl text-slate-500 mb-6 max-w-4xl mx-auto leading-relaxed font-light"
+                className="text-xl md:text-2xl text-slate-500 mb-4 max-w-4xl mx-auto leading-relaxed font-light"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
@@ -148,7 +148,7 @@ function HomePage() {
 
               {/* 权威机构名称 - 淡雅小字 */}
               <motion.div
-                className="mb-10"
+                className="mb-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.45 }}
@@ -165,7 +165,7 @@ function HomePage() {
 
               {/* 淡雅的功能说明 */}
               <motion.div
-                className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-5xl mx-auto"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-5xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
@@ -226,10 +226,10 @@ function HomePage() {
         </section>
 
         {/* AI Assistant Section - 优雅的对话界面 */}
-        <section id="ai-assistant-section" className="py-20 px-4 sm:px-8 bg-gradient-to-br from-blue-50/30 to-indigo-50/20">
+        <section id="ai-assistant-section" className="py-16 px-4 sm:px-8 bg-gradient-to-br from-blue-50/30 to-indigo-50/20">
           <div className="container mx-auto max-w-4xl">
-            <motion.div 
-              className="text-center mb-12"
+            <motion.div
+              className="text-center mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -316,9 +316,9 @@ function HomePage() {
 
               {/* 示例问题 - 优雅的按钮 */}
               {!showResponse && (
-                <div className="mt-8">
-                  <p className="text-sm text-slate-500 mb-4 font-light">Try asking:</p>
-                  <div className="flex flex-wrap gap-3">
+                <div className="mt-6">
+                  <p className="text-sm text-slate-500 mb-3 font-light">Try asking:</p>
+                  <div className="flex flex-wrap gap-2">
                     <button
                       onClick={() => setAiQuery("What are the key milestones in infant development?")}
                       className="px-4 py-2 bg-blue-100 hover:bg-blue-200 rounded-xl text-sm text-blue-700 transition-colors font-light"
@@ -342,6 +342,42 @@ function HomePage() {
                       className="px-4 py-2 bg-blue-100 hover:bg-blue-200 rounded-xl text-sm text-blue-700 transition-colors font-light"
                     >
                       Postpartum depression signs
+                    </button>
+                    <button
+                      onClick={() => setAiQuery("When can I introduce solid foods to my baby?")}
+                      className="px-4 py-2 bg-violet-100 hover:bg-violet-200 rounded-xl text-sm text-violet-700 transition-colors font-light"
+                    >
+                      Starting solid foods
+                    </button>
+                    <button
+                      onClick={() => setAiQuery("How much sleep does a newborn need?")}
+                      className="px-4 py-2 bg-indigo-100 hover:bg-indigo-200 rounded-xl text-sm text-indigo-700 transition-colors font-light"
+                    >
+                      Newborn sleep patterns
+                    </button>
+                    <button
+                      onClick={() => setAiQuery("What vaccines does my baby need?")}
+                      className="px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-xl text-sm text-purple-700 transition-colors font-light"
+                    >
+                      Baby vaccination schedule
+                    </button>
+                    <button
+                      onClick={() => setAiQuery("How to deal with baby colic?")}
+                      className="px-4 py-2 bg-pink-100 hover:bg-pink-200 rounded-xl text-sm text-pink-700 transition-colors font-light"
+                    >
+                      Managing baby colic
+                    </button>
+                    <button
+                      onClick={() => setAiQuery("What are safe foods for a 6-month-old?")}
+                      className="px-4 py-2 bg-blue-100 hover:bg-blue-200 rounded-xl text-sm text-blue-700 transition-colors font-light"
+                    >
+                      6-month-old food guide
+                    </button>
+                    <button
+                      onClick={() => setAiQuery("How to prevent diaper rash?")}
+                      className="px-4 py-2 bg-violet-100 hover:bg-violet-200 rounded-xl text-sm text-violet-700 transition-colors font-light"
+                    >
+                      Diaper rash prevention
                     </button>
                   </div>
                 </div>
@@ -489,7 +525,7 @@ function HomePage() {
         </section>
 
         {/* Our Apps Section */}
-        <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-emerald-50/30 to-teal-50/20">
+        <section id="our-apps" className="py-20 px-4 sm:px-8 bg-gradient-to-br from-emerald-50/30 to-teal-50/20">
           <div className="container mx-auto max-w-6xl">
             <motion.div
               className="text-center mb-16"
@@ -523,45 +559,53 @@ function HomePage() {
                   </div>
                   <div>
                     <h3 className="text-3xl font-light text-slate-500 mb-2">DearBaby</h3>
-                    <p className="text-slate-400 text-lg font-light">AI-Powered Newborn Tracker</p>
+                    <p className="text-slate-400 text-lg font-light">Baby Tracker & Sleep</p>
                   </div>
                 </div>
-                
+
                 <p className="text-slate-400 mb-8 text-lg leading-relaxed font-light">
-                  Track feeding, sleep, and milestones with AI-powered insights. Get personalized recommendations for your baby's development and growth.
+                  Your AI parenting co-pilot: log feeds & sleep in seconds, auto charts, predictive reminders, and personalized tips for calmer routines.
                 </p>
-                
+
                 <div className="space-y-4 mb-8">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                    <span className="text-slate-500 font-light">Smart feeding & sleep tracking</span>
+                    <span className="text-slate-500 font-light">Log nursing, bottle & nap with one tap</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                    <span className="text-slate-500 font-light">AI milestone predictions</span>
+                    <span className="text-slate-500 font-light">View growth charts & AI-powered reminders</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                    <span className="text-slate-500 font-light">Apple Watch integration</span>
+                    <span className="text-slate-500 font-light">Allergy-aware weaning tips & Apple Watch sync</span>
                   </div>
                 </div>
                 
-                <div className="flex gap-4">
+                <div className="space-y-3">
+                  <div className="flex gap-4">
+                    <a
+                      href="https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 bg-gradient-to-r from-slate-400 to-violet-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
+                    >
+                      Download Free
+                    </a>
+                    <Link
+                      href="/products/dearbaby"
+                      className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
+                    >
+                      Learn More
+                    </Link>
+                  </div>
                   <a
                     href="https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 bg-gradient-to-r from-slate-400 to-violet-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
+                    className="block text-center text-sm text-slate-400 hover:text-slate-600 transition-colors"
                   >
-                    Download Free
-                  </a>
-                  <a
-                    href="https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
-                  >
-                    View on App Store
+                    View on App Store →
                   </a>
                 </div>
               </motion.div>
@@ -581,46 +625,55 @@ function HomePage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-light text-slate-500 mb-2">SolidStart</h3>
-                    <p className="text-slate-400 text-lg font-light">AI Baby Food Companion</p>
+                    <h3 className="text-3xl font-light text-slate-500 mb-2">DearBaby: Solid Start</h3>
+                    <p className="text-slate-400 text-lg font-light">Baby Recipes · BLW Lunchbox</p>
                   </div>
                 </div>
-                
+
                 <p className="text-slate-400 mb-8 text-lg leading-relaxed font-light">
-                  Safe, stage-appropriate baby recipes powered by AI. Get ingredient scanning and allergy-safe meal planning for your little one.
+                  Purées, mashed, soft pieces, and beginner finger foods. Clean, calm interface designed for busy parents introducing solids around 6+ months.
                 </p>
-                
+
                 <div className="space-y-4 mb-8">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                    <span className="text-slate-500 font-light">Ingredient safety scanner</span>
+                    <span className="text-slate-500 font-light">Recipes by stage with step-by-step guidance</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                    <span className="text-slate-500 font-light">Age-appropriate meal plans</span>
+                    <span className="text-slate-500 font-light">Lunchbox builder for balanced meals</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                    <span className="text-slate-500 font-light">Smart shopping lists</span>
+                    <span className="text-slate-500 font-light">Favorites & collections organized by month</span>
                   </div>
                 </div>
-                
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => alert('SolidStart is coming soon! Join our newsletter to be notified when it launches.')}
-                    className="flex-1 bg-gradient-to-r from-slate-400 to-purple-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
+
+                <div className="space-y-3">
+                  <div className="flex gap-4">
+                    <a
+                      href="https://apps.apple.com/us/app/dearbaby-solid-start/id6749838104"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 bg-gradient-to-r from-slate-400 to-purple-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
+                    >
+                      Download Free
+                    </a>
+                    <Link
+                      href="/products/solidstart"
+                      className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
+                    >
+                      Learn More
+                    </Link>
+                  </div>
+                  <a
+                    href="https://apps.apple.com/us/app/dearbaby-solid-start/id6749838104"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-center text-sm text-slate-400 hover:text-slate-600 transition-colors"
                   >
-                    Coming Soon
-                  </button>
-                  <button
-                    onClick={() => {
-                      const newsletterBtn = document.querySelector('[data-newsletter-trigger]') as HTMLElement;
-                      newsletterBtn?.click();
-                    }}
-                    className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
-                  >
-                    Join Waitlist
-                  </button>
+                    View on App Store →
+                  </a>
                 </div>
               </motion.div>
             </div>

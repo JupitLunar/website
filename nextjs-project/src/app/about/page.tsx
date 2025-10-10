@@ -327,6 +327,110 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Contact Section */}
+      <section className="py-20 px-4 sm:px-8 bg-white">
+        <div className="container mx-auto max-w-4xl">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-light text-slate-500 mb-6">
+              Get in Touch
+            </h2>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto font-light">
+              Have questions or feedback? We'd love to hear from you.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="bg-gradient-to-br from-slate-50 to-violet-50/30 rounded-3xl p-8 md:p-12 border border-slate-200"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-2xl font-light text-slate-500 mb-6">Contact Information</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-slate-200 to-violet-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm text-slate-400 mb-1">Email</p>
+                      <a href="mailto:support@momaiagent.com" className="text-slate-600 hover:text-violet-500 transition-colors">
+                        support@momaiagent.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-slate-200 to-indigo-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm text-slate-400 mb-1">Location</p>
+                      <p className="text-slate-600">Edmonton, AB, Canada</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-slate-200 to-purple-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm text-slate-400 mb-1">Response Time</p>
+                      <p className="text-slate-600">Within 48 hours</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-light text-slate-500 mb-6">Quick Links</h3>
+                <div className="space-y-3">
+                  <Link href="/privacy" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    Privacy Policy
+                  </Link>
+                  <Link href="/disclaimer" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    Medical Disclaimer
+                  </Link>
+                  <Link href="/trust" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    Trust & Methods
+                  </Link>
+                  <Link href="/faq" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    FAQ
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 px-4 sm:px-8 bg-gradient-to-r from-slate-400 via-violet-400 to-slate-500 text-white">
         <div className="container mx-auto max-w-4xl text-center">

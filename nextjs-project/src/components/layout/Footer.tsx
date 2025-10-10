@@ -127,12 +127,18 @@ function Footer() {
             <p className="text-gray-400 text-sm">
               © 2025 JupitLunar. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            <div className="flex flex-wrap justify-center md:justify-end gap-4 md:gap-6 mt-4 md:mt-0">
+              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Privacy
+              </Link>
+              <Link href="/disclaimer" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Disclaimer
+              </Link>
               <Link href="/trust" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Trust & Methods
+                Trust
               </Link>
               <Link href="/about" className="text-gray-400 hover:text-white text-sm transition-colors">
-                About Us
+                About
               </Link>
               <Link href="/faq" className="text-gray-400 hover:text-white text-sm transition-colors">
                 FAQ

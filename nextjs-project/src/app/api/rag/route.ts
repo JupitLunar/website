@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import OpenAI from 'openai';
 
 // Initialize Supabase client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,7 +70,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Generate AI response based on found content
-    let answer = generateAnswer(query, articles, knowledgeChunks);
+    let answer = await generateAnswer(query, articles, knowledgeChunks);
 
     return NextResponse.json({
       answer,
@@ -85,7 +91,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function generateAnswer(query: string, articles: any[], knowledgeChunks: any[]): string {
+async function generateAnswer(query: string, articles: any[], knowledgeChunks: any[]): Promise<string> {
   const lowerQuery = query.toLowerCase();
 
   // Handle common maternal & infant care questions
@@ -120,7 +126,30 @@ function generateAnswer(query: string, articles: any[], knowledgeChunks: any[]):
     return `${topChunk.content.substring(0, 400)}...\n\nFor specific guidance related to your situation, please consult your healthcare provider.`;
   }
 
-  // Default response
+  // Use LLM fallback when no knowledge base content found
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{
+        role: 'system',
+        content: 'You are a helpful maternal and infant care assistant. Provide evidence-based information based on general medical consensus from trusted sources (AAP, CDC, WHO). Keep responses warm, supportive, and empathetic. Include practical, actionable advice. Always remind parents to consult their healthcare provider for personalized medical advice. Use bullet points for clarity when appropriate.'
+      }, {
+        role: 'user',
+        content: query
+      }],
+      max_tokens: 800,
+      temperature: 0.7,
+    });
+
+    const responseText = completion.choices[0]?.message?.content;
+    if (responseText) {
+      return responseText + "\n\n💡 This response was generated using AI. For personalized medical advice, please consult your healthcare provider.";
+    }
+  } catch (error) {
+    console.error('LLM fallback error:', error);
+  }
+
+  // Final fallback if LLM fails
   return "Thank you for your question about maternal and infant care. While I don't have specific information on this topic in my current knowledge base, I recommend:\n\n• Consulting with your pediatrician or healthcare provider for personalized advice\n• Checking our knowledge base sections on feeding, development, and safety\n• Reaching out to trusted sources like AAP, CDC, or WHO for evidence-based information\n\nYour baby's health and your well-being are important - never hesitate to contact your healthcare provider with concerns.";
 }
 
