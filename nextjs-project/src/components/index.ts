@@ -8,7 +8,6 @@ export { default as Header } from './Header';
 export { default as LatestArticlesTable } from './LatestArticlesTable';
 export { default as MedicalDisclaimer } from './MedicalDisclaimer';
 export { default as NewsletterSignup } from './NewsletterSignup';
-export { default as PerformanceMonitor } from './PerformanceMonitor';
 export { ArticleItemList, DatasetStructuredData } from './StructuredData';
 export { default as Analytics } from './Analytics';
 
