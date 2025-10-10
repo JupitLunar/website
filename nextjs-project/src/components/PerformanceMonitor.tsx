@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { performanceMonitor } from '@/lib/cache';
+import { performanceMonitor } from '../lib/cache';
 
 type MetricEntry = {
   name: string;

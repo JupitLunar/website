@@ -1,6 +1,6 @@
 import React from 'react';
 import Script from 'next/script';
-import { BottomLineAnswer, USCanadaComparison, CommonAnswer, CommonComparison } from '@/components';
+import { BottomLineAnswer, USCanadaComparison } from '@/components';
 
 /**
  * AEO优化文章页面示例

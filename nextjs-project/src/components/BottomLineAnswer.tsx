@@ -1,7 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 
-interface BottomLineAnswerProps {
+export interface BottomLineAnswerProps {
   question: string;
   answer: string;
   keyNumbers?: string[];
@@ -12,6 +12,10 @@ interface BottomLineAnswerProps {
   className?: string;
   articleSlug?: string;
 }
+
+// Type aliases for backward compatibility
+export type CommonAnswer = BottomLineAnswerProps;
+export type CommonComparison = BottomLineAnswerProps;
 
 export function BottomLineAnswer({
   question,

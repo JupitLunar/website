@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Generate AI response based on found content
-    const response = await generateAnswer(query, articles, knowledgeChunks);
+    const response = await generateAnswer(query, articles || [], knowledgeChunks || []);
 
     return NextResponse.json({
       answer: response,
