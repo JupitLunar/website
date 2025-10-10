@@ -42,7 +42,7 @@ Add these to your Vercel project settings:
 
 ```bash
 # OpenAI (for AI fallback)
-OPENAI_API_KEY=sk-proj-... # Your existing key
+OPENAI_API_KEY=your_openai_api_key_here
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co

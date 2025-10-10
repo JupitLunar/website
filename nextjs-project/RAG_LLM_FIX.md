@@ -86,7 +86,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 在 `.env.local` 文件中添加：
 
 ```bash
-OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxx
+OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 #### Vercel 部署
@@ -95,7 +95,7 @@ OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxx
 2. 选择 **Environment Variables**
 3. 添加新变量：
    - Name: `OPENAI_API_KEY`
-   - Value: `sk-proj-xxxxxxxxxxxxx`
+   - Value: `your_openai_api_key_here`
    - Environment: Production, Preview, Development
 
 ### 2. 获取 OpenAI API Key
