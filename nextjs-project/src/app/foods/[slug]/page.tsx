@@ -225,7 +225,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
                     Nutrition Highlights
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {food.nutrients_focus.map((nutrient, index) => (
+                    {food.nutrients_focus.map((nutrient: string, index: number) => (
                       <span
                         key={index}
                         className="px-3 py-1.5 bg-purple-100 text-purple-700 text-sm font-medium rounded-full"
@@ -267,7 +267,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
                 Quick Facts
               </h2>
               <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {keyTakeaways.map((fact, index) => (
+                {keyTakeaways.map((fact: string, index: number) => (
                   <li
                     key={index}
                     itemProp="itemListElement"
@@ -355,7 +355,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
                   Do's
                 </h3>
                 <ul className="space-y-3">
-                  {food.do_list.map((item, index) => (
+                  {food.do_list.map((item: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -377,7 +377,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
                   Don'ts
                 </h3>
                 <ul className="space-y-3">
-                  {food.dont_list.map((item, index) => (
+                  {food.dont_list.map((item: string, index: number) => (
                     <li key={index} className="flex items-start gap-3">
                       <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -500,7 +500,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
             </h2>
 
             <div className="space-y-4">
-              {faqs.map((faq, index) => (
+              {faqs.map((faq: any, index: number) => (
                 <details
                   key={index}
                   className="bg-white border-2 border-purple-200 rounded-xl overflow-hidden group"

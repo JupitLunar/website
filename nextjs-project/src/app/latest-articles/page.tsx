@@ -226,8 +226,8 @@ export default async function LatestArticlesPage() {
             <h2 className="text-3xl font-bold mb-6">Articles by Region</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Object.entries(articlesByRegion)
-                .sort((a, b) => b[1].length - a[1].length)
-                .map(([region, regionArticles]) => (
+                .sort((a: [string, any], b: [string, any]) => b[1].length - a[1].length)
+                .map(([region, regionArticles]: [string, any]) => (
                   <div key={region} className="bg-white rounded-lg shadow p-6">
                     <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
                       <span className="text-2xl">

@@ -1,5 +1,5 @@
 // Export all components for easier importing
-export { default as BottomLineAnswer } from './BottomLineAnswer';
+export { BottomLineAnswer, CommonAnswer } from './BottomLineAnswer';
 export { default as USCanadaComparison } from './USCanadaComparison';
 export { default as CitationBox } from './CitationBox';
 export { default as FoodCard } from './FoodCard';
@@ -34,4 +34,4 @@ export { default as Button } from './ui/Button';
 export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/Card';
 
 // Type exports for components that need them
-export type { CommonAnswer, CommonComparison } from './BottomLineAnswer';
+export type { BottomLineAnswerProps as CommonAnswerType, BottomLineAnswerProps as CommonComparisonType } from './BottomLineAnswer';
