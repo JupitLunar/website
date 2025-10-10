@@ -2,6 +2,7 @@
 
 /**
  * 全球自动爬虫 - 支持多地区权威来源
+ * 优化版本 - 使用共享工具模块
  */
 
 const axios = require('axios');
@@ -9,6 +10,13 @@ const cheerio = require('cheerio');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 const { getAllSources, getSourcesByRegion, getAllRegions } = require('./global-sources-config');
+const { 
+  extractArticle, 
+  generateSlug, 
+  extractKeywords, 
+  delay, 
+  fetchWithRetry 
+} = require('./scraper-utils');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
 
@@ -26,11 +34,23 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const CONFIG = {
   delayBetweenRequests: 1500,  // 增加到1.5秒（更礼貌）
   delayBetweenArticles: 2500,  // 增加到2.5秒
-  maxArticlesPerRun: 100,      // 增加到100篇
-  minContentLength: 500,
+  maxArticlesPerRun: 500,      // 增加到500篇
+  minContentLength: 300,       // 降低到300字符（更宽松）
   maxContentLength: 50000,
+  minParagraphs: 3,            // 至少3段
+  debugMode: process.env.DEBUG === 'true', // 调试模式
   // 可以指定抓取的地区，留空则抓取所有
   targetRegions: []  // 例如: ['US', 'UK', 'CA'] 或 [] 表示全部
+};
+
+// Region 映射 - 将所有 region 映射到数据库支持的值
+const REGION_MAPPING = {
+  'US': 'US',
+  'CA': 'CA',
+  'UK': 'Global',
+  'AU': 'Global',
+  'EU': 'Global',
+  'Global': 'Global'
 };
 
 // 排除模式
@@ -123,98 +143,88 @@ async function discoverArticlesFromSource(source) {
   }));
 }
 
-// 抓取文章内容
+// 抓取文章内容（使用共享工具）
 async function scrapeArticle(articleInfo) {
-  const html = await fetch(articleInfo.url);
-  if (!html) return null;
+  const html = await fetchWithRetry(articleInfo.url);
+  if (!html) {
+    console.log(`    📌 原因: 无法获取HTML`);
+    return null;
+  }
 
-  const $ = cheerio.load(html);
-
-  // 移除无用标签
-  $('script, style, nav, header, footer, aside, iframe, .advertisement, .social-share').remove();
-
-  const title = $('h1').first().text().trim();
-  const paragraphs = [];
-
-  $('p').each((i, elem) => {
-    const text = $(elem).text().trim();
-    if (text.length > 20) {
-      paragraphs.push(text);
-    }
+  // 使用共享工具提取文章
+  const result = extractArticle(html, {
+    minContentLength: CONFIG.minContentLength,
+    maxContentLength: CONFIG.maxContentLength,
+    minParagraphs: CONFIG.minParagraphs,
+    debugMode: CONFIG.debugMode
   });
 
-  const content = paragraphs.join('\n\n');
-
-  // 验证内容质量
-  if (!title || content.length < CONFIG.minContentLength || content.length > CONFIG.maxContentLength) {
+  if (!result.success) {
+    console.log(`    📌 内容质量不足:`);
+    result.failures.forEach(failure => {
+      console.log(`       - ${failure}`);
+    });
     return null;
   }
 
   return {
     ...articleInfo,
-    title,
-    content,
-    paragraphCount: paragraphs.length
+    ...result.data
   };
 }
 
-// 检查文章是否已存在
-async function articleExists(url) {
-  const { data } = await supabase
+// 检查文章是否已存在（增强的去重逻辑）
+async function articleExists(url, title) {
+  // 检查 1: 通过 URL
+  const { data: urlMatch } = await supabase
     .from('articles')
     .select('id')
     .ilike('license', `%${url}%`)
-    .single();
+    .limit(1);
 
-  return !!data;
+  if (urlMatch && urlMatch.length > 0) {
+    return { exists: true, reason: 'URL已存在' };
+  }
+
+  // 检查 2: 通过标题（防止同一文章不同URL）
+  const slug = generateSlug(title);
+  const { data: slugMatch } = await supabase
+    .from('articles')
+    .select('id')
+    .eq('slug', slug)
+    .limit(1);
+
+  if (slugMatch && slugMatch.length > 0) {
+    return { exists: true, reason: 'slug已存在（标题重复）' };
+  }
+
+  return { exists: false };
 }
 
-// 生成slug
-function generateSlug(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .substring(0, 100);
-}
+// generateSlug 和 extractKeywords 现在从 scraper-utils 导入
 
-// 提取关键词
-function extractKeywords(content) {
-  const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'can', 'your', 'you', 'they', 'them', 'their', 'this', 'that', 'with', 'from', 'about', 'when', 'what', 'which', 'who', 'how'];
-
-  const words = content
-    .toLowerCase()
-    .match(/\b[a-z]{4,}\b/g) || [];
-
-  const freq = {};
-  words.forEach(word => {
-    if (!commonWords.includes(word)) {
-      freq[word] = (freq[word] || 0) + 1;
-    }
-  });
-
-  return Object.entries(freq)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([word]) => word);
+// 映射 region 到数据库支持的值
+function mapRegion(region) {
+  return REGION_MAPPING[region] || 'Global';
 }
 
 // 保存文章到数据库
 async function saveArticle(articleData) {
   try {
     const slug = generateSlug(articleData.title);
+    const mappedRegion = mapRegion(articleData.region);
 
-    // 检查slug是否已存在
-    const { data: existing } = await supabase
-      .from('articles')
-      .select('id')
-      .eq('slug', slug)
-      .single();
-
-    if (existing) {
-      return { success: false, reason: 'slug已存在' };
+    // 双重检查是否已存在
+    const existsCheck = await articleExists(articleData.url, articleData.title);
+    if (existsCheck.exists) {
+      return { success: false, reason: existsCheck.reason };
     }
+
+    // 确保 one_liner 至少 50 字符
+    const oneLiner = articleData.content.substring(0, 200);
+    const paddedOneLiner = oneLiner.length < 50 
+      ? oneLiner + ' Evidence-based information from trusted health organizations.'
+      : oneLiner;
 
     const article = {
       slug,
@@ -222,7 +232,7 @@ async function saveArticle(articleData) {
       hub: 'feeding',
       lang: articleData.language || 'en',
       title: articleData.title.substring(0, 200),
-      one_liner: articleData.content.substring(0, 200),
+      one_liner: paddedOneLiner.substring(0, 200),
       key_facts: [
         `Source: ${articleData.source}`,
         `Region: ${articleData.region}`,
@@ -231,7 +241,7 @@ async function saveArticle(articleData) {
       body_md: articleData.content,
       entities: extractKeywords(articleData.content),
       age_range: '0-12 months',
-      region: articleData.region,  // 重要：设置地区
+      region: mappedRegion,  // 使用映射后的 region
       last_reviewed: new Date().toISOString().split('T')[0],
       reviewed_by: 'Web Scraper Bot',
       license: `Source: ${articleData.source} (${articleData.organization}) | Region: ${articleData.region} | URL: ${articleData.url}`,
@@ -335,9 +345,12 @@ async function main() {
   for (const article of allArticles) {
     if (articlesToScrape.length >= CONFIG.maxArticlesPerRun) break;
 
-    const exists = await articleExists(article.url);
-    if (!exists) {
+    // 只检查 URL，标题检查在保存时进行
+    const existsCheck = await articleExists(article.url, '');
+    if (!existsCheck.exists) {
       articlesToScrape.push(article);
+    } else {
+      console.log(`  ⏭️  跳过: ${article.url} (${existsCheck.reason})`);
     }
   }
 

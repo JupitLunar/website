@@ -8,18 +8,23 @@ import Image from 'next/image';
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFoodsOpen, setIsFoodsOpen] = useState(false);
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [showNewsletterModal, setShowNewsletterModal] = useState(false);
   const [email, setEmail] = useState('');
   const foodsMenuRef = useRef<HTMLDivElement>(null);
+  const productsMenuRef = useRef<HTMLDivElement>(null);
   const aboutMenuRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
-    if (!isFoodsOpen && !isAboutOpen) return;
+    if (!isFoodsOpen && !isProductsOpen && !isAboutOpen) return;
     function handleClickOutside(event: MouseEvent) {
       if (foodsMenuRef.current && !foodsMenuRef.current.contains(event.target as Node)) {
         setIsFoodsOpen(false);
+      }
+      if (productsMenuRef.current && !productsMenuRef.current.contains(event.target as Node)) {
+        setIsProductsOpen(false);
       }
       if (aboutMenuRef.current && !aboutMenuRef.current.contains(event.target as Node)) {
         setIsAboutOpen(false);
@@ -27,7 +32,7 @@ function Header() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isFoodsOpen, isAboutOpen]);
+  }, [isFoodsOpen, isProductsOpen, isAboutOpen]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -49,20 +54,21 @@ function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-r from-primary-500/80 to-primary-600/80 p-[1.5px]">
-              <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                <Image 
-                  src="/Assets/Logo.png" 
-                  alt="JupitLunar Logo" 
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain scale-[1.6] p-0.5 translate-x-2 translate-y-1" 
-                />
-              </div>
+            <Image 
+              src="/Assets/Logo.png" 
+              alt="JupitLunar Logo" 
+              width={80}
+              height={80}
+              className="w-20 h-20 object-contain" 
+            />
+            <div className="flex flex-col">
+              <span className="text-xl font-semibold bg-gradient-to-r from-primary-500/80 to-primary-600/80 bg-clip-text text-transparent">
+                JupitLunar
+              </span>
+              <span className="text-xs text-gray-500 font-light">
+                Powered by Mom AI Agent
+              </span>
             </div>
-            <span className="text-xl font-semibold bg-gradient-to-r from-primary-500/80 to-primary-600/80 bg-clip-text text-transparent">
-              JupitLunar
-            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -165,6 +171,46 @@ function Header() {
                       </svg>
                     </Link>
                   </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* Products Dropdown */}
+            <div className="relative" ref={productsMenuRef}>
+              <button
+                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
+                onClick={() => setIsProductsOpen((v) => !v)}
+                aria-haspopup="true"
+                aria-expanded={isProductsOpen}
+              >
+                <span>Products</span>
+                <svg className={`w-4 h-4 transition-transform duration-200 ${isProductsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isProductsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 py-2 overflow-hidden"
+                >
+                  <Link
+                    href="/products/dearbaby"
+                    onClick={() => setIsProductsOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    DearBaby - Baby Tracker
+                  </Link>
+                  <Link
+                    href="/products/solidstart"
+                    onClick={() => setIsProductsOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    DearBaby: Solid Start
+                  </Link>
                 </motion.div>
               )}
             </div>
@@ -295,6 +341,25 @@ function Header() {
                   className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
                   12+ Months
+                </Link>
+              </div>
+
+              {/* Products Section */}
+              <div className="border-t border-gray-100 pt-3">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 px-2">Products</div>
+                <Link
+                  href="/products/dearbaby"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  DearBaby - Baby Tracker
+                </Link>
+                <Link
+                  href="/products/solidstart"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  DearBaby: Solid Start
                 </Link>
               </div>
 

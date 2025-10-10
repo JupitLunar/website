@@ -31,10 +31,15 @@ export default function SolidStartProductPage() {
         <section
           className="relative overflow-hidden text-center px-4 py-16 sm:py-28 md:py-36"
           style={{
-            background:
+            backgroundImage:
+              `url(/Assets/marble2.png), ` +
               "linear-gradient(180deg,#fdfcff 0%,#faf8ff 100%), " +
               "radial-gradient(1000px at 20% -200px, rgba(199,187,255,0.35) 0%, rgba(255,255,255,0) 70%), " +
               "radial-gradient(800px at 85% 110%, rgba(235,227,255,0.45) 0%, rgba(255,255,255,0) 75%)",
+            backgroundSize: "cover, 100% 100%, 100% 100%, 100% 100%",
+            backgroundPosition: "center, center, center, center",
+            backgroundRepeat: "no-repeat, no-repeat, no-repeat, no-repeat",
+            backgroundBlendMode: "normal",
             minHeight: "60vh"
           }}
         >

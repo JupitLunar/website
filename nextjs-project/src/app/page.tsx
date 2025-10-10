@@ -7,11 +7,24 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { generateWebsiteStructuredData, generateOrganizationStructuredData } from '@/lib/json-ld';
 
+interface StructuredResponse {
+  summary: string;
+  keyPoints: string[];
+  details: {
+    sections: Array<{
+      title: string;
+      content: string;
+    }>;
+  };
+  actionableAdvice: string[];
+  disclaimer: string;
+}
+
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [aiQuery, setAiQuery] = useState('');
   const [isAiTyping, setIsAiTyping] = useState(false);
-  const [aiResponse, setAiResponse] = useState('');
+  const [aiResponse, setAiResponse] = useState<StructuredResponse | null>(null);
   const [aiSources, setAiSources] = useState<any[]>([]);
   const [showResponse, setShowResponse] = useState(false);
 
@@ -102,10 +115,10 @@ function HomePage() {
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-purple-100/8 to-violet-100/3 rounded-full blur-3xl"></div>
 
           <div className="container mx-auto max-w-6xl relative z-10">
-            <motion.div
+          <motion.div
               className="text-center"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
               {/* 非常淡雅的产品标识 */}
@@ -120,14 +133,14 @@ function HomePage() {
                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <span className="text-sm font-light text-slate-500">AI-Powered Maternal & Infant Knowledge Base</span>
-              </motion.div>
+                <span className="text-sm font-light text-slate-500">Mom AI Agent- Powered Maternal & Infant Knowledge Base</span>
+          </motion.div>
 
               {/* 淡雅的主标题 */}
               <motion.h1
                 className="text-5xl md:text-6xl lg:text-7xl font-light text-slate-500 mb-3 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
                 Trusted Care for
@@ -147,10 +160,10 @@ function HomePage() {
               </motion.p>
 
               {/* 权威机构名称 - 淡雅小字 */}
-              <motion.div
+          <motion.div
                 className="mb-6"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.45 }}
               >
                 <p className="text-xs text-slate-400 mb-3 font-light">Trusted by leading health organizations</p>
@@ -161,13 +174,13 @@ function HomePage() {
                   <span className="text-xs text-slate-400 font-light">Health Canada</span>
                   <span className="text-xs text-slate-400 font-light">Canadian Paediatric Society</span>
                 </div>
-              </motion.div>
+          </motion.div>
 
               {/* 淡雅的功能说明 */}
-              <motion.div
+          <motion.div
                 className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-5xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
                 <div className="premium-card group hover:scale-105 transition-all duration-300">
@@ -199,13 +212,13 @@ function HomePage() {
                   <h3 className="font-light text-slate-500 mb-3 text-xl">Comprehensive Care</h3>
                   <p className="text-sm text-slate-400 leading-relaxed">From pregnancy to early childhood, covering all aspects of maternal and infant health</p>
                 </div>
-              </motion.div>
+          </motion.div>
 
               {/* 淡雅的CTA按钮 */}
-              <motion.div
+          <motion.div
                 className="flex flex-col sm:flex-row gap-4 justify-center"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
                 <Link href="/topics" className="btn-primary text-lg px-8 py-4">
@@ -221,9 +234,9 @@ function HomePage() {
                   Ask AI Assistant
                 </button>
               </motion.div>
-            </motion.div>
-          </div>
-        </section>
+          </motion.div>
+        </div>
+      </section>
 
         {/* AI Assistant Section - 优雅的对话界面 */}
         <section id="ai-assistant-section" className="py-16 px-4 sm:px-8 bg-gradient-to-br from-blue-50/30 to-indigo-50/20">
@@ -237,7 +250,7 @@ function HomePage() {
             >
               <h2 className="text-3xl md:text-4xl font-medium text-slate-700 mb-4">
                 Ask MomAI Agent
-              </h2>
+            </h2>
               <p className="text-lg text-slate-500 max-w-2xl mx-auto font-light">
                 Gentle guidance for your maternal and infant care questions
               </p>
@@ -281,29 +294,90 @@ function HomePage() {
                       </svg>
                     )}
                   </button>
-                </div>
+          </div>
               </form>
 
-              {/* AI响应显示 - 优雅样式 */}
-              {showResponse && (
-                <div className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 shadow-sm">
+              {/* AI响应显示 - 结构化样式 */}
+              {showResponse && aiResponse && (
+                <div className="mt-8 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl border border-blue-200 shadow-sm">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                       <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-slate-700 leading-relaxed mb-4 font-light">{aiResponse}</p>
+          </div>
+                    <div className="flex-1 space-y-6">
+                      {/* Summary */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-slate-800 mb-2">Quick Answer</h3>
+                        <p className="text-slate-700 leading-relaxed">{aiResponse.summary}</p>
+        </div>
 
-                      {/* 来源信息 - 优雅样式 */}
+                      {/* Key Points */}
+                      {aiResponse.keyPoints && aiResponse.keyPoints.length > 0 && (
+                        <div>
+                          <h3 className="text-lg font-semibold text-slate-800 mb-3">Key Points</h3>
+                          <ul className="space-y-2">
+                            {aiResponse.keyPoints.map((point, idx) => (
+                              <li key={idx} className="flex items-start gap-3">
+                                <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+                                <span className="text-slate-700 leading-relaxed">{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Detailed Sections */}
+                      {aiResponse.details?.sections && aiResponse.details.sections.length > 0 && (
+                        <div className="space-y-4">
+                          {aiResponse.details.sections.map((section, idx) => (
+                            <div key={idx} className="bg-white/60 rounded-2xl p-5 border border-blue-100">
+                              <h4 className="text-md font-semibold text-slate-800 mb-2">{section.title}</h4>
+                              <p className="text-slate-700 leading-relaxed text-sm">{section.content}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Actionable Advice */}
+                      {aiResponse.actionableAdvice && aiResponse.actionableAdvice.length > 0 && (
+                        <div className="bg-gradient-to-br from-violet-50 to-purple-50 rounded-2xl p-5 border border-violet-200">
+                          <h3 className="text-lg font-semibold text-violet-800 mb-3 flex items-center gap-2">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Next Steps
+                          </h3>
+                          <ul className="space-y-2">
+                            {aiResponse.actionableAdvice.map((advice, idx) => (
+                              <li key={idx} className="flex items-start gap-3">
+                                <span className="text-violet-600 font-bold flex-shrink-0">{idx + 1}.</span>
+                                <span className="text-slate-700 leading-relaxed">{advice}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Disclaimer */}
+                      {aiResponse.disclaimer && (
+                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                          <p className="text-xs text-amber-800 leading-relaxed whitespace-pre-line">{aiResponse.disclaimer}</p>
+                        </div>
+                      )}
+
+                      {/* 来源信息 */}
                       {aiSources.length > 0 && (
-                        <div className="border-t border-blue-200 pt-4">
-                          <p className="text-xs text-slate-500 mb-3 font-medium">Sources:</p>
+                        <div className="border-t border-blue-200 pt-5 mt-2">
+                          <p className="text-xs text-slate-500 mb-3 font-semibold uppercase tracking-wide">Sources</p>
                           <div className="space-y-2">
                             {aiSources.slice(0, 3).map((source, index) => (
-                              <div key={index} className="text-xs text-slate-600 bg-white/60 px-3 py-2 rounded-lg border border-blue-100">
-                                • {source.title} ({source.category})
+                              <div key={index} className="text-xs text-slate-600 bg-white/60 px-4 py-2.5 rounded-lg border border-blue-100 flex items-center gap-2">
+                                <svg className="w-4 h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                </svg>
+                                <span>{source.title} <span className="text-slate-400">({source.category})</span></span>
                               </div>
                             ))}
                           </div>
@@ -389,7 +463,7 @@ function HomePage() {
         {/* Core Features */}
         <section className="py-20 px-4 sm:px-8 bg-white">
           <div className="container mx-auto max-w-7xl">
-            <motion.div
+            <motion.div 
               className="text-center mb-16"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -477,7 +551,7 @@ function HomePage() {
                       <svg className="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00 2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
-                    </div>
+                  </div>
                     <h3 className="text-2xl font-light text-slate-500 mb-4">Feeding Milestones</h3>
                     <p className="text-slate-400 mb-6 leading-relaxed font-light">
                       Developmental readiness, texture progression, and portion guidance
@@ -506,7 +580,7 @@ function HomePage() {
                       <svg className="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                    </div>
+                  </div>
                     <h3 className="text-2xl font-light text-slate-500 mb-4">Allergen Introduction</h3>
                     <p className="text-slate-400 mb-6 leading-relaxed font-light">
                       Evidence-based protocols for safe allergen introduction
@@ -561,7 +635,7 @@ function HomePage() {
                     <h3 className="text-3xl font-light text-slate-500 mb-2">DearBaby</h3>
                     <p className="text-slate-400 text-lg font-light">Baby Tracker & Sleep</p>
                   </div>
-                </div>
+                  </div>
 
                 <p className="text-slate-400 mb-8 text-lg leading-relaxed font-light">
                   Your AI parenting co-pilot: log feeds & sleep in seconds, auto charts, predictive reminders, and personalized tips for calmer routines.
@@ -571,7 +645,7 @@ function HomePage() {
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
                     <span className="text-slate-500 font-light">Log nursing, bottle & nap with one tap</span>
-                  </div>
+                    </div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
                     <span className="text-slate-500 font-light">View growth charts & AI-powered reminders</span>
@@ -659,7 +733,7 @@ function HomePage() {
                     >
                       Download Free
                     </a>
-                    <Link
+                    <Link 
                       href="/products/solidstart"
                       className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
                     >
@@ -674,9 +748,9 @@ function HomePage() {
                   >
                     View on App Store →
                   </a>
-                </div>
+                  </div>
               </motion.div>
-            </div>
+                </div>
           </div>
         </section>
 
@@ -696,11 +770,11 @@ function HomePage() {
               <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light">
                 Join thousands of moms who've found confidence in their feeding journey
               </p>
-            </motion.div>
+              </motion.div>
 
             {/* 妈妈故事网格 */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              <motion.div
+              <motion.div 
                 className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -752,7 +826,7 @@ function HomePage() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-purple-200 rounded-full flex items-center justify-center shadow-sm">
                     <span className="text-slate-600 font-light text-lg">MC</span>
-                  </div>
+                    </div>
                   <div>
                     <h4 className="font-light text-slate-500">Maria C.</h4>
                     <p className="text-sm text-slate-400 font-light">Mom of twins</p>
@@ -775,7 +849,7 @@ function HomePage() {
               <div className="flex items-start gap-6">
                 <div className="w-16 h-16 bg-gradient-to-r from-slate-200 to-violet-200 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
                   <span className="text-slate-600 font-light text-xl">AL</span>
-                </div>
+          </div>
                 <div className="flex-1">
                   <div className="mb-4">
                     <h4 className="text-xl font-light text-slate-500 mb-1">Anna L.</h4>
@@ -797,8 +871,8 @@ function HomePage() {
                 </div>
               </div>
             </motion.div>
-          </div>
-        </section>
+        </div>
+      </section>
 
         {/* Trust Signals */}
         <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-gray-50/50 to-slate-50/30">
@@ -829,7 +903,7 @@ function HomePage() {
                 <div className="w-20 h-20 bg-gradient-to-br from-slate-200 to-violet-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                   <svg className="w-10 h-10 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
+                </svg>
                 </div>
                 <h3 className="text-2xl font-light text-slate-500 mb-4">Official Guidelines</h3>
                 <p className="text-slate-400 text-lg leading-relaxed font-light">
@@ -847,7 +921,7 @@ function HomePage() {
                 <div className="w-20 h-20 bg-gradient-to-br from-slate-200 to-indigo-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                   <svg className="w-10 h-10 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                  </svg>
+                </svg>
                 </div>
                 <h3 className="text-2xl font-light text-slate-500 mb-4">Regularly Updated</h3>
                 <p className="text-slate-400 text-lg leading-relaxed font-light">
@@ -855,24 +929,24 @@ function HomePage() {
                 </p>
               </motion.div>
 
-              <motion.div
+                  <motion.div
                 className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                viewport={{ once: true }}
-              >
+                    viewport={{ once: true }}
+                  >
                 <div className="w-20 h-20 bg-gradient-to-br from-slate-200 to-purple-200 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                   <svg className="w-10 h-10 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
                   </svg>
-                </div>
+                    </div>
                 <h3 className="text-2xl font-light text-slate-500 mb-4">Transparent Sources</h3>
                 <p className="text-slate-400 text-lg leading-relaxed font-light">
                   Every claim linked to peer-reviewed or government sources
                 </p>
               </motion.div>
-            </div>
+                    </div>
 
             <motion.div
               className="mt-16 text-center"
@@ -890,9 +964,9 @@ function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
-            </motion.div>
-          </div>
-        </section>
+                  </motion.div>
+        </div>
+      </section>
 
         {/* CTA Section */}
         <section className="py-24 px-4 sm:px-8 bg-gradient-to-r from-slate-400 via-violet-400 to-slate-500 text-white">
@@ -922,11 +996,11 @@ function HomePage() {
                 >
                   View All Topics
                 </Link>
-              </div>
-            </motion.div>
           </div>
+            </motion.div>
+        </div>
         </section>
-      </div>
+    </div>
     </>
   );
 }
