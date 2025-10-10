@@ -242,7 +242,90 @@ async function generateAnswer(query: string, articles: any[], knowledgeChunks: a
   }
 
   // Use LLM fallback when no knowledge base content found
+  console.log('🔍 No relevant content found in knowledge base, using LLM to generate response...');
+  console.log('🔑 OpenAI API Key configured:', !!process.env.OPENAI_API_KEY);
+  console.log('📝 Query:', query.substring(0, 100));
+  
   try {
+    // Step 1: First check if the question is related to maternal and infant care
+    console.log('🔍 Checking if question is related to maternal and infant care...');
+    const validationCompletion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{
+        role: 'system',
+        content: `You are a topic classifier for a maternal and infant care platform. Your job is to determine if a user's question is related to maternal and infant care.
+
+RELEVANT TOPICS include:
+- Pregnancy, prenatal care, maternal health
+- Baby care, infant care, newborn care
+- Feeding (breastfeeding, formula, solid foods, nutrition)
+- Child development and milestones (0-3 years)
+- Baby sleep, sleep training
+- Infant safety, baby-proofing
+- Postpartum recovery and maternal mental health
+- Common baby health issues (fever, rashes, colic, etc.)
+- Parenting tips for infants and toddlers
+- Baby products and equipment
+
+NOT RELEVANT topics include:
+- Technology, programming, cryptocurrency
+- Politics, current events, sports
+- Adult health unrelated to pregnancy/postpartum
+- General knowledge questions
+- Entertainment, movies, music
+- School-age children or older
+
+You must respond with valid JSON only:
+{
+  "isRelevant": true or false,
+  "confidence": "high" | "medium" | "low",
+  "reason": "Brief explanation"
+}`
+      }, {
+        role: 'user',
+        content: query
+      }],
+      max_tokens: 150,
+      temperature: 0.3,
+      response_format: { type: "json_object" }
+    });
+
+    const validationText = validationCompletion.choices[0]?.message?.content;
+    console.log('🔍 Topic validation result:', validationText);
+
+    if (validationText) {
+      const validation = JSON.parse(validationText);
+      
+      // If question is not relevant to maternal/infant care, reject it politely
+      if (!validation.isRelevant) {
+        console.log('❌ Question is not related to maternal and infant care');
+        return {
+          summary: "I'm specifically designed to help with maternal and infant care questions.",
+          keyPoints: [
+            "I can answer questions about pregnancy, baby care, feeding, development, and parenting",
+            "For other topics, please consult appropriate resources or specialists",
+            "Feel free to ask me anything about maternal and infant health!"
+          ],
+          details: {
+            sections: [{
+              title: "What I Can Help With",
+              content: "I specialize in maternal and infant care topics including pregnancy, newborn care, breastfeeding, baby nutrition, developmental milestones, sleep training, infant safety, and postpartum support. I'm here to provide evidence-based guidance on these topics based on recommendations from trusted sources like AAP, CDC, and WHO."
+            }]
+          },
+          actionableAdvice: [
+            "Ask me about baby feeding, sleep, development, or safety",
+            "Consult your pediatrician for specific medical concerns",
+            "Visit trusted sources for other topics outside maternal and infant care"
+          ],
+          disclaimer: "I focus exclusively on maternal and infant care topics to provide you with the most accurate and relevant information."
+        };
+      }
+      
+      console.log('✅ Question is relevant to maternal and infant care, proceeding with LLM response...');
+    }
+
+    // Step 2: Generate the actual answer since question is relevant
+    console.log('🤖 Calling OpenAI API to generate answer...');
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [{
@@ -276,15 +359,22 @@ Keep responses warm, supportive, and empathetic. Focus on practical, actionable 
     });
 
     const responseText = completion.choices[0]?.message?.content;
+    console.log('✅ Received LLM response:', responseText ? 'Success' : 'Empty response');
+    
     if (responseText) {
+      console.log('📄 Raw response length:', responseText.length);
+      console.log('📄 Raw response preview:', responseText.substring(0, 200));
+      
       try {
         const structuredResponse = JSON.parse(responseText) as StructuredResponse;
+        console.log('✅ Successfully parsed JSON response');
         // Add AI indicator to disclaimer
         structuredResponse.disclaimer = (structuredResponse.disclaimer || "") +
           "\n\n💡 This response was generated using AI. For personalized medical advice, please consult your healthcare provider.";
         return structuredResponse;
       } catch (parseError) {
-        console.error('JSON parsing error:', parseError);
+        console.error('❌ JSON parsing error:', parseError);
+        console.error('Raw response:', responseText);
         // If JSON parsing fails, return plain text fallback
         return {
           summary: responseText.substring(0, 200),
@@ -294,11 +384,62 @@ Keep responses warm, supportive, and empathetic. Focus on practical, actionable 
           disclaimer: "💡 This response was generated using AI. For personalized medical advice, please consult your healthcare provider."
         };
       }
+    } else {
+      console.error('❌ LLM returned empty response');
+      throw new Error('LLM returned empty response');
     }
-  } catch (error) {
-    console.error('LLM fallback error:', error);
+  } catch (error: any) {
+    console.error('❌ LLM fallback error:', error);
+    console.error('❌ Error details:', error.message, error.stack);
+    
+    // Handle specific error cases
+    if (error.code === 'insufficient_quota' || error.message.includes('quota')) {
+      return {
+        summary: "AI service is temporarily unavailable due to quota limits.",
+        keyPoints: [
+          "For immediate concerns, please consult your pediatrician or healthcare provider",
+          "Check our knowledge base sections on feeding, development, and safety",
+          "Contact trusted sources like AAP, CDC, or WHO for evidence-based information"
+        ],
+        details: {
+          sections: [{
+            title: "Getting Help",
+            content: "Our AI assistant is temporarily unavailable due to service limits. Your baby's health and your well-being are important. Never hesitate to contact your healthcare provider with concerns."
+          }]
+        },
+        actionableAdvice: [
+          "Schedule a consultation with your pediatrician",
+          "Explore our knowledge base for evidence-based information",
+          "Try again later when AI service is restored"
+        ],
+        disclaimer: "For personalized medical advice, please consult your healthcare provider. AI service temporarily unavailable."
+      };
+    }
+    
+    // Generic error fallback
+    return {
+      summary: "AI service is temporarily unavailable.",
+      keyPoints: [
+        "For immediate concerns, please consult your pediatrician or healthcare provider",
+        "Check our knowledge base sections on feeding, development, and safety",
+        "Contact trusted sources like AAP, CDC, or WHO for evidence-based information"
+      ],
+      details: {
+        sections: [{
+          title: "Getting Help",
+          content: "Our AI assistant is temporarily unavailable. Your baby's health and your well-being are important. Never hesitate to contact your healthcare provider with concerns."
+        }]
+      },
+      actionableAdvice: [
+        "Schedule a consultation with your pediatrician",
+        "Explore our knowledge base for evidence-based information",
+        "Try again later when AI service is restored"
+      ],
+      disclaimer: "For personalized medical advice, please consult your healthcare provider. AI service temporarily unavailable."
+    };
   }
 
+  console.log('⚠️ Reaching final fallback - LLM failed or returned no response');
   // Final fallback if LLM fails
   return {
     summary: "Thank you for your question about maternal and infant care.",
