@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import path from 'path';
 
 /**
  * Web Scraper API
@@ -65,8 +66,9 @@ export async function POST(request: NextRequest) {
     }
     
     // 动态导入爬虫脚本
-    const scraperPath = require('path').resolve(process.cwd(), 'scripts/web-scraper.js');
-    const { main } = require(scraperPath);
+    const scraperPath = path.resolve(process.cwd(), 'scripts/web-scraper.js');
+    const scraperModule = await import(scraperPath);
+    const { main } = scraperModule;
     
     // 执行爬虫
     const results = await main({ sources });
@@ -116,8 +118,9 @@ export async function GET(request: NextRequest) {
     }
     
     // 加载配置
-    const configPath = require('path').resolve(process.cwd(), 'scripts/scraper-config.js');
-    const { SOURCES } = require(configPath);
+    const configPath = path.resolve(process.cwd(), 'scripts/scraper-config.js');
+    const configModule = await import(configPath);
+    const { SOURCES } = configModule;
     
     // 统计信息
     const sourceList = Object.keys(SOURCES).map(key => ({
