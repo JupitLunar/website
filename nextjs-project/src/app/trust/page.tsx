@@ -1,5 +1,4 @@
 import React from 'react';
-import Script from 'next/script';
 import Link from 'next/link';
 import { knowledgeBase } from '@/lib/supabase';
 import type { KnowledgeRule, KnowledgeGuide, KnowledgeFood, KnowledgeSource } from '@/types/content';
@@ -34,7 +33,7 @@ function buildStructuredData({
     '@type': 'HealthTopicContent',
     name: 'JupitLunar Trust & Methods',
     description:
-      'Content curation methodology and authoritative sources behind JupitLunar's infant and toddler feeding knowledge base.',
+      "Content curation methodology and authoritative sources behind JupitLunar's infant and toddler feeding knowledge base.",
     inLanguage: 'en',
     audience: {
       '@type': 'PeopleAudience',
@@ -93,11 +92,6 @@ export default async function TrustCenterPage() {
 
   return (
     <div className="bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8] py-16">
-      <Script
-        id="trust-structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
       <div className="mx-auto max-w-5xl space-y-16 px-4">
         <header className="space-y-6 text-center">
           <span className="inline-flex items-center justify-center rounded-full bg-purple-100 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-purple-700">

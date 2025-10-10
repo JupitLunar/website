@@ -110,17 +110,17 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8]">
+    <div className="min-h-screen bg-gradient-elegant">
       <Header />
       
-      {/* Search Header */}
-      <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      {/* Search Header - 淡雅风格 */}
+      <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50/20 via-white to-violet-50/10">
         <div className="max-w-4xl mx-auto text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+            className="text-4xl md:text-5xl font-light text-slate-600 mb-6"
           >
             Search Content
           </motion.h1>
@@ -128,7 +128,7 @@ export default function SearchPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-xl text-gray-600 mb-8"
+            className="text-xl text-slate-500 mb-8 font-light"
           >
             Find expert insights on maternal and infant health
           </motion.p>
@@ -148,13 +148,13 @@ export default function SearchPage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search for articles, topics, or keywords..."
-                  className="w-full px-6 py-4 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-6 py-4 text-lg border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-400 focus:border-transparent font-light"
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading || !query.trim()}
-                className="px-8 py-4 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 disabled:opacity-50 transition-colors"
+                className="px-8 py-4 bg-gradient-to-r from-slate-400 to-violet-400 text-white rounded-xl font-light hover:from-slate-500 hover:to-violet-500 disabled:opacity-50 transition-all shadow-sm"
               >
                 {loading ? 'Searching...' : 'Search'}
               </button>

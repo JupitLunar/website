@@ -235,6 +235,7 @@ function Header() {
             <button
               onClick={() => setShowNewsletterModal(true)}
               className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+              data-newsletter-trigger
             >
               Subscribe
             </button>
@@ -363,8 +364,8 @@ function Header() {
 
       {/* Newsletter 弹窗 */}
       {showNewsletterModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-3xl p-10 max-w-sm w-full relative border-0 shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-3xl p-10 max-w-sm w-full relative border-0 shadow-lg mx-auto my-auto">
             <button
               className="absolute top-4 right-4 text-gray-300 hover:text-gray-500 text-2xl font-light focus:outline-none"
               onClick={() => setShowNewsletterModal(false)}

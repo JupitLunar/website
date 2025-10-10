@@ -4,21 +4,21 @@ import Image from 'next/image';
 
 function Footer() {
   const contentHubs = [
-    { name: 'Feeding & Nutrition', href: '/learn/feeding' },
-    { name: 'Sleep & Routines', href: '/learn/sleep' },
-    { name: 'Mom Health', href: '/learn/mom-health' },
-    { name: 'Baby Development', href: '/learn/development' },
-    { name: 'Safety & First Aid', href: '/learn/safety' },
-    { name: 'Recipes & Solid Start', href: '/learn/recipes' },
+    { name: 'Feeding & Nutrition', href: '/topics/feeding-foundations' },
+    { name: 'Sleep & Development', href: '/topics' },
+    { name: 'Safety & Hygiene', href: '/topics/safety-and-hygiene' },
+    { name: 'Allergen Readiness', href: '/topics/allergen-readiness' },
+    { name: 'Nutrient Priorities', href: '/topics/nutrient-priorities' },
+    { name: 'Food Database', href: '/foods' },
   ];
 
   const quickLinks = [
     { name: 'About Us', href: '/about' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Latest Articles', href: '/latest-articles' },
     { name: 'FAQ', href: '/faq' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
+    { name: 'All Topics', href: '/topics' },
+    { name: 'Trust & Methods', href: '/trust' },
+    { name: 'Search', href: '/search' },
   ];
 
   return (
@@ -128,14 +128,14 @@ function Footer() {
               © 2025 JupitLunar. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Privacy Policy
+              <Link href="/trust" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Trust & Methods
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Terms of Service
+              <Link href="/about" className="text-gray-400 hover:text-white text-sm transition-colors">
+                About Us
               </Link>
-              <Link href="/contact" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Contact
+              <Link href="/faq" className="text-gray-400 hover:text-white text-sm transition-colors">
+                FAQ
               </Link>
             </div>
           </div>

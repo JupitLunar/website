@@ -1,3 +1,4 @@
+
 # 📰 最新文章页面 - AEO优化指南
 
 ## 🎯 页面目的
@@ -400,20 +401,6 @@ node -e "console.log(JSON.parse(fs.readFileSync('...')))"
 ```bash
 # 检查.env.local
 cat .env.local | grep SUPABASE
-```
-
-### 问题4: Module not found '@supabase/auth-helpers-nextjs'
-
-**原因**: 使用了未安装的包
-
-**解决**: 已修复，使用 `@supabase/supabase-js` 代替
-```typescript
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 ```
 
 ---

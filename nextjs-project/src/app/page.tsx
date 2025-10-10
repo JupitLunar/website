@@ -85,6 +85,17 @@ function HomePage() {
       <div className="min-h-screen bg-gradient-elegant">
         {/* Hero Section - 淡雅柔和风格 */}
         <section className="relative py-16 px-4 sm:px-8 overflow-hidden bg-gradient-to-br from-slate-50/20 via-white to-violet-50/10">
+          {/* 月相树背景图 */}
+          <div className="absolute inset-0 opacity-[0.45] pointer-events-none">
+            <Image
+              src="/heroimage.png"
+              alt="Moon Tree Background"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+
           {/* 非常淡雅的背景装饰 */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-100/10 to-purple-100/5 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-br from-indigo-100/10 to-violet-100/5 rounded-full blur-3xl"></div>
@@ -119,10 +130,10 @@ function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                Your Trusted Guide to
+                Trusted Care for
                 <br />
                 <span className="bg-gradient-to-r from-slate-400 via-violet-400 to-slate-500 bg-clip-text text-transparent">
-                  Maternal & Infant Care
+                  Mom & Baby
                 </span>
               </motion.h1>
 
@@ -132,8 +143,7 @@ function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                Comprehensive knowledge base for maternal health, infant development, and pediatric care. 
-                Evidence-based guidance from leading health organizations.
+                Evidence-based guidance for your health journey together.
               </motion.p>
 
               {/* 权威机构名称 - 淡雅小字 */}
@@ -198,10 +208,16 @@ function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <button className="btn-primary text-lg px-8 py-4">
+                <Link href="/topics" className="btn-primary text-lg px-8 py-4">
                   Explore Knowledge Base
-                </button>
-                <button className="btn-secondary text-lg px-8 py-4">
+                </Link>
+                <button
+                  onClick={() => {
+                    const aiSection = document.getElementById('ai-assistant-section');
+                    aiSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
+                  className="btn-secondary text-lg px-8 py-4"
+                >
                   Ask AI Assistant
                 </button>
               </motion.div>
@@ -210,7 +226,7 @@ function HomePage() {
         </section>
 
         {/* AI Assistant Section - 优雅的对话界面 */}
-        <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-blue-50/30 to-indigo-50/20">
+        <section id="ai-assistant-section" className="py-20 px-4 sm:px-8 bg-gradient-to-br from-blue-50/30 to-indigo-50/20">
           <div className="container mx-auto max-w-4xl">
             <motion.div 
               className="text-center mb-12"
@@ -531,17 +547,21 @@ function HomePage() {
                 </div>
                 
                 <div className="flex gap-4">
-                  <Link
-                    href="/products/dearbaby"
-                    className="flex-1 bg-gradient-to-r from-slate-400 to-violet-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
-                  >
-                    Learn More
-                  </Link>
                   <a
                     href="https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368"
-                    className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-gradient-to-r from-slate-400 to-violet-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
                   >
                     Download Free
+                  </a>
+                  <a
+                    href="https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
+                  >
+                    View on App Store
                   </a>
                 </div>
               </motion.div>
@@ -586,14 +606,20 @@ function HomePage() {
                 </div>
                 
                 <div className="flex gap-4">
-                  <Link 
-                    href="/products/solidstart"
+                  <button
+                    onClick={() => alert('SolidStart is coming soon! Join our newsletter to be notified when it launches.')}
                     className="flex-1 bg-gradient-to-r from-slate-400 to-purple-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
                   >
-                    Learn More
-                  </Link>
-                  <button className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all">
-                    Join Beta
+                    Coming Soon
+                  </button>
+                  <button
+                    onClick={() => {
+                      const newsletterBtn = document.querySelector('[data-newsletter-trigger]') as HTMLElement;
+                      newsletterBtn?.click();
+                    }}
+                    className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
+                  >
+                    Join Waitlist
                   </button>
                 </div>
               </motion.div>

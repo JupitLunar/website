@@ -2,7 +2,6 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import Script from 'next/script';
 import { foodManager } from '@/lib/supabase';
 import FoodCard from '@/components/FoodCard';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
@@ -138,41 +137,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
   const howToInstructions = food.how_to || [];
 
   return (
-    <>
-      {/* Schema.org Structured Data for AEO */}
-      <Script
-        id="breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      {howToSchema && (
-        <Script
-          id="howto-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
-        />
-      )}
-      <Script
-        id="health-topic-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthTopicSchema) }}
-      />
-      {keyTakeawaysSchema && (
-        <Script
-          id="key-takeaways-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(keyTakeawaysSchema) }}
-        />
-      )}
-      {faqSchema && (
-        <Script
-          id="faq-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      )}
-
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto max-w-7xl px-4 sm:px-8 py-4">
@@ -438,8 +403,8 @@ export default async function FoodDetailPage({ params }: PageProps) {
               <p className="text-gray-900">{food.portion_hint}</p>
             </div>
           )}
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* How-To Instructions */}
       {howToInstructions && howToInstructions.length > 0 && (
@@ -631,6 +596,5 @@ export default async function FoodDetailPage({ params }: PageProps) {
         </div>
       </section>
     </div>
-    </>
   );
 }

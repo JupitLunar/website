@@ -24,21 +24,21 @@
 }
 
 @layer components {
-  /* GEO Content Components */
+  /* AEO Content Components - 淡雅风格 */
   .tldr-section {
-    @apply bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-400 p-6 rounded-r-lg mb-8;
+    @apply bg-gradient-to-r from-slate-50 to-indigo-50/20 border-l-4 border-slate-400 p-6 rounded-r-lg mb-8 shadow-sm;
   }
   
   .key-facts-section {
-    @apply bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400 p-6 rounded-r-lg mb-8;
+    @apply bg-gradient-to-r from-slate-50 to-violet-50/20 border-l-4 border-slate-400 p-6 rounded-r-lg mb-8 shadow-sm;
   }
   
   .faq-section {
-    @apply bg-gradient-to-r from-purple-50 to-violet-50 border-l-4 border-purple-400 p-6 rounded-r-lg mb-8;
+    @apply bg-gradient-to-r from-slate-50 to-purple-50/20 border-l-4 border-slate-400 p-6 rounded-r-lg mb-8 shadow-sm;
   }
   
   .citations-section {
-    @apply bg-gradient-to-r from-orange-50 to-amber-50 border-l-4 border-orange-400 p-6 rounded-r-lg mb-8;
+    @apply bg-gradient-to-r from-slate-50 to-gray-50 border-l-4 border-slate-400 p-6 rounded-r-lg mb-8 shadow-sm;
   }
   
   /* Button Components */
@@ -88,16 +88,56 @@
 }
 
 @layer utilities {
+  /* 淡雅渐变工具类 */
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-slate-400 via-violet-400 to-slate-500 bg-clip-text text-transparent;
   }
   
-  .bg-gradient-primary {
-    @apply bg-gradient-to-r from-primary-500 to-primary-600;
+  .text-gradient-premium {
+    @apply bg-gradient-to-r from-slate-600 to-gray-700 bg-clip-text text-transparent;
   }
   
-  .bg-gradient-secondary {
-    @apply bg-gradient-to-r from-secondary-500 to-secondary-600;
+  .bg-gradient-elegant {
+    @apply bg-gradient-to-br from-slate-50 to-gray-50;
+  }
+  
+  .bg-gradient-premium {
+    @apply bg-gradient-to-br from-slate-100 to-gray-100;
+  }
+  
+  .bg-gradient-soft {
+    @apply bg-gradient-to-br from-white to-slate-50;
+  }
+  
+  /* 淡雅文本颜色 */
+  .text-elegant {
+    @apply text-slate-500;
+  }
+  
+  .text-premium {
+    @apply text-slate-600;
+  }
+  
+  .text-soft {
+    @apply text-slate-400;
+  }
+  
+  /* 淡雅背景颜色 */
+  .bg-elegant {
+    @apply bg-slate-50;
+  }
+  
+  .bg-premium {
+    @apply bg-slate-100;
+  }
+  
+  /* 淡雅边框 */
+  .border-elegant {
+    @apply border-slate-200;
+  }
+  
+  .border-premium {
+    @apply border-slate-300;
   }
   
   /* Primary color utilities */

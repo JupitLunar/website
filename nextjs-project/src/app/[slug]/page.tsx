@@ -112,63 +112,66 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           }}
         />
         
-        <div className="min-h-screen bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8]">
-          {/* Hero Section */}
-        <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
+        <div className="min-h-screen bg-gradient-elegant">
+          {/* Hero Section - 淡雅柔和风格 */}
+        <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50/20 via-white to-violet-50/10">
+          {/* 淡雅的背景装饰 */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-100/10 to-purple-100/5 rounded-full blur-3xl"></div>
+          
+          <div className="max-w-4xl mx-auto relative z-10">
             {/* Breadcrumb */}
             <nav className="mb-8">
-              <ol className="flex items-center space-x-2 text-sm text-gray-600">
+              <ol className="flex items-center space-x-2 text-sm text-slate-500">
                 <li>
-                  <Link href="/" className="hover:text-purple-600 transition-colors">
+                  <Link href="/" className="hover:text-violet-600 transition-colors font-light">
                     Home
                   </Link>
                 </li>
                 <li>
-                  <span className="mx-2">/</span>
+                  <span className="mx-2 text-slate-300">/</span>
                 </li>
                 <li>
-                  <Link href={`/hub/${article.hub}`} className="hover:text-purple-600 transition-colors">
+                  <Link href={`/hub/${article.hub}`} className="hover:text-violet-600 transition-colors font-light">
                     {article.hub}
                   </Link>
                 </li>
                 <li>
-                  <span className="mx-2">/</span>
+                  <span className="mx-2 text-slate-300">/</span>
                 </li>
-                <li className="text-gray-900 font-medium">{article.title}</li>
+                <li className="text-slate-700 font-light">{article.title}</li>
               </ol>
             </nav>
 
             {/* Article Header */}
             <div className="text-center mb-12">
-              <div className="inline-flex items-center px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-medium mb-6">
-                {article.type}
+              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-50/90 to-violet-50/60 backdrop-blur-sm rounded-full text-sm font-light mb-6 border border-slate-200/30">
+                <span className="text-slate-600">{article.type}</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-light text-slate-600 mb-6 leading-tight">
                 {article.title}
               </h1>
               {article.one_liner && (
-                <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                <p className="text-xl text-slate-500 mb-8 max-w-3xl mx-auto font-light">
                   {article.one_liner}
                 </p>
               )}
               
-              {/* Article Meta */}
-              <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500">
-                {publishedAt && <span>Published: {publishedAt.toLocaleDateString()}</span>}
+              {/* Article Meta - 淡雅样式 */}
+              <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400">
+                {publishedAt && <span className="font-light">Published: {publishedAt.toLocaleDateString()}</span>}
                 {updatedAt && (!publishedAt || updatedAt.getTime() !== publishedAt.getTime()) && (
-                  <span>Updated: {updatedAt.toLocaleDateString()}</span>
+                  <span className="font-light">Updated: {updatedAt.toLocaleDateString()}</span>
                 )}
                 {article.reviewed_by && (
-                  <span>Reviewed by {article.reviewed_by}</span>
+                  <span className="font-light">Reviewed by {article.reviewed_by}</span>
                 )}
                 {lastReviewedAt && (
-                  <span>Last review: {lastReviewedAt.toLocaleDateString()}</span>
+                  <span className="font-light">Last review: {lastReviewedAt.toLocaleDateString()}</span>
                 )}
                 {article.reading_time && (
-                  <span>{article.reading_time} min read</span>
+                  <span className="font-light">{article.reading_time} min read</span>
                 )}
-                {article.region && <span>Region: {article.region}</span>}
+                {article.region && <span className="font-light">Region: {article.region}</span>}
               </div>
             </div>
 
@@ -187,16 +190,16 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           </div>
         </section>
 
-        {/* Article Content */}
+        {/* Article Content - 淡雅白色背景 */}
         <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-4xl mx-auto">
             <div className="prose prose-lg max-w-none">
-              {/* TL;DR */}
+              {/* TL;DR - 淡雅样式 */}
               {tldrItems.length > 0 && (
-                <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-400 p-6 rounded-r-lg mb-8">
+                <div className="bg-gradient-to-r from-slate-50 to-indigo-50/20 border-l-4 border-slate-400 p-6 rounded-r-lg mb-8 shadow-sm">
                   <div className="flex items-center justify-between gap-4 flex-wrap">
                     <div>
-                      <h3 className="text-lg font-semibold text-emerald-900 mb-2">TL;DR</h3>
+                      <h3 className="text-lg font-light text-slate-600 mb-2">TL;DR</h3>
                       <p className="text-sm text-emerald-700">Top takeaways suitable for AI summaries & quick caregiver reference.</p>
                     </div>
                     {article.last_reviewed && (

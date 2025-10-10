@@ -97,28 +97,30 @@ export default async function HubPage({ params }: { params: { 'hub-slug': string
           }}
         />
         
-        <div className="min-h-screen bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8]">
-        {/* Hero Section */}
-        <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen bg-gradient-elegant">
+        {/* Hero Section - 淡雅风格 */}
+        <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50/20 via-white to-violet-50/10">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-100/10 to-purple-100/5 rounded-full blur-3xl"></div>
+          
+          <div className="max-w-6xl mx-auto relative z-10">
             {/* Breadcrumb */}
             <nav className="mb-8">
-              <ol className="flex items-center space-x-2 text-sm text-gray-600">
+              <ol className="flex items-center space-x-2 text-sm text-slate-500">
                 <li>
-                  <Link href="/" className="hover:text-purple-600 transition-colors">
+                  <Link href="/" className="hover:text-violet-600 transition-colors font-light">
                     Home
                   </Link>
                 </li>
                 <li>
-                  <span className="mx-2">/</span>
+                  <span className="mx-2 text-slate-300">/</span>
                 </li>
-                <li className="text-gray-900 font-medium">{hub.name}</li>
+                <li className="text-slate-700 font-light">{hub.name}</li>
               </ol>
             </nav>
 
             {/* Hub Header */}
             <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl mb-6">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-slate-200 to-violet-200 rounded-2xl mb-6 shadow-sm">
                 {hub.icon && (
                   <Image
                     src={hub.icon}
@@ -129,17 +131,17 @@ export default async function HubPage({ params }: { params: { 'hub-slug': string
                   />
                 )}
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              <h1 className="text-4xl md:text-5xl font-light text-slate-600 mb-6">
                 {hub.name}
               </h1>
               {hub.description && (
-                <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                <p className="text-xl text-slate-500 mb-8 max-w-3xl mx-auto font-light">
                   {hub.description}
                 </p>
               )}
               
-              {/* Hub Stats */}
-              <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
+              {/* Hub Stats - 淡雅样式 */}
+              <div className="flex items-center justify-center space-x-8 text-sm text-slate-400 font-light">
                 <span>{articles.length} Articles</span>
                 <span>•</span>
                 <span>{hub.article_count || 0} Total</span>

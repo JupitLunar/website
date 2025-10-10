@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
 import { knowledgeBase } from '@/lib/supabase';
 import type { KnowledgeSource } from '@/types/content';
 
@@ -77,43 +76,8 @@ export default async function TopicsLibraryPage() {
     ? new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: 'short', day: 'numeric' }).format(latestRetrieved)
     : 'Continuously updated';
 
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: 'JupitLunar Knowledge Base Library',
-    url: 'https://jupitlunar.com/topics',
-    description: metadata.description,
-    isPartOf: {
-      '@type': 'WebSite',
-      name: 'JupitLunar',
-      url: 'https://jupitlunar.com',
-    },
-    mainEntity: {
-      '@type': 'ItemList',
-      itemListElement: TOPIC_CARDS.map((topic, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        name: topic.title,
-        url: `https://jupitlunar.com/topics/${topic.slug}`,
-        description: topic.blurb,
-      })),
-    },
-    citation: sortedSources.slice(0, 12).map((source) => ({
-      '@type': 'CreativeWork',
-      name: source.name,
-      url: source.url,
-      dateModified: source.retrieved_at,
-      publisher: source.organization,
-    })),
-  };
-
   return (
     <div className="bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8] py-16">
-      <Script
-        id="topics-structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
       <div className="mx-auto max-w-6xl space-y-16 px-4">
         <header className="space-y-4 text-center">
           <h1 className="text-4xl font-bold text-slate-900">Knowledge base library</h1>
