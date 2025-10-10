@@ -23,7 +23,7 @@ export function generateFoodHowToSchema(food: {
 }) {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momaiagent.com';
 
-  const steps = [];
+  const steps: any[] = [];
 
   // Add serving form steps
   if (food.serving_forms && food.serving_forms.length > 0) {

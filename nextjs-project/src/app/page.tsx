@@ -64,7 +64,13 @@ function HomePage() {
       setShowResponse(true);
     } catch (error) {
       console.error('AI query error:', error);
-      setAiResponse("I'm sorry, I'm having trouble accessing my knowledge base right now. Please try again later or consult your pediatrician for immediate concerns.");
+      setAiResponse({
+        summary: "I'm sorry, I'm having trouble accessing my knowledge base right now. Please try again later or consult your pediatrician for immediate concerns.",
+        keyPoints: [],
+        details: { sections: [] },
+        actionableAdvice: [],
+        disclaimer: "This information is for educational purposes only and should not replace professional medical advice."
+      });
       setAiSources([]);
       setShowResponse(true);
     } finally {

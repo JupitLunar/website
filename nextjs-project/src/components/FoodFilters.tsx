@@ -193,7 +193,7 @@ const FoodFilters: React.FC<FoodFiltersProps> = ({
           </div>
           <div className="flex flex-wrap gap-2">
             {Object.entries(selectedFilters).map(([filterType, values]) =>
-              values.map(value => (
+               values.map((value: string) => (
                 <span
                   key={`${filterType}-${value}`}
                   className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded-full"
