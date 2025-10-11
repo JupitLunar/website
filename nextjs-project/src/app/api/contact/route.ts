@@ -5,6 +5,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { name, email, message, contactType } = body;
+    
+    // Debug logging
+    console.log('Contact API called with:', { name, email, message, contactType });
 
     // Validate required fields
     if (!name || !email || !message || !contactType) {
@@ -54,6 +57,23 @@ export async function POST(request: NextRequest) {
     }
 
     // Use Supabase client
+    console.log('Supabase client initialized:', !!supabase);
+    
+    // Test Supabase connection
+    const { data: testData, error: testError } = await supabase
+      .from('user_feedback')
+      .select('id')
+      .limit(1);
+    
+    if (testError) {
+      console.error('Supabase connection test failed:', testError);
+      return NextResponse.json(
+        { error: 'Database connection failed', details: testError.message },
+        { status: 500 }
+      );
+    }
+    
+    console.log('Supabase connection test successful');
 
     // Insert into user_feedback table
     const { data, error } = await supabase
