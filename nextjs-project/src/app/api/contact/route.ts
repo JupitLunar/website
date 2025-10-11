@@ -72,8 +72,14 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Database error:', error);
+      console.error('Error details:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint
+      });
       return NextResponse.json(
-        { error: 'Failed to submit contact form. Please try again.' },
+        { error: 'Failed to submit contact form. Please try again.', details: error.message },
         { status: 500 }
       );
     }
