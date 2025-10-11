@@ -38,50 +38,94 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use Supabase client
+    // Use Supabase client with retry mechanism
+    console.log('Newsletter API called with:', { email, name });
+    
+    // Retry mechanism for database operations
+    const maxRetries = 3;
+    let lastError = null;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Attempt ${attempt}/${maxRetries} to subscribe to newsletter`);
+        
+        // Insert into waitlist_users table
+        const { data, error } = await supabase
+          .from('waitlist_users')
+          .insert([
+            {
+              email: email.trim().toLowerCase(),
+              name: name ? name.trim() : null,
+              // created_at will be automatically set by the database
+            }
+          ])
+          .select();
 
-    // Insert into waitlist_users table
-    const { data, error } = await supabase
-      .from('waitlist_users')
-      .insert([
-        {
-          email: email.trim().toLowerCase(),
-          name: name ? name.trim() : null,
-          // created_at will be automatically set by the database
+        if (error) {
+          lastError = error;
+          console.error(`Attempt ${attempt} failed:`, error);
+          
+          // Check if it's a duplicate email error
+          if (error.code === '23505') { // Unique constraint violation
+            return NextResponse.json(
+              { error: 'This email is already subscribed to our newsletter' },
+              { status: 409 }
+            );
+          }
+          
+          // If it's a connection issue and we have retries left, wait and try again
+          if (attempt < maxRetries && (
+            error.message.includes('connection') ||
+            error.message.includes('timeout') ||
+            error.code === 'PGRST301' // Connection timeout
+          )) {
+            console.log(`Waiting 1 second before retry ${attempt + 1}...`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            continue;
+          }
+          
+          // If it's not a connection issue or we're out of retries, break
+          break;
         }
-      ])
-      .select();
-
-    if (error) {
-      // Check if it's a duplicate email error
-      if (error.code === '23505') { // Unique constraint violation
+        
+        // Success! Log and return
+        console.log(`Newsletter subscription successful on attempt ${attempt}:`, {
+          id: data[0]?.id,
+          email: email.trim().toLowerCase(),
+          timestamp: new Date().toISOString()
+        });
+        
         return NextResponse.json(
-          { error: 'This email is already subscribed to our newsletter' },
-          { status: 409 }
+          { 
+            success: true, 
+            message: 'Successfully subscribed to newsletter',
+            id: data[0]?.id 
+          },
+          { status: 200 }
         );
+        
+      } catch (error) {
+        lastError = error;
+        console.error(`Attempt ${attempt} threw error:`, error);
+        
+        if (attempt < maxRetries) {
+          console.log(`Waiting 1 second before retry ${attempt + 1}...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
       }
-
-      console.error('Database error:', error);
-      return NextResponse.json(
-        { error: 'Failed to subscribe. Please try again.' },
-        { status: 500 }
-      );
     }
-
-    // Log successful subscription (for monitoring)
-    console.log('Newsletter subscription:', {
-      id: data[0]?.id,
-      email: email.trim().toLowerCase(),
-      timestamp: new Date().toISOString()
-    });
-
+    
+    // If we get here, all retries failed
+    const finalError = lastError;
+    console.error('All retry attempts failed for newsletter subscription:', finalError);
+    
     return NextResponse.json(
       { 
-        success: true, 
-        message: 'Successfully subscribed to newsletter',
-        id: data[0]?.id 
+        error: 'Failed to subscribe after multiple attempts. Please try again.',
+        details: (finalError as any)?.message || 'Unknown error',
+        retries: maxRetries
       },
-      { status: 200 }
+      { status: 500 }
     );
 
   } catch (error) {

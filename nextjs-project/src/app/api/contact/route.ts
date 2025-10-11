@@ -56,68 +56,96 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use Supabase client
+    // Use Supabase client with retry mechanism
     console.log('Supabase client initialized:', !!supabase);
     
-    // Test Supabase connection
-    const { data: testData, error: testError } = await supabase
-      .from('user_feedback')
-      .select('id')
-      .limit(1);
+    // Retry mechanism for database operations
+    const maxRetries = 3;
+    let lastError = null;
     
-    if (testError) {
-      console.error('Supabase connection test failed:', testError);
-      return NextResponse.json(
-        { error: 'Database connection failed', details: testError.message },
-        { status: 500 }
-      );
-    }
-    
-    console.log('Supabase connection test successful');
-
-    // Insert into user_feedback table
-    const { data, error } = await supabase
-      .from('user_feedback')
-      .insert([
-        {
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          message: message.trim(),
-          contact_type: contactType,
-          // rating can be null as it's optional
-          // created_at will be automatically set by the database
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Attempt ${attempt}/${maxRetries} to insert contact data`);
+        
+        // Insert into user_feedback table
+        const { data, error } = await supabase
+          .from('user_feedback')
+          .insert([
+            {
+              name: name.trim(),
+              email: email.trim().toLowerCase(),
+              message: message.trim(),
+              contact_type: contactType,
+              // rating can be null as it's optional
+              // created_at will be automatically set by the database
+            }
+          ])
+          .select();
+        
+        if (error) {
+          lastError = error;
+          console.error(`Attempt ${attempt} failed:`, error);
+          
+          // If it's a connection issue and we have retries left, wait and try again
+          if (attempt < maxRetries && (
+            error.message.includes('connection') ||
+            error.message.includes('timeout') ||
+            error.code === 'PGRST301' // Connection timeout
+          )) {
+            console.log(`Waiting 1 second before retry ${attempt + 1}...`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            continue;
+          }
+          
+          // If it's not a connection issue or we're out of retries, break
+          break;
         }
-      ])
-      .select();
-
-    if (error) {
-      console.error('Database error:', error);
-      console.error('Error details:', {
-        code: error.code,
-        message: error.message,
-        details: error.details,
-        hint: error.hint
-      });
-      return NextResponse.json(
-        { error: 'Failed to submit contact form. Please try again.', details: error.message },
-        { status: 500 }
-      );
+        
+        // Success! Log and return
+        console.log(`Contact form submitted successfully on attempt ${attempt}:`, {
+          id: data[0]?.id,
+          contactType,
+          timestamp: new Date().toISOString()
+        });
+        
+        return NextResponse.json(
+          { 
+            success: true, 
+            message: 'Contact form submitted successfully',
+            id: data[0]?.id 
+          },
+          { status: 200 }
+        );
+        
+      } catch (error) {
+        lastError = error;
+        console.error(`Attempt ${attempt} threw error:`, error);
+        
+        if (attempt < maxRetries) {
+          console.log(`Waiting 1 second before retry ${attempt + 1}...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
     }
-
-    // Log successful submission (for monitoring)
-    console.log('Contact form submitted:', {
-      id: data[0]?.id,
-      contactType,
-      timestamp: new Date().toISOString()
+    
+    // If we get here, all retries failed
+    const finalError = lastError;
+    
+    console.error('All retry attempts failed. Final error:', finalError);
+    console.error('Error details:', {
+      code: (finalError as any)?.code,
+      message: (finalError as any)?.message,
+      details: (finalError as any)?.details,
+      hint: (finalError as any)?.hint
     });
-
+    
     return NextResponse.json(
       { 
-        success: true, 
-        message: 'Contact form submitted successfully',
-        id: data[0]?.id 
+        error: 'Failed to submit contact form after multiple attempts. Please try again.', 
+        details: (finalError as any)?.message || 'Unknown error',
+        retries: maxRetries
       },
-      { status: 200 }
+      { status: 500 }
     );
 
   } catch (error) {
