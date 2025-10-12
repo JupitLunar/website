@@ -5,6 +5,12 @@
       "maxDuration": 30
     }
   },
+  "crons": [
+    {
+      "path": "/api/scraper/run",
+      "schedule": "0 2 * * *"
+    }
+  ],
   "env": {
     "NEXT_PUBLIC_APP_URL": "https://www.momaiagent.com",
     "NEXT_PUBLIC_SITE_URL": "https://www.momaiagent.com"

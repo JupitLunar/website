@@ -17,33 +17,37 @@ import path from 'path';
  *   }
  */
 
-// 验证API密钥
-function validateApiKey(request: NextRequest): boolean {
+// 验证API密钥或Vercel Cron
+function validateRequest(request: NextRequest): boolean {
+  // 检查是否是Vercel Cron请求
+  const cronSecret = request.headers.get('authorization');
+  if (cronSecret === `Bearer ${process.env.CRON_SECRET}`) {
+    return true;
+  }
+  
+  // 检查是否是手动API调用
   const authHeader = request.headers.get('authorization');
   const apiKey = process.env.SCRAPER_API_KEY;
   
-  if (!apiKey) {
-    console.error('❌ SCRAPER_API_KEY not configured in environment');
-    return false;
+  if (apiKey && authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    if (token === apiKey) {
+      return true;
+    }
   }
   
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return false;
-  }
-  
-  const token = authHeader.substring(7);
-  return token === apiKey;
+  return false;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // 验证API密钥
-    if (!validateApiKey(request)) {
+    // 验证请求（API key或Cron secret）
+    if (!validateRequest(request)) {
       return NextResponse.json(
         { 
           success: false, 
           error: 'Unauthorized',
-          message: 'Invalid or missing API key'
+          message: 'Invalid or missing API key or Cron secret'
         },
         { status: 401 }
       );
@@ -65,13 +69,13 @@ export async function POST(request: NextRequest) {
       console.log(`   指定来源: ${sources.join(', ')}`);
     }
     
-    // 动态导入爬虫脚本
-    const scraperPath = path.resolve(process.cwd(), 'scripts/web-scraper.js');
+    // 动态导入全球自动爬虫脚本
+    const scraperPath = path.resolve(process.cwd(), 'scripts/global-auto-scraper.js');
     const scraperModule = await import(scraperPath);
     const { main } = scraperModule;
     
     // 执行爬虫
-    const results = await main({ sources });
+    const results = await main();
     
     // 返回结果
     return NextResponse.json({
@@ -105,13 +109,13 @@ export async function POST(request: NextRequest) {
 // GET请求 - 获取爬虫状态和配置
 export async function GET(request: NextRequest) {
   try {
-    // 验证API密钥
-    if (!validateApiKey(request)) {
+    // 验证请求（API key或Cron secret）
+    if (!validateRequest(request)) {
       return NextResponse.json(
         { 
           success: false, 
           error: 'Unauthorized',
-          message: 'Invalid or missing API key'
+          message: 'Invalid or missing API key or Cron secret'
         },
         { status: 401 }
       );

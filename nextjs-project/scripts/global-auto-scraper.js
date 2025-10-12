@@ -67,11 +67,7 @@ const EXCLUDE_PATTERNS = [
   /index\.html?$/i
 ];
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function fetch(url) {
+async function fetchPage(url) {
   try {
     const response = await axios.get(url, {
       timeout: 15000,
@@ -106,7 +102,7 @@ async function discoverArticlesFromSource(source) {
       ? category
       : `${source.baseUrl}${category}`;
 
-    const html = await fetch(categoryUrl);
+    const html = await fetchPage(categoryUrl);
     if (!html) continue;
 
     const $ = cheerio.load(html);
@@ -418,6 +414,15 @@ async function main() {
     console.log(`ℹ️  还有 ${stats.discovered - CONFIG.maxArticlesPerRun} 篇文章未抓取`);
     console.log(`   可以再次运行此脚本来抓取更多文章\n`);
   }
+  
+  // 返回统计结果（用于API调用）
+  return {
+    total: stats.discovered,
+    successful: stats.successful,
+    failed: stats.failed,
+    skipped: stats.discovered - stats.attempted,
+    byRegion: stats.byRegion
+  };
 }
 
 if (require.main === module) {
