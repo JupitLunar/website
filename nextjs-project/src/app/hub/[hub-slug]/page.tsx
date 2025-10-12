@@ -77,8 +77,8 @@ export default async function HubPage({ params }: { params: { 'hub-slug': string
     // 生成结构化数据
     const structuredData = generateHubStructuredData(hub, articles);
     const breadcrumbData = generateBreadcrumbStructuredData([
-      { name: 'Home', url: 'https://jupitlunar.com' },
-      { name: hub.name, url: `https://jupitlunar.com/hub/${hub.slug}` }
+      { name: 'Home', url: 'https://www.momaiagent.com' },
+      { name: hub.name, url: `https://www.momaiagent.com/hub/${hub.slug}` }
     ]);
 
     return (

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: 'Latest Baby & Parenting Articles - Updated Daily',
     description: 'Stay informed with the latest evidence-based baby care articles from AAP, Mayo Clinic, WHO, and more.',
     type: 'website',
-    url: 'https://jupitlunar.com/latest-articles',
+    url: 'https://www.momaiagent.com/latest-articles',
     images: [
       {
         url: '/og-latest-articles.jpg',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     images: ['/og-latest-articles.jpg']
   },
   alternates: {
-    canonical: 'https://jupitlunar.com/latest-articles'
+    canonical: 'https://www.momaiagent.com/latest-articles'
   },
   robots: {
     index: true,
@@ -95,7 +95,7 @@ export default async function LatestArticlesPage() {
         items={articles.slice(0, 50).map((article, index) => ({
           position: index + 1,
           name: article.title,
-          url: `https://jupitlunar.com/articles/${article.slug}`,
+          url: `https://www.momaiagent.com/articles/${article.slug}`,
           description: article.one_liner || article.meta_description
         }))}
       />
@@ -109,7 +109,7 @@ export default async function LatestArticlesPage() {
             '@type': 'CollectionPage',
             name: 'Latest Baby Care & Parenting Articles',
             description: 'Comprehensive collection of the latest evidence-based baby care articles',
-            url: 'https://jupitlunar.com/latest-articles',
+            url: 'https://www.momaiagent.com/latest-articles',
             dateModified: lastUpdated,
             mainEntity: {
               '@type': 'ItemList',
@@ -119,7 +119,7 @@ export default async function LatestArticlesPage() {
                 item: {
                   '@type': 'Article',
                   headline: article.title,
-                  url: `https://jupitlunar.com/articles/${article.slug}`,
+                  url: `https://www.momaiagent.com/articles/${article.slug}`,
                   description: article.one_liner,
                   datePublished: article.created_at,
                   author: {
@@ -132,7 +132,7 @@ export default async function LatestArticlesPage() {
             provider: {
               '@type': 'Organization',
               name: 'JupitLunar',
-              url: 'https://jupitlunar.com'
+              url: 'https://www.momaiagent.com'
             }
           })
         }}

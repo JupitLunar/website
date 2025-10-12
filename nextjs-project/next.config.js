@@ -46,6 +46,23 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        // Redirect non-www to www
+        {
+          source: '/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'momaiagent.com',
+            },
+          ],
+          destination: 'https://www.momaiagent.com/:path*',
+        },
+      ],
+    };
+  },
   async headers() {
     return [
       {

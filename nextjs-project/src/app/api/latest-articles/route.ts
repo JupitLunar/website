@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   const formattedArticles = articles?.map(article => ({
     id: article.id,
     title: article.title,
-    url: `https://jupitlunar.com/articles/${article.slug}`,
+    url: `https://www.momaiagent.com/articles/${article.slug}`,
     summary: article.one_liner,
     fullContent: article.body_md,
     metadata: {

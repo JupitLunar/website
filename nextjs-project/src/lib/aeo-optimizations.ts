@@ -8,7 +8,7 @@ export function generateMedicalWebPageSchema(article: any) {
   const schema = {
     "@context": "https://schema.org",
     "@type": ["MedicalWebPage", "Article"],
-    "@id": `https://jupitlunar.com/${article.slug}#medical-page`,
+    "@id": `https://www.momaiagent.com/${article.slug}#medical-page`,
     "headline": article.title,
     "description": article.one_liner,
     "about": {
@@ -24,7 +24,7 @@ export function generateMedicalWebPageSchema(article: any) {
       "@type": "Organization",
       "name": "JupitLunar Editorial Team",
       "description": "Evidence-based health content curation",
-      "url": "https://jupitlunar.com/about"
+      "url": "https://www.momaiagent.com/about"
     },
     "reviewedBy": {
       "@type": "MedicalOrganization",
@@ -36,11 +36,11 @@ export function generateMedicalWebPageSchema(article: any) {
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://jupitlunar.com/Assets/Logo.png",
+        "url": "https://www.momaiagent.com/Assets/Logo.png",
         "width": 200,
         "height": 60
       },
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     },
     "medicalAudience": {
       "@type": "MedicalAudience",
@@ -50,7 +50,7 @@ export function generateMedicalWebPageSchema(article: any) {
     "isPartOf": {
       "@type": "WebSite",
       "name": "JupitLunar Health Intelligence",
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     },
     "speakable": {
       "@type": "SpeakableSpecification",
@@ -105,14 +105,14 @@ export function generateClaimReviewSchema({
     "author": {
       "@type": "Organization",
       "name": "JupitLunar Editorial Team",
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     },
     "publisher": {
       "@type": "Organization",
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://jupitlunar.com/Assets/Logo.png"
+        "url": "https://www.momaiagent.com/Assets/Logo.png"
       }
     },
     "url": articleUrl,
@@ -188,7 +188,7 @@ export function generateComparisonTableSchema({
 
 // 生成hreflang元数据
 export function generateHreflangMetadata(slug: string, region?: string) {
-  const baseUrl = 'https://jupitlunar.com';
+  const baseUrl = 'https://www.momaiagent.com';
   
   const alternates = {
     canonical: `/${slug}`,
@@ -233,10 +233,10 @@ export function generateMachineReadableFAQ(article: any) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "@id": `https://jupitlunar.com/${article.slug}#faq`,
+    "@id": `https://www.momaiagent.com/${article.slug}#faq`,
     "mainEntity": article.qas.map((qa: any, index: number) => ({
       "@type": "Question",
-      "@id": `https://jupitlunar.com/${article.slug}#question-${index + 1}`,
+      "@id": `https://www.momaiagent.com/${article.slug}#question-${index + 1}`,
       "name": qa.question,
       "acceptedAnswer": {
         "@type": "Answer",
@@ -331,7 +331,7 @@ export function generateCompleteAEOSchema(article: any) {
   //     topic: article.title,
   //     usData: article.us_ca_comparison.us || {},
   //     caData: article.us_ca_comparison.ca || {},
-  //     articleUrl: `https://jupitlunar.com/${article.slug}`
+  //     articleUrl: `https://www.momaiagent.com/${article.slug}`
   //   }));
   // }
 

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { contentManager } from '@/lib/supabase';
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://jupitlunar.com').replace(/\/$/, '');
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseRoutes: MetadataRoute.Sitemap = [

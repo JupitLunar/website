@@ -68,8 +68,8 @@ export default async function AllergenReadinessPage() {
             <span className="font-semibold">Transparency pledge:</span> Sources include CPS, HealthyChildren.org, FDA/EPA,
             and Health Canada. Evidence grades indicate the level of authority (A = official guideline, B = academic
             consensus). Share feedback via{' '}
-            <a className="text-purple-600 underline" href="mailto:hello@jupitlunar.com">
-              hello@jupitlunar.com
+            <a className="text-purple-600 underline" href="mailto:hello@www.momaiagent.com">
+              hello@www.momaiagent.com
             </a>
             .
           </div>

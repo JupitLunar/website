@@ -335,7 +335,7 @@ export default function PrivacyPage() {
                   <strong>Location:</strong> Edmonton, AB, Canada
                 </p>
                 <p className="text-slate-600 text-sm mb-1">
-                  <strong>Website:</strong> <a href="https://momaiagent.com" className="text-blue-600 hover:underline">momaiagent.com</a>
+                  <strong>Website:</strong> <a href="https://www.momaiagent.com" className="text-blue-600 hover:underline">www.momaiagent.com</a>
                 </p>
                 <p className="text-slate-600 text-sm mt-3 pt-3 border-t border-slate-200">
                   <strong>Response time:</strong> Within 48 hours

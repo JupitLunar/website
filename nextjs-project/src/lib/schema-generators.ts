@@ -21,7 +21,7 @@ export function generateFoodHowToSchema(food: {
   how_to?: HowToInstruction[];
   risk_level?: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momaiagent.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com';
 
   const steps: any[] = [];
 
@@ -89,7 +89,7 @@ export function generateFoodHowToSchema(food: {
 
 // Generate Breadcrumb schema
 export function generateBreadcrumbSchema(breadcrumbs: Array<{ name: string; url: string }>) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momaiagent.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com';
 
   return {
     '@context': 'https://schema.org',
@@ -154,7 +154,7 @@ export function generateFoodHealthTopicSchema(food: {
   last_reviewed_at?: string;
   expires_at?: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momaiagent.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com';
 
   return {
     '@context': 'https://schema.org',
@@ -229,7 +229,7 @@ export function generateClaimReviewSchema(claim: {
       name: claim.reviewedBy || 'JupitLunar Editorial Team',
     },
     datePublished: claim.reviewDate || new Date().toISOString(),
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://momaiagent.com',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com',
   };
 }
 
@@ -242,7 +242,7 @@ export function generateTopicCollectionSchema(topic: {
   lastReviewed?: string;
   itemCount?: number;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momaiagent.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com';
 
   return {
     '@context': 'https://schema.org',

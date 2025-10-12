@@ -23,7 +23,7 @@ export function generateArticleStructuredData(article: any) {
 
   const structuredData: Record<string, any> = {
     "@type": primaryType,
-    "@id": `https://jupitlunar.com/${article.slug}#article`,
+    "@id": `https://www.momaiagent.com/${article.slug}#article`,
     "headline": article.title,
     "description": article.one_liner || article.body_md?.substring(0, 160),
     "abstract": tldrItems.length > 0 ? tldrItems.join(' • ') : undefined,
@@ -38,7 +38,7 @@ export function generateArticleStructuredData(article: any) {
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://jupitlunar.com/Assets/Logo.png",
+        "url": "https://www.momaiagent.com/Assets/Logo.png",
       },
     },
     "datePublished": article.published_at,
@@ -46,7 +46,7 @@ export function generateArticleStructuredData(article: any) {
     "dateCreated": article.published_at,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://jupitlunar.com/${article.slug}`,
+      "@id": `https://www.momaiagent.com/${article.slug}`,
     },
     "articleSection": article.hub,
     "keywords": article.entities?.join(', ') || 'maternal health, infant care, parenting',
@@ -56,7 +56,7 @@ export function generateArticleStructuredData(article: any) {
     "isPartOf": {
       "@type": "WebSite",
       "name": "JupitLunar",
-      "url": "https://jupitlunar.com",
+      "url": "https://www.momaiagent.com",
     },
     "speakable": {
       "@type": 'SpeakableSpecification',
@@ -134,7 +134,7 @@ export function generateArticleStructuredData(article: any) {
         "text": article.one_liner || article.body_md?.substring(0, 500),
         "dateCreated": article.published_at,
         "upvoteCount": article.helpful_count || 0,
-        "url": `https://jupitlunar.com/${article.slug}#answer`
+        "url": `https://www.momaiagent.com/${article.slug}#answer`
       }
     },
     // 内容可信度信号
@@ -162,7 +162,7 @@ export function generateArticleStructuredData(article: any) {
   if (article.type === 'howto' && Array.isArray(article.how_to_steps) && article.how_to_steps.length > 0) {
     graph.push({
       "@type": "HowTo",
-      "@id": `https://jupitlunar.com/${article.slug}#howto`,
+      "@id": `https://www.momaiagent.com/${article.slug}#howto`,
       "name": article.title,
       "description": article.one_liner,
       "totalTime": article.time_required ? `PT${article.time_required}` : undefined,
@@ -194,7 +194,7 @@ export function generateArticleStructuredData(article: any) {
 
     graph.push({
       "@type": "Recipe",
-      "@id": `https://jupitlunar.com/${article.slug}#recipe`,
+      "@id": `https://www.momaiagent.com/${article.slug}#recipe`,
       "name": article.title,
       "description": article.one_liner,
       "image": article.featured_image ? [article.featured_image] : undefined,
@@ -211,10 +211,10 @@ export function generateArticleStructuredData(article: any) {
   if (article.qas && article.qas.length > 0) {
     graph.push({
       "@type": "FAQPage",
-      "@id": `https://jupitlunar.com/${article.slug}#faq`,
+      "@id": `https://www.momaiagent.com/${article.slug}#faq`,
       "mainEntity": article.qas.map((qa: any, index: number) => ({
         "@type": "Question",
-        "@id": `https://jupitlunar.com/${article.slug}#question-${index + 1}`,
+        "@id": `https://www.momaiagent.com/${article.slug}#question-${index + 1}`,
         "name": qa.question,
         "acceptedAnswer": {
           "@type": "Answer",
@@ -227,7 +227,7 @@ export function generateArticleStructuredData(article: any) {
   if (['explainer', 'research', 'howto', 'faq', 'recipe'].includes(article.type)) {
     graph.push({
       "@type": "HealthTopicContent",
-      "@id": `https://jupitlunar.com/${article.slug}#health-topic`,
+      "@id": `https://www.momaiagent.com/${article.slug}#health-topic`,
       "name": article.title,
       "description": article.one_liner || article.body_md?.substring(0, 160),
       "lastReviewed": article.last_reviewed || article.updated_at,
@@ -275,7 +275,7 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
     "@type": "CollectionPage",
     "name": hub.name,
     "description": hub.description,
-    "url": `https://jupitlunar.com/hub/${hub.slug}`,
+    "url": `https://www.momaiagent.com/hub/${hub.slug}`,
     "mainEntity": {
       "@type": "ItemList",
       "numberOfItems": articles.length,
@@ -285,7 +285,7 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
         "item": {
           "@type": "Article",
           "headline": article.title,
-          "url": `https://jupitlunar.com/${article.slug}`,
+          "url": `https://www.momaiagent.com/${article.slug}`,
           "datePublished": article.published_at,
           "dateModified": article.updated_at || article.published_at
         }
@@ -294,13 +294,13 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
     "publisher": {
       "@type": "Organization",
       "name": "JupitLunar",
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     },
     "inLanguage": "en",
     "isPartOf": {
       "@type": "WebSite",
       "name": "JupitLunar",
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     }
   };
 }
@@ -326,12 +326,12 @@ export function generateWebsiteStructuredData() {
     "@type": "WebSite",
     "name": "JupitLunar",
     "description": "AI-Powered Health Intelligence for Mom & Baby Wellness",
-    "url": "https://jupitlunar.com",
+    "url": "https://www.momaiagent.com",
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://jupitlunar.com/search?q={search_term_string}"
+        "urlTemplate": "https://www.momaiagent.com/search?q={search_term_string}"
       },
       "query-input": "required name=search_term_string"
     },
@@ -340,7 +340,7 @@ export function generateWebsiteStructuredData() {
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://jupitlunar.com/Assets/Logo.png"
+        "url": "https://www.momaiagent.com/Assets/Logo.png"
       },
       "sameAs": [
         "https://twitter.com/jupitlunar",
@@ -358,17 +358,17 @@ export function generateOrganizationStructuredData() {
     "@type": "Organization",
     "name": "JupitLunar",
     "description": "AI-Powered Health Intelligence for Mom & Baby Wellness",
-    "url": "https://jupitlunar.com",
+    "url": "https://www.momaiagent.com",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://jupitlunar.com/Assets/Logo.png",
+      "url": "https://www.momaiagent.com/Assets/Logo.png",
       "width": 200,
       "height": 200
     },
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "email": "hello@jupitlunar.com"
+      "email": "hello@www.momaiagent.com"
     },
     "address": {
       "@type": "PostalAddress",
@@ -475,7 +475,7 @@ export function generateClaimReviewStructuredData(claim: {
     "author": {
       "@type": "Organization",
       "name": "JupitLunar Editorial Team",
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     },
     "reviewRating": {
       "@type": "Rating",

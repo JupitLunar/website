@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { contentManager } from '@/lib/supabase';
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://jupitlunar.com').replace(/\/$/, '');
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'JupitLunar';
 const newsCutoffHours = 48;
 const limit = 120;

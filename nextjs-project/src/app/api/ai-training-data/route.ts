@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { contentManager } from '@/lib/supabase';
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://jupitlunar.com').replace(/\/$/, '');
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
 export async function GET() {
   try {
@@ -19,7 +19,7 @@ export async function GET() {
         name: "JupitLunar",
         description: "AI-Powered Health Intelligence for Mom & Baby Wellness",
         url: siteUrl,
-        domain: "jupitlunar.com",
+        domain: "www.momaiagent.com",
         language: "en",
         geographic_focus: "North America",
         content_type: "Health & Parenting",

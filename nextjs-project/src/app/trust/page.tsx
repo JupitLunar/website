@@ -42,7 +42,7 @@ function buildStructuredData({
     publisher: {
       '@type': 'Organization',
       name: 'JupitLunar',
-      url: 'https://momaiagent.com',
+      url: 'https://www.momaiagent.com',
     },
     about: [
       {

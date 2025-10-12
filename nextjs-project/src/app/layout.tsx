@@ -22,14 +22,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://momaiagent.com'),
+  metadataBase: new URL('https://www.momaiagent.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: 'JupitLunar - AI-Powered Health Intelligence',
     description: 'Expert-curated health guidance for moms and babies',
-    url: 'https://momaiagent.com',
+    url: 'https://www.momaiagent.com',
     siteName: 'JupitLunar',
     locale: 'en_US',
     type: 'website',

@@ -573,7 +573,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
 
           <CitationBox
             title={`${food.name} for Babies and Toddlers`}
-            url={`https://momaiagent.com/foods/${slug}`}
+            url={`https://www.momaiagent.com/foods/${slug}`}
             lastReviewed={food.last_reviewed_at}
             siteName="JupitLunar"
           />

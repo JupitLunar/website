@@ -60,7 +60,7 @@ export default function ExampleAEOArticlePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": ["MedicalWebPage", "Article"],
-    "@id": `https://jupitlunar.com/${articleData.slug}#article`,
+    "@id": `https://www.momaiagent.com/${articleData.slug}#article`,
     "headline": articleData.title,
     "description": articleData.one_liner,
     "abstract": articleData.summary,
@@ -77,7 +77,7 @@ export default function ExampleAEOArticlePage() {
       "@type": "Organization",
       "name": "JupitLunar Editorial Team",
       "description": "Evidence-based health content curation",
-      "url": "https://jupitlunar.com/about"
+      "url": "https://www.momaiagent.com/about"
     },
     "reviewedBy": {
       "@type": "MedicalOrganization",
@@ -89,11 +89,11 @@ export default function ExampleAEOArticlePage() {
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://jupitlunar.com/Assets/Logo.png",
+        "url": "https://www.momaiagent.com/Assets/Logo.png",
         "width": 200,
         "height": 60
       },
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     },
     "medicalAudience": {
       "@type": "MedicalAudience",
@@ -103,7 +103,7 @@ export default function ExampleAEOArticlePage() {
     "isPartOf": {
       "@type": "WebSite",
       "name": "JupitLunar Health Intelligence",
-      "url": "https://jupitlunar.com"
+      "url": "https://www.momaiagent.com"
     },
     "speakable": {
       "@type": "SpeakableSpecification",
@@ -125,10 +125,10 @@ export default function ExampleAEOArticlePage() {
   const faqStructuredData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "@id": `https://jupitlunar.com/${articleData.slug}#faq`,
+    "@id": `https://www.momaiagent.com/${articleData.slug}#faq`,
     "mainEntity": articleData.qas.map((qa, index) => ({
       "@type": "Question",
-      "@id": `https://jupitlunar.com/${articleData.slug}#question-${index + 1}`,
+      "@id": `https://www.momaiagent.com/${articleData.slug}#question-${index + 1}`,
       "name": qa.question,
       "acceptedAnswer": {
         "@type": "Answer",

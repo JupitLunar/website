@@ -79,8 +79,8 @@ export default async function FeedingSafetyPage() {
             <span className="font-semibold">Transparency pledge:</span> Every recommendation links back to the
             originating agency. Look for the evidence grade badges (A = official guideline, B = academic consensus).
             Feedback or corrections? Email{' '}
-            <a className="text-purple-600 underline" href="mailto:hello@jupitlunar.com">
-              hello@jupitlunar.com
+            <a className="text-purple-600 underline" href="mailto:hello@www.momaiagent.com">
+              hello@www.momaiagent.com
             </a>
             .
           </div>

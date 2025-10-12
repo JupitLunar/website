@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         modifiedTime: article.updated_at,
         authors: ['JupitLunar Team'],
         images: article.featured_image ? [article.featured_image] : [],
-        url: `https://jupitlunar.com/${article.slug}`,
+        url: `https://www.momaiagent.com/${article.slug}`,
         siteName: 'JupitLunar',
       },
       twitter: {
@@ -80,9 +80,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     // 生成结构化数据
     const structuredData = generateArticleStructuredData(article);
     const breadcrumbData = generateBreadcrumbStructuredData([
-      { name: 'Home', url: 'https://jupitlunar.com' },
-      { name: article.hub, url: `https://jupitlunar.com/hub/${article.hub}` },
-      { name: article.title, url: `https://jupitlunar.com/${article.slug}` }
+      { name: 'Home', url: 'https://www.momaiagent.com' },
+      { name: article.hub, url: `https://www.momaiagent.com/hub/${article.hub}` },
+      { name: article.title, url: `https://www.momaiagent.com/${article.slug}` }
     ]);
 
     const tldrItems = Array.isArray(article.key_facts) ? article.key_facts.slice(0, 5) : [];
