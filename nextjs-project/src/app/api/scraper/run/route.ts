@@ -19,23 +19,38 @@ import path from 'path';
 
 // 验证API密钥或Vercel Cron
 function validateRequest(request: NextRequest): boolean {
-  // 检查是否是Vercel Cron请求
-  const cronSecret = request.headers.get('authorization');
-  if (cronSecret === `Bearer ${process.env.CRON_SECRET}`) {
+  // 方法1: 检查 Vercel Cron 的特殊 header (生产环境)
+  const isVercelCron = request.headers.get('user-agent')?.includes('vercel-cron');
+  if (isVercelCron) {
+    console.log('✅ Vercel Cron 请求验证通过');
     return true;
   }
   
-  // 检查是否是手动API调用
-  const authHeader = request.headers.get('authorization');
-  const apiKey = process.env.SCRAPER_API_KEY;
+  // 方法2: 开发环境 - 允许本地测试
+  if (process.env.NODE_ENV === 'development') {
+    console.log('✅ 开发环境，跳过验证');
+    return true;
+  }
   
-  if (apiKey && authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.substring(7);
-    if (token === apiKey) {
+  // 方法3: 检查是否设置了 CRON_SECRET（可选）
+  const authHeader = request.headers.get('authorization');
+  if (process.env.CRON_SECRET && authHeader) {
+    if (authHeader === `Bearer ${process.env.CRON_SECRET}`) {
+      console.log('✅ CRON_SECRET 验证通过');
       return true;
     }
   }
   
+  // 方法4: 检查手动API调用密钥（可选）
+  if (process.env.SCRAPER_API_KEY && authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    if (token === process.env.SCRAPER_API_KEY) {
+      console.log('✅ SCRAPER_API_KEY 验证通过');
+      return true;
+    }
+  }
+  
+  console.log('❌ 验证失败 - 没有有效的认证');
   return false;
 }
 
