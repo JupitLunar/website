@@ -136,35 +136,23 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    // 加载配置
-    const configPath = path.resolve(process.cwd(), 'scripts/scraper-config.js');
-    const configModule = await import(configPath);
-    const { SOURCES } = configModule;
-    
-    // 统计信息
-    const sourceList = Object.keys(SOURCES).map(key => ({
-      key,
-      name: SOURCES[key].name,
-      organization: SOURCES[key].organization,
-      grade: SOURCES[key].grade,
-      pageCount: SOURCES[key].targetPages.length
-    }));
-    
-    const totalPages = sourceList.reduce((sum, source) => sum + source.pageCount, 0);
-    
+    // 简单返回状态信息（不需要加载配置文件）
     return NextResponse.json({
       success: true,
-      message: 'Scraper configuration',
+      message: 'Cron scraper API is ready',
       data: {
-        sources: sourceList,
-        totalSources: sourceList.length,
-        totalPages,
-        status: 'ready'
+        status: 'ready',
+        endpoint: '/api/scraper/run',
+        method: 'POST',
+        schedule: '0 12 * * * (Daily at 12:00 UTC / 20:00 Beijing Time)',
+        authentication: 'Vercel Cron (automatic)',
+        version: '2.0',
+        timestamp: new Date().toISOString()
       }
     });
     
   } catch (error: any) {
-    console.error('❌ 获取配置错误:', error);
+    console.error('❌ 获取状态错误:', error);
     
     return NextResponse.json(
       {
