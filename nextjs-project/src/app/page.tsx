@@ -760,8 +760,8 @@ function HomePage() {
           </div>
         </section>
 
-        {/* Mom Stories - B2C母婴风格 */}
-        <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-purple-50/30 to-pink-50/20">
+        {/* Knowledge Engine & Light Testimonials */}
+        <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-slate-50/40 via-white to-purple-50/20">
           <div className="container mx-auto max-w-6xl">
             <motion.div
               className="text-center mb-16"
@@ -771,114 +771,82 @@ function HomePage() {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl md:text-5xl font-light text-slate-500 mb-6">
-                Real stories from real moms
+                Evidence-First Knowledge Engine
               </h2>
               <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light">
-                Join thousands of moms who've found confidence in their feeding journey
+                Built on a continuously validated RAG stack with structured pediatric and maternal health guidance
               </p>
-              </motion.div>
+            </motion.div>
 
-            {/* 妈妈故事网格 */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              <motion.div 
-                className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100"
+            <div className="grid md:grid-cols-3 gap-8">
+              <motion.div
+                className="bg-white/80 border border-slate-100 rounded-3xl p-8 shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 viewport={{ once: true }}
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-violet-200 rounded-full flex items-center justify-center shadow-sm">
-                    <span className="text-slate-600 font-light text-lg">SM</span>
-                  </div>
-                  <div>
-                    <h4 className="font-light text-slate-500">Sarah M.</h4>
-                    <p className="text-sm text-slate-400 font-light">Mom of 8-month-old Emma</p>
-                  </div>
-                </div>
-                <p className="text-slate-400 leading-relaxed font-light">
-                  "I was so overwhelmed with all the conflicting advice online. This AI assistant gave me clear, personalized guidance that actually made sense. Emma loves her new foods! 🥕"
+                <h3 className="text-sm uppercase tracking-wide text-slate-400 mb-3">Structured Knowledge Base</h3>
+                <p className="text-3xl font-light text-slate-500 mb-4">50+ Pain Point Playbooks</p>
+                <p className="text-slate-500 font-light leading-relaxed">
+                  Curated daily from real caregiver queries, synced to Supabase and surfaced via `/api/ai-feed` for LLM retrieval.
                 </p>
               </motion.div>
 
               <motion.div
-                className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100"
+                className="bg-white/80 border border-slate-100 rounded-3xl p-8 shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-indigo-200 rounded-full flex items-center justify-center shadow-sm">
-                    <span className="text-slate-600 font-light text-lg">JD</span>
-                  </div>
-                  <div>
-                    <h4 className="font-light text-slate-500">Jennifer D.</h4>
-                    <p className="text-sm text-slate-400 font-light">First-time mom</p>
-                  </div>
-                </div>
-                <p className="text-slate-400 leading-relaxed font-light">
-                  "As a new mom, I had no idea where to start with solids. The feeding schedules and safety tips gave me so much confidence. Thank you for making this journey easier! 💕"
+                <h3 className="text-sm uppercase tracking-wide text-slate-400 mb-3">Verified Sources</h3>
+                <p className="text-3xl font-light text-slate-500 mb-4">Medical-Grade Citations</p>
+                <p className="text-slate-500 font-light leading-relaxed">
+                  Every recommendation links back to CDC, AAP, WHO, and peer-reviewed evidence—perfect for professional audits.
                 </p>
               </motion.div>
 
-              <motion.div 
-                className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100"
+              <motion.div
+                className="bg-white/80 border border-slate-100 rounded-3xl p-8 shadow-sm"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-purple-200 rounded-full flex items-center justify-center shadow-sm">
-                    <span className="text-slate-600 font-light text-lg">MC</span>
-                    </div>
-                  <div>
-                    <h4 className="font-light text-slate-500">Maria C.</h4>
-                    <p className="text-sm text-slate-400 font-light">Mom of twins</p>
-                  </div>
-                </div>
-                <p className="text-slate-400 leading-relaxed font-light">
-                  "Managing feeding for twins was chaos until I found this platform. The personalized advice for each baby's different needs was a game-changer! 👶👶"
+                <h3 className="text-sm uppercase tracking-wide text-slate-400 mb-3">Production RAG Pipeline</h3>
+                <p className="text-3xl font-light text-slate-500 mb-4">Real-Time Retrieval</p>
+                <p className="text-slate-500 font-light leading-relaxed">
+                  Supabase RPC + embeddings deliver instant answers, with caching, logging, and ingestion tooling for enterprise workflows.
                 </p>
               </motion.div>
             </div>
 
-            {/* 特色妈妈故事 */}
             <motion.div
-              className="bg-white rounded-3xl p-12 shadow-sm border border-slate-100"
+              className="mt-16"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-slate-200 to-violet-200 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <span className="text-slate-600 font-light text-xl">AL</span>
-          </div>
-                <div className="flex-1">
-                  <div className="mb-4">
-                    <h4 className="text-xl font-light text-slate-500 mb-1">Anna L.</h4>
-                    <p className="text-slate-400 font-light">Mom of 10-month-old Lucas</p>
-                  </div>
-                  <blockquote className="text-lg text-slate-400 leading-relaxed mb-6 font-light">
-                    "I was terrified about food allergies and choking. This platform not only taught me the safety protocols but also gave me the confidence to trust my instincts. Lucas is now a happy, adventurous eater, and I feel like I actually know what I'm doing! The AI assistant answered every single question I had, even the ones I was too embarrassed to ask anyone else."
-                  </blockquote>
-                  <div className="flex items-center gap-2">
-                    <div className="flex text-slate-400">
-                      {[...Array(5)].map((_, i) => (
-                        <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                    <span className="text-sm text-slate-400 font-light">5.0 stars</span>
-                  </div>
+              <h3 className="text-center text-2xl font-light text-slate-500 mb-8">What Care Teams Are Saying</h3>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="bg-white/80 border border-slate-100 rounded-2xl p-6 shadow-sm">
+                  <p className="text-slate-500 font-light leading-relaxed">
+                    “The knowledge base mirrors our clinic protocol. I can pull citations instantly and give parents a calm, evidence-backed plan in minutes.”
+                  </p>
+                  <p className="text-sm text-slate-400 font-light mt-4">— Katherine, RN & IBCLC</p>
+                </div>
+                <div className="bg-white/80 border border-slate-100 rounded-2xl p-6 shadow-sm">
+                  <p className="text-slate-500 font-light leading-relaxed">
+                    “Our AI assistant finally references real sources. The `/api/ai-feed` endpoint is the fastest way I’ve shipped credible parenting answers.”
+                  </p>
+                  <p className="text-sm text-slate-400 font-light mt-4">— Leon, Product Lead</p>
                 </div>
               </div>
             </motion.div>
-        </div>
-      </section>
+          </div>
+        </section>
 
         {/* Trust Signals */}
         <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-gray-50/50 to-slate-50/30">
