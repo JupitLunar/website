@@ -202,14 +202,14 @@ function Header() {
                     onClick={() => setIsProductsOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    DearBaby - Baby Tracker
+                    DearBaby Tracker
                   </Link>
                   <Link
                     href="/products/solidstart"
                     onClick={() => setIsProductsOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    DearBaby: Solid Start
+                    DearBaby Solid Food
                   </Link>
                 </motion.div>
               )}
@@ -352,14 +352,14 @@ function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
-                  DearBaby - Baby Tracker
+                  DearBaby Tracker
                 </Link>
                 <Link
                   href="/products/solidstart"
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
-                  DearBaby: Solid Start
+                  DearBaby Solid Food
                 </Link>
               </div>
 
