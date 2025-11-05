@@ -10,12 +10,12 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    default: 'JupitLunar - AI-Powered Health Intelligence for Mom & Baby Wellness',
-    template: '%s | JupitLunar'
+    default: 'DearBaby - AI-Powered Maternal & Infant Care | Evidence-Based Parenting Guide',
+    template: '%s | DearBaby by JupitLunar'
   },
-  description: 'Expert-curated, AI-powered health intelligence for maternal and infant wellness. Evidence-based guidance from trusted sources.',
-  keywords: ['baby health', 'maternal wellness', 'AI health', 'parenting', 'baby development', 'sleep training', 'feeding', 'nutrition'],
-  authors: [{ name: 'JupitLunar Team' }],
+  description: 'Get expert maternal and infant care guidance powered by Mom AI Agent. Evidence-based feeding schedules, safety tips, and pediatric health advice from CDC, AAP, and WHO sources.',
+  keywords: ['maternal care', 'infant care', 'baby feeding', 'parenting guide', 'pediatric health', 'AI parenting assistant', 'evidence-based baby care', 'DearBaby', 'baby development', 'feeding schedules'],
+  authors: [{ name: 'JupitLunar' }],
   creator: 'JupitLunar',
   publisher: 'JupitLunar',
   formatDetection: {
@@ -28,17 +28,17 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'JupitLunar - AI-Powered Health Intelligence',
-    description: 'Expert-curated health guidance for moms and babies',
+    title: 'DearBaby - AI-Powered Maternal & Infant Care',
+    description: 'Evidence-based parenting guidance powered by Mom AI Agent',
     url: 'https://www.momaiagent.com',
-    siteName: 'JupitLunar',
+    siteName: 'DearBaby by JupitLunar',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'JupitLunar - AI-Powered Health Intelligence',
-    description: 'Expert-curated health guidance for moms and babies',
+    title: 'DearBaby - AI-Powered Maternal & Infant Care',
+    description: 'Evidence-based parenting guidance powered by Mom AI Agent',
   },
   robots: {
     index: true,

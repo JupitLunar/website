@@ -56,17 +56,17 @@ function Header() {
           <Link href="/" className="flex items-center space-x-3">
             <Image 
               src="/Assets/Logo.png" 
-              alt="JupitLunar Logo" 
+              alt="DearBaby Logo" 
               width={80}
               height={80}
               className="w-20 h-20 object-contain" 
             />
             <div className="flex flex-col">
               <span className="text-xl font-semibold bg-gradient-to-r from-primary-500/80 to-primary-600/80 bg-clip-text text-transparent">
-                JupitLunar
+                DearBaby
               </span>
               <span className="text-xs text-gray-500 font-light">
-                Powered by Mom AI Agent
+                powered by Mom AI Agent
               </span>
             </div>
           </Link>
