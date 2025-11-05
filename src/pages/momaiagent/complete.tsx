@@ -50,7 +50,7 @@ const Complete: React.FC = () => {
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <a
-              href="/momaiagent/dashboard"
+              href="/momaiagent/complete"
               className="inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-indigo-700"
             >
               Go to your dashboard
@@ -126,8 +126,8 @@ const Complete: React.FC = () => {
             <a className="transition hover:text-indigo-500" href="/privacy">
               Privacy Policy
             </a>
-            <a className="transition hover:text-indigo-500" href="/terms">
-              Terms of Service
+            <a className="transition hover:text-indigo-500" href="/disclaimer">
+              Disclaimer
             </a>
             <a className="transition hover:text-indigo-500" href="mailto:hello@momaiagent.com">
               Support
