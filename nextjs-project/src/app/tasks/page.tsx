@@ -1,5 +1,15 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Task Archive | DearBaby Internal',
+  description: 'Internal task archive for DearBaby by JupitLunar.',
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface TaskRecord {
   id: string;

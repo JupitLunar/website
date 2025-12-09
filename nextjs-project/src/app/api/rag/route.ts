@@ -369,8 +369,7 @@ Keep responses warm, supportive, and empathetic. Focus on practical, actionable 
         const structuredResponse = JSON.parse(responseText) as StructuredResponse;
         console.log('✅ Successfully parsed JSON response');
         // Add AI indicator to disclaimer
-        structuredResponse.disclaimer = (structuredResponse.disclaimer || "") +
-          "\n\n💡 This response was generated using AI. For personalized medical advice, please consult your healthcare provider.";
+        structuredResponse.disclaimer = `${structuredResponse.disclaimer || ''}\n\n💡 This response was generated using AI. For personalized medical advice, please consult your healthcare provider.`;
         return structuredResponse;
       } catch (parseError) {
         console.error('❌ JSON parsing error:', parseError);

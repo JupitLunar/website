@@ -59,13 +59,13 @@ export default function ExampleAEOArticlePage() {
   // 生成结构化数据
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": ["MedicalWebPage", "Article"],
+    "@type": ["WebPage", "Article"],
     "@id": `https://www.momaiagent.com/${articleData.slug}#article`,
     "headline": articleData.title,
     "description": articleData.one_liner,
     "abstract": articleData.summary,
     "about": {
-      "@type": "MedicalCondition",
+      "@type": "Thing",
       "name": "Infant nutrition and supplementation",
       "description": "Guidance on vitamin D and iron supplementation for infants"
     },
@@ -80,9 +80,9 @@ export default function ExampleAEOArticlePage() {
       "url": "https://www.momaiagent.com/about"
     },
     "reviewedBy": {
-      "@type": "MedicalOrganization",
-      "name": "Based on CDC, AAP, Health Canada Guidelines",
-      "description": "Content follows official government and medical organization guidelines"
+      "@type": "Organization",
+      "name": "Guidance references CDC, AAP, Health Canada Guidelines",
+      "description": "Educational summaries referencing official institutions; DearBaby is not a clinic."
     },
     "publisher": {
       "@type": "Organization",
@@ -95,8 +95,8 @@ export default function ExampleAEOArticlePage() {
       },
       "url": "https://www.momaiagent.com"
     },
-    "medicalAudience": {
-      "@type": "MedicalAudience",
+    "audience": {
+      "@type": "PeopleAudience",
       "audienceType": "Parents and caregivers of infants and toddlers",
       "geographicArea": "North America"
     },
@@ -110,15 +110,7 @@ export default function ExampleAEOArticlePage() {
       "cssSelector": ["h1", ".bottom-line-answer", ".key-numbers"]
     },
     "disclaimer": "This content is for educational purposes only and does not replace professional medical advice. Always consult your pediatrician for personalized guidance.",
-    "keywords": articleData.keywords.join(', '),
-    "audience": {
-      "@type": "PeopleAudience",
-      "audienceType": "Parents and caregivers",
-      "geographicArea": {
-        "@type": "Country",
-        "name": "North America"
-      }
-    }
+    "keywords": articleData.keywords.join(', ')
   };
 
   // FAQ结构化数据

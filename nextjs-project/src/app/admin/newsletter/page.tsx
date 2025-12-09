@@ -4,6 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Admin Newsletter | DearBaby Internal',
+  description: 'Internal newsletter management for DearBaby by JupitLunar.',
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 interface Subscriber {
   id: string;
@@ -338,4 +348,3 @@ export default function NewsletterManagement() {
     </div>
   );
 }
-

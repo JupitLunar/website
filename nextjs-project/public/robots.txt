@@ -112,10 +112,10 @@ Disallow: /api/analytics/
 # ============================================
 # Sitemaps & Content Feeds
 # ============================================
-Sitemap: https://jupitlunar.com/sitemap.xml
-Sitemap: https://jupitlunar.com/news-sitemap.xml
-Sitemap: https://jupitlunar.com/feed.json
-Sitemap: https://jupitlunar.com/sitemap-blog.xml
+Sitemap: https://www.momaiagent.com/sitemap.xml
+Sitemap: https://www.momaiagent.com/news-sitemap.xml
+Sitemap: https://www.momaiagent.com/feed.json
+Sitemap: https://www.momaiagent.com/sitemap-blog.xml
 
 # ============================================
 # AEO Metadata for LLM Understanding

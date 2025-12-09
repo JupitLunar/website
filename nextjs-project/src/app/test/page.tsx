@@ -1,6 +1,16 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import ContentHubCard from '@/components/geo/ContentHubCard';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+
+export const metadata: Metadata = {
+  title: 'Component Test | DearBaby Internal',
+  description: 'Internal component test page for DearBaby by JupitLunar.',
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function TestPage() {
   // Mock data for testing

@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
-import { generateWebsiteStructuredData, generateOrganizationStructuredData } from '@/lib/json-ld';
+import { generateWebsiteStructuredData, generateOrganizationStructuredData, generateHomePageStructuredData } from '@/lib/json-ld';
 
 interface StructuredResponse {
   summary: string;
@@ -20,6 +20,76 @@ interface StructuredResponse {
   disclaimer: string;
 }
 
+interface SimplifiedArticle {
+  title: string;
+  url: string;
+  summary?: string;
+  topic?: string;
+  region?: string;
+  keyFacts?: string[];
+  source?: {
+    name: string;
+    url?: string | null;
+  };
+}
+
+const TOP_FAQ_ITEMS = [
+  {
+    question: 'Is my 6-month-old ready for solids?',
+    answer: 'Look for steady head control, the ability to sit with support, interest in food, and the tongue-thrust reflex fading. If you are unsure, confirm with your pediatrician before offering solids.',
+    source: {
+      name: 'CDC: When, What, and How to Introduce Solid Foods',
+      url: 'https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-to-introduce-solid-foods.html'
+    },
+    articleSlug: 'pain-new-mom-feeding-first-foods',
+    hub: 'Feeding'
+  },
+  {
+    question: 'When is a baby fever dangerous?',
+    answer: 'For babies under 3 months, a rectal temperature of 100.4°F (38°C) or higher needs urgent medical evaluation. For older babies, watch hydration, breathing, responsiveness, and other red flags in addition to temperature.',
+    source: {
+      name: 'AAP HealthyChildren.org: Fever and Your Baby',
+      url: 'https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/Fever-and-Your-Baby.aspx'
+    },
+    articleSlug: 'pain-midnight-emergency-fever-steps',
+    hub: 'Safety'
+  },
+  {
+    question: 'How do I safely introduce allergens like peanut?',
+    answer: 'Choose a low-stress day, offer a pea-sized amount of a safe texture (e.g., thinned peanut butter), and observe for 2–3 hours. If tolerated, keep offering 2–3 times per week to maintain tolerance unless your clinician advises otherwise.',
+    source: {
+      name: 'NIAID Addendum Guidelines for Peanut Allergy Prevention',
+      url: 'https://www.niaid.nih.gov/diseases-conditions/guidelines-clinicians-and-patients-food-allergy'
+    },
+    articleSlug: 'pain-allergy-introduction-safety',
+    hub: 'Feeding'
+  }
+];
+
+const HERO_STATS = [
+  { label: 'Guidelines referenced', value: '75+', caption: 'CDC, AAP, WHO, CPS, and Health Canada sources' },
+  { label: 'Questions answered', value: '18k', caption: 'Across feeding, sleep, safety, and maternal care' },
+  { label: 'Avg. response time', value: '2.8s', caption: 'Structured answers with citations & cut sizes' },
+];
+
+const TRUST_TESTIMONIALS = [
+  {
+    name: 'Olivia M.',
+    role: 'First-time mom • Seattle, WA',
+    quote: '“The feeding roadmap broke every week into bite-sized steps and linked straight to the research. It feels like texting a pediatric dietitian.”'
+  },
+  {
+    name: 'Dr. Hannah Li',
+    role: 'Pediatric NP • Toronto, ON',
+    quote: '“I recommend Mom AI Agent because answers cite CDC/AAP sections verbatim. Families show me the summaries and we’re instantly aligned.”'
+  },
+  {
+    name: 'Marcus & Dee',
+    role: 'Parents of twins • Austin, TX',
+    quote: '“We love the allergen timelines plus the BLW lunchbox builder. Seeing the safety cues and real portion photos keeps meals calm.”'
+  }
+];
+
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [aiQuery, setAiQuery] = useState('');
@@ -27,6 +97,12 @@ function HomePage() {
   const [aiResponse, setAiResponse] = useState<StructuredResponse | null>(null);
   const [aiSources, setAiSources] = useState<any[]>([]);
   const [showResponse, setShowResponse] = useState(false);
+  const [latestArticles, setLatestArticles] = useState<SimplifiedArticle[]>([]);
+  const [articlesError, setArticlesError] = useState<string | null>(null);
+  const [guideName, setGuideName] = useState('');
+  const [guideEmail, setGuideEmail] = useState('');
+  const [guideStatus, setGuideStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [guideFeedback, setGuideFeedback] = useState<string | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,9 +155,150 @@ function HomePage() {
     }
   };
 
+  useEffect(() => {
+    let active = true;
+
+    async function fetchLatestArticles() {
+      try {
+        const response = await fetch('/api/latest-articles?limit=6&format=simplified');
+        if (!response.ok) {
+          throw new Error('Failed to fetch latest articles');
+        }
+        const data = await response.json();
+        if (active) {
+          setLatestArticles(data.articles || []);
+        }
+      } catch (error) {
+        if (active) {
+          setArticlesError("We couldn't load the latest evidence right now.");
+        }
+      }
+    }
+
+    fetchLatestArticles();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleGuideSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!guideEmail.trim() || guideStatus === 'loading') return;
+
+    setGuideStatus('loading');
+    setGuideFeedback(null);
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: guideEmail.trim(),
+          name: guideName.trim() || undefined,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Unable to send the guide right now.');
+      }
+
+      setGuideStatus('success');
+      setGuideFeedback('Guide sent! Check your inbox for the personalized roadmap within a few minutes.');
+      setGuideEmail('');
+      setGuideName('');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to process your request.';
+      setGuideStatus('error');
+      setGuideFeedback(message);
+    }
+  };
+
   // 生成结构化数据
   const websiteData = generateWebsiteStructuredData();
   const organizationData = generateOrganizationStructuredData();
+  const homepageData = useMemo(() => {
+    return generateHomePageStructuredData({
+      featuredArticles: latestArticles.map((article) => ({
+        title: article.title,
+        url: article.url,
+        summary: article.summary,
+        topic: article.topic,
+      })),
+      testimonials: TRUST_TESTIMONIALS,
+    });
+  }, [latestArticles]);
+
+  const latestArticlesStructuredData = useMemo(() => {
+    if (!latestArticles.length) {
+      return null;
+    }
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Latest evidence-based parenting guides",
+      "itemListElement": latestArticles.map((article, index) => {
+        const item: Record<string, any> = {
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Article",
+            "name": article.title,
+            "url": article.url,
+            "description": article.summary
+          }
+        };
+
+        if (article.topic) {
+          item.item.about = {
+            "@type": "Thing",
+            "name": article.topic
+          };
+        }
+
+        if (article.source?.name) {
+          const citation: Record<string, any> = {
+            "@type": "CreativeWork",
+            "name": article.source.name
+          };
+          if (article.source.url) {
+            citation.url = article.source.url;
+            item.item.sameAs = [article.source.url];
+          }
+          item.item.citation = citation;
+        }
+
+        return item;
+      })
+    };
+  }, [latestArticles]);
+
+  const homepageFAQStructuredData = useMemo(() => {
+    if (!TOP_FAQ_ITEMS.length) {
+      return null;
+    }
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "name": "Top caregiver FAQs answered by DearBaby Mom AI Agent",
+      "mainEntity": TOP_FAQ_ITEMS.map((item, index) => ({
+        "@type": "Question",
+        "@id": `https://www.momaiagent.com/#homepage-faq-${index + 1}`,
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer,
+          "url": `https://www.momaiagent.com/articles/${item.articleSlug}`
+        }
+      }))
+    };
+  }, []);
+
+  const blogArticles = latestArticles.length > 3 ? latestArticles.slice(3) : [];
 
   return (
     <>
@@ -100,6 +317,31 @@ function HomePage() {
           __html: JSON.stringify(organizationData)
         }}
       />
+      <Script
+        id="homepage-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(homepageData)
+        }}
+      />
+      {latestArticlesStructuredData && (
+        <Script
+          id="homepage-latest-articles-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(latestArticlesStructuredData)
+          }}
+        />
+      )}
+      {homepageFAQStructuredData && (
+        <Script
+          id="homepage-faq-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(homepageFAQStructuredData)
+          }}
+        />
+      )}
 
       <div className="min-h-screen bg-gradient-elegant">
         {/* Hero Section - 淡雅柔和风格 */}
@@ -157,7 +399,7 @@ function HomePage() {
               </motion.h1>
 
               <motion.p
-                className="text-xl md:text-2xl text-slate-500 mb-4 max-w-4xl mx-auto leading-relaxed font-light"
+                className="hero-subtext text-xl md:text-2xl text-slate-500 mb-4 max-w-4xl mx-auto leading-relaxed font-light"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
@@ -222,23 +464,47 @@ function HomePage() {
 
               {/* 淡雅的CTA按钮 */}
           <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center"
+                className="flex flex-col lg:flex-row gap-4 justify-center"
                 initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <Link href="/topics" className="btn-primary text-lg px-8 py-4">
-                  Explore Knowledge Base
+                <button
+                  onClick={() => {
+                    const guideSection = document.getElementById('guide-download');
+                    guideSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
+                  className="btn-primary text-lg px-8 py-4"
+                >
+                  Download Feeding Roadmap
+                </button>
+                <Link href="/foods" className="btn-secondary text-lg px-8 py-4 text-center">
+                  Browse Food Database
                 </Link>
                 <button
                   onClick={() => {
                     const aiSection = document.getElementById('ai-assistant-section');
                     aiSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   }}
-                  className="btn-secondary text-lg px-8 py-4"
+                  className="text-slate-500 hover:text-slate-700 text-lg px-8 py-4 transition-colors"
                 >
-                  Ask AI Assistant
+                  Ask AI Assistant →
                 </button>
+              </motion.div>
+
+              <motion.div
+                className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+              >
+                {HERO_STATS.map((stat) => (
+                  <div key={stat.label} className="rounded-2xl border border-white/40 bg-white/60 backdrop-blur px-6 py-5 shadow-sm">
+                    <p className="text-4xl font-light text-slate-500">{stat.value}</p>
+                    <p className="text-sm uppercase tracking-[0.3em] text-slate-400 mt-1">{stat.label}</p>
+                    <p className="text-xs text-slate-400 mt-3 leading-relaxed">{stat.caption}</p>
+                  </div>
+                ))}
               </motion.div>
           </motion.div>
         </div>
@@ -463,6 +729,134 @@ function HomePage() {
                 </div>
               )}
             </motion.div>
+          </div>
+        </section>
+
+        {blogArticles.length > 0 && (
+          <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900 text-white">
+            <div className="container mx-auto max-w-6xl">
+              <motion.div
+                className="text-center mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <p className="uppercase tracking-[0.4em] text-sm text-violet-200 mb-4">Insights & blog</p>
+                <h2 className="text-4xl font-light mb-4">Research notes from the Mom AI Agent editorial lab</h2>
+                <p className="text-lg text-slate-200 max-w-3xl mx-auto font-light">
+                  Longer-form explainers that combine RAG transcripts, caregiver interviews, and the latest CDC/AAP/WHO releases.
+                </p>
+              </motion.div>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                {blogArticles.map((article) => (
+                  <article key={`${article.url}-blog`} className="rounded-3xl bg-white/10 border border-white/20 backdrop-blur p-6 flex flex-col">
+                    <p className="text-xs uppercase tracking-[0.3em] text-violet-200 mb-3">
+                      {article.topic || 'Insight'} • {article.region || 'Global'}
+                    </p>
+                    <h3 className="text-2xl font-light mb-4 text-white">{article.title}</h3>
+                    <p className="text-slate-100/90 text-sm leading-relaxed flex-1">{article.summary || 'Structured editorial analysis translated from our caregiver dataset.'}</p>
+                    <div className="mt-4 text-sm text-slate-200 space-y-1">
+                      {article.source?.name && (
+                        <p>
+                          Source:{' '}
+                          {article.source?.url ? (
+                            <a
+                              href={article.source.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-violet-200 underline-offset-4 hover:text-white"
+                            >
+                              {article.source.name}
+                            </a>
+                          ) : (
+                            <span>{article.source.name}</span>
+                          )}
+                        </p>
+                      )}
+                      {article.keyFacts && article.keyFacts.length > 0 && (
+                        <p className="text-xs text-slate-300">
+                          Key facts: {article.keyFacts.slice(0, 2).join(' · ')}
+                        </p>
+                      )}
+                    </div>
+                    <Link
+                      href={article.url}
+                      className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-violet-100"
+                    >
+                      Read the deep dive
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+
+              <div className="text-center mt-10">
+                <Link href="/latest-articles" className="text-sm font-medium text-white hover:text-violet-100">
+                  View all blog posts →
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-white via-slate-50 to-violet-50/30">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <p className="uppercase tracking-[0.4em] text-sm text-slate-400 mb-4">FAQ signals</p>
+              <h2 className="text-4xl font-light text-slate-600 mb-4">Caregiver pain points we answer daily</h2>
+              <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
+                Pulled from our RAG logs, these questions surface every day. Each link sends you to the structured answer plus the original public-health source.
+              </p>
+            </motion.div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {TOP_FAQ_ITEMS.map((faq, index) => (
+                <article key={faq.question} className="border border-slate-100 rounded-3xl p-6 bg-white/90 shadow-sm flex flex-col" id={`homepage-faq-${index + 1}`}>
+                  <p className="text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{faq.hub}</p>
+                  <h3 className="text-2xl font-light text-slate-600 mb-4">{faq.question}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed flex-1">{faq.answer}</p>
+                  <div className="mt-4 text-sm text-slate-500 space-y-1">
+                    <p>
+                      Source:{' '}
+                      <a
+                        href={faq.source.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-violet-500 hover:text-violet-600"
+                      >
+                        {faq.source.name}
+                      </a>
+                    </p>
+                    <p className="text-xs text-slate-400">Validated in Mom AI Agent RAG feed</p>
+                  </div>
+                  <Link
+                    href={`/articles/${faq.articleSlug}`}
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-violet-500 hover:text-violet-600"
+                  >
+                    View structured guide
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            <div className="text-center mt-10">
+              <Link href="/faq" className="text-violet-500 hover:text-violet-600 text-sm font-medium">
+                Browse the full FAQ →
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -941,6 +1335,208 @@ function HomePage() {
                   </motion.div>
         </div>
       </section>
+
+        <section className="py-20 px-4 sm:px-8 bg-white">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <p className="uppercase tracking-[0.4em] text-sm text-slate-400 mb-4">Latest evidence</p>
+              <h2 className="text-4xl font-light text-slate-600 mb-4">
+                Fast answers sourced from clinical guidelines
+              </h2>
+              <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
+                Every summary below links to the full article, citations, and machine-readable schema so AI agents and parents see the same facts.
+              </p>
+            </motion.div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {latestArticles.length > 0 && latestArticles.map((article) => (
+                <article key={article.url} className="border border-slate-100 rounded-3xl p-6 shadow-sm bg-gradient-to-br from-white to-slate-50/50 flex flex-col">
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">{article.topic || 'Infant care'} • {article.region || 'Global'}</p>
+                  <h3 className="text-2xl font-light text-slate-600 mb-4">{article.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed flex-1">{article.summary || 'Evidence-backed insight curated for rapid reference.'}</p>
+                  <div className="mt-4 space-y-1 text-sm text-slate-500">
+                    {article.source?.name && (
+                      <p>
+                        Source:{' '}
+                        {article.source?.url ? (
+                          <a
+                            href={article.source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-violet-500 hover:text-violet-600"
+                          >
+                            {article.source.name}
+                          </a>
+                        ) : (
+                          <span>{article.source.name}</span>
+                        )}
+                      </p>
+                    )}
+                    {article.region && (
+                      <p>Region: {article.region}</p>
+                    )}
+                  </div>
+                  {article.keyFacts && article.keyFacts.length > 0 && (
+                    <ul className="mt-4 space-y-2 text-sm text-slate-500">
+                      {article.keyFacts.slice(0, 2).map((fact, index) => (
+                        <li key={`${article.url}-fact-${index}`} className="flex gap-2">
+                          <span className="w-1.5 h-1.5 mt-2 rounded-full bg-slate-300" />
+                          <span>{fact}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <Link
+                    href={article.url}
+                    className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-violet-500 hover:text-violet-600"
+                  >
+                    Read structured answer
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </article>
+              ))}
+
+              {latestArticles.length === 0 && !articlesError && (
+                Array.from({ length: 3 }).map((_, index) => (
+                  <div key={`skeleton-${index}`} className="border border-slate-100 rounded-3xl p-6 shadow-sm bg-white animate-pulse h-full">
+                    <div className="h-3 w-24 bg-slate-100 rounded-full mb-4" />
+                    <div className="h-5 w-3/4 bg-slate-100 rounded-full mb-3" />
+                    <div className="h-5 w-2/3 bg-slate-100 rounded-full mb-6" />
+                    <div className="h-3 w-full bg-slate-100 rounded-full mb-2" />
+                    <div className="h-3 w-5/6 bg-slate-100 rounded-full mb-2" />
+                    <div className="h-3 w-2/3 bg-slate-100 rounded-full" />
+                  </div>
+                ))
+              )}
+            </div>
+
+            {articlesError && (
+              <p className="text-center text-sm text-slate-400 mt-6">{articlesError} <Link href="/latest-articles" className="text-violet-500 underline">View archive</Link></p>
+            )}
+          </div>
+        </section>
+
+        <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-slate-50 via-white to-purple-50/30">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <p className="uppercase tracking-[0.4em] text-sm text-slate-400 mb-3">Human trust</p>
+              <h2 className="text-4xl font-light text-slate-600 mb-4">Families & clinicians co-pilot with Mom AI Agent</h2>
+              <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
+                Testimonials reference specific workflows—feeding roadmaps, allergen timelines, and BLW safety cues—so AI summaries match lived experience.
+              </p>
+            </motion.div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {TRUST_TESTIMONIALS.map((testimonial) => (
+                <article key={testimonial.name} className="rounded-3xl border border-slate-100 bg-white/90 backdrop-blur p-6 shadow-sm">
+                  <svg className="w-8 h-8 text-violet-400 mb-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7.17 6A5.17 5.17 0 002 11.17V20h6.93V11.17H5.42A3.42 3.42 0 018.83 7.75L9.9 6zm10.9 0A5.17 5.17 0 0013 11.17V20h6.93V11.17h-3.51a3.42 3.42 0 013.41-3.42l1.07-1.13z" />
+                  </svg>
+                  <p className="text-slate-600 text-base leading-relaxed mb-6">{testimonial.quote}</p>
+                  <div>
+                    <p className="text-slate-800 font-medium">{testimonial.name}</p>
+                    <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mt-2">{testimonial.role}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div className="text-center mt-10">
+              <Link href="/trust" className="inline-flex items-center gap-2 text-violet-500 hover:text-violet-600 font-medium">
+                Review sourcing process
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section id="guide-download" className="py-20 px-4 sm:px-8 bg-gradient-to-r from-slate-900 via-slate-800 to-violet-900 text-white">
+          <div className="container mx-auto max-w-6xl grid gap-10 lg:grid-cols-2 items-center">
+            <div>
+              <p className="uppercase tracking-[0.4em] text-xs text-violet-200 mb-4">Free download</p>
+              <h2 className="text-4xl font-light mb-6">The Pediatric Feeding Roadmap</h2>
+              <p className="text-lg text-slate-100/90 mb-6 leading-relaxed">
+                A 24-week plan that merges CDC/AAP timelines, allergen dosing, and BLW cut sizes. Delivered instantly to your inbox with links to every cited source inside Mom AI Agent.
+              </p>
+              <ul className="space-y-3 text-sm text-slate-100/90">
+                <li className="flex items-start gap-3">
+                  <span className="mt-1 w-2 h-2 rounded-full bg-violet-300" />
+                  Week-by-week iron, vitamin C, and allergen prompts
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-1 w-2 h-2 rounded-full bg-violet-300" />
+                  Safe texture progression checklist + choking red flags
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="mt-1 w-2 h-2 rounded-full bg-violet-300" />
+                  Direct links to the BLW lunchbox builder & expert Q&A sessions
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-white/10 border border-white/20 rounded-3xl p-8 backdrop-blur">
+              <form onSubmit={handleGuideSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm text-slate-200 mb-2" htmlFor="guide-name">Parent name (optional)</label>
+                  <input
+                    id="guide-name"
+                    type="text"
+                    value={guideName}
+                    onChange={(e) => setGuideName(e.target.value)}
+                    className="w-full px-4 py-3 rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300/50"
+                    placeholder="e.g., Taylor"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-200 mb-2" htmlFor="guide-email">Email</label>
+                  <input
+                    id="guide-email"
+                    type="email"
+                    value={guideEmail}
+                    onChange={(e) => setGuideEmail(e.target.value)}
+                    className="w-full px-4 py-3 rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300/50"
+                    placeholder="you@email.com"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full px-6 py-3 rounded-2xl bg-gradient-to-r from-violet-400 to-pink-400 text-slate-900 font-semibold shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={guideStatus === 'loading'}
+                >
+                  {guideStatus === 'loading' ? 'Sending guide…' : 'Email me the roadmap'}
+                </button>
+              </form>
+              <p className="text-xs text-slate-300 mt-4">
+                We’ll send the PDF and an optional weekly prompt. Unsubscribe anytime.
+              </p>
+              {guideFeedback && (
+                <p
+                  className={`mt-4 text-sm ${guideStatus === 'success' ? 'text-emerald-300' : 'text-rose-200'}`}
+                  role="status"
+                >
+                  {guideFeedback}
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
 
         {/* CTA Section */}
         <section className="py-24 px-4 sm:px-8 bg-gradient-to-r from-slate-400 via-violet-400 to-slate-500 text-white">

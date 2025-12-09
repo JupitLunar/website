@@ -3,18 +3,20 @@
  * 专门为LLM搜索优化设计
  */
 
-// 生成MedicalWebPage + Article组合的Schema
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+
+// 生成面向教育内容的 WebPage + Article Schema
 export function generateMedicalWebPageSchema(article: any) {
   const schema = {
     "@context": "https://schema.org",
-    "@type": ["MedicalWebPage", "Article"],
-    "@id": `https://www.momaiagent.com/${article.slug}#medical-page`,
+    "@type": ["WebPage", "Article"],
+    "@id": `${siteUrl}/${article.slug}#medical-page`,
     "headline": article.title,
     "description": article.one_liner,
     "about": {
-      "@type": "MedicalCondition",
-      "name": article.hub || "Infant and toddler health",
-      "description": `Health guidance for ${article.age_range || '0-24 months'}`
+      "@type": "Thing",
+      "name": article.hub || "Maternal and infant wellness",
+      "description": `Parenting guidance referencing official sources for ${article.age_range || '0-24 months'}`
     },
     "inLanguage": article.lang === 'en' ? 'en-US' : article.lang || 'en-US',
     "datePublished": article.date_published,
@@ -23,50 +25,47 @@ export function generateMedicalWebPageSchema(article: any) {
     "author": {
       "@type": "Organization",
       "name": "JupitLunar Editorial Team",
-      "description": "Evidence-based health content curation",
-      "url": "https://www.momaiagent.com/about"
+      "description": "Evidence-based parenting content curation studio",
+      "url": `${siteUrl}/about`
     },
     "reviewedBy": {
-      "@type": "MedicalOrganization",
-      "name": "Based on CDC, AAP, Health Canada Guidelines",
-      "description": "Content follows official government and medical organization guidelines"
+      "@type": "Organization",
+      "name": "Guidance references CDC, AAP, WHO, Health Canada publications",
+      "description": "Articles cite official government and medical organization guidelines; DearBaby is an educational publisher, not a clinic."
     },
     "publisher": {
       "@type": "Organization",
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.momaiagent.com/Assets/Logo.png",
+        "url": `${siteUrl}/Assets/Logo.png`,
         "width": 200,
         "height": 60
       },
-      "url": "https://www.momaiagent.com"
+      "url": siteUrl
     },
-    "medicalAudience": {
-      "@type": "MedicalAudience",
+    "audience": {
+      "@type": "PeopleAudience",
       "audienceType": "Parents and caregivers of infants and toddlers",
       "geographicArea": article.region === 'Global' ? "North America" : article.region
     },
     "isPartOf": {
       "@type": "WebSite",
       "name": "JupitLunar Health Intelligence",
-      "url": "https://www.momaiagent.com"
+      "url": siteUrl
     },
     "speakable": {
       "@type": "SpeakableSpecification",
       "cssSelector": ["h1", ".bottom-line", ".key-facts"]
     },
-    "disclaimer": "This content is for educational purposes only and does not replace professional medical advice. Always consult your pediatrician for personalized guidance.",
+    "disclaimer": "Educational resource referencing public-health guidelines; not a medical diagnosis or clinic.",
     "keywords": article.keywords?.join(', ') || article.entities?.join(', ') || 'infant health, baby development, parenting',
-    "audience": {
-      "@type": "PeopleAudience",
-      "audienceType": "Parents and caregivers",
-      "geographicArea": {
-        "@type": "Country",
-        "name": article.region === 'US' ? "United States" : 
-               article.region === 'CA' ? "Canada" : "North America"
-      }
-    }
+    "isBasedOn": (article.citations || []).slice(0, 3).map((citation: any) => ({
+      "@type": "CreativeWork",
+      "name": citation.title,
+      "url": citation.url,
+      "publisher": citation.publisher
+    }))
   };
 
   return schema;
@@ -97,7 +96,7 @@ export function generateClaimReviewSchema({
     "claimReviewed": claimText,
     "reviewRating": {
       "@type": "Rating",
-      "ratingValue": ratingValue,
+      ratingValue,
       "alternateName": rating,
       "bestRating": 5,
       "worstRating": 1
@@ -188,24 +187,38 @@ export function generateComparisonTableSchema({
 
 // 生成hreflang元数据
 export function generateHreflangMetadata(slug: string, region?: string) {
-  const baseUrl = 'https://www.momaiagent.com';
-  
-  const alternates = {
-    canonical: `/${slug}`,
-    languages: {
-      'en-US': `${baseUrl}/en-us/${slug}`,
-      'en-CA': `${baseUrl}/en-ca/${slug}`,
-    }
-  };
+  const baseUrl = siteUrl;
+  const allowed = (process.env.NEXT_PUBLIC_HREFLANG_LANGS || 'en-US,en-CA,x-default')
+    .split(',')
+    .map(l => l.trim())
+    .filter(Boolean);
 
-  // 如果是特定地区的内容，添加更多语言版本
-  if (region === 'US') {
-    alternates.languages['en-US'] = `${baseUrl}/en-us/${slug}`;
-  } else if (region === 'CA') {
-    alternates.languages['en-CA'] = `${baseUrl}/en-ca/${slug}`;
+  const languages: Record<string, string> = {};
+
+  if (allowed.includes('x-default')) {
+    languages['x-default'] = `${baseUrl}/${slug}`;
+  }
+  if (allowed.includes('en-US')) {
+    languages['en-US'] = `${baseUrl}/en-us/${slug}`;
+  }
+  if (allowed.includes('en-CA')) {
+    languages['en-CA'] = `${baseUrl}/en-ca/${slug}`;
+  }
+  if (allowed.includes('zh-CN')) {
+    languages['zh-CN'] = `${baseUrl}/zh-cn/${slug}`;
   }
 
-  return alternates;
+  // 优先匹配地区特定版本（如果允许）
+  if (region === 'US' && allowed.includes('en-US')) {
+    languages['en-US'] = `${baseUrl}/en-us/${slug}`;
+  } else if (region === 'CA' && allowed.includes('en-CA')) {
+    languages['en-CA'] = `${baseUrl}/en-ca/${slug}`;
+  }
+
+  return {
+    canonical: `/${slug}`,
+    languages
+  };
 }
 
 // 生成"首屏即答案"格式的内容摘要
@@ -233,10 +246,10 @@ export function generateMachineReadableFAQ(article: any) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "@id": `https://www.momaiagent.com/${article.slug}#faq`,
+    "@id": `${siteUrl}/${article.slug}#faq`,
     "mainEntity": article.qas.map((qa: any, index: number) => ({
       "@type": "Question",
-      "@id": `https://www.momaiagent.com/${article.slug}#question-${index + 1}`,
+      "@id": `${siteUrl}/${article.slug}#question-${index + 1}`,
       "name": qa.question,
       "acceptedAnswer": {
         "@type": "Answer",
@@ -278,7 +291,7 @@ export function generateAIOptimizedSummary(content: string): {
 
   // 生成首句摘要
   const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 20);
-  const bottomLine = sentences[0]?.trim() || content.substring(0, 150) + '...';
+  const bottomLine = sentences[0]?.trim() || `${content.substring(0, 150)}...`;
 
   return {
     bottomLine,
@@ -318,29 +331,27 @@ export function generateCompleteAEOSchema(article: any) {
     generateMedicalWebPageSchema(article)
   ];
 
-  // 添加FAQ schema
-  // Temporarily disabled due to type mismatch
-  // const faqSchema = generateMachineReadableFAQ(article);
-  // if (faqSchema) {
-  //   schemas.push(faqSchema);
-  // }
+  const faqSchema = generateMachineReadableFAQ(article);
+  if (faqSchema) {
+    schemas.push(faqSchema);
+  }
 
-  // Temporarily disabled due to type mismatch
-  // if (article.region === 'Global' && article.us_ca_comparison) {
-  //   schemas.push(generateComparisonTableSchema({
-  //     topic: article.title,
-  //     usData: article.us_ca_comparison.us || {},
-  //     caData: article.us_ca_comparison.ca || {},
-  //     articleUrl: `https://www.momaiagent.com/${article.slug}`
-  //   }));
-  // }
+  if (article.region === 'Global' && article.us_ca_comparison && article.us_ca_comparison.us && article.us_ca_comparison.ca) {
+    schemas.push(generateComparisonTableSchema({
+      topic: article.title,
+      usData: article.us_ca_comparison.us,
+      caData: article.us_ca_comparison.ca,
+      articleUrl: `${siteUrl}/${article.slug}`
+    }));
+  }
 
-  // Temporarily disabled due to type mismatch
-  // if (article.claim_reviews) {
-  //   article.claim_reviews.forEach((claim: any) => {
-  //     schemas.push(generateClaimReviewSchema(claim));
-  //   });
-  // }
+  if (Array.isArray(article.claim_reviews)) {
+    article.claim_reviews.forEach((claim: any) => {
+      if (claim.claimText && claim.rating && claim.reviewExplanation && claim.articleUrl) {
+        schemas.push(generateClaimReviewSchema(claim));
+      }
+    });
+  }
 
   return {
     "@context": "https://schema.org",

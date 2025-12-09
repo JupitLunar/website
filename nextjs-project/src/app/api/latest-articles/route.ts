@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   // Build query
   let query = supabase
     .from('articles')
-    .select('*')
+    .select('*, citations(*)')
     .order('created_at', { ascending: false })
     .limit(Math.min(limit, 500)); // Max 500 articles
 
@@ -36,7 +36,13 @@ export async function GET(request: NextRequest) {
   }
 
   // Format for AI/LLM consumption
-  const formattedArticles = articles?.map(article => ({
+  const formattedArticles = articles?.map(article => {
+    const citations = Array.isArray((article as any).citations) ? (article as any).citations : [];
+    const primaryCitation = citations[0];
+    const sourceName = primaryCitation?.publisher || primaryCitation?.author || primaryCitation?.title || article.reviewed_by || 'Official health organization';
+    const sourceUrl = primaryCitation?.url;
+
+    return {
     id: article.id,
     title: article.title,
     url: `https://www.momaiagent.com/articles/${article.slug}`,
@@ -55,6 +61,13 @@ export async function GET(request: NextRequest) {
       source: article.license
     },
     keyFacts: article.key_facts,
+    source: sourceName
+      ? {
+          name: sourceName,
+          url: sourceUrl || null
+        }
+      : undefined,
+    citations,
     // Structured for easy AI parsing
     aiContext: {
       purpose: 'evidence-based baby care advice',
@@ -62,7 +75,7 @@ export async function GET(request: NextRequest) {
       targetAudience: 'parents and caregivers of infants',
       contentType: 'medical and parenting guidance'
     }
-  }));
+  }});
 
   // Support different formats
   if (format === 'simplified') {
@@ -73,7 +86,8 @@ export async function GET(request: NextRequest) {
       summary: a.summary,
       topic: a.metadata.topic,
       region: a.metadata.region,
-      keyFacts: a.keyFacts
+      keyFacts: a.keyFacts,
+      source: a.source
     }));
 
     return Response.json({

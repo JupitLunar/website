@@ -1,6 +1,9 @@
 import type { ContentHub } from '@/types/content';
 import { generateMedicalWebPageSchema, generateCompleteAEOSchema } from './aeo-optimizations';
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+const logoUrl = `${siteUrl}/Assets/Logo.png`;
+
 // 生成文章的结构化数据
 export function generateArticleStructuredData(article: any) {
   const primaryType = (() => {
@@ -20,10 +23,11 @@ export function generateArticleStructuredData(article: any) {
   })();
 
   const tldrItems = Array.isArray(article.key_facts) ? article.key_facts.slice(0, 5) : [];
+  const citations = Array.isArray(article.citations) ? article.citations : [];
 
   const structuredData: Record<string, any> = {
     "@type": primaryType,
-    "@id": `https://www.momaiagent.com/${article.slug}#article`,
+    "@id": `${siteUrl}/${article.slug}#article`,
     "headline": article.title,
     "description": article.one_liner || article.body_md?.substring(0, 160),
     "abstract": tldrItems.length > 0 ? tldrItems.join(' • ') : undefined,
@@ -38,7 +42,7 @@ export function generateArticleStructuredData(article: any) {
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.momaiagent.com/Assets/Logo.png",
+        "url": logoUrl,
       },
     },
     "datePublished": article.published_at,
@@ -46,7 +50,7 @@ export function generateArticleStructuredData(article: any) {
     "dateCreated": article.published_at,
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://www.momaiagent.com/${article.slug}`,
+      "@id": `${siteUrl}/${article.slug}`,
     },
     "articleSection": article.hub,
     "keywords": article.entities?.join(', ') || 'maternal health, infant care, parenting',
@@ -56,7 +60,7 @@ export function generateArticleStructuredData(article: any) {
     "isPartOf": {
       "@type": "WebSite",
       "name": "JupitLunar",
-      "url": "https://www.momaiagent.com",
+      "url": siteUrl,
     },
     "speakable": {
       "@type": 'SpeakableSpecification',
@@ -66,7 +70,7 @@ export function generateArticleStructuredData(article: any) {
       ],
     },
     // AEO优化：强调基于权威来源而非个人审核
-    "isBasedOn": article.citations?.slice(0, 3).map((citation: any) => ({
+    "isBasedOn": citations.slice(0, 3).map((citation: any) => ({
       "@type": "CreativeWork",
       "name": citation.title,
       "url": citation.url,
@@ -90,15 +94,15 @@ export function generateArticleStructuredData(article: any) {
         "name": "AAP Parenting Resources",
         "url": "https://www.healthychildren.org/",
         "publisher": {
-          "@type": "MedicalOrganization",
+          "@type": "Organization",
           "name": "American Academy of Pediatrics"
         }
       }
     ],
     "sourceOrganization": {
-      "@type": "GovernmentOrganization",
-      "name": "CDC, AAP, Health Canada",
-      "description": "Content based on official U.S. and Canadian health guidelines"
+      "@type": "Organization",
+      "name": "CDC, AAP, Health Canada (source references)",
+      "description": "Summaries reference official public-health publications; DearBaby curates and contextualizes those materials."
     },
     "educationalLevel": "Beginner to Intermediate",
     "audience": {
@@ -107,14 +111,13 @@ export function generateArticleStructuredData(article: any) {
       "geographicArea": {
         "@type": "Place",
         "name": "North America"
-      },
-      "healthCondition": article.hub
+      }
     },
     "about": article.entities?.map((entity: string) => ({
       "@type": 'Thing',
       name: entity,
     })) || [],
-    "citation": article.citations?.map((citation: any) => ({
+    "citation": citations.map((citation: any) => ({
       "@type": "CreativeWork",
       "name": citation.title,
       "url": citation.url,
@@ -134,7 +137,7 @@ export function generateArticleStructuredData(article: any) {
         "text": article.one_liner || article.body_md?.substring(0, 500),
         "dateCreated": article.published_at,
         "upvoteCount": article.helpful_count || 0,
-        "url": `https://www.momaiagent.com/${article.slug}#answer`
+        "url": `${siteUrl}/${article.slug}#answer`
       }
     },
     // 内容可信度信号
@@ -157,12 +160,26 @@ export function generateArticleStructuredData(article: any) {
     structuredData.wordCount = words.length || undefined;
   }
 
+  const citationLinks = citations
+    .map((citation: any) => citation.url)
+    .filter((url: string | undefined) => typeof url === 'string');
+  const maintenanceLinks = [
+    `${siteUrl}/latest-articles`,
+    `${siteUrl}/api/latest-articles?format=simplified`
+  ];
+  structuredData.significantLink = Array.from(new Set([...maintenanceLinks, ...citationLinks]));
+  structuredData.maintainer = {
+    "@type": "Organization",
+    "name": "JupitLunar Editorial Operations",
+    "url": `${siteUrl}/trust`
+  };
+
   const graph: Record<string, any>[] = [structuredData];
 
   if (article.type === 'howto' && Array.isArray(article.how_to_steps) && article.how_to_steps.length > 0) {
     graph.push({
       "@type": "HowTo",
-      "@id": `https://www.momaiagent.com/${article.slug}#howto`,
+      "@id": `${siteUrl}/${article.slug}#howto`,
       "name": article.title,
       "description": article.one_liner,
       "totalTime": article.time_required ? `PT${article.time_required}` : undefined,
@@ -194,7 +211,7 @@ export function generateArticleStructuredData(article: any) {
 
     graph.push({
       "@type": "Recipe",
-      "@id": `https://www.momaiagent.com/${article.slug}#recipe`,
+      "@id": `${siteUrl}/${article.slug}#recipe`,
       "name": article.title,
       "description": article.one_liner,
       "image": article.featured_image ? [article.featured_image] : undefined,
@@ -211,10 +228,10 @@ export function generateArticleStructuredData(article: any) {
   if (article.qas && article.qas.length > 0) {
     graph.push({
       "@type": "FAQPage",
-      "@id": `https://www.momaiagent.com/${article.slug}#faq`,
+      "@id": `${siteUrl}/${article.slug}#faq`,
       "mainEntity": article.qas.map((qa: any, index: number) => ({
         "@type": "Question",
-        "@id": `https://www.momaiagent.com/${article.slug}#question-${index + 1}`,
+        "@id": `${siteUrl}/${article.slug}#question-${index + 1}`,
         "name": qa.question,
         "acceptedAnswer": {
           "@type": "Answer",
@@ -227,7 +244,7 @@ export function generateArticleStructuredData(article: any) {
   if (['explainer', 'research', 'howto', 'faq', 'recipe'].includes(article.type)) {
     graph.push({
       "@type": "HealthTopicContent",
-      "@id": `https://www.momaiagent.com/${article.slug}#health-topic`,
+      "@id": `${siteUrl}/${article.slug}#health-topic`,
       "name": article.title,
       "description": article.one_liner || article.body_md?.substring(0, 160),
       "lastReviewed": article.last_reviewed || article.updated_at,
@@ -275,7 +292,7 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
     "@type": "CollectionPage",
     "name": hub.name,
     "description": hub.description,
-    "url": `https://www.momaiagent.com/hub/${hub.slug}`,
+    "url": `${siteUrl}/hub/${hub.slug}`,
     "mainEntity": {
       "@type": "ItemList",
       "numberOfItems": articles.length,
@@ -285,7 +302,7 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
         "item": {
           "@type": "Article",
           "headline": article.title,
-          "url": `https://www.momaiagent.com/${article.slug}`,
+          "url": `${siteUrl}/${article.slug}`,
           "datePublished": article.published_at,
           "dateModified": article.updated_at || article.published_at
         }
@@ -294,13 +311,13 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
     "publisher": {
       "@type": "Organization",
       "name": "JupitLunar",
-      "url": "https://www.momaiagent.com"
+      "url": siteUrl
     },
     "inLanguage": "en",
     "isPartOf": {
       "@type": "WebSite",
       "name": "JupitLunar",
-      "url": "https://www.momaiagent.com"
+      "url": siteUrl
     }
   };
 }
@@ -326,12 +343,12 @@ export function generateWebsiteStructuredData() {
     "@type": "WebSite",
     "name": "JupitLunar",
     "description": "AI-Powered Health Intelligence for Mom & Baby Wellness",
-    "url": "https://www.momaiagent.com",
+    "url": siteUrl,
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://www.momaiagent.com/search?q={search_term_string}"
+        "urlTemplate": `${siteUrl}/search?q={search_term_string}`
       },
       "query-input": "required name=search_term_string"
     },
@@ -340,13 +357,121 @@ export function generateWebsiteStructuredData() {
       "name": "JupitLunar",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.momaiagent.com/Assets/Logo.png"
+        "url": logoUrl
       },
       "sameAs": [
         "https://twitter.com/jupitlunar",
         "https://linkedin.com/company/jupitlunar"
       ]
     },
+    "inLanguage": "en"
+  };
+}
+
+export function generateHomePageStructuredData({
+  featuredArticles = [],
+  testimonials = []
+}: {
+  featuredArticles?: Array<{ title: string; url: string; summary?: string; topic?: string }>;
+  testimonials?: Array<{ name: string; quote: string; role?: string }>;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${siteUrl}/#homepage`,
+    "name": "DearBaby | Mom AI Agent for Evidence-Based Maternal & Infant Care",
+    "url": `${siteUrl}/`,
+    "description": "Ask Mom AI Agent for instant maternal and infant health guidance backed by CDC, AAP, WHO, and Health Canada sources. Download feeding roadmaps, explore food databases, and review curated parenting research.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      "name": "JupitLunar",
+      "url": siteUrl
+    },
+    "about": [
+      {
+        "@type": "Thing",
+        "name": "Parenting knowledge base"
+      },
+      {
+        "@type": "Thing",
+        "name": "Maternal & infant wellness research summaries"
+      },
+      {
+        "@type": "Thing",
+        "name": "Evidence-based parenting answers"
+      }
+    ],
+    "audience": {
+      "@type": "PeopleAudience",
+      "audienceType": "Parents and caregivers of infants and toddlers",
+      "healthCondition": "Maternal and infant wellness",
+      "geographicArea": {
+        "@type": "AdministrativeArea",
+        "name": "North America"
+      }
+    },
+    "primaryImageOfPage": {
+      "@type": "ImageObject",
+      "@id": `${siteUrl}/#homepage-image`,
+      "url": `${siteUrl}/heroimage.png`,
+      "width": 1920,
+      "height": 1080,
+      "caption": "Mom AI Agent providing guidance to parents"
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [
+        "h1",
+        ".hero-subtext",
+        "#guide-download h2"
+      ]
+    },
+    "mainEntity": {
+      "@type": "Question",
+      "name": "What does Mom AI Agent deliver to new parents?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mom AI Agent combines 75+ pediatric guidelines into one searchable assistant so you can get safe feeding, sleep, and safety answers in seconds, download a personalized feeding roadmap, and review cited sources before taking action."
+      }
+    },
+    "significantLink": featuredArticles.slice(0, 5).map(article => ({
+      "@type": "WebPage",
+      "url": article.url,
+      "name": article.title,
+      "description": article.summary
+    })),
+    "review": testimonials.map(testimonial => ({
+      "@type": "Review",
+      "name": `Testimonial from ${testimonial.name}`,
+      "reviewBody": testimonial.quote,
+      "author": {
+        "@type": "Person",
+        "name": testimonial.name,
+        "jobTitle": testimonial.role
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": 5,
+        "bestRating": 5,
+        "worstRating": 1
+      }
+    })),
+    "potentialAction": [
+      {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    },
+    {
+      "@type": "SubscribeAction",
+      "name": "Download Feeding Roadmap",
+      "target": `${siteUrl}/#guide-download`
+    }
+    ],
     "inLanguage": "en"
   };
 }
@@ -358,18 +483,25 @@ export function generateOrganizationStructuredData() {
     "@type": "Organization",
     "name": "JupitLunar",
     "description": "AI-Powered Health Intelligence for Mom & Baby Wellness",
-    "url": "https://www.momaiagent.com",
+    "url": siteUrl,
     "logo": {
       "@type": "ImageObject",
-      "url": "https://www.momaiagent.com/Assets/Logo.png",
+      "url": logoUrl,
       "width": 200,
       "height": 200
     },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "customer service",
-      "email": "hello@www.momaiagent.com"
-    },
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "support@momaiagent.com",
+        "telephone": "+1-587-200-1550",
+        "areaServed": "US/CA",
+        "availableLanguage": ["en", "zh"],
+        "contactOption": ["TollFree"],
+        "hoursAvailable": "Mo-Fr 09:00-18:00"
+      }
+    ],
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Edmonton",
@@ -387,7 +519,13 @@ export function generateOrganizationStructuredData() {
       "Maternal Health",
       "Infant Care",
       "AI Health Intelligence",
-      "Parenting Technology"
+      "Parenting Technology",
+      "Baby-Led Weaning",
+      "Early Allergen Guidance"
+    ],
+    "hasCredential": [
+      "Editorial reviewers: RN, IBCLC, IBCLC-certified lactation consultants",
+      "RAG pipeline cites CDC, AAP, WHO, Health Canada documents"
     ]
   };
 }
@@ -475,11 +613,11 @@ export function generateClaimReviewStructuredData(claim: {
     "author": {
       "@type": "Organization",
       "name": "JupitLunar Editorial Team",
-      "url": "https://www.momaiagent.com"
+      "url": siteUrl
     },
     "reviewRating": {
       "@type": "Rating",
-      "ratingValue": ratingValue,
+      ratingValue,
       "bestRating": 5,
       "worstRating": 1,
       "alternateName": claim.rating

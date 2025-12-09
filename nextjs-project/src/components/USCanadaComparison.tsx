@@ -20,12 +20,13 @@ export function USCanadaComparison({
   articleSlug,
   className = ""
 }: USCanadaComparisonProps) {
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
   
   // 生成结构化数据
   const comparisonSchema = {
     "@context": "https://schema.org",
     "@type": "Table",
-    "@id": `https://www.momaiagent.com/${articleSlug || 'comparison'}#us-canada-comparison`,
+    "@id": `${siteUrl}/${articleSlug || 'comparison'}#us-canada-comparison`,
     "name": `US vs Canada: ${topic}`,
     "description": `Comparison of ${topic} guidelines between United States and Canada`,
     "about": topic,
@@ -52,7 +53,7 @@ export function USCanadaComparison({
     })),
     "isPartOf": {
       "@type": "WebPage",
-      "url": `https://www.momaiagent.com/${articleSlug || ''}`
+      "url": `${siteUrl}/${articleSlug || ''}`
     }
   };
 

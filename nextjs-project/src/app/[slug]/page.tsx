@@ -6,6 +6,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { generateArticleStructuredData, generateBreadcrumbStructuredData } from '@/lib/json-ld';
 import Script from 'next/script';
+import { generateHreflangMetadata, generateBottomLineSummary } from '@/lib/aeo-optimizations';
+import { BottomLineAnswer } from '@/components/BottomLineAnswer';
+import { USCanadaComparison } from '@/components/USCanadaComparison';
 
 // 生成静态路径
 export async function generateStaticParams() {
@@ -37,6 +40,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: article.one_liner || article.body_md?.substring(0, 160) || 'Expert insights on maternal and infant health.',
       keywords: article.entities?.join(', ') || 'maternal health, infant care, parenting',
       authors: [{ name: 'JupitLunar Team' }],
+      alternates: generateHreflangMetadata(article.slug, article.region),
       openGraph: {
         title: article.title,
         description: article.one_liner || article.body_md?.substring(0, 160),
@@ -93,6 +97,23 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     const publishedAt = article.published_at ? new Date(article.published_at) : null;
     const updatedAt = article.updated_at ? new Date(article.updated_at) : null;
     const lastReviewedAt = article.last_reviewed ? new Date(article.last_reviewed) : null;
+
+    // 首屏即答案数据
+    const bottomLine = generateBottomLineSummary(article);
+    const keyNumbers = Array.isArray(article.key_facts)
+      ? article.key_facts.filter((fact: any) => typeof fact === 'string' && /\d/.test(fact)).slice(0, 4)
+      : [];
+    const actionItems = Array.isArray((article as any).how_to_steps)
+      ? (article as any).how_to_steps.slice(0, 4).map((step: any) => step.title || step.description || '').filter(Boolean)
+      : [];
+    const sources = citationItems.slice(0, 4).map((citation: any) => citation.title || citation.url).filter(Boolean);
+    const comparisonData = (article as any).us_ca_comparison;
+    const hasComparison = article.region === 'Global' &&
+      comparisonData &&
+      typeof comparisonData === 'object' &&
+      comparisonData.us && comparisonData.ca &&
+      Object.keys(comparisonData.us).length > 0 &&
+      Object.keys(comparisonData.ca).length > 0;
 
     return (
       <>
@@ -193,6 +214,17 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         {/* Article Content - 淡雅白色背景 */}
         <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
           <div className="max-w-4xl mx-auto">
+            <BottomLineAnswer
+              question={article.title}
+              answer={bottomLine}
+              keyNumbers={keyNumbers}
+              actionItems={actionItems}
+              ageRange={article.age_range}
+              region={article.region}
+              sources={sources}
+              articleSlug={article.slug}
+              className="mb-10"
+            />
             <div className="prose prose-lg max-w-none">
               {/* TL;DR - 淡雅样式 */}
               {tldrItems.length > 0 && (
@@ -216,6 +248,17 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+
+              {hasComparison && (
+                <div className="mb-10">
+                  <USCanadaComparison
+                    topic={article.title}
+                    usData={(comparisonData as any).us}
+                    caData={(comparisonData as any).ca}
+                    articleSlug={article.slug}
+                  />
                 </div>
               )}
 

@@ -12,6 +12,8 @@ function Header() {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [showNewsletterModal, setShowNewsletterModal] = useState(false);
   const [email, setEmail] = useState('');
+  const [newsletterFeedback, setNewsletterFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isSubmittingNewsletter, setIsSubmittingNewsletter] = useState(false);
   const foodsMenuRef = useRef<HTMLDivElement>(null);
   const productsMenuRef = useRef<HTMLDivElement>(null);
   const aboutMenuRef = useRef<HTMLDivElement>(null);
@@ -34,6 +36,12 @@ function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isFoodsOpen, isProductsOpen, isAboutOpen]);
 
+  useEffect(() => {
+    if (!showNewsletterModal) {
+      setNewsletterFeedback(null);
+    }
+  }, [showNewsletterModal]);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -43,9 +51,40 @@ function Header() {
 
   // 提交邮箱到newsletter
   async function submitNewsletter(email: string) {
-    // TODO: Implement newsletter subscription
-    console.log('Newsletter subscription:', email);
-    alert('Thank you for subscribing to our newsletter!');
+    if (!email) return false;
+    setNewsletterFeedback(null);
+    setIsSubmittingNewsletter(true);
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Unable to subscribe right now.');
+      }
+
+      setNewsletterFeedback({
+        type: 'success',
+        message: 'Thanks! Check your inbox for a welcome note and guide.',
+      });
+      setEmail('');
+      return true;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Something went wrong.';
+      setNewsletterFeedback({
+        type: 'error',
+        message,
+      });
+      return false;
+    } finally {
+      setIsSubmittingNewsletter(false);
+    }
   }
 
   return (
@@ -440,8 +479,10 @@ function Header() {
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
-                await submitNewsletter(email);
-                setShowNewsletterModal(false);
+                const success = await submitNewsletter(email);
+                if (success) {
+                  setShowNewsletterModal(false);
+                }
               }}
               className="space-y-6"
             >
@@ -455,11 +496,20 @@ function Header() {
               />
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-base font-semibold shadow-none hover:from-purple-700 hover:to-pink-700 transition-all duration-200"
+                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-base font-semibold shadow-none hover:from-purple-700 hover:to-pink-700 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={isSubmittingNewsletter}
               >
-                Subscribe
+                {isSubmittingNewsletter ? 'Subscribing…' : 'Subscribe'}
               </button>
             </form>
+            {newsletterFeedback && (
+              <p
+                className={`mt-4 text-sm ${newsletterFeedback.type === 'success' ? 'text-emerald-500' : 'text-rose-500'}`}
+                role="status"
+              >
+                {newsletterFeedback.message}
+              </p>
+            )}
           </div>
         </div>
       )}

@@ -48,7 +48,7 @@ export const trackEvent = (action: string, category: string, label?: string, val
     window.gtag('event', action, {
       event_category: category,
       event_label: label,
-      value: value,
+      value,
     });
   }
 };
@@ -58,11 +58,11 @@ export const trackNewsletterSubscription = (email: string, source: string) => {
   trackEvent('newsletter_subscribe', 'engagement', source);
   
   if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'newsletter_subscription', {
-      event_category: 'engagement',
-      event_label: source,
-      custom_parameter_1: email.substring(0, 3) + '***', // Partial email for privacy
-    });
+      window.gtag('event', 'newsletter_subscription', {
+        event_category: 'engagement',
+        event_label: source,
+        custom_parameter_1: `${email.substring(0, 3)}***`, // Partial email for privacy
+      });
   }
 };
 
@@ -138,6 +138,8 @@ export const trackError = (error: string, context?: string) => {
     });
   }
 };
+
+
 
 
 

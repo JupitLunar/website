@@ -7,6 +7,7 @@ import ContactChatbot from '@/components/ContactChatbot';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] });
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
 export const metadata: Metadata = {
   title: {
@@ -23,14 +24,20 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://www.momaiagent.com'),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: '/',
+    languages: {
+      'x-default': `${siteUrl}/`,
+      'en-US': `${siteUrl}/en-us`,
+      'en-CA': `${siteUrl}/en-ca`,
+      'zh-CN': `${siteUrl}/zh-cn`,
+    },
   },
   openGraph: {
     title: 'DearBaby - AI-Powered Maternal & Infant Care',
     description: 'Evidence-based parenting guidance powered by Mom AI Agent',
-    url: 'https://www.momaiagent.com',
+    url: siteUrl,
     siteName: 'DearBaby by JupitLunar',
     locale: 'en_US',
     type: 'website',
