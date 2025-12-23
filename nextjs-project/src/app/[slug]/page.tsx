@@ -35,27 +35,35 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       };
     }
 
+    const description = (article.one_liner || article.body_md?.substring(0, 155) || 'Expert insights on maternal and infant health.').trim();
+    
     return {
-      title: `${article.title} | JupitLunar`,
-      description: article.one_liner || article.body_md?.substring(0, 160) || 'Expert insights on maternal and infant health.',
-      keywords: article.entities?.join(', ') || 'maternal health, infant care, parenting',
-      authors: [{ name: 'JupitLunar Team' }],
+      title: `${article.title} | Mom AI Agent`,
+      description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+      keywords: [
+        ...(article.meta_keywords || []),
+        article.hub,
+        article.region === 'Global' ? 'North America' : article.region,
+        article.age_range || '0-24 months',
+        ...(article.entities || [])
+      ].filter(Boolean).join(', '),
+      authors: [{ name: 'Mom AI Agent Editorial Team' }],
       alternates: generateHreflangMetadata(article.slug, article.region),
       openGraph: {
         title: article.title,
-        description: article.one_liner || article.body_md?.substring(0, 160),
+        description: description.length > 160 ? description.substring(0, 157) + '...' : description,
         type: 'article',
         publishedTime: article.published_at,
         modifiedTime: article.updated_at,
-        authors: ['JupitLunar Team'],
+        authors: ['Mom AI Agent Editorial Team'],
         images: article.featured_image ? [article.featured_image] : [],
         url: `https://www.momaiagent.com/${article.slug}`,
-        siteName: 'JupitLunar',
+        siteName: 'Mom AI Agent',
       },
       twitter: {
         card: 'summary_large_image',
         title: article.title,
-        description: article.one_liner || article.body_md?.substring(0, 160),
+        description: description.length > 160 ? description.substring(0, 157) + '...' : description,
         images: article.featured_image ? [article.featured_image] : [],
         creator: '@jupitlunar',
         site: '@jupitlunar',
@@ -64,7 +72,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   } catch (error) {
     console.error('Error generating metadata:', error);
     return {
-      title: 'Article | JupitLunar',
+      title: 'Article | Mom AI Agent',
       description: 'Expert insights on maternal and infant health.',
     };
   }

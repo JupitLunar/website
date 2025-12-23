@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -11,12 +12,12 @@ const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com
 
 export const metadata: Metadata = {
   title: {
-    default: 'DearBaby - AI-Powered Maternal & Infant Care | Evidence-Based Parenting Guide',
-    template: '%s | DearBaby by JupitLunar'
+    default: 'Mom AI Agent - Evidence-Based Parenting Guide for North America',
+    template: '%s | Mom AI Agent'
   },
-  description: 'Get expert maternal and infant care guidance powered by Mom AI Agent. Evidence-based feeding schedules, safety tips, and pediatric health advice from CDC, AAP, and WHO sources.',
-  keywords: ['maternal care', 'infant care', 'baby feeding', 'parenting guide', 'pediatric health', 'AI parenting assistant', 'evidence-based baby care', 'DearBaby', 'baby development', 'feeding schedules'],
-  authors: [{ name: 'JupitLunar' }],
+  description: 'Get expert maternal and infant care guidance powered by Mom AI Agent. Evidence-based feeding schedules, safety tips, and pediatric health advice from CDC, AAP, WHO, and Health Canada sources. Explore DearBaby and Solid Start apps.',
+  keywords: ['Mom AI Agent', 'evidence-based parenting', 'North America baby care', 'CDC AAP guidelines', 'maternal care', 'infant care', 'baby feeding', 'parenting guide', 'pediatric health', 'DearBaby', 'baby development', 'feeding schedules'],
+  authors: [{ name: 'Mom AI Agent Editorial Team' }],
   creator: 'JupitLunar',
   publisher: 'JupitLunar',
   formatDetection: {
@@ -35,17 +36,26 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'DearBaby - AI-Powered Maternal & Infant Care',
-    description: 'Evidence-based parenting guidance powered by Mom AI Agent',
+    title: 'Mom AI Agent - Evidence-Based Parenting Guide',
+    description: 'Evidence-based parenting guidance for North American families. Trusted advice from CDC, AAP, WHO, and Health Canada. Powered by Mom AI Agent.',
     url: siteUrl,
-    siteName: 'DearBaby by JupitLunar',
+    siteName: 'Mom AI Agent',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: `${siteUrl}/og-image.svg`,
+        width: 1200,
+        height: 630,
+        alt: 'Mom AI Agent - Evidence-Based Parenting Guide'
+      }
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DearBaby - AI-Powered Maternal & Infant Care',
-    description: 'Evidence-based parenting guidance powered by Mom AI Agent',
+    title: 'Mom AI Agent - Evidence-Based Parenting Guide',
+    description: 'Evidence-based parenting guidance for North American families. Trusted advice from CDC, AAP, WHO, and Health Canada.',
+    images: [`${siteUrl}/og-image.svg`],
   },
   robots: {
     index: true,
@@ -68,6 +78,19 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.className} antialiased`}>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-QQTEKXVQN4"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-QQTEKXVQN4');
+          `}
+        </Script>
         <Header />
         <main className="pt-20">
           {children}

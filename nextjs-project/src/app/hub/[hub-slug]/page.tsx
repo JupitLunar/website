@@ -34,18 +34,19 @@ export async function generateMetadata({ params }: { params: { 'hub-slug': strin
     }
 
     return {
-      title: `${hub.name} | JupitLunar`,
-      description: hub.description || `Expert insights on ${hub.name.toLowerCase()}.`,
-      keywords: `${hub.name}, maternal health, infant care, parenting`,
+      title: `${hub.name} | Mom AI Agent`,
+      description: hub.description || `Expert insights on ${hub.name.toLowerCase()} from Mom AI Agent.`,
+      keywords: `${hub.name}, Mom AI Agent, maternal health, infant care, parenting, North America`,
       openGraph: {
-        title: hub.name,
+        title: `${hub.name} | Mom AI Agent`,
         description: hub.description,
         type: 'website',
         images: hub.icon ? [hub.icon] : [],
+        siteName: 'Mom AI Agent',
       },
       twitter: {
         card: 'summary_large_image',
-        title: hub.name,
+        title: `${hub.name} | Mom AI Agent`,
         description: hub.description,
         images: hub.icon ? [hub.icon] : [],
       },
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: { params: { 'hub-slug': strin
   } catch (error) {
     console.error('Error generating metadata:', error);
     return {
-      title: 'Content Hub | JupitLunar',
+      title: 'Content Hub | Mom AI Agent',
       description: 'Expert insights on maternal and infant health.',
     };
   }

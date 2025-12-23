@@ -24,9 +24,13 @@ export function generateMedicalWebPageSchema(article: any) {
     "lastReviewed": article.last_reviewed,
     "author": {
       "@type": "Organization",
-      "name": "JupitLunar Editorial Team",
+      "name": "Mom AI Agent Editorial Team",
       "description": "Evidence-based parenting content curation studio",
-      "url": `${siteUrl}/about`
+      "url": `${siteUrl}/about`,
+      "memberOf": {
+        "@type": "Organization",
+        "name": "JupitLunar"
+      }
     },
     "reviewedBy": {
       "@type": "Organization",
@@ -51,7 +55,7 @@ export function generateMedicalWebPageSchema(article: any) {
     },
     "isPartOf": {
       "@type": "WebSite",
-      "name": "JupitLunar Health Intelligence",
+      "name": "Mom AI Agent",
       "url": siteUrl
     },
     "speakable": {

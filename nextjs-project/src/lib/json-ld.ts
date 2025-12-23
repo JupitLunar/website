@@ -34,8 +34,12 @@ export function generateArticleStructuredData(article: any) {
     "image": article.featured_image ? [article.featured_image] : undefined,
     "author": {
       "@type": "Organization",
-      "name": "JupitLunar Editorial Team",
-      "description": "Science-based parenting content curators",
+      "name": "Mom AI Agent Editorial Team",
+      "description": "Evidence-based parenting content curators",
+      "memberOf": {
+        "@type": "Organization",
+        "name": "JupitLunar"
+      }
     },
     "publisher": {
       "@type": "Organization",
@@ -59,7 +63,7 @@ export function generateArticleStructuredData(article: any) {
     "isAccessibleForFree": true,
     "isPartOf": {
       "@type": "WebSite",
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "url": siteUrl,
     },
     "speakable": {
@@ -311,7 +315,24 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
     "publisher": {
       "@type": "Organization",
       "name": "JupitLunar",
-      "url": siteUrl
+      "url": siteUrl,
+      "owns": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Mom AI Agent",
+          "applicationCategory": "HealthApplication"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "DearBaby",
+          "applicationCategory": "HealthApplication"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "DearBaby: Solid Start",
+          "applicationCategory": "HealthApplication"
+        }
+      ]
     },
     "inLanguage": "en",
     "isPartOf": {
@@ -341,8 +362,9 @@ export function generateWebsiteStructuredData() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "JupitLunar",
-    "description": "AI-Powered Health Intelligence for Mom & Baby Wellness",
+    "name": "Mom AI Agent",
+    "alternateName": "momaiagent.com",
+    "description": "Evidence-Based Parenting Guide for North America - Trusted advice from CDC, AAP, WHO, and Health Canada",
     "url": siteUrl,
     "potentialAction": {
       "@type": "SearchAction",
@@ -379,13 +401,13 @@ export function generateHomePageStructuredData({
     "@context": "https://schema.org",
     "@type": "WebPage",
     "@id": `${siteUrl}/#homepage`,
-    "name": "DearBaby | Mom AI Agent for Evidence-Based Maternal & Infant Care",
+    "name": "Mom AI Agent - Evidence-Based Maternal & Infant Care Guide for North America",
     "url": `${siteUrl}/`,
     "description": "Ask Mom AI Agent for instant maternal and infant health guidance backed by CDC, AAP, WHO, and Health Canada sources. Download feeding roadmaps, explore food databases, and review curated parenting research.",
     "isPartOf": {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "url": siteUrl
     },
     "about": [
@@ -482,7 +504,7 @@ export function generateOrganizationStructuredData() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "JupitLunar",
-    "description": "AI-Powered Health Intelligence for Mom & Baby Wellness",
+    "description": "Health technology company providing evidence-based parenting solutions through Mom AI Agent platform",
     "url": siteUrl,
     "logo": {
       "@type": "ImageObject",
