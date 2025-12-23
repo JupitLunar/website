@@ -90,12 +90,6 @@ const TASK_ARCHIVE: TaskRecord[] = [
   },
 ];
 
-export const metadata = {
-  title: 'Task Archive | JupitLunar',
-  description:
-    'Structured reports highlighting the outcomes, evidence, and next actions for each JupitLunar knowledge base iteration.',
-};
-
 function TaskCard({ record }: { record: TaskRecord }) {
   return (
     <article className="space-y-4 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">

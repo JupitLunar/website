@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     
     return {
       title: `${article.title} | Mom AI Agent`,
-      description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+      description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
       keywords: [
         ...(article.meta_keywords || []),
         article.hub,
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       alternates: generateHreflangMetadata(article.slug, article.region),
       openGraph: {
         title: article.title,
-        description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+        description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
         type: 'article',
         publishedTime: article.published_at,
         modifiedTime: article.updated_at,
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       twitter: {
         card: 'summary_large_image',
         title: article.title,
-        description: description.length > 160 ? description.substring(0, 157) + '...' : description,
+        description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
         images: article.featured_image ? [article.featured_image] : [],
         creator: '@jupitlunar',
         site: '@jupitlunar',

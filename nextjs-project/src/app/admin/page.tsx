@@ -4,16 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { contentManager } from '@/lib/supabase';
 import type { BaseContent, ContentHub, ContentStats, HubInfo } from '@/types/content';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Admin Dashboard | DearBaby Internal',
-  description: 'Internal admin dashboard for DearBaby by JupitLunar.',
-  robots: {
-    index: false,
-    follow: true,
-  },
-};
 
 export default function AdminPage() {
   const [stats, setStats] = useState<ContentStats | null>(null);

@@ -331,7 +331,7 @@ export function generateAuthorityCitations(article: any) {
 
 // 生成完整的AEO优化Schema组合
 export function generateCompleteAEOSchema(article: any) {
-  const schemas = [
+  const schemas: any[] = [
     generateMedicalWebPageSchema(article)
   ];
 

@@ -4,16 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Admin Analytics | DearBaby Internal',
-  description: 'Internal analytics dashboard for DearBaby by JupitLunar.',
-  robots: {
-    index: false,
-    follow: true,
-  },
-};
 
 interface AnalyticsData {
   page_views: number;
