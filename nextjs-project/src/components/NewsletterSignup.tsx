@@ -8,12 +8,16 @@ interface NewsletterSignupProps {
   variant?: 'default' | 'compact' | 'inline';
   className?: string;
   onSuccess?: () => void;
+  title?: string;
+  description?: string;
 }
 
 export default function NewsletterSignup({ 
   variant = 'default', 
   className = '',
-  onSuccess 
+  onSuccess,
+  title,
+  description
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -57,10 +61,10 @@ export default function NewsletterSignup({
     return (
       <div className={`bg-white rounded-lg border border-gray-200 p-4 ${className}`}>
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          Stay Updated
+          {title || "Stay Updated"}
         </h3>
         <p className="text-sm text-gray-600 mb-3">
-          Get the latest insights on maternal and infant health.
+          {description || "Get the latest insights on maternal and infant health."}
         </p>
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
@@ -127,10 +131,10 @@ export default function NewsletterSignup({
     >
       <div className="max-w-md mx-auto text-center">
         <h2 className="text-2xl font-bold mb-4">
-          Stay Informed with Expert Health Insights
+          {title || "Stay Informed with Expert Health Insights"}
         </h2>
         <p className="text-purple-100 mb-6">
-          Get weekly updates on maternal and infant health, delivered directly to your inbox.
+          {description || "Get weekly updates on maternal and infant health, delivered directly to your inbox."}
         </p>
         
         <form onSubmit={handleSubmit} className="space-y-4">
