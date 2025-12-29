@@ -82,12 +82,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Get AI-generated insight articles
   const supabase = createAdminClient();
-  const { data: insightArticles } = await supabase
-    .from('articles')
-    .select('slug, date_published, date_modified, created_at')
-    .eq('reviewed_by', 'AI Content Generator')
-    .eq('status', 'published')
-    .catch(() => ({ data: [] }));
+  let insightArticles: any[] = [];
+  try {
+    const { data } = await supabase
+      .from('articles')
+      .select('slug, date_published, date_modified, created_at')
+      .eq('reviewed_by', 'AI Content Generator')
+      .eq('status', 'published');
+    insightArticles = data || [];
+  } catch (error) {
+    console.error('Error fetching insight articles for sitemap:', error);
+    insightArticles = [];
+  }
 
   const hubRoutes: MetadataRoute.Sitemap = Array.isArray(hubs)
     ? hubs.map((hub: any) => ({
@@ -139,8 +145,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     : [];
 
   // Insight articles routes (AI-generated content)
-  const insightRoutes: MetadataRoute.Sitemap = Array.isArray(insightArticles?.data)
-    ? insightArticles.data.map((article: any) => {
+  const insightRoutes: MetadataRoute.Sitemap = Array.isArray(insightArticles)
+    ? insightArticles.map((article: any) => {
         const lastMod = article.date_modified || article.date_published || article.created_at;
         const daysSinceUpdate = lastMod
           ? Math.floor((Date.now() - new Date(lastMod).getTime()) / (1000 * 60 * 60 * 24))

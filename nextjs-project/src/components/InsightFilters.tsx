@@ -270,7 +270,7 @@ export default function InsightFilters({ articles, allKeywords, allHubs, allAgeR
                   <div className="flex flex-wrap gap-1.5 items-center">
                     {cleanKeywords.slice(0, 3).map((keyword: string, idx: number) => {
                       // Truncate long keywords to keep tags uniform (max 20 chars)
-                      const displayKeyword = keyword.length > 20 ? keyword.substring(0, 17) + '...' : keyword;
+                      const displayKeyword = keyword.length > 20 ? `${keyword.substring(0, 17)}...` : keyword;
                       return (
                         <span
                           key={idx}

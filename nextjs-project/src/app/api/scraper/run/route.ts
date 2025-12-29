@@ -86,7 +86,8 @@ export async function POST(request: NextRequest) {
     
     // 动态导入全球自动爬虫脚本
     const scraperPath = path.resolve(process.cwd(), 'scripts/global-auto-scraper.js');
-    const scraperModule = await import(scraperPath);
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const scraperModule = await import(/* webpackIgnore: true */ scraperPath);
     const { main } = scraperModule;
     
     // 执行爬虫
