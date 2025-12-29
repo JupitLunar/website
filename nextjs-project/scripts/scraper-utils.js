@@ -241,27 +241,61 @@ function delay(ms) {
 }
 
 /**
- * 带重试的 HTTP 请求
+ * 带重试的 HTTP 请求（可选 Puppeteer 兜底）
  */
-async function fetchWithRetry(url, retries = 3, delayMs = 1000) {
+async function fetchWithRetry(url, retries = 3, delayMs = 1000, options = {}) {
   const axios = require('axios');
+  const {
+    headers = {},
+    timeout = 30000,
+    usePuppeteerFallback = false,
+    forcePuppeteer = false,
+    puppeteerDomains = [],
+    puppeteerTimeout = 45000,
+    blockPatterns = DEFAULT_BLOCK_PATTERNS
+  } = options;
   
+  if (forcePuppeteer) {
+    const rendered = await fetchWithPuppeteer(url, {
+      headers: { 'User-Agent': DEFAULT_USER_AGENT, ...headers },
+      timeout: puppeteerTimeout
+    });
+    if (rendered) return rendered;
+  }
+
   for (let i = 0; i < retries; i++) {
     try {
       const response = await axios.get(url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; ScraperBot/1.0; +https://momaiagent.com/bot)'
+          'User-Agent': DEFAULT_USER_AGENT,
+          ...headers
         },
-        timeout: 30000,
+        timeout,
         validateStatus: (status) => status < 500
       });
       
       if (response.status === 200) {
-        return response.data;
+        const html = response.data || '';
+        if (usePuppeteerFallback && shouldUsePuppeteer(url, html, puppeteerDomains, blockPatterns)) {
+          const rendered = await fetchWithPuppeteer(url, {
+            headers: { 'User-Agent': DEFAULT_USER_AGENT, ...headers },
+            timeout: puppeteerTimeout
+          });
+          return rendered || html;
+        }
+        return html;
       }
       
       if (response.status === 404) {
         return null; // 页面不存在，不需要重试
+      }
+      
+      if (usePuppeteerFallback && (response.status === 403 || response.status === 429)) {
+        const rendered = await fetchWithPuppeteer(url, {
+          headers: { 'User-Agent': DEFAULT_USER_AGENT, ...headers },
+          timeout: puppeteerTimeout
+        });
+        if (rendered) return rendered;
       }
       
     } catch (error) {
@@ -276,6 +310,81 @@ async function fetchWithRetry(url, retries = 3, delayMs = 1000) {
   return null;
 }
 
+const DEFAULT_USER_AGENT = 'Mozilla/5.0 (compatible; ScraperBot/1.0; +https://momaiagent.com/bot)';
+
+const DEFAULT_BLOCK_PATTERNS = [
+  /access denied/i,
+  /bot detection/i,
+  /captcha/i,
+  /cloudflare/i,
+  /pardon the interruption/i,
+  /please enable javascript/i,
+  /perimeterx/i,
+  /akamai/i
+];
+
+function shouldUsePuppeteer(url, html, domains, blockPatterns) {
+  try {
+    const parsed = new URL(url);
+    if (Array.isArray(domains) && domains.length > 0) {
+      const host = parsed.hostname.toLowerCase();
+      const matched = domains.some(domain => host.endsWith(domain));
+      if (!matched) return false;
+    }
+  } catch {
+    return false;
+  }
+  const content = html || '';
+  return blockPatterns.some(pattern => pattern.test(content));
+}
+
+async function fetchWithPuppeteer(url, options = {}) {
+  const { headers = {}, timeout = 45000 } = options;
+  let browser;
+  
+  try {
+    const puppeteer = require('puppeteer');
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
+    const page = await browser.newPage();
+    if (headers['User-Agent']) {
+      await page.setUserAgent(headers['User-Agent']);
+    }
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': headers['Accept-Language'] || 'en-US,en;q=0.9'
+    });
+    
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      const type = req.resourceType();
+      if (['image', 'stylesheet', 'font', 'media'].includes(type)) {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+    
+    const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout });
+    if (!response) return null;
+    
+    const html = await page.content();
+    return html || null;
+  } catch (error) {
+    console.error(`    ❌ Puppeteer抓取失败: ${error.message}`);
+    return null;
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
+}
+
+// 导出 articleExists 用于向后兼容（如果已经定义）
+// 注意：新的脚本应该使用 scripts/article-dedup.js 中的增强版本
+
 module.exports = {
   extractTitle,
   extractContent,
@@ -286,8 +395,6 @@ module.exports = {
   delay,
   fetchWithRetry
 };
-
-
 
 
 

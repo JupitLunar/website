@@ -92,8 +92,8 @@ export default function Header() {
                 )}
               </div>
 
-              <Link href="/blog" className="text-gray-700 hover:text-purple-600 transition-colors">
-                Blog
+              <Link href="/insight" className="text-gray-700 hover:text-purple-600 transition-colors">
+                Insights
               </Link>
               <Link href="/about" className="text-gray-700 hover:text-purple-600 transition-colors">
                 About
@@ -147,8 +147,8 @@ export default function Header() {
               <Link href="/" className="block text-gray-700 hover:text-purple-600 transition-colors">
                 Home
               </Link>
-              <Link href="/blog" className="block text-gray-700 hover:text-purple-600 transition-colors">
-                Blog
+              <Link href="/insight" className="block text-gray-700 hover:text-purple-600 transition-colors">
+                Insights
               </Link>
               <Link href="/about" className="block text-gray-700 hover:text-purple-600 transition-colors">
                 About

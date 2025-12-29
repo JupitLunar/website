@@ -5,7 +5,6 @@
  * 优化版本 - 使用共享工具模块
  */
 
-const axios = require('axios');
 const cheerio = require('cheerio');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
@@ -36,11 +35,24 @@ const CONFIG = {
   delayBetweenArticles: 2500,  // 增加到2.5秒
   maxArticlesPerRun: 500,      // 增加到500篇
   minContentLength: 300,       // 降低到300字符（更宽松）
-  maxContentLength: 50000,
+  maxContentLength: 150000,    // 放宽以容纳长篇权威指南
   minParagraphs: 3,            // 至少3段
   debugMode: process.env.DEBUG === 'true', // 调试模式
   // 可以指定抓取的地区，留空则抓取所有
-  targetRegions: []  // 例如: ['US', 'UK', 'CA'] 或 [] 表示全部
+  targetRegions: [],  // 例如: ['US', 'UK', 'CA'] 或 [] 表示全部
+  // 仅抓取喂养/营养相关主题
+  topicFilterEnabled: true,
+  // Puppeteer 兜底用于反爬站点
+  usePuppeteerFallback: true,
+  puppeteerDomains: [
+    'healthychildren.org',
+    'cdc.gov',
+    'nhs.uk',
+    'canada.ca',
+    'mayoclinic.org'
+  ],
+  fetchRetryCount: 3,
+  fetchRetryDelay: 1200
 };
 
 // Region 映射 - 将所有 region 映射到数据库支持的值
@@ -64,67 +76,180 @@ const EXCLUDE_PATTERNS = [
   /all-categories/i,
   /sitemap/i,
   /search/i,
-  /index\.html?$/i
+  /index\.html?$/i,
+  /about/i,
+  /editorial/i,
+  /policy/i,
+  /privacy/i,
+  /terms/i,
+  /nondiscrimination/i,
+  /donate/i,
+  /newsletter/i,
+  /careers?/i,
+  /press/i,
+  /\.(pdf|jpg|jpeg|png|gif|svg)(\?|$|\s)/i
+];
+
+const EXCLUDE_HOSTS = [
+  'facebook.com',
+  'instagram.com',
+  'twitter.com',
+  'x.com',
+  'youtube.com',
+  'pinterest.com',
+  'tiktok.com'
+];
+
+const TOPIC_PATTERNS = [
+  /feeding/i,
+  /nutrition/i,
+  /breastfeed/i,
+  /formula/i,
+  /solid[-\s]?foods?/i,
+  /wean/i,
+  /allergen/i,
+  /milk/i,
+  /lactation/i,
+  /bottle/i,
+  /infant[-\s]?nutrition/i,
+  /vitamin|iron/i
 ];
 
 async function fetchPage(url) {
   try {
-    const response = await axios.get(url, {
-      timeout: 15000,
+    return await fetchWithRetry(url, CONFIG.fetchRetryCount, CONFIG.fetchRetryDelay, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; JupitLunarBot/1.0)',
         'Accept-Language': 'en-US,en;q=0.9'
-      }
+      },
+      usePuppeteerFallback: CONFIG.usePuppeteerFallback,
+      puppeteerDomains: CONFIG.puppeteerDomains
     });
-    return response.data;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
 
-function shouldExclude(url) {
+function shouldExclude(url, source) {
+  try {
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase();
+    if (EXCLUDE_HOSTS.some(domain => host.endsWith(domain))) {
+      return true;
+    }
+    if (host.endsWith('llli.org') && isNonEnglishLLLI(parsed.pathname)) {
+      return true;
+    }
+  } catch {
+    return true;
+  }
+
+  if (source && source.language && source.language !== 'en') {
+    return true;
+  }
+
   return EXCLUDE_PATTERNS.some(pattern => pattern.test(url));
+}
+
+function isNonEnglishLLLI(pathname) {
+  return /^\/[a-z]{2}([_-][a-z]{2})?\//i.test(pathname);
+}
+
+function matchesTopic(url) {
+  if (!CONFIG.topicFilterEnabled) return true;
+  return TOPIC_PATTERNS.some(pattern => pattern.test(url));
+}
+
+function shouldForcePuppeteer(url) {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return CONFIG.puppeteerDomains.some(domain => host.endsWith(domain));
+  } catch {
+    return false;
+  }
 }
 
 // 通用文章发现函数
 async function discoverArticlesFromSource(source) {
   console.log(`🔍 [${source.region}] 发现 ${source.name} 文章...`);
 
-  if (!source.categories || source.categories.length === 0) {
-    console.log(`  ⚠️  无分类配置，跳过`);
-    return [];
-  }
-
   const articles = new Set();
 
-  for (const category of source.categories) {
-    const categoryUrl = category.startsWith('http')
-      ? category
-      : `${source.baseUrl}${category}`;
+  if (source.categories && source.categories.length > 0) {
+    for (const category of source.categories) {
+      const categoryUrl = category.startsWith('http')
+        ? category
+        : `${source.baseUrl}${category}`;
 
-    const html = await fetchPage(categoryUrl);
-    if (!html) continue;
+      const html = await fetchPage(categoryUrl);
+      if (!html) continue;
 
-    const $ = cheerio.load(html);
+      const $ = cheerio.load(html);
 
-    // 查找所有链接
-    $('a[href]').each((i, elem) => {
-      const href = $(elem).attr('href');
-      if (!href) return;
+      // 查找所有链接
+      $('a[href]').each((i, elem) => {
+        const href = $(elem).attr('href');
+        if (!href) return;
 
-      const fullUrl = href.startsWith('http')
-        ? href
-        : href.startsWith('/')
-        ? `${source.baseUrl}${href}`
-        : `${source.baseUrl}/${href}`;
+        const fullUrl = href.startsWith('http')
+          ? href
+          : href.startsWith('/')
+          ? `${source.baseUrl}${href}`
+          : `${source.baseUrl}/${href}`;
 
-      // 使用linkPattern过滤
-      if (source.linkPattern && source.linkPattern.test(fullUrl) && !shouldExclude(fullUrl)) {
+        // 使用 linkPattern + 主题过滤
+        if (source.linkPattern && source.linkPattern.test(fullUrl)) {
+          if (!shouldExclude(fullUrl, source) && matchesTopic(fullUrl)) {
+            articles.add(fullUrl);
+          }
+        }
+      });
+
+      await delay(CONFIG.delayBetweenRequests);
+    }
+  }
+
+  if (source.sitemapUrl) {
+    const sitemapXml = await fetchPage(source.sitemapUrl);
+    if (sitemapXml) {
+      const urls = sitemapXml
+        .split('<loc>')
+        .slice(1)
+        .map(part => part.split('</loc>')[0].trim())
+        .filter(Boolean);
+      urls.forEach((fullUrl) => {
+        if (source.linkPattern && !source.linkPattern.test(fullUrl)) return;
+        if (shouldExclude(fullUrl, source) || !matchesTopic(fullUrl)) return;
         articles.add(fullUrl);
-      }
-    });
+      });
+    }
+  }
 
-    await delay(CONFIG.delayBetweenRequests);
+  if (source.searchUrl) {
+    const html = await fetchPage(source.searchUrl);
+    if (html) {
+      const $ = cheerio.load(html);
+      $('a[href]').each((i, elem) => {
+        const href = $(elem).attr('href');
+        if (!href) return;
+
+        const fullUrl = href.startsWith('http')
+          ? href
+          : href.startsWith('/')
+          ? `${source.baseUrl}${href}`
+          : `${source.baseUrl}/${href}`;
+
+        if (source.linkPattern && source.linkPattern.test(fullUrl)) {
+          if (!shouldExclude(fullUrl, source) && matchesTopic(fullUrl)) {
+            articles.add(fullUrl);
+          }
+        }
+      });
+    }
+  }
+
+  if ((!source.categories || source.categories.length === 0) && !source.sitemapUrl && !source.searchUrl) {
+    console.log(`  ⚠️  无分类配置，跳过`);
+    return [];
   }
 
   const articleList = Array.from(articles);
@@ -141,7 +266,13 @@ async function discoverArticlesFromSource(source) {
 
 // 抓取文章内容（使用共享工具）
 async function scrapeArticle(articleInfo) {
-  const html = await fetchWithRetry(articleInfo.url);
+  const html = await fetchWithRetry(articleInfo.url, CONFIG.fetchRetryCount, CONFIG.fetchRetryDelay, {
+    headers: {
+      'Accept-Language': 'en-US,en;q=0.9'
+    },
+    usePuppeteerFallback: CONFIG.usePuppeteerFallback,
+    puppeteerDomains: CONFIG.puppeteerDomains
+  });
   if (!html) {
     console.log(`    📌 原因: 无法获取HTML`);
     return null;
@@ -156,6 +287,32 @@ async function scrapeArticle(articleInfo) {
   });
 
   if (!result.success) {
+    if (CONFIG.usePuppeteerFallback && shouldForcePuppeteer(articleInfo.url)) {
+      const rendered = await fetchWithRetry(articleInfo.url, 1, 0, {
+        headers: {
+          'Accept-Language': 'en-US,en;q=0.9'
+        },
+        forcePuppeteer: true,
+        puppeteerDomains: CONFIG.puppeteerDomains
+      });
+
+      if (rendered && rendered !== html) {
+        const retryResult = extractArticle(rendered, {
+          minContentLength: CONFIG.minContentLength,
+          maxContentLength: CONFIG.maxContentLength,
+          minParagraphs: CONFIG.minParagraphs,
+          debugMode: CONFIG.debugMode
+        });
+
+        if (retryResult.success) {
+          return {
+            ...articleInfo,
+            ...retryResult.data
+          };
+        }
+      }
+    }
+
     console.log(`    📌 内容质量不足:`);
     result.failures.forEach(failure => {
       console.log(`       - ${failure}`);

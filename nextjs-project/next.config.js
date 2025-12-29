@@ -44,6 +44,16 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/blog',
+        destination: '/insight',
+        permanent: true,
+      },
+      {
+        source: '/blog/:slug',
+        destination: '/insight/:slug',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

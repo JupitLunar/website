@@ -1,7 +1,7 @@
 # 全球母婴内容爬虫 - 完整指南
 
-> **最后更新**: 2024-10-10  
-> **版本**: 2.0 优化版
+> **最后更新**: 2025-12-24  
+> **版本**: 2.2 Playwright 增强版
 
 ---
 
@@ -15,6 +15,13 @@
 6. [工作原理](#工作原理)
 7. [常见问题](#常见问题)
 8. [维护指南](#维护指南)
+9. [版本历史](#版本历史)
+
+**相关文档**:
+- `SCRAPER_脚本清单.md` - 完整的脚本清单和使用说明
+- `去重机制说明.md` - 详细的去重机制文档
+- `PLAYWRIGHT_爬虫最终总结.md` - Playwright 爬虫详细报告
+- `AAP_CDC_测试结果.md` - AAP 和 CDC 测试结果
 
 ---
 
@@ -41,11 +48,20 @@ node scripts/global-auto-scraper.js
 ### 常用命令
 
 ```bash
-# 快速测试（抓取少量文章）
-node scripts/test-scraper-quick.js
+# 传统方式（Cheerio + Axios）
+node scripts/test-scraper-quick.js  # 快速测试
+node scripts/global-auto-scraper.js # 完整运行
 
-# 完整运行（最多500篇）
-node scripts/global-auto-scraper.js
+# Playwright 方式（用于反爬站点）✨推荐
+npm run scrape:playwright:nhs       # NHS 专用
+npm run scrape:playwright:aap-cdc   # AAP 和 CDC
+npm run scrape:playwright:more      # 更多站点
+npm run scrape:playwright           # 完整运行
+
+# 工具命令
+npm run sync:rag                    # 同步到 RAG 数据库
+npm run check:duplicates            # 检查重复文章
+npm run scrape:stats                # 查看统计信息
 
 # 调试模式（查看详细信息）
 DEBUG=true node scripts/test-scraper-quick.js
@@ -96,6 +112,106 @@ nextjs-project/
 
 ---
 
+### 当前在用的 Scrape → RAG 入库流程
+
+> **线上/定时任务**: `global-auto-scraper.js`（传统方式）  
+> **反爬站点**: `playwright-scraper-*.js`（Playwright 方式）✅ **已成功突破**
+
+#### 1) 抓取与清洗
+
+**传统方式**（Cheerio + Axios）:
+- **入口**: `scripts/global-auto-scraper.js`
+- **来源配置**: `scripts/global-sources-config.js`
+- **清洗抽取**: `scripts/scraper-utils.js`
+
+**Playwright 方式**（用于反爬站点）✨新增:
+- **NHS 专用**: `scripts/playwright-scraper-nhs-only.js`
+- **AAP + CDC**: `scripts/playwright-scraper-aap-cdc.js`
+- **更多站点**: `scripts/playwright-scraper-more-sites.js`
+- **完整版**: `scripts/playwright-scraper-full.js`
+
+#### 2) 入库（抓取结果）
+- **写入表**:
+  - `articles`（默认 `status = draft`）
+  - `citations`（来源引用）
+
+#### 3) 人工审核与发布
+- **工具**: `scripts/review-scraped-content.js`
+- **发布后**: `articles.status = published`
+
+#### 4) 同步到 RAG 表（知识切片）
+- **函数**: `populate_knowledge_chunks()`（RPC）
+- **写入表**: `knowledge_chunks`
+- **注意**:
+  - 该函数有两版 SQL：  
+    - `supabase/migrations/step2_indexes_functions_fixed.sql`：从 `articles` 生成 chunks  
+    - `supabase/migrations/step4_populate_data.sql`：从 `kb_rules/kb_foods/kb_guides` 生成  
+  - **当前 Scrape→RAG 使用的是"articles 版本"。** 若执行 `step4_populate_data.sql` 会覆盖函数逻辑。
+
+#### 5) 生成向量嵌入
+- **脚本**: `scripts/generate-embeddings.js`
+- **写入字段**: `knowledge_chunks.embedding`（vector(1536)）
+
+#### 6) RAG 检索验证
+- **API**: `src/app/api/rag/route.ts`（当前走 `articles` + `knowledge_chunks` 的 `textSearch`）
+- **测试**: `scripts/test-rag-search.js`
+
+#### 关键表一览（当前在用）
+- `articles`：抓取结果主表（审核前为 draft）
+- `citations`：文章引用来源
+- `knowledge_chunks`：RAG 检索主表（向量+文本）
+- `content_quality_metrics`：仅 hybrid search 使用（当前 API 未调用）
+
+#### 📦 新增脚本和工具（v2.2）
+
+**Playwright 爬虫脚本**:
+- `scripts/playwright-scraper-nhs-only.js` - NHS 专用爬虫
+- `scripts/playwright-scraper-aap-cdc.js` - AAP 和 CDC 爬虫
+- `scripts/playwright-scraper-more-sites.js` - 更多站点爬虫
+- `scripts/playwright-scraper-full.js` - 完整版爬虫
+- `scripts/playwright-scraper-test.js` - 测试脚本
+
+**工具脚本**:
+- `scripts/sync-to-rag.js` - 同步文章到 RAG 数据库
+- `scripts/article-dedup.js` - 统一去重函数
+- `scripts/check-duplicates.js` - 检查数据库中的重复
+- `scripts/check-recent-inserts.js` - 检查最近插入的文章
+- `scripts/check-authority-sites.js` - 检查权威站点抓取情况
+
+**调试脚本**:
+- `scripts/test-aap-cdc-chrome.js` - 测试 AAP/CDC 不同配置
+- `scripts/debug-aap-links.js` - 调试 AAP 链接发现
+- `scripts/debug-aap-content.js` - 调试 AAP 内容提取
+
+#### ⚠️ 反爬站点状态确认（2025-12-24）
+
+**✅ 使用 Playwright 成功访问的站点**:
+- ✅ **NHS (nhs.uk)**: 使用 `scripts/playwright-scraper-full.js` 成功抓取 11 篇文章
+  - 链接格式: `/baby/weaning-and-feeding/...`
+  - 成功率: 100% (内容提取成功)
+
+**❌ 当前仍无法访问的站点**（Socket Hang Up 或 403）:
+
+| 站点 | 数据库文章数 | 状态 | 原因 |
+|------|------------|------|------|
+| AAP (healthychildren.org) | 125 | ❌ 无法新增 | Socket Hang Up |
+| CDC (cdc.gov) | 1 | ❌ 无法新增 | 403 / Socket Hang Up |
+| NHS (nhs.uk) | 0 | ❌ 无法抓取 | Socket Hang Up + JS 渲染 |
+| UNICEF | 0 | ❌ 无法抓取 | Socket Hang Up |
+| Raising Children (AU) | 0 | ❌ 无法抓取 | Socket Hang Up |
+| NHS Start4Life | 0 | ❌ 链接无法提取 | JS 渲染 |
+| Mayo Clinic | 2 | ⚠️ 成功率极低 | Sitemap 过滤过严 |
+| Cleveland Clinic | 0 | ❌ 链接无法提取 | 搜索页结构变化 |
+| Stanford Children's | 0 | ❌ 链接无法提取 | 分类页结构变化 |
+
+**已成功抓取的站点**（仍可正常使用）:
+- ✅ KidsHealth (Nemours): 14 篇（传统方式）
+- ✅ Health Canada: 9 篇（8篇历史 + 1篇 Playwright）
+- ✅ NHS: 14 篇（3篇历史 + 11篇 Playwright）✅
+- ✅ CDC: 14 篇（2篇历史 + 12篇 Playwright）✅
+
+---
+
 ## ⚙️ 配置说明
 
 ### 主要配置项
@@ -108,10 +224,21 @@ const CONFIG = {
   delayBetweenArticles: 2500,  // 文章间延迟（毫秒）
   maxArticlesPerRun: 500,      // 每次最多抓取数量
   minContentLength: 300,       // 最少字符数
-  maxContentLength: 50000,     // 最多字符数
+  maxContentLength: 150000,    // 最多字符数（长篇指南）
   minParagraphs: 3,            // 最少段落数
   debugMode: false,            // 调试模式
-  targetRegions: []            // 指定地区（空=全部）
+  targetRegions: [],           // 指定地区（空=全部）
+  topicFilterEnabled: true,    // 仅抓取喂养/营养相关主题
+  usePuppeteerFallback: true,  // 反爬站点使用Puppeteer兜底
+  puppeteerDomains: [          // 需要渲染/反爬的域名
+    'healthychildren.org',
+    'cdc.gov',
+    'nhs.uk',
+    'canada.ca',
+    'mayoclinic.org'
+  ],
+  fetchRetryCount: 3,
+  fetchRetryDelay: 1200
 };
 ```
 
@@ -175,6 +302,38 @@ node scripts/global-auto-scraper.js
 - ✅ 全面覆盖18个来源
 - ✅ 自动去重
 - ⏱️ 运行时间：30-60分钟
+
+### 方法三：Playwright 爬虫（用于反爬站点）✨新增
+
+**适用场景**: 访问被反爬的权威站点
+
+```bash
+# NHS 专用（推荐，已测试成功）
+npm run scrape:playwright:nhs
+
+# AAP 和 CDC
+npm run scrape:playwright:aap-cdc
+
+# 更多站点（Health Canada 等）
+npm run scrape:playwright:more
+
+# 完整运行（所有可访问的反爬站点）
+npm run scrape:playwright
+```
+
+**特点**:
+- ✅ 使用 Playwright 成功绕过反爬机制
+- ✅ **已成功**: NHS (11篇), CDC (12篇), Health Canada (1篇)
+- ✅ **部分成功**: AAP (发现116篇链接，内容提取需优化)
+- ✅ 自动提取内容并保存到数据库
+- ✅ 完善的去重机制
+- ⏱️ 运行时间：取决于站点数量（每篇约 3-5 秒）
+
+**成功率统计**:
+- NHS: 100% ✅
+- CDC: 60% ✅
+- Health Canada: 100% ✅
+- AAP: 链接发现成功，内容提取需优化 ⚠️
 
 ### 方法三：指定地区
 
@@ -261,12 +420,40 @@ const CONFIG = {
 
 ---
 
+## ✅ 免费/合规抓取策略（推荐）
+
+权威站点（AAP/CDC/NHS 等）普遍有反爬策略，**免费方式也可能抓不到正文**。建议优先走以下合规入口：
+
+1. **官方 Sitemap / RSS / 公开 HTML**  
+   - 配置 `sitemapUrl` 或 `searchUrl` 获取链接，再按 `linkPattern` 过滤。
+2. **内容主题过滤**  
+   - `topicFilterEnabled: true` 仅保留喂养/营养相关页面，避免杂页。
+3. **人工/半自动挑选**  
+   - 对于强反爬站点，优先手动提供 URL 或正文，再做结构化改写与引用。
+
+### Sitemap/搜索配置示例
+
+```javascript
+MY_SOURCE: {
+  name: 'Example Authority',
+  organization: 'Example Org',
+  baseUrl: 'https://example.org',
+  region: 'US',
+  grade: 'A',
+  sitemapUrl: 'https://example.org/sitemap.xml',
+  searchUrl: 'https://example.org/search?q=infant+feeding',
+  linkPattern: /\\/articles\\//i
+}
+```
+
+---
+
 ## 🔧 工作原理
 
 ### 1. 文章发现阶段
 
 ```
-遍历每个来源的分类页面
+遍历分类页 / sitemap / 搜索页
   ↓
 提取所有文章链接
   ↓
@@ -281,6 +468,8 @@ const CONFIG = {
 - 播客、视频
 - 网站地图
 - 搜索结果
+- 关于/政策/隐私页面
+- 社交媒体/文件/图片链接
 
 ### 2. 去重检查
 
@@ -395,7 +584,44 @@ minContentLength: 200,  // 从300降到200
 minParagraphs: 2,       // 从3降到2
 ```
 
-### Q2: 如何查看失败原因？
+### Q2: 遇到 403/Access Denied/空内容？✅ **已部分解决**
+
+**A**: 使用 Playwright 已成功突破部分反爬机制！
+
+#### ✅ 使用 Playwright 成功访问的站点（2025-12-24）:
+
+- ✅ **NHS (nhs.uk)**: **完全成功** - 已抓取 11 篇文章
+  - 脚本: `npm run scrape:playwright:nhs`
+  - 成功率: 100%
+  
+- ✅ **CDC (cdc.gov)**: **成功** - 已抓取 12 篇文章
+  - 脚本: `npm run scrape:playwright:aap-cdc`
+  - 成功率: 60%（部分 URL 失效或内容不足）
+  
+- ⚠️ **AAP (healthychildren.org)**: **部分成功** - 发现 116 篇链接，内容提取需优化
+  - 脚本: `npm run scrape:playwright:aap-cdc`
+  - 状态: 页面可访问，但内容提取逻辑需要优化
+
+#### ⚠️ 仍无法访问的站点:
+
+- ❌ **UNICEF (unicef.org)**: 未测试（预期类似问题）
+- ❌ **Raising Children Network (AU)**: 链接模式需要调整
+- ❌ **NHS Start4Life**: 分类页可访问但链接无法提取
+- ❌ **Mayo Clinic**: Sitemap 链接模式需要优化
+- ❌ **Cleveland Clinic / Stanford**: 搜索页/分类页结构变化
+
+**当前数据库状态（2025-12-24）**:
+- AAP: **131 篇**（125篇历史 + 0篇新增，内容提取需优化）
+- CDC: **14 篇**（2篇历史 + 12篇新增）✅
+- NHS: **14 篇**（3篇历史 + 11篇新增）✅
+- Health Canada: **9 篇**（8篇历史 + 1篇新增）✅
+
+**技术要点**:
+- ✅ 使用 `waitUntil: 'domcontentloaded'` 而非 `networkidle`
+- ✅ 使用 `browser.newContext()` 正确配置 viewport 和 headers
+- ✅ 增加等待时间（5-8秒）让 JS 内容加载
+
+### Q3: 如何查看失败原因？
 
 **A**: 启用调试模式
 
@@ -410,7 +636,7 @@ DEBUG=true node scripts/test-scraper-quick.js
    - 段落太少: 2 < 3 段
 ```
 
-### Q3: 抓取速度太慢？
+### Q4: 抓取速度太慢？
 
 **A**: 调整延迟设置
 
@@ -423,14 +649,14 @@ const CONFIG = {
 
 ⚠️ **警告**: 太快可能被网站封禁！
 
-### Q4: 如何只抓取新内容？
+### Q5: 如何只抓取新内容？
 
 **A**: 系统已自动去重，无需额外配置。每次运行会：
 1. 检查URL是否存在
 2. 检查标题是否重复
 3. 只抓取新文章
 
-### Q5: 数据保存在哪里？
+### Q6: 数据保存在哪里？
 
 **A**: 两个位置
 
@@ -441,7 +667,7 @@ const CONFIG = {
 2. **本地文件** (备份):
    - `data/scraped/*.json` - 原始HTML和元数据
 
-### Q6: 如何修改数据库 region 限制？
+### Q7: 如何修改数据库 region 限制？
 
 **A**: 修改数据库 schema
 
@@ -458,7 +684,7 @@ ADD CONSTRAINT articles_region_check
 CHECK (region IN ('US', 'CA', 'UK', 'AU', 'EU', 'Global'));
 ```
 
-### Q7: 如何清理旧数据？
+### Q8: 如何清理旧数据？
 
 **A**: 使用 SQL 删除
 
@@ -636,7 +862,7 @@ grep "内容质量不足" scraper.log
 
 ## 📊 统计数据
 
-### 当前状态（截至2024-10-10）
+### 当前状态（截至2025-12-24）
 
 | 指标 | 数值 |
 |------|------|
@@ -659,6 +885,21 @@ grep "内容质量不足" scraper.log
 ---
 
 ## 🔄 版本历史
+
+### v2.2 (2025-12-24) - Playwright 增强版
+- ✅ 成功使用 Playwright 抓取 NHS (11篇)、CDC (12篇)、Health Canada (1篇)
+- ✅ 创建完整的 Playwright 爬虫脚本套件
+- ✅ 实现统一的去重机制（`scripts/article-dedup.js`）
+- ✅ 创建 RAG 同步脚本（`scripts/sync-to-rag.js`）
+- ✅ 创建检查和调试工具
+- ⚠️ AAP 内容提取需优化（已发现116篇链接）
+- ✅ 更新所有文档，反映最新状态
+
+### v2.1 (2025-12-24)
+- ✅ 添加 Playwright 爬虫支持
+- ✅ 成功抓取 NHS 站点 11 篇文章
+- ✅ 创建 `scripts/playwright-scraper-full.js` 和 `scripts/playwright-scraper-nhs-only.js`
+- ✅ 更新文档，添加 Playwright 使用方法
 
 ### v2.0 (2024-10-10)
 - ✅ 创建共享工具模块 `scraper-utils.js`
@@ -693,12 +934,7 @@ grep "内容质量不足" scraper.log
 
 ---
 
-**文档结束** - 最后更新：2024-10-10
-
-
-
-
-
+**文档结束** - 最后更新：2025-12-24 (v2.2)
 
 
 

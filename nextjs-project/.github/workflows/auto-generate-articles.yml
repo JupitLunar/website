@@ -1,0 +1,135 @@
+name: Auto Generate Articles
+
+on:
+  schedule:
+    # 每天凌晨3点运行（UTC时间）
+    - cron: '0 3 * * *'
+  workflow_dispatch:  # 允许手动触发
+    inputs:
+      topic:
+        description: '指定要生成的主题（可选）'
+        required: false
+        type: string
+      hub:
+        description: '指定内容中心（feeding, sleep, mom-health, development, safety, recipes）'
+        required: false
+        type: choice
+        options:
+          - ''
+          - feeding
+          - sleep
+          - mom-health
+          - development
+          - safety
+          - recipes
+
+jobs:
+  generate-articles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: nextjs-project/package-lock.json
+
+      - name: Create logs directory
+        run: mkdir -p nextjs-project/logs
+
+      - name: Install dependencies
+        run: |
+          cd nextjs-project
+          npm ci
+
+      - name: Generate articles
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TOPIC: ${{ github.event.inputs.topic }}
+          HUB: ${{ github.event.inputs.hub }}
+        run: |
+          cd nextjs-project
+          node scripts/auto-generate-articles.js \
+            ${TOPIC:+--topic "$TOPIC"} \
+            ${HUB:+--hub "$HUB"} \
+            | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
+
+      - name: Get statistics
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd nextjs-project
+          node -e "
+          const { createClient } = require('@supabase/supabase-js');
+          const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY
+          );
+
+          (async () => {
+            // Total articles
+            const { count: totalCount } = await supabase
+              .from('articles')
+              .select('*', { count: 'exact', head: true })
+              .eq('status', 'published');
+
+            // AI-generated insights
+            const { count: aiCount } = await supabase
+              .from('articles')
+              .select('*', { count: 'exact', head: true })
+              .eq('status', 'published')
+              .eq('article_source', 'ai_generated');
+
+            // Authoritative articles
+            const { count: authCount } = await supabase
+              .from('articles')
+              .select('*', { count: 'exact', head: true })
+              .eq('status', 'published')
+              .eq('article_source', 'authoritative');
+
+            console.log('📊 Article Statistics:');
+            console.log(\`   Total published: \${totalCount}\`);
+            console.log(\`   AI-generated insights: \${aiCount}\`);
+            console.log(\`   Authoritative articles: \${authCount}\`);
+
+            // Latest AI-generated insights
+            const { data: latestInsights } = await supabase
+              .from('articles')
+              .select('title, hub, created_at')
+              .eq('status', 'published')
+              .eq('article_source', 'ai_generated')
+              .order('created_at', { ascending: false })
+              .limit(5);
+
+            console.log('\n💡 Latest 5 AI-generated insights:');
+            if (latestInsights && latestInsights.length > 0) {
+              latestInsights.forEach((a, i) => {
+                console.log(\`  \${i+1}. [\${a.hub}] \${a.title.substring(0, 60)}\`);
+              });
+            } else {
+              console.log('   No insights yet');
+            }
+          })();
+          "
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: article-generation-logs
+          path: nextjs-project/logs/article-generation-*.log
+          retention-days: 30
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::warning::Article generation failed"
+          # 可以在这里添加Slack/Email通知

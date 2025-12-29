@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import Script from 'next/script';
 import { generateFAQStructuredData } from '@/lib/json-ld';
 
@@ -46,8 +47,8 @@ const FAQ_DATA = [
 ];
 
 export const metadata = {
-  title: 'Baby Feeding FAQ: Common Questions About Infant Nutrition | JupitLunar',
-  description: 'Get expert answers to the most common baby feeding questions. Evidence-based guidance on when to start solids, food safety, allergens, and nutrition for babies 0-24 months.',
+  title: 'Baby Feeding FAQ | Mom AI Agent',
+  description: 'Evidence-informed answers to common baby feeding questions, including solids readiness, safety, allergens, and nutrition.',
   keywords: [
     'baby feeding FAQ', 'infant nutrition questions', 'baby food safety', 
     'when to start baby food', 'baby feeding problems', 'infant feeding guide',
@@ -66,75 +67,85 @@ export default function FAQPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8] py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Baby Feeding FAQ
+      <div className="min-h-screen bg-gradient-elegant">
+        <section className="relative overflow-hidden py-16 px-4 sm:px-8">
+          <div className="absolute top-0 right-0 h-72 w-72 rounded-full bg-gradient-to-br from-violet-100/40 to-purple-100/10 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-gradient-to-br from-slate-100/70 to-violet-100/10 blur-3xl"></div>
+          <div className="container mx-auto max-w-4xl relative z-10 text-center">
+            <p className="uppercase tracking-[0.4em] text-xs text-slate-400 mb-4">FAQ</p>
+            <h1 className="text-4xl md:text-5xl font-light text-slate-700 mb-4">
+              Baby feeding questions, answered clearly
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Expert answers to the most common questions about infant and toddler nutrition, 
-              based on CDC, WHO, AAP, and Health Canada guidelines.
+            <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
+              Evidence-informed guidance for solids readiness, food safety, allergens, and nutrition based on public health guidance.
             </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <span className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-400">
+                Evidence informed
+              </span>
+              <Link
+                href="/topics"
+                className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-500 hover:text-violet-500 transition-colors"
+              >
+                Explore Topics
+              </Link>
+              <Link
+                href="/trust"
+                className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-500 hover:text-violet-500 transition-colors"
+              >
+                Methods and sources
+              </Link>
+            </div>
           </div>
+        </section>
 
-          {/* FAQ Content */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           <div className="space-y-6">
             {FAQ_DATA.map((faq, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100"
+                className="rounded-3xl border border-slate-200 bg-white/80 p-8 shadow-sm"
               >
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
+                  <span className="uppercase tracking-[0.3em]">Question {index + 1}</span>
+                  <span className="uppercase tracking-[0.2em]">Feeding FAQ</span>
+                </div>
+                <h2 className="text-xl font-light text-slate-700 mb-3">
                   {faq.question}
                 </h2>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-sm text-slate-600 leading-relaxed">
                   {faq.answer}
                 </p>
               </div>
             ))}
           </div>
 
-          {/* Additional Resources */}
-          <div className="mt-16 bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-8 border border-emerald-100">
-            <h2 className="text-2xl font-semibold text-emerald-900 mb-4">
-              Need More Help?
+          <div className="mt-12 rounded-3xl border border-slate-200 bg-white/80 p-8 shadow-sm">
+            <h2 className="text-2xl font-light text-slate-700 mb-3">
+              Need a deeper dive?
             </h2>
-            <p className="text-emerald-800 mb-6">
-              These answers are based on current medical guidelines, but every baby is unique. 
-              Always consult with your pediatrician for personalized advice.
+            <p className="text-sm text-slate-500 mb-6">
+              These answers summarize current guidance, but every baby is unique. For personal recommendations, consult your pediatrician.
             </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white rounded-xl p-4 border border-emerald-200">
-                <h3 className="font-semibold text-emerald-900 mb-2">Browse Our Knowledge Base</h3>
-                <p className="text-sm text-emerald-700 mb-3">
-                  Explore detailed guides on feeding foundations, safety, and nutrition.
-                </p>
-                <a 
-                  href="/topics" 
-                  className="text-emerald-600 font-medium hover:text-emerald-700"
-                >
-                  View Topics →
-                </a>
-              </div>
-              <div className="bg-white rounded-xl p-4 border border-emerald-200">
-                <h3 className="font-semibold text-emerald-900 mb-2">Trust & Transparency</h3>
-                <p className="text-sm text-emerald-700 mb-3">
-                  See our review process and source citations for every recommendation.
-                </p>
-                <a 
-                  href="/trust" 
-                  className="text-emerald-600 font-medium hover:text-emerald-700"
-                >
-                  Learn More →
-                </a>
-              </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Link
+                href="/topics"
+                className="rounded-2xl border border-slate-200 bg-white/70 p-4 text-sm text-slate-600 hover:text-violet-500 transition-colors"
+              >
+                <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Topics library</span>
+                Explore structured playbooks on feeding foundations, safety, and nutrition.
+              </Link>
+              <Link
+                href="/trust"
+                className="rounded-2xl border border-slate-200 bg-white/70 p-4 text-sm text-slate-600 hover:text-violet-500 transition-colors"
+              >
+                <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Trust and transparency</span>
+                Review our methodology and the source registry behind each recommendation.
+              </Link>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </>
   );
 }
-

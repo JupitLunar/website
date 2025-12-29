@@ -298,7 +298,7 @@ function HomePage() {
     };
   }, []);
 
-  const blogArticles = latestArticles.length > 3 ? latestArticles.slice(3) : [];
+  const insightArticles = latestArticles.length > 3 ? latestArticles.slice(3) : [];
 
   return (
     <>
@@ -732,7 +732,7 @@ function HomePage() {
           </div>
         </section>
 
-        {blogArticles.length > 0 && (
+        {insightArticles.length > 0 && (
           <section className="py-20 px-4 sm:px-8 bg-gradient-to-br from-slate-900 via-slate-800 to-violet-900 text-white">
             <div className="container mx-auto max-w-6xl">
               <motion.div
@@ -742,7 +742,7 @@ function HomePage() {
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
-                <p className="uppercase tracking-[0.4em] text-sm text-violet-200 mb-4">Insights & blog</p>
+                <p className="uppercase tracking-[0.4em] text-sm text-violet-200 mb-4">Insights</p>
                 <h2 className="text-4xl font-light mb-4">Research notes from the Mom AI Agent editorial lab</h2>
                 <p className="text-lg text-slate-200 max-w-3xl mx-auto font-light">
                   Longer-form explainers that combine RAG transcripts, caregiver interviews, and the latest CDC/AAP/WHO releases.
@@ -750,8 +750,8 @@ function HomePage() {
               </motion.div>
 
               <div className="grid gap-6 md:grid-cols-3">
-                {blogArticles.map((article) => (
-                  <article key={`${article.url}-blog`} className="rounded-3xl bg-white/10 border border-white/20 backdrop-blur p-6 flex flex-col">
+                {insightArticles.map((article) => (
+                  <article key={`${article.url}-insight`} className="rounded-3xl bg-white/10 border border-white/20 backdrop-blur p-6 flex flex-col">
                     <p className="text-xs uppercase tracking-[0.3em] text-violet-200 mb-3">
                       {article.topic || 'Insight'} • {article.region || 'Global'}
                     </p>
@@ -795,8 +795,8 @@ function HomePage() {
               </div>
 
               <div className="text-center mt-10">
-                <Link href="/latest-articles" className="text-sm font-medium text-white hover:text-violet-100">
-                  View all blog posts →
+                <Link href="/insight" className="text-sm font-medium text-white hover:text-violet-100">
+                  View all insights →
                 </Link>
               </div>
             </div>

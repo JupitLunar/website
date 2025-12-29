@@ -36,7 +36,16 @@
     "scrape:test": "node scripts/web-scraper.js --test",
     "scrape:review": "node scripts/review-scraped-content.js",
     "scrape:stats": "node scripts/scraper-stats.js",
-    "scrape:report": "node scripts/scraper-stats.js --report"
+    "scrape:report": "node scripts/scraper-stats.js --report",
+    "scrape:playwright": "node scripts/playwright-scraper-full.js",
+    "scrape:playwright:nhs": "node scripts/playwright-scraper-nhs-only.js",
+    "scrape:playwright:more": "node scripts/playwright-scraper-more-sites.js",
+    "scrape:playwright:aap-cdc": "node scripts/playwright-scraper-aap-cdc.js",
+    "sync:rag": "node scripts/sync-to-rag.js",
+    "check:duplicates": "node scripts/check-duplicates.js",
+    "generate:articles": "node scripts/auto-generate-articles.js",
+    "generate:articles:topic": "node scripts/auto-generate-articles.js --topic",
+    "generate:articles:hub": "node scripts/auto-generate-articles.js --hub"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",
@@ -50,6 +59,9 @@
     "framer-motion": "^10.16.16",
     "next": "14.0.4",
     "openai": "^6.2.0",
+    "playwright": "^1.57.0",
+    "playwright-extra": "^4.3.6",
+    "playwright-stealth": "^0.0.1",
     "puppeteer": "^21.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
