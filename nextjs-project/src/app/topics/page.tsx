@@ -186,7 +186,7 @@ export default async function TopicsLibraryPage() {
                         {source.grade}
                       </span>
                     </td>
-                    <td className="px-4 py-4 text-xs text-slate-400">{formatSourceDate(source.retrieved_at)}</td>
+                    <td className="px-4 py-4 text-xs text-slate-400">{formatSourceDate(source.retrieved_at ?? null)}</td>
                   </tr>
                 ))}
               </tbody>
