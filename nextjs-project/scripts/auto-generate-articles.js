@@ -202,6 +202,7 @@ async function insertArticle(articleData, topicInfo) {
     return { success: false, reason: existsCheck.reason };
   }
 
+  // 先不包含article_source，避免schema cache问题
   const article = {
     slug,
     type: topicInfo.type,
@@ -220,8 +221,8 @@ async function insertArticle(articleData, topicInfo) {
     meta_title: articleData.meta_title || articleData.title,
     meta_description: articleData.meta_description || articleData.one_liner,
     keywords: articleData.keywords || [],
-    status: 'published',
-    article_source: 'ai_generated'  // Mark as AI-generated
+    status: 'published'
+    // article_source将在插入后单独更新
   };
 
   // 验证必需字段
@@ -242,18 +243,12 @@ async function insertArticle(articleData, topicInfo) {
   }
 
   try {
-    // 使用直接SQL插入，避免schema cache问题
+    // 第一步：插入文章（不包含article_source，避免schema cache问题）
     const { data, error } = await supabase
       .from('articles')
       .insert([article])
       .select()
       .single();
-    
-    // 如果失败，尝试使用RPC函数
-    if (error && error.message.includes('schema cache')) {
-      console.log('⚠️  Schema cache问题，尝试使用RPC函数...');
-      // 这里可以添加RPC调用作为备选方案
-    }
 
     if (error) {
       if (error.code === '23505') {
@@ -261,6 +256,33 @@ async function insertArticle(articleData, topicInfo) {
         return { success: false, reason: 'Slug冲突' };
       }
       throw error;
+    }
+
+    // 第二步：更新article_source字段
+    // 由于schema cache问题，先尝试直接UPDATE
+    // 如果失败，文章已通过reviewed_by='AI Content Generator'标识，可以稍后批量更新
+    try {
+      const { error: updateError } = await supabase
+        .from('articles')
+        .update({ article_source: 'ai_generated' })
+        .eq('id', data.id);
+      
+      if (updateError) {
+        if (updateError.message.includes('schema cache')) {
+          // Schema cache问题，稍后可以通过运行 update-article-source.js 批量更新
+          console.log(`⚠️  Schema cache问题，article_source未更新`);
+          console.log(`   文章已通过reviewed_by='AI Content Generator'标识为AI生成`);
+          console.log(`   可以运行: node scripts/update-article-source.js 来批量更新`);
+        } else {
+          console.log(`⚠️  更新article_source时出错: ${updateError.message}`);
+        }
+      } else {
+        console.log(`   ✅ article_source已设置为'ai_generated'`);
+      }
+    } catch (updateErr) {
+      // 更新失败不影响主流程，文章已插入
+      console.log(`⚠️  更新article_source时出错: ${updateErr.message}`);
+      console.log(`   文章已插入，将通过reviewed_by字段标识`);
     }
 
     console.log(`✅ 文章插入成功: ${articleData.title}`);

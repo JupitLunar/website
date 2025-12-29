@@ -9,10 +9,11 @@ export async function generateStaticParams() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  // 使用 reviewed_by 字段识别 AI 生成的文章
   const { data: articles } = await supabase
     .from('articles')
     .select('slug')
-    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
+    .eq('reviewed_by', 'AI Content Generator')
     .eq('status', 'published')
     .limit(100);
 
@@ -27,11 +28,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  // 使用 reviewed_by 字段识别 AI 生成的文章
   const { data: article } = await supabase
     .from('articles')
     .select('*')
     .eq('slug', params.slug)
-    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
+    .eq('reviewed_by', 'AI Content Generator')
     .eq('status', 'published')
     .single();
 
@@ -101,11 +103,12 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  // 使用 reviewed_by 字段识别 AI 生成的文章
   const { data: article, error } = await supabase
     .from('articles')
     .select('*')
     .eq('slug', params.slug)
-    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
+    .eq('reviewed_by', 'AI Content Generator')
     .eq('status', 'published')
     .single();
 

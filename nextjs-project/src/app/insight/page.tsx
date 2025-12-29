@@ -30,12 +30,14 @@ async function getInsightArticles() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  // 使用 reviewed_by 字段识别 AI 生成的文章
+  // 注意：article_source 字段可能因 schema cache 问题无法使用
   const { data: articles, error } = await supabase
     .from('articles')
     .select('*')
-    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
+    .eq('reviewed_by', 'AI Content Generator')
     .eq('status', 'published')
-    .order('date_published', { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(50);
 
   if (error) {
