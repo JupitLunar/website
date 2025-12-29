@@ -6,12 +6,8 @@ on:
     - cron: '0 3 * * *'
   workflow_dispatch:
     inputs:
-      topic:
-        description: 'Topic to generate (optional)'
-        required: false
-        type: string
       hub:
-        description: 'Content hub (feeding, sleep, mom-health, development, safety, recipes)'
+        description: 'Content hub (optional - leave empty for random selection from trending topics or preset topics)'
         required: false
         type: choice
         options:
@@ -52,17 +48,15 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          TOPIC: ${{ github.event.inputs.topic }}
           HUB: ${{ github.event.inputs.hub }}
         run: |
           cd nextjs-project
-          if [ -n "$TOPIC" ]; then
-            node scripts/auto-generate-articles.js --topic "$TOPIC" | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
-          elif [ -n "$HUB" ]; then
+          if [ -n "$HUB" ]; then
+            echo "📋 Generating articles for hub: $HUB"
             node scripts/auto-generate-articles.js --hub "$HUB" | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
           else
-            # 没有指定参数时，随机选择topic
-            echo "🎲 No topic or hub specified, will randomly select from missing topics"
+            # 没有指定 hub 时，自动随机选择（优先 trending topics，不足时用预设主题补充）
+            echo "🎲 No hub specified, will automatically select from trending topics or preset topics"
             node scripts/auto-generate-articles.js | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
           fi
 

@@ -589,8 +589,9 @@ async function main() {
     }
     
     // 如果 trending topics 不足或失败，使用预设主题补充
+    let missingPresetTopics = [];
     if (topicsToGenerate.length < 3) {
-      const missingPresetTopics = await findMissingTopics(specifiedHub);
+      missingPresetTopics = await findMissingTopics(specifiedHub);
       
       if (missingPresetTopics.length > 0) {
         const needed = 3 - topicsToGenerate.length;
@@ -604,10 +605,15 @@ async function main() {
       }
     }
     
-    // 如果仍然没有主题，完全回退到预设主题
+    // 如果仍然没有主题，完全回退到预设主题（重用之前查询的结果）
     if (topicsToGenerate.length === 0) {
       console.log('📋 回退到预设主题列表\n');
-      topicsToGenerate = await findMissingTopics(specifiedHub);
+      // 如果之前已经查询过，直接使用结果；否则才查询
+      if (missingPresetTopics.length > 0) {
+        topicsToGenerate = missingPresetTopics;
+      } else {
+        topicsToGenerate = await findMissingTopics(specifiedHub);
+      }
     }
   }
 
