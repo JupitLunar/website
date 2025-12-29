@@ -5,6 +5,12 @@
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
+// Filter out AEO metadata from keywords array (stored with __AEO_ prefix)
+function filterCleanKeywords(keywords: string[] | null | undefined): string[] {
+  if (!keywords || !Array.isArray(keywords)) return [];
+  return keywords.filter(k => !k.startsWith('__AEO_'));
+}
+
 // 生成面向教育内容的 WebPage + Article Schema
 export function generateMedicalWebPageSchema(article: any) {
   const schema = {
@@ -63,7 +69,7 @@ export function generateMedicalWebPageSchema(article: any) {
       "cssSelector": ["h1", ".bottom-line", ".key-facts"]
     },
     "disclaimer": "Educational resource referencing public-health guidelines; not a medical diagnosis or clinic.",
-    "keywords": article.keywords?.join(', ') || article.entities?.join(', ') || 'infant health, baby development, parenting',
+    "keywords": filterCleanKeywords(article.keywords).join(', ') || article.entities?.join(', ') || 'infant health, baby development, parenting',
     "isBasedOn": (article.citations || []).slice(0, 3).map((citation: any) => ({
       "@type": "CreativeWork",
       "name": citation.title,

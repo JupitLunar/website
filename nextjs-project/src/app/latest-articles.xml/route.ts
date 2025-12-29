@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { filterCleanKeywords } from '@/lib/supabase';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -33,7 +34,7 @@ export async function GET() {
       <pubDate>${new Date(article.created_at).toUTCString()}</pubDate>
       <description><![CDATA[${article.one_liner || ''}]]></description>
       <category>${article.region}</category>
-      ${article.keywords?.map((kw: string) => `<category>${kw}</category>`).join('\n      ')}
+      ${filterCleanKeywords(article.keywords).map((kw: string) => `<category>${kw}</category>`).join('\n      ')}
     </item>`
       )
       .join('\n')}

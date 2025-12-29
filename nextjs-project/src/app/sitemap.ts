@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { contentManager } from '@/lib/supabase';
+import { contentManager, createAdminClient } from '@/lib/supabase';
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
@@ -47,6 +47,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/insight`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
     // AI feed endpoints - 高优先级给LLM爬虫
     {
       url: `${siteUrl}/api/ai-feed`,
@@ -68,10 +74,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // Get all articles (authoritative content)
   const [articles, hubs] = await Promise.all([
     contentManager.getAllArticles().catch(() => []),
     contentManager.getContentHubs().catch(() => []),
   ]);
+
+  // Get AI-generated insight articles
+  const supabase = createAdminClient();
+  const { data: insightArticles } = await supabase
+    .from('articles')
+    .select('slug, date_published, date_modified, created_at')
+    .eq('reviewed_by', 'AI Content Generator')
+    .eq('status', 'published')
+    .catch(() => ({ data: [] }));
 
   const hubRoutes: MetadataRoute.Sitemap = Array.isArray(hubs)
     ? hubs.map((hub: any) => ({
@@ -122,5 +138,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       })
     : [];
 
-  return [...baseRoutes, ...hubRoutes, ...articleRoutes];
+  // Insight articles routes (AI-generated content)
+  const insightRoutes: MetadataRoute.Sitemap = Array.isArray(insightArticles?.data)
+    ? insightArticles.data.map((article: any) => {
+        const lastMod = article.date_modified || article.date_published || article.created_at;
+        const daysSinceUpdate = lastMod
+          ? Math.floor((Date.now() - new Date(lastMod).getTime()) / (1000 * 60 * 60 * 24))
+          : 999;
+
+        // Insight articles are fresh content, higher priority
+        const freshnessBonus = daysSinceUpdate < 30 ? 0.15 :
+                               daysSinceUpdate < 90 ? 0.1 : 0.05;
+        const finalPriority = Math.min(0.95, 0.85 + freshnessBonus);
+
+        const changeFreq = daysSinceUpdate < 7 ? 'daily' :
+                          daysSinceUpdate < 30 ? 'weekly' :
+                          daysSinceUpdate < 90 ? 'monthly' : 'yearly';
+
+        return {
+          url: `${siteUrl}/insight/${article.slug}`,
+          lastModified: lastMod ? new Date(lastMod) : new Date(),
+          changeFrequency: changeFreq as any,
+          priority: finalPriority,
+        };
+      })
+    : [];
+
+  return [...baseRoutes, ...hubRoutes, ...articleRoutes, ...insightRoutes];
 }

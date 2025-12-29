@@ -1,61 +1,99 @@
 /**
- * 母婴相关主题列表
+ * 母婴相关主题列表 - AEO优化版本
  * 用于自动生成Insights文章
+ * 
+ * AEO最佳实践:
+ * - 使用问题形式的标题 (How, What, When, Why, Can)
+ * - 涵盖用户实际搜索的问题
+ * - 包含具体的年龄范围
  */
 
 const MATERNAL_INFANT_TOPICS = [
-  // Feeding & Nutrition
-  { topic: 'Newborn Feeding Basics', hub: 'feeding', type: 'explainer', age_range: '0-3 months' },
-  { topic: 'Breastfeeding Positions and Techniques', hub: 'feeding', type: 'howto', age_range: '0-6 months' },
-  { topic: 'Formula Feeding Guide', hub: 'feeding', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Introducing Solid Foods', hub: 'feeding', type: 'howto', age_range: '4-6 months' },
-  { topic: 'Baby-Led Weaning vs Purees', hub: 'feeding', type: 'explainer', age_range: '6-12 months' },
-  { topic: 'Allergen Introduction Schedule', hub: 'feeding', type: 'howto', age_range: '6-12 months' },
-  { topic: 'Iron-Rich Foods for Babies', hub: 'feeding', type: 'explainer', age_range: '6-12 months' },
-  { topic: 'Vitamin D Supplementation', hub: 'feeding', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Baby Feeding Schedule by Age', hub: 'feeding', type: 'howto', age_range: '0-12 months' },
-  { topic: 'Dealing with Picky Eaters', hub: 'feeding', type: 'explainer', age_range: '12-24 months' },
+  // ============ FEEDING & NUTRITION ============
+  // Question-format titles for better AEO
+  { topic: 'How Often Should I Feed My Newborn', hub: 'feeding', type: 'explainer', age_range: '0-3 months' },
+  { topic: 'What Are the Best Breastfeeding Positions', hub: 'feeding', type: 'howto', age_range: '0-6 months' },
+  { topic: 'How to Choose the Right Baby Formula', hub: 'feeding', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'When Can Babies Start Eating Solid Foods', hub: 'feeding', type: 'explainer', age_range: '4-6 months' },
+  { topic: 'What Is Baby-Led Weaning and How Does It Work', hub: 'feeding', type: 'explainer', age_range: '6-12 months' },
+  { topic: 'How to Introduce Allergenic Foods to Baby', hub: 'feeding', type: 'howto', age_range: '6-12 months' },
+  { topic: 'What Foods Are High in Iron for Babies', hub: 'feeding', type: 'explainer', age_range: '6-12 months' },
+  { topic: 'Does My Baby Need Vitamin D Supplements', hub: 'feeding', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'How Much Should My Baby Eat at Each Age', hub: 'feeding', type: 'howto', age_range: '0-12 months' },
+  { topic: 'How to Handle a Picky Toddler Eater', hub: 'feeding', type: 'explainer', age_range: '12-24 months' },
+  { topic: 'When Should I Stop Breastfeeding', hub: 'feeding', type: 'explainer', age_range: '6-24 months' },
+  { topic: 'How to Increase Breast Milk Supply', hub: 'feeding', type: 'howto', age_range: '0-12 months' },
+  { topic: 'What Are the Signs of a Food Allergy in Babies', hub: 'feeding', type: 'explainer', age_range: '4-12 months' },
+  { topic: 'How to Store and Warm Breast Milk Safely', hub: 'feeding', type: 'howto', age_range: '0-12 months' },
+  { topic: 'Can I Mix Breast Milk and Formula', hub: 'feeding', type: 'explainer', age_range: '0-12 months' },
   
-  // Sleep
-  { topic: 'Newborn Sleep Patterns', hub: 'sleep', type: 'explainer', age_range: '0-3 months' },
-  { topic: 'Safe Sleep Guidelines', hub: 'sleep', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Sleep Training Methods', hub: 'sleep', type: 'howto', age_range: '4-12 months' },
-  { topic: 'Establishing Bedtime Routine', hub: 'sleep', type: 'howto', age_range: '0-12 months' },
-  { topic: 'Dealing with Night Wakings', hub: 'sleep', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Nap Schedule by Age', hub: 'sleep', type: 'howto', age_range: '0-24 months' },
-  { topic: 'Co-Sleeping Safety', hub: 'sleep', type: 'explainer', age_range: '0-12 months' },
+  // ============ SLEEP ============
+  { topic: 'How Much Sleep Does My Newborn Need', hub: 'sleep', type: 'explainer', age_range: '0-3 months' },
+  { topic: 'What Are the ABCs of Safe Sleep', hub: 'sleep', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'What Is the Best Sleep Training Method', hub: 'sleep', type: 'howto', age_range: '4-12 months' },
+  { topic: 'How to Create a Bedtime Routine for Baby', hub: 'sleep', type: 'howto', age_range: '0-12 months' },
+  { topic: 'Why Does My Baby Wake Up at Night', hub: 'sleep', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'What Is the Right Nap Schedule by Age', hub: 'sleep', type: 'howto', age_range: '0-24 months' },
+  { topic: 'Is Co-Sleeping Safe for My Baby', hub: 'sleep', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'When Do Babies Sleep Through the Night', hub: 'sleep', type: 'explainer', age_range: '3-12 months' },
+  { topic: 'How to Handle Sleep Regressions', hub: 'sleep', type: 'explainer', age_range: '4-18 months' },
+  { topic: 'What Is the Best Room Temperature for Baby Sleep', hub: 'sleep', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'Should I Wake My Baby to Feed at Night', hub: 'sleep', type: 'explainer', age_range: '0-3 months' },
+  { topic: 'How to Transition Baby from Bassinet to Crib', hub: 'sleep', type: 'howto', age_range: '3-6 months' },
   
-  // Development
-  { topic: 'Newborn Development Milestones', hub: 'development', type: 'explainer', age_range: '0-3 months' },
-  { topic: '3-6 Month Baby Milestones', hub: 'development', type: 'explainer', age_range: '3-6 months' },
-  { topic: '6-9 Month Baby Milestones', hub: 'development', type: 'explainer', age_range: '6-9 months' },
-  { topic: '9-12 Month Baby Milestones', hub: 'development', type: 'explainer', age_range: '9-12 months' },
-  { topic: 'Tummy Time Benefits', hub: 'development', type: 'explainer', age_range: '0-6 months' },
-  { topic: 'Encouraging Baby to Crawl', hub: 'development', type: 'howto', age_range: '6-9 months' },
-  { topic: 'Baby Speech Development', hub: 'development', type: 'explainer', age_range: '0-24 months' },
-  { topic: 'Fine Motor Skills Development', hub: 'development', type: 'explainer', age_range: '6-12 months' },
+  // ============ DEVELOPMENT ============
+  { topic: 'What Milestones Should My Newborn Reach', hub: 'development', type: 'explainer', age_range: '0-3 months' },
+  { topic: 'What Can My 3 to 6 Month Old Baby Do', hub: 'development', type: 'explainer', age_range: '3-6 months' },
+  { topic: 'What Milestones Happen at 6 to 9 Months', hub: 'development', type: 'explainer', age_range: '6-9 months' },
+  { topic: 'What Should My 9 to 12 Month Old Be Doing', hub: 'development', type: 'explainer', age_range: '9-12 months' },
+  { topic: 'Why Is Tummy Time Important for Babies', hub: 'development', type: 'explainer', age_range: '0-6 months' },
+  { topic: 'How to Help My Baby Learn to Crawl', hub: 'development', type: 'howto', age_range: '6-9 months' },
+  { topic: 'When Will My Baby Start Talking', hub: 'development', type: 'explainer', age_range: '0-24 months' },
+  { topic: 'How to Encourage Fine Motor Skills in Babies', hub: 'development', type: 'howto', age_range: '6-12 months' },
+  { topic: 'What Are the Signs of Developmental Delays', hub: 'development', type: 'explainer', age_range: '0-24 months' },
+  { topic: 'How to Play with My Newborn', hub: 'development', type: 'howto', age_range: '0-3 months' },
+  { topic: 'When Do Babies Start Walking', hub: 'development', type: 'explainer', age_range: '9-18 months' },
+  { topic: 'How to Support My Baby Learning to Stand', hub: 'development', type: 'howto', age_range: '8-12 months' },
   
-  // Safety
-  { topic: 'Baby-Proofing Your Home', hub: 'safety', type: 'howto', age_range: '0-12 months' },
-  { topic: 'Choking Prevention', hub: 'safety', type: 'explainer', age_range: '6-24 months' },
-  { topic: 'Car Seat Safety', hub: 'safety', type: 'explainer', age_range: '0-24 months' },
-  { topic: 'Baby First Aid Basics', hub: 'safety', type: 'howto', age_range: '0-24 months' },
-  { topic: 'Preventing SIDS', hub: 'safety', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Baby Bath Safety', hub: 'safety', type: 'explainer', age_range: '0-12 months' },
+  // ============ SAFETY ============
+  { topic: 'How to Baby-Proof Your Home Room by Room', hub: 'safety', type: 'howto', age_range: '0-12 months' },
+  { topic: 'What Foods Are Choking Hazards for Babies', hub: 'safety', type: 'explainer', age_range: '6-24 months' },
+  { topic: 'How to Install a Car Seat Correctly', hub: 'safety', type: 'howto', age_range: '0-24 months' },
+  { topic: 'What to Do If My Baby Is Choking', hub: 'safety', type: 'howto', age_range: '0-24 months' },
+  { topic: 'How to Reduce the Risk of SIDS', hub: 'safety', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'How to Bathe a Newborn Safely', hub: 'safety', type: 'howto', age_range: '0-6 months' },
+  { topic: 'What Household Items Are Dangerous for Babies', hub: 'safety', type: 'explainer', age_range: '6-24 months' },
+  { topic: 'How to Check If a Product Has Been Recalled', hub: 'safety', type: 'howto', age_range: '0-24 months' },
+  { topic: 'When Can Baby Use a Forward Facing Car Seat', hub: 'safety', type: 'explainer', age_range: '12-48 months' },
+  { topic: 'How to Keep Baby Safe Around Pets', hub: 'safety', type: 'explainer', age_range: '0-24 months' },
   
-  // Mom Health
-  { topic: 'Postpartum Recovery Timeline', hub: 'mom-health', type: 'explainer', age_range: '0-6 months' },
-  { topic: 'Postpartum Depression Signs', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Breastfeeding Challenges', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Postpartum Exercise Guide', hub: 'mom-health', type: 'howto', age_range: '0-6 months' },
-  { topic: 'Managing New Mom Stress', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
-  { topic: 'Postpartum Nutrition', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
+  // ============ MOM HEALTH ============
+  { topic: 'What to Expect During Postpartum Recovery', hub: 'mom-health', type: 'explainer', age_range: '0-6 months' },
+  { topic: 'How to Recognize Postpartum Depression', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'How to Overcome Common Breastfeeding Challenges', hub: 'mom-health', type: 'howto', age_range: '0-12 months' },
+  { topic: 'When Can I Start Exercising After Giving Birth', hub: 'mom-health', type: 'explainer', age_range: '0-6 months' },
+  { topic: 'How to Manage New Mom Stress and Anxiety', hub: 'mom-health', type: 'howto', age_range: '0-12 months' },
+  { topic: 'What Should I Eat While Breastfeeding', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'How to Deal with Mastitis', hub: 'mom-health', type: 'howto', age_range: '0-12 months' },
+  { topic: 'What Is Normal Postpartum Bleeding', hub: 'mom-health', type: 'explainer', age_range: '0-2 months' },
+  { topic: 'How to Get Enough Sleep as a New Parent', hub: 'mom-health', type: 'howto', age_range: '0-12 months' },
+  { topic: 'When Will My Period Return After Baby', hub: 'mom-health', type: 'explainer', age_range: '0-24 months' },
   
-  // Recipes
-  { topic: 'First Foods for Baby', hub: 'recipes', type: 'recipe', age_range: '4-6 months' },
-  { topic: 'Iron-Rich Baby Purees', hub: 'recipes', type: 'recipe', age_range: '6-9 months' },
-  { topic: 'Finger Foods for 9-12 Months', hub: 'recipes', type: 'recipe', age_range: '9-12 months' },
-  { topic: 'Healthy Baby Snacks', hub: 'recipes', type: 'recipe', age_range: '12-24 months' },
+  // ============ RECIPES ============
+  { topic: 'What Are the Best First Foods for Babies', hub: 'recipes', type: 'recipe', age_range: '4-6 months' },
+  { topic: 'How to Make Iron-Rich Baby Purees', hub: 'recipes', type: 'recipe', age_range: '6-9 months' },
+  { topic: 'What Finger Foods Can I Give My 9 Month Old', hub: 'recipes', type: 'recipe', age_range: '9-12 months' },
+  { topic: 'What Are Healthy Snack Ideas for Toddlers', hub: 'recipes', type: 'recipe', age_range: '12-24 months' },
+  { topic: 'How to Make Homemade Baby Food', hub: 'recipes', type: 'howto', age_range: '6-12 months' },
+  { topic: 'What Breakfast Ideas Are Good for Toddlers', hub: 'recipes', type: 'recipe', age_range: '12-24 months' },
+  
+  // ============ HEALTH & ILLNESS ============
+  { topic: 'What Is a Normal Baby Temperature', hub: 'development', type: 'explainer', age_range: '0-24 months' },
+  { topic: 'How to Tell If My Baby Has an Ear Infection', hub: 'development', type: 'explainer', age_range: '3-24 months' },
+  { topic: 'What to Do When Baby Has a Cold', hub: 'development', type: 'howto', age_range: '0-24 months' },
+  { topic: 'When Should I Call the Pediatrician', hub: 'safety', type: 'explainer', age_range: '0-24 months' },
+  { topic: 'How to Treat Diaper Rash at Home', hub: 'development', type: 'howto', age_range: '0-24 months' },
+  { topic: 'What Vaccines Does My Baby Need', hub: 'safety', type: 'explainer', age_range: '0-24 months' },
 ];
 
 module.exports = { MATERNAL_INFANT_TOPICS };

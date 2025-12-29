@@ -29,6 +29,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Helper: Filter out AEO metadata from keywords array
+// AEO data is stored with __AEO_ prefix and should be excluded from public display
+export function filterCleanKeywords(keywords: string[] | null | undefined): string[] {
+  if (!keywords || !Array.isArray(keywords)) return [];
+  return keywords.filter(k => !k.startsWith('__AEO_'));
+}
+
 // Admin client for server-side operations
 export const createAdminClient = () => {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

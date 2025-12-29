@@ -1,4 +1,14 @@
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '404 - Page Not Found | Mom AI Agent',
+  description: 'The page you are looking for does not exist. Return to our homepage or explore our parenting insights and guides.',
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function NotFound() {
   return (
@@ -20,6 +30,7 @@ export default function NotFound() {
           <Link
             href="/"
             className="inline-block px-8 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-purple-700 transition-all duration-200"
+            aria-label="Return to homepage"
           >
             Go Home
           </Link>
@@ -32,6 +43,7 @@ export default function NotFound() {
                   key={hub}
                   href={`/hub/${hub}`}
                   className="px-3 py-1 bg-white text-purple-600 rounded-full text-xs hover:bg-purple-50 transition-colors"
+                  aria-label={`Explore ${hub.replace('-', ' ')} content hub`}
                 >
                   {hub.replace('-', ' ')}
                 </Link>

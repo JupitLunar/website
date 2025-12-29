@@ -3,6 +3,12 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
+// Filter out AEO metadata from keywords array (stored with __AEO_ prefix)
+function filterCleanKeywords(keywords: string[] | null | undefined): string[] {
+  if (!keywords || !Array.isArray(keywords)) return [];
+  return keywords.filter(k => !k.startsWith('__AEO_'));
+}
+
 interface Article {
   id: string;
   slug: string;
@@ -50,7 +56,7 @@ export default function LatestArticlesTable({ articles }: Props) {
       filtered = filtered.filter(article =>
         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.one_liner?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.keywords?.some(k => k.toLowerCase().includes(searchTerm.toLowerCase()))
+        filterCleanKeywords(article.keywords).some(k => k.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -278,9 +284,9 @@ export default function LatestArticlesTable({ articles }: Props) {
                         {article.one_liner}
                       </p>
                     )}
-                    {article.keywords && article.keywords.length > 0 && (
+                    {filterCleanKeywords(article.keywords).length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {article.keywords.slice(0, 3).map((keyword, idx) => (
+                        {filterCleanKeywords(article.keywords).slice(0, 3).map((keyword, idx) => (
                           <span
                             key={idx}
                             className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded"

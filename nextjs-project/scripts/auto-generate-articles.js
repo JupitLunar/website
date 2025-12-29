@@ -120,52 +120,130 @@ async function findMissingTopics(filterHub = null) {
 }
 
 /**
- * 使用OpenAI生成文章
+ * 使用OpenAI生成文章 - AEO优化版本
+ * AEO (Answer Engine Optimization) for AI search engines like ChatGPT, Perplexity, Google AI Overview
  */
 async function generateArticle(topicInfo) {
   console.log(`\n🤖 正在生成文章: ${topicInfo.topic}...`);
 
   const systemPrompt = `You are an expert content writer specializing in evidence-based maternal and infant health information. 
-Your articles are authoritative, well-researched, and follow CDC, AAP, and WHO guidelines.
+Your content is optimized for AI search engines (AEO - Answer Engine Optimization) and will be cited by ChatGPT, Perplexity, Google AI Overview, and Claude.
+
+CRITICAL AUTHORITY REQUIREMENTS:
+- ALL information MUST be based on official guidelines from CDC, AAP, WHO, or peer-reviewed research
+- NEVER make up statistics, studies, or medical claims
+- ALWAYS cite specific organizations: "According to the American Academy of Pediatrics (AAP)...", "The CDC recommends...", "WHO guidelines state..."
+- Include evidence-based statements: "Studies show...", "Research indicates...", "Evidence suggests..."
+- Add safety considerations and medical disclaimers in every article
 
 Write a comprehensive, authoritative article in English about: "${topicInfo.topic}"
 
-Requirements:
-1. Title: Clear, SEO-friendly title (60-70 characters)
-2. One-liner: Engaging summary (50-200 characters)
-3. Key Facts: 3-8 bullet points with important information
-4. Body: 2000-4000 words in Markdown format with:
-   - Introduction
-   - Main sections with ## headings
-   - Evidence-based information
-   - Practical tips and steps
-   - Safety considerations
-   - When to consult a healthcare provider
-   - Conclusion
-5. Age Range: ${topicInfo.age_range}
-6. Hub: ${topicInfo.hub}
-7. Type: ${topicInfo.type}
+## AEO REQUIREMENTS (CRITICAL FOR AI CITATIONS):
 
-Format your response as JSON:
+1. **QUICK ANSWER** (First 2-3 sentences):
+   - Start with a direct, concise answer to the main question
+   - Use the format: "[Topic] involves/requires/means [direct answer]."
+   - This snippet should be quotable by AI assistants
+
+2. **Title**: Question-format when possible (e.g., "How to...", "What is...", "When should...")
+   - 60-70 characters, include main keyword
+
+3. **One-liner**: Direct answer in one sentence (50-200 characters)
+   - Should directly answer the implied question
+
+4. **Key Facts**: 5-8 bullet points, each starting with a verb or key stat
+   - Format: "Evidence shows...", "Studies indicate...", "Experts recommend..."
+   - Include specific numbers, percentages, or time frames when possible
+
+5. **FAQ Section** (CRITICAL FOR AEO):
+   - Generate 5-8 frequently asked questions related to the topic
+   - Each answer should be 2-4 sentences, directly answering the question
+   - Questions should be natural, how real parents would ask
+   - Example: "At what age can babies start solid foods?" → "Most babies are ready for solid foods around 6 months..."
+
+6. **Step-by-Step Guide** (when applicable):
+   - If the topic is a "how-to", include numbered steps
+   - Each step: title + 1-2 sentence explanation
+   - Include estimated time if relevant
+
+7. **Body Structure** (2500-4000 words in clean HTML - NOT Markdown):
+   - Use <h2> for sections, <h3> for subsections, <p> for paragraphs
+   - Use <ul>/<li> for lists, <strong> for emphasis
+   - Structure:
+     * <h2>Quick Answer</h2> (2-3 sentence direct answer - MOST IMPORTANT for AI citations)
+     * <h2>What You Need to Know</h2> (overview)
+     * <h2>Evidence-Based Guidelines</h2> (MANDATORY: cite CDC, AAP, WHO with specific recommendations)
+     * <h2>Step-by-Step Guide</h2> (if applicable)
+     * <h2>Common Questions Parents Ask</h2> (FAQ format inline)
+     * <h2>Safety Considerations</h2> (MANDATORY: include safety warnings, risks, precautions)
+     * <h2>When to Contact Your Pediatrician</h2> (MANDATORY: specific situations requiring medical attention)
+     * <h2>The Bottom Line</h2> (summary with evidence-based conclusion)
+   - DO NOT use Markdown syntax (no #, *, **, etc.)
+   - Use semantic HTML tags only
+
+8. **Citation Format** (MANDATORY - Every article must include):
+   - Mention sources inline: "According to the American Academy of Pediatrics (AAP)..."
+   - Use specific recommendations: "The CDC recommends..."
+   - Include year when available: "2024 WHO guidelines suggest..."
+   - Include evidence statements: "Studies published in [journal] indicate...", "Research shows that..."
+   - Minimum 3-5 citations to CDC, AAP, or WHO in the body content
+
+9. **Semantic Entities**: Include relevant medical/parenting entities for knowledge graph
+
+10. **Age Range**: ${topicInfo.age_range}
+11. **Hub**: ${topicInfo.hub}
+12. **Type**: ${topicInfo.type}
+
+Format your response as JSON (body_md must be HTML, NOT Markdown):
 {
-  "title": "Article Title",
-  "one_liner": "Brief description",
-  "key_facts": ["fact1", "fact2", "fact3"],
-  "body_md": "# Article Title\n\nFull markdown content...",
-  "meta_title": "SEO optimized title",
-  "meta_description": "SEO description (150-160 characters)",
-  "keywords": ["keyword1", "keyword2", "keyword3"],
-  "entities": ["entity1", "entity2"]
-}`;
+  "title": "Question-Format Article Title (How to / What is / When should)",
+  "one_liner": "Direct one-sentence answer to the main question",
+  "quick_answer": "2-3 sentence direct answer that AI can quote. Start with the key answer.",
+  "key_facts": [
+    "Evidence shows that [specific fact with number/timeframe] - cite source",
+    "The AAP recommends [specific recommendation with context]",
+    "Studies indicate [specific finding] - reference research when possible",
+    "According to CDC guidelines, [specific guidance with safety note]",
+    "WHO guidelines suggest [recommendation] for [age group]",
+    "Research published in [journal/org] shows [finding]"
+  ],
+  "faqs": [
+    {
+      "question": "Natural parent question about the topic?",
+      "answer": "Direct 2-4 sentence answer with evidence."
+    },
+    {
+      "question": "Another common question?",
+      "answer": "Direct answer with practical guidance."
+    }
+  ],
+  "steps": [
+    {
+      "title": "Step title",
+      "description": "1-2 sentence explanation"
+    }
+  ],
+  "body_md": "<h2>Quick Answer</h2><p>[Direct answer here]</p><h2>What You Need to Know</h2><p>...</p>",
+  "meta_title": "SEO title with question (60-70 chars)",
+  "meta_description": "Direct answer to the question in 150-160 characters for search snippets",
+  "keywords": ["primary keyword", "related keyword", "long-tail question keyword"],
+  "entities": ["CDC", "AAP", "relevant medical terms", "age groups"],
+  "sources": ["American Academy of Pediatrics", "Centers for Disease Control and Prevention", "World Health Organization"]
+}
+
+CRITICAL: The body_md field MUST be valid HTML (use <h2>, <p>, <ul>, <li>, <strong> tags), NOT Markdown syntax.`;
 
   try {
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Write an article about: ${topicInfo.topic}` }
+        { role: 'user', content: `Write an authoritative, evidence-based article about: ${topicInfo.topic}. 
+Ensure you cite CDC, AAP, or WHO guidelines at least 3-5 times throughout the article. 
+Include safety considerations and medical disclaimers. 
+All information must be factual and based on official health organization guidelines.` }
       ],
-      temperature: 0.7,
+      temperature: 0.7, // Lower temperature for more factual, consistent content
       max_tokens: 4000,
       response_format: { type: 'json_object' }
     });
@@ -180,6 +258,30 @@ Format your response as JSON:
     // 验证必需字段
     if (!articleData.title || !articleData.body_md) {
       throw new Error('生成的文章缺少必需字段');
+    }
+
+    // 验证权威性和真实性
+    const bodyText = articleData.body_md.toLowerCase();
+    const hasAAP = bodyText.includes('aap') || bodyText.includes('american academy of pediatrics');
+    const hasCDC = bodyText.includes('cdc') || bodyText.includes('centers for disease control');
+    const hasWHO = bodyText.includes('who') || bodyText.includes('world health organization');
+    const hasGuidelines = bodyText.includes('guidelines') || bodyText.includes('recommendations');
+    const hasEvidence = bodyText.includes('evidence') || bodyText.includes('studies') || bodyText.includes('research');
+    const hasSafety = bodyText.includes('safety') || bodyText.includes('safe') || bodyText.includes('risk');
+    const hasDisclaimer = bodyText.includes('consult') || bodyText.includes('pediatrician') || bodyText.includes('medical advice');
+    
+    // 警告但不阻止（允许一些灵活性）
+    if (!hasAAP && !hasCDC && !hasWHO) {
+      console.log('⚠️  警告: 文章缺少权威组织引用 (AAP/CDC/WHO)');
+    }
+    if (!hasEvidence) {
+      console.log('⚠️  警告: 文章缺少证据引用');
+    }
+    if (!hasSafety && (topicInfo.hub === 'safety' || topicInfo.type === 'howto')) {
+      console.log('⚠️  警告: 安全相关文章缺少安全考虑');
+    }
+    if (!hasDisclaimer) {
+      console.log('⚠️  警告: 文章缺少医疗免责声明');
     }
 
     return articleData;
@@ -203,6 +305,23 @@ async function insertArticle(articleData, topicInfo) {
   }
 
   // 先不包含article_source，避免schema cache问题
+  // AEO优化：将 FAQ 和 AEO 数据存储在 entities 字段中（已有的 JSON 字段）
+  
+  // 构建增强的 entities 数组，包含 AEO 元数据
+  const enhancedEntities = [
+    ...(articleData.entities || []),
+    // 添加 AEO 标记
+    'AEO_OPTIMIZED',
+    ...(articleData.sources || ['AAP', 'CDC', 'WHO'])
+  ];
+
+  // 构建增强的 key_facts，确保以直接回答开头
+  let enhancedKeyFacts = articleData.key_facts || [];
+  if (articleData.quick_answer) {
+    // 将 quick_answer 作为第一个 key fact
+    enhancedKeyFacts = [articleData.quick_answer, ...enhancedKeyFacts];
+  }
+  
   const article = {
     slug,
     type: topicInfo.type,
@@ -210,17 +329,24 @@ async function insertArticle(articleData, topicInfo) {
     lang: 'en',
     title: articleData.title,
     one_liner: articleData.one_liner || articleData.title,
-    key_facts: articleData.key_facts || [],
+    key_facts: enhancedKeyFacts.slice(0, 10), // 最多10个 key facts
     body_md: articleData.body_md,
     age_range: topicInfo.age_range,
     region: 'Global',
     last_reviewed: new Date().toISOString().split('T')[0],
     reviewed_by: 'AI Content Generator',
-    entities: articleData.entities || [],
+    entities: enhancedEntities,
     license: 'CC BY-NC 4.0',
     meta_title: articleData.meta_title || articleData.title,
     meta_description: articleData.meta_description || articleData.one_liner,
-    keywords: articleData.keywords || [],
+    // 将 FAQ 数据编码存储在 keywords 中（JSON 格式）
+    keywords: [
+      ...(articleData.keywords || []),
+      // 存储 FAQ 元数据作为 JSON 字符串
+      articleData.faqs ? `__AEO_FAQS__${JSON.stringify(articleData.faqs)}` : null,
+      articleData.steps ? `__AEO_STEPS__${JSON.stringify(articleData.steps)}` : null,
+      articleData.quick_answer ? `__AEO_QUICK__${articleData.quick_answer}` : null
+    ].filter(Boolean),
     status: 'published'
     // article_source将在插入后单独更新
   };

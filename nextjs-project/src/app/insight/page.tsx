@@ -1,26 +1,135 @@
 import { Metadata } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import Link from 'next/link';
+import Script from 'next/script';
+import InsightFilters from '@/components/InsightFilters';
+import { filterCleanKeywords } from '@/lib/supabase';
 
-export const metadata: Metadata = {
-  title: 'Parenting Insights | Mom AI Agent',
-  description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, development, and parenting.',
-  keywords: [
-    'parenting insights',
-    'baby care articles',
-    'infant care tips',
-    'parenting explainers'
-  ],
-  openGraph: {
+// Generate CollectionPage schema for AEO with enhanced keywords
+function generateInsightsPageSchema(articles: any[], allKeywords: string[]) {
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+  
+  // Collect all unique keywords from articles
+  const articleKeywords = new Set<string>();
+  articles.forEach((article) => {
+    const cleanKeywords = filterCleanKeywords(article.keywords || []);
+    cleanKeywords.forEach((k: string) => articleKeywords.add(k));
+  });
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Parenting Insights | Mom AI Agent',
+    description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, development, and parenting.',
+    url: `${baseUrl}/insight`,
+    keywords: Array.from(articleKeywords).slice(0, 20).join(', '),
+    about: {
+      '@type': 'Thing',
+      name: 'Parenting Insights',
+      description: 'Evidence-based parenting articles covering feeding, sleep, development, safety, and more.',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Mom AI Agent',
+      url: baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/Logo.png`,
+      },
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: articles.length,
+      itemListElement: articles.slice(0, 10).map((article, index) => {
+        const cleanKeywords = filterCleanKeywords(article.keywords || []);
+        return {
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Article',
+            headline: article.title,
+            description: article.one_liner || article.meta_description,
+            url: `${baseUrl}/insight/${article.slug}`,
+            datePublished: article.date_published || article.created_at,
+            keywords: cleanKeywords.join(', '),
+            about: {
+              '@type': 'Thing',
+              name: article.hub,
+            },
+            author: {
+              '@type': 'Organization',
+              name: 'Mom AI Agent',
+            },
+          },
+        };
+      }),
+    },
+  };
+}
+
+// Generate Organization schema
+function generateOrganizationSchema() {
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+  
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Mom AI Agent',
+    url: baseUrl,
+    logo: `${baseUrl}/Logo.png`,
+    description: 'AI-powered parenting companion providing evidence-based guidance for baby care, feeding, sleep, and development.',
+    sameAs: [],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      url: `${baseUrl}/contact`,
+    },
+  };
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { data: articles } = await supabase
+    .from('articles')
+    .select('keywords')
+    .eq('reviewed_by', 'AI Content Generator')
+    .eq('status', 'published')
+    .limit(50);
+
+  // Collect all unique keywords
+  const allKeywords = new Set<string>();
+  articles?.forEach((article) => {
+    const cleanKeywords = filterCleanKeywords(article.keywords || []);
+    cleanKeywords.forEach((k: string) => allKeywords.add(k));
+  });
+
+  const keywordsArray = Array.from(allKeywords).slice(0, 30);
+
+  return {
     title: 'Parenting Insights | Mom AI Agent',
-    description: 'Evidence-informed explainers and caregiver insights for baby care and parenting.',
-    type: 'website',
-    url: 'https://www.momaiagent.com/insight',
-  },
-  alternates: {
-    canonical: 'https://www.momaiagent.com/insight'
-  }
-};
+    description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, development, and parenting.',
+    keywords: [
+      'parenting insights',
+      'baby care articles',
+      'infant care tips',
+      'parenting explainers',
+      ...keywordsArray
+    ],
+    openGraph: {
+      title: 'Parenting Insights | Mom AI Agent',
+      description: 'Evidence-informed explainers and caregiver insights for baby care and parenting.',
+      type: 'website',
+      url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight`,
+    },
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight`
+    }
+  };
+}
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -82,11 +191,43 @@ function getHubName(hub: string) {
   return names[hub] || hub;
 }
 
-export default async function InsightPage() {
+export default async function InsightPage({
+  searchParams,
+}: {
+  searchParams?: { hub?: string; age?: string; keyword?: string };
+}) {
   const articles = await getInsightArticles();
+  
+  // Extract unique values for filters
+  const allHubs = Array.from(new Set(articles.map((a: any) => a.hub).filter(Boolean)));
+  const allAgeRanges = Array.from(new Set(articles.map((a: any) => a.age_range).filter(Boolean)));
+  
+  // Collect all unique keywords
+  const allKeywordsSet = new Set<string>();
+  articles.forEach((article: any) => {
+    const cleanKeywords = filterCleanKeywords(article.keywords || []);
+    cleanKeywords.forEach((k: string) => allKeywordsSet.add(k));
+  });
+  const allKeywords = Array.from(allKeywordsSet).sort();
+  
+  // Generate schemas for AEO
+  const collectionSchema = generateInsightsPageSchema(articles, allKeywords);
+  const orgSchema = generateOrganizationSchema();
 
   return (
     <div className="min-h-screen bg-gradient-elegant">
+      {/* JSON-LD Structured Data for AEO */}
+      <Script
+        id="collection-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <Script
+        id="org-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
+
       {/* Hero */}
       <section className="relative overflow-hidden py-16 px-4 sm:px-8">
         <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-violet-100/40 to-purple-100/10 rounded-full blur-3xl"></div>
@@ -109,6 +250,7 @@ export default async function InsightPage() {
             <Link
               href="/topics"
               className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-500 hover:text-violet-500 transition-colors"
+              aria-label="Explore parenting topics and guidelines"
             >
               Explore Topics
             </Link>
@@ -127,63 +269,18 @@ export default async function InsightPage() {
             <Link
               href="/topics"
               className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-slate-400 to-violet-400 rounded-xl shadow-sm hover:from-slate-500 hover:to-violet-500 transition-all duration-300"
+              aria-label="Browse parenting topics and guidelines"
             >
               Browse Topics
             </Link>
           </div>
         ) : (
-          <>
-            {/* Stats */}
-            <div className="mb-10 text-center text-sm text-slate-500">
-              Showing <span className="font-semibold text-slate-700">{articles.length}</span> insights
-            </div>
-
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {articles.map((article: any) => (
-                <Link
-                  key={article.id}
-                  href={`/insight/${article.slug}`}
-                  className="group premium-card flex flex-col"
-                >
-                  <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold ${getHubColor(article.hub)}`}>
-                      {getHubName(article.hub)}
-                    </span>
-                    <span className="text-[11px] uppercase tracking-[0.2em]">
-                      {formatDate(article.date_published)}
-                    </span>
-                  </div>
-
-                  <h2 className="text-2xl font-light text-slate-700 mb-3 group-hover:text-slate-900 transition-colors line-clamp-2">
-                    {article.title}
-                  </h2>
-
-                  <p className="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-3 flex-1">
-                    {article.one_liner || article.meta_description}
-                  </p>
-
-                  {article.key_facts && Array.isArray(article.key_facts) && article.key_facts.length > 0 && (
-                    <p className="text-xs text-slate-400 mb-6 line-clamp-2">
-                      Key points: {article.key_facts.slice(0, 2).join(' | ')}
-                    </p>
-                  )}
-
-                  <div className="mt-auto pt-4 border-t border-slate-200/70 flex items-center justify-between text-xs text-slate-400">
-                    <span>
-                      {article.age_range ? `Age: ${article.age_range}` : 'All stages'}
-                    </span>
-                    <span className="inline-flex items-center gap-2 text-slate-500 group-hover:text-violet-500 transition-colors">
-                      Read insight
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
+          <InsightFilters
+            articles={articles}
+            allKeywords={allKeywords}
+            allHubs={allHubs}
+            allAgeRanges={allAgeRanges}
+          />
         )}
       </div>
 
@@ -200,12 +297,14 @@ export default async function InsightPage() {
               <Link
                 href="/topics"
                 className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
+                aria-label="Explore parenting topics and guidelines"
               >
                 Explore Topics
               </Link>
               <Link
                 href="/trust"
                 className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
+                aria-label="Learn about our methods and sources"
               >
                 Methods and sources
               </Link>

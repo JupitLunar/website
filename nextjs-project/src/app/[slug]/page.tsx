@@ -37,6 +37,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
     const description = (article.one_liner || article.body_md?.substring(0, 155) || 'Expert insights on maternal and infant health.').trim();
     
+    const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+    
     return {
       title: `${article.title} | Mom AI Agent`,
       description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
@@ -48,7 +50,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         ...(article.entities || [])
       ].filter(Boolean).join(', '),
       authors: [{ name: 'Mom AI Agent Editorial Team' }],
-      alternates: generateHreflangMetadata(article.slug, article.region),
+      alternates: {
+        ...generateHreflangMetadata(article.slug, article.region),
+        canonical: `${baseUrl}/${article.slug}`,
+      },
       openGraph: {
         title: article.title,
         description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
