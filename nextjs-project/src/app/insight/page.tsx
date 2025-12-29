@@ -33,7 +33,7 @@ async function getInsightArticles() {
   const { data: articles, error } = await supabase
     .from('articles')
     .select('*')
-    .eq('article_source', 'ai_generated')
+    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
     .eq('status', 'published')
     .order('date_published', { ascending: false })
     .limit(50);

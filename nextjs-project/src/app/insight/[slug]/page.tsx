@@ -12,7 +12,7 @@ export async function generateStaticParams() {
   const { data: articles } = await supabase
     .from('articles')
     .select('slug')
-    .eq('article_source', 'ai_generated')
+    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
     .eq('status', 'published')
     .limit(100);
 
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     .from('articles')
     .select('*')
     .eq('slug', params.slug)
-    .eq('article_source', 'ai_generated')
+    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
     .eq('status', 'published')
     .single();
 
