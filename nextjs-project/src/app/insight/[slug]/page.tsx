@@ -4,6 +4,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
 import { filterCleanKeywords } from '@/lib/supabase';
+import SocialShare from '@/components/SocialShare';
+import CitationBox from '@/components/CitationBox';
 
 // AEO Helper: Extract FAQ data from keywords
 function extractAEOData(keywords: string[]) {
@@ -547,6 +549,22 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
 
         {/* Related Articles - Based on Keywords and Hub */}
         <RelatedArticlesSection currentArticle={article} />
+
+        {/* Social Share & Citation */}
+        <div className="mt-12 space-y-6">
+          <SocialShare 
+            url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${article.slug}`}
+            title={article.title}
+            description={article.one_liner || article.meta_description}
+          />
+          
+          <CitationBox
+            title={article.title}
+            url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${article.slug}`}
+            lastReviewed={article.date_modified || article.date_published}
+            siteName="Mom AI Agent"
+          />
+        </div>
 
         {/* Sources and Trust Signals */}
         <div className="grid gap-6 md:grid-cols-2 mt-12">

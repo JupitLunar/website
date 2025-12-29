@@ -475,10 +475,15 @@ function HomePage() {
                     guideSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   }}
                   className="btn-primary text-lg px-8 py-4"
+                  aria-label="Download feeding roadmap guide"
                 >
                   Download Feeding Roadmap
                 </button>
-                <Link href="/foods" className="btn-secondary text-lg px-8 py-4 text-center">
+                <Link 
+                  href="/foods" 
+                  className="btn-secondary text-lg px-8 py-4 text-center"
+                  aria-label="Browse baby food database"
+                >
                   Browse Food Database
                 </Link>
                 <button
@@ -487,6 +492,7 @@ function HomePage() {
                     aiSection?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                   }}
                   className="text-slate-500 hover:text-slate-700 text-lg px-8 py-4 transition-colors"
+                  aria-label="Ask AI assistant for parenting questions"
                 >
                   Ask AI Assistant →
                 </button>
@@ -1063,12 +1069,14 @@ function HomePage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 bg-gradient-to-r from-slate-400 to-violet-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
+                      aria-label="Download DearBaby app from App Store"
                     >
                       Download Free
                     </a>
                     <Link
                       href="/products/dearbaby"
                       className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
+                      aria-label="Learn more about DearBaby app features and benefits"
                     >
                       Learn More
                     </Link>
@@ -1078,6 +1086,7 @@ function HomePage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block text-center text-sm text-slate-400 hover:text-slate-600 transition-colors"
+                    aria-label="View DearBaby app on App Store"
                   >
                     View on App Store →
                   </a>
@@ -1130,12 +1139,14 @@ function HomePage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 bg-gradient-to-r from-slate-400 to-purple-400 text-white px-8 py-4 rounded-2xl font-light text-center hover:shadow-md transition-all"
+                      aria-label="Download Solid Start app from App Store"
                     >
                       Download Free
                     </a>
                     <Link 
                       href="/products/solidstart"
                       className="flex-1 bg-slate-100 text-slate-500 px-8 py-4 rounded-2xl font-light text-center hover:bg-slate-200 transition-all"
+                      aria-label="Learn more about Solid Start app features and baby feeding guidance"
                     >
                       Learn More
                     </Link>
@@ -1145,6 +1156,7 @@ function HomePage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block text-center text-sm text-slate-400 hover:text-slate-600 transition-colors"
+                    aria-label="View Solid Start app on App Store"
                   >
                     View on App Store →
                   </a>

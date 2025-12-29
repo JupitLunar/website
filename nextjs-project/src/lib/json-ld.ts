@@ -382,8 +382,9 @@ export function generateWebsiteStructuredData() {
         "url": logoUrl
       },
       "sameAs": [
-        "https://twitter.com/jupitlunar",
-        "https://linkedin.com/company/jupitlunar"
+        "https://www.linkedin.com/company/dearbabyai",
+        "https://www.instagram.com/dearbabyai",
+        "https://www.tiktok.com/@dearbabygrow"
       ]
     },
     "inLanguage": "en"
@@ -531,8 +532,9 @@ export function generateOrganizationStructuredData() {
       "addressCountry": "CA"
     },
     "sameAs": [
-      "https://twitter.com/jupitlunar",
-      "https://linkedin.com/company/jupitlunar"
+      "https://www.linkedin.com/company/dearbabyai",
+      "https://www.instagram.com/dearbabyai",
+      "https://www.tiktok.com/@dearbabygrow"
     ],
     "foundingDate": "2024",
     "areaServed": "North America",
