@@ -35,6 +35,9 @@ const openai = new OpenAI({ apiKey: openaiApiKey });
 // 导入主题列表
 const { MATERNAL_INFANT_TOPICS } = require('./topics-list');
 
+// 导入 trending topics 获取函数
+const { fetchTrendingTopics } = require('./fetch-trending-topics');
+
 /**
  * 生成slug
  */
@@ -423,6 +426,102 @@ async function insertArticle(articleData, topicInfo) {
 }
 
 /**
+ * 使用 OpenAI 将 trending topics 转换为标准格式
+ */
+async function convertTrendingTopicsToStandardFormat(rawTrendingTopics) {
+  if (!rawTrendingTopics || rawTrendingTopics.length === 0) {
+    return [];
+  }
+
+  console.log(`\n🤖 正在使用 AI 转换 ${rawTrendingTopics.length} 个 trending topics...`);
+
+  const systemPrompt = `You are an expert content strategist for maternal and infant health content.
+Convert trending topics into question-format article topics suitable for evidence-based maternal/infant health content.
+
+For each trending topic that is related to maternal/infant health, determine:
+- topic: Question format (How to / What is / When should / Why does / Can I)
+- hub: One of [feeding, sleep, mom-health, development, safety, recipes]
+- type: One of [explainer, howto, recipe]
+- age_range: Appropriate age range (e.g., "0-3 months", "6-12 months", "12-24 months")
+
+IMPORTANT:
+- Only include topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, or child development
+- Convert to question format when possible
+- Match to the most appropriate hub
+- If a topic is not related to maternal/infant health, skip it
+- Return a JSON object with a "topics" array containing the converted topics
+
+Return format: { "topics": [{ "topic": "...", "hub": "...", "type": "...", "age_range": "..." }] }`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Convert these trending topics into standard article topics for maternal/infant health content:\n${JSON.stringify(rawTrendingTopics.slice(0, 20), null, 2)}\n\nOnly convert topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, or child development. Skip topics about baby products, baby names, or unrelated topics. Return a JSON object with a "topics" array.` }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+      response_format: { type: 'json_object' }
+    });
+
+    const content = completion.choices[0]?.message?.content;
+    if (!content) {
+      throw new Error('OpenAI返回空内容');
+    }
+
+    const parsed = JSON.parse(content);
+    
+    // 处理不同的响应格式
+    let convertedTopics = [];
+    if (Array.isArray(parsed)) {
+      convertedTopics = parsed;
+    } else if (parsed.topics && Array.isArray(parsed.topics)) {
+      convertedTopics = parsed.topics;
+    } else if (parsed.articles && Array.isArray(parsed.articles)) {
+      convertedTopics = parsed.articles;
+    } else if (parsed.data && Array.isArray(parsed.data)) {
+      convertedTopics = parsed.data;
+    } else {
+      // 尝试直接使用对象的值
+      const values = Object.values(parsed);
+      if (values.length > 0 && Array.isArray(values[0])) {
+        convertedTopics = values[0];
+      } else {
+        // 如果都没有，尝试查找任何包含数组的属性
+        for (const key in parsed) {
+          if (Array.isArray(parsed[key])) {
+            convertedTopics = parsed[key];
+            break;
+          }
+        }
+      }
+    }
+
+    // 验证格式
+    const validTopics = convertedTopics.filter(topic => 
+      topic.topic && 
+      topic.hub && 
+      ['feeding', 'sleep', 'mom-health', 'development', 'safety', 'recipes'].includes(topic.hub) &&
+      topic.type &&
+      ['explainer', 'howto', 'recipe'].includes(topic.type) &&
+      topic.age_range
+    );
+
+    if (validTopics.length === 0) {
+      console.log('⚠️  AI 转换后没有找到相关的母婴健康主题');
+      return [];
+    }
+
+    console.log(`✅ 成功转换 ${validTopics.length} 个 trending topics`);
+    return validTopics;
+  } catch (error) {
+    console.error(`❌ 转换 trending topics 失败:`, error.message);
+    return [];
+  }
+}
+
+/**
  * 主函数
  */
 async function main() {
@@ -450,8 +549,66 @@ async function main() {
       process.exit(1);
     }
   } else {
-    // 查找缺失的主题
-    topicsToGenerate = await findMissingTopics(specifiedHub);
+    // 没有指定 topic 或 hub 时，尝试使用 trending topics
+    let trendingTopicsConverted = [];
+    
+    try {
+      // 1. 获取 trending topics
+      const rawTrendingTopics = await fetchTrendingTopics();
+      
+      if (rawTrendingTopics && rawTrendingTopics.length > 0) {
+        // 2. 转换为标准格式
+        trendingTopicsConverted = await convertTrendingTopicsToStandardFormat(rawTrendingTopics);
+        
+        if (trendingTopicsConverted.length > 0) {
+          // 3. 检查这些主题是否已存在于数据库
+          const filteredTrendingTopics = [];
+          for (const topic of trendingTopicsConverted) {
+            // 如果指定了 hub，只保留匹配的
+            if (specifiedHub && topic.hub !== specifiedHub) {
+              continue;
+            }
+            
+            const existsCheck = await articleExists(topic.topic);
+            if (!existsCheck.exists) {
+              filteredTrendingTopics.push(topic);
+            } else {
+              console.log(`⏭️  Trending topic 已存在: ${topic.topic}`);
+            }
+          }
+          
+          if (filteredTrendingTopics.length > 0) {
+            console.log(`\n✅ 找到 ${filteredTrendingTopics.length} 个新的 trending topics`);
+            topicsToGenerate = filteredTrendingTopics;
+          }
+        }
+      }
+    } catch (error) {
+      console.log(`⚠️  获取 trending topics 时出错: ${error.message}`);
+      console.log('   将回退到预设主题列表\n');
+    }
+    
+    // 如果 trending topics 不足或失败，使用预设主题补充
+    if (topicsToGenerate.length < 3) {
+      const missingPresetTopics = await findMissingTopics(specifiedHub);
+      
+      if (missingPresetTopics.length > 0) {
+        const needed = 3 - topicsToGenerate.length;
+        const presetTopicsToAdd = missingPresetTopics.slice(0, needed);
+        
+        if (presetTopicsToAdd.length > 0) {
+          // 合并 trending topics 和预设主题
+          topicsToGenerate = [...topicsToGenerate, ...presetTopicsToAdd];
+          console.log(`📋 使用 ${presetTopicsToAdd.length} 个预设主题补充，总共 ${topicsToGenerate.length} 个主题\n`);
+        }
+      }
+    }
+    
+    // 如果仍然没有主题，完全回退到预设主题
+    if (topicsToGenerate.length === 0) {
+      console.log('📋 回退到预设主题列表\n');
+      topicsToGenerate = await findMissingTopics(specifiedHub);
+    }
   }
 
   if (topicsToGenerate.length === 0) {
@@ -534,5 +691,6 @@ module.exports = {
   findMissingTopics,
   generateArticle,
   insertArticle,
-  articleExists
+  articleExists,
+  convertTrendingTopicsToStandardFormat
 };
