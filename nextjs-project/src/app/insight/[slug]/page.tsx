@@ -105,7 +105,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
     .from('articles')
     .select('*')
     .eq('slug', params.slug)
-    .eq('article_source', 'ai_generated')
+    .or('article_source.eq.ai_generated,reviewed_by.eq.AI Content Generator')
     .eq('status', 'published')
     .single();
 
