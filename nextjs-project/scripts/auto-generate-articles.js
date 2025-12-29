@@ -313,6 +313,16 @@ async function main() {
 
   console.log(`📋 找到 ${topicsToGenerate.length} 个缺失的主题\n`);
 
+  // 如果没有指定topic，随机打乱顺序（实现随机选择）
+  if (!specifiedTopic) {
+    // Fisher-Yates shuffle algorithm for random selection
+    for (let i = topicsToGenerate.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [topicsToGenerate[i], topicsToGenerate[j]] = [topicsToGenerate[j], topicsToGenerate[i]];
+    }
+    console.log('🎲 随机选择主题顺序\n');
+  }
+
   // 每天最多生成3篇文章
   const maxArticles = 3;
   const topicsToProcess = topicsToGenerate.slice(0, maxArticles);

@@ -56,10 +56,15 @@ jobs:
           HUB: ${{ github.event.inputs.hub }}
         run: |
           cd nextjs-project
-          node scripts/auto-generate-articles.js \
-            ${TOPIC:+--topic "$TOPIC"} \
-            ${HUB:+--hub "$HUB"} \
-            | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
+          if [ -n "$TOPIC" ]; then
+            node scripts/auto-generate-articles.js --topic "$TOPIC" | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
+          elif [ -n "$HUB" ]; then
+            node scripts/auto-generate-articles.js --hub "$HUB" | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
+          else
+            # 没有指定参数时，随机选择topic
+            echo "🎲 No topic or hub specified, will randomly select from missing topics"
+            node scripts/auto-generate-articles.js | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
+          fi
 
       - name: Get statistics
         env:
