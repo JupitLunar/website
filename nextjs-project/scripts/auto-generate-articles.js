@@ -652,16 +652,28 @@ async function main() {
       console.log(`\n📝 处理主题: ${topicInfo.topic}`);
       console.log(`   Hub: ${topicInfo.hub}, Type: ${topicInfo.type}, Age: ${topicInfo.age_range}`);
 
-      // 检查是否已存在
+      // 检查是否已存在（使用预设主题格式检查）
       const existsCheck = await articleExists(topicInfo.topic);
       if (existsCheck.exists) {
-        console.log(`⏭️  跳过: ${existsCheck.reason}`);
+        console.log(`⏭️  跳过: ${existsCheck.reason} (${existsCheck.existingTitle})`);
         results.skipped++;
         continue;
       }
 
       // 生成文章
       const articleData = await generateArticle(topicInfo);
+
+      // 生成后再次检查（使用实际生成的标题，更准确）
+      // 因为 AI 可能生成与预设主题格式不同的标题
+      const finalExistsCheck = await articleExists(articleData.title);
+      if (finalExistsCheck.exists) {
+        console.log(`⏭️  跳过: 生成的文章标题已存在 (${finalExistsCheck.reason})`);
+        console.log(`   预设主题: ${topicInfo.topic}`);
+        console.log(`   生成标题: ${articleData.title}`);
+        console.log(`   已存在: ${finalExistsCheck.existingTitle}`);
+        results.skipped++;
+        continue;
+      }
 
       // 插入数据库
       const insertResult = await insertArticle(articleData, topicInfo);
