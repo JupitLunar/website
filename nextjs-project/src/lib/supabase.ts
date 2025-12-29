@@ -61,7 +61,7 @@ export const contentManager = {
       .eq('hub', hub)
       .eq('lang', lang)
       .eq('status', 'published')
-      .neq('article_source', 'ai_generated')  // Exclude AI-generated articles
+      .neq('reviewed_by', 'AI Content Generator')  // Exclude AI-generated articles
       .order('date_published', { ascending: false })
       .limit(limit);
     
@@ -91,7 +91,7 @@ export const contentManager = {
       .eq('slug', slug)
       .eq('lang', lang)
       .eq('status', 'published')
-      .neq('article_source', 'ai_generated')  // Exclude AI-generated articles
+      .neq('reviewed_by', 'AI Content Generator')  // Exclude AI-generated articles
       .single();
     
     if (error) {
@@ -139,7 +139,7 @@ export const contentManager = {
       .from('articles')
       .select('slug, hub, lang, type, date_published, date_modified')
       .eq('status', 'published')
-      .neq('article_source', 'ai_generated')  // Exclude AI-generated articles
+      .neq('reviewed_by', 'AI Content Generator')  // Exclude AI-generated articles
       .order('date_published', { ascending: false });
     
     if (error) throw error;
