@@ -57,7 +57,7 @@ export const metadata = {
     'Browse evidence-led playbooks and the public health sources that power the Mom AI Agent knowledge base.',
 };
 
-function formatSourceDate(value: string | null) {
+function formatSourceDate(value: string | null | undefined) {
   if (!value) return 'Not listed';
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
