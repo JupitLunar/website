@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
   try {
     // 验证请求
     if (!validateRequest(request)) {
+      console.error('❌ Revalidation API: Unauthorized request');
       return NextResponse.json(
         { 
           success: false, 
@@ -60,45 +61,64 @@ export async function POST(request: NextRequest) {
     const revalidatedPaths: string[] = [];
     const revalidatedTags: string[] = [];
     
+    console.log(`🔄 Revalidation API called: path=${revalidatePathValue || '/insight'}, tag=${tag || 'none'}`);
+    
     // 重新验证指定的路径或使用默认路径
-    if (revalidatePathValue) {
-      revalidatePath(revalidatePathValue);
-      revalidatedPaths.push(revalidatePathValue);
-    } else {
-      // 默认重新验证 insight 相关页面
-      revalidatePath('/insight');
-      revalidatePath('/insight', 'page');
-      revalidatedPaths.push('/insight');
-    }
+    const pathToRevalidate = revalidatePathValue || '/insight';
     
-    // 重新验证 sitemap
-    revalidatePath('/sitemap.xml');
-    revalidatedPaths.push('/sitemap.xml');
-    
-    // 如果指定了 tag，也重新验证 tag
-    if (tag) {
-      revalidateTag(tag);
-      revalidatedTags.push(tag);
-    }
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Revalidation successful',
-      revalidated: {
-        paths: revalidatedPaths,
-        tags: revalidatedTags,
-        timestamp: new Date().toISOString()
+    try {
+      // 在 App Router 中，revalidatePath 需要明确指定类型
+      // 对于页面路由，使用 'page' 类型
+      revalidatePath(pathToRevalidate, 'page');
+      console.log(`✅ Revalidated path (page): ${pathToRevalidate}`);
+      revalidatedPaths.push(pathToRevalidate);
+      
+      // 对于布局，使用 'layout' 类型（如果需要）
+      // 注意：对于 /insight 这样的页面，可能不需要 layout revalidation
+      if (pathToRevalidate === '/insight') {
+        // 只 revalidate page，不 revalidate layout（避免不必要的重新生成）
+        // revalidatePath(pathToRevalidate, 'layout');
       }
-    });
+      
+      // 重新验证 sitemap
+      revalidatePath('/sitemap.xml', 'page');
+      console.log(`✅ Revalidated path: /sitemap.xml`);
+      revalidatedPaths.push('/sitemap.xml');
+      
+      // 如果指定了 tag，也重新验证 tag
+      if (tag) {
+        revalidateTag(tag);
+        console.log(`✅ Revalidated tag: ${tag}`);
+        revalidatedTags.push(tag);
+      }
+      
+      console.log(`✅ Revalidation completed successfully`);
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Revalidation successful',
+        revalidated: {
+          paths: revalidatedPaths,
+          tags: revalidatedTags,
+          timestamp: new Date().toISOString()
+        }
+      });
+      
+    } catch (revalidateError: any) {
+      console.error('❌ Revalidation error:', revalidateError);
+      throw revalidateError;
+    }
     
   } catch (error: any) {
     console.error('❌ Revalidation API错误:', error);
+    console.error('Error stack:', error.stack);
     
     return NextResponse.json(
       {
         success: false,
         error: 'Revalidation error',
-        message: error.message
+        message: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       },
       { status: 500 }
     );

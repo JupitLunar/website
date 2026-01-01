@@ -154,6 +154,11 @@ async function getInsightArticles() {
     return [];
   }
 
+  // 添加调试日志（仅在开发环境或需要时）
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Insight Page] Fetched ${articles?.length || 0} articles`);
+  }
+
   return articles || [];
 }
 
