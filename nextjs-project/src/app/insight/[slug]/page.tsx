@@ -187,7 +187,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export const revalidate = 3600;
+export const revalidate = 300; // Revalidate every 5 minutes (fallback if revalidation API fails)
 
 function getHubColor(hub: string) {
   const colors: Record<string, string> = {
