@@ -150,13 +150,14 @@ async function getInsightArticles() {
     .limit(50);
 
   if (error) {
-    console.error('Error fetching insight articles:', error);
+    console.error('[Insight Page] Error fetching articles:', error);
     return [];
   }
 
-  // 添加调试日志（仅在开发环境或需要时）
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[Insight Page] Fetched ${articles?.length || 0} articles`);
+  // 添加调试日志（生产环境也记录，便于排查问题）
+  console.log(`[Insight Page] Fetched ${articles?.length || 0} articles from database`);
+  if (articles && articles.length > 0) {
+    console.log(`[Insight Page] Latest article: ${articles[0].title} (${articles[0].slug})`);
   }
 
   return articles || [];
