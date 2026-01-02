@@ -84,12 +84,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient();
   let insightArticles: any[] = [];
   try {
-    const { data } = await supabase
+    // Query all published articles first, then filter in code for reliability
+    const { data: allArticles, error } = await supabase
       .from('articles')
-      .select('slug, date_published, date_modified, created_at')
-      .eq('reviewed_by', 'AI Content Generator')
+      .select('slug, date_published, date_modified, created_at, article_source, reviewed_by')
       .eq('status', 'published');
-    insightArticles = data || [];
+    
+    if (error) {
+      console.error('Error fetching articles for sitemap:', error);
+      insightArticles = [];
+    } else {
+      // Filter AI-generated articles: article_source='ai_generated' OR reviewed_by='AI Content Generator'
+      insightArticles = (allArticles || []).filter((article: any) => 
+        article.article_source === 'ai_generated' || 
+        article.reviewed_by === 'AI Content Generator'
+      );
+    }
   } catch (error) {
     console.error('Error fetching insight articles for sitemap:', error);
     insightArticles = [];

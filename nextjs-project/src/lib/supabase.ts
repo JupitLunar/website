@@ -142,15 +142,23 @@ export const contentManager = {
 
   // Get all articles for static generation
   async getAllArticles() {
+    // Query all published articles, then filter in code for reliability
     const { data, error } = await supabase
       .from('articles')
-      .select('slug, hub, lang, type, date_published, date_modified')
+      .select('slug, hub, lang, type, date_published, date_modified, article_source, reviewed_by')
       .eq('status', 'published')
-      .neq('reviewed_by', 'AI Content Generator')  // Exclude AI-generated articles
       .order('date_published', { ascending: false });
     
     if (error) throw error;
-    return data;
+    
+    // Filter out AI-generated articles:
+    // Exclude if article_source='ai_generated' OR reviewed_by='AI Content Generator'
+    const authoritativeArticles = (data || []).filter((article: any) => 
+      article.article_source !== 'ai_generated' && 
+      article.reviewed_by !== 'AI Content Generator'
+    );
+    
+    return authoritativeArticles;
   },
 
   async getArticlesPublishedSince(isoDate: string, limit: number = 100) {
