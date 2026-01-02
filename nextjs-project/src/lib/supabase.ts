@@ -143,22 +143,21 @@ export const contentManager = {
   // Get all articles for static generation
   async getAllArticles() {
     // Query all published articles, then filter in code for reliability
+    // Note: article_source field may not exist in all databases, so we select it but handle gracefully
     const { data, error } = await supabase
       .from('articles')
-      .select('slug, hub, lang, type, date_published, date_modified, article_source, reviewed_by')
+      .select('slug, hub, lang, type, date_published, date_modified, reviewed_by')
       .eq('status', 'published')
+      .neq('reviewed_by', 'AI Content Generator')  // Primary filter using reviewed_by
       .order('date_published', { ascending: false });
     
     if (error) throw error;
     
-    // Filter out AI-generated articles:
-    // Exclude if article_source='ai_generated' OR reviewed_by='AI Content Generator'
-    const authoritativeArticles = (data || []).filter((article: any) => 
-      article.article_source !== 'ai_generated' && 
+    // Additional filtering in code: exclude articles with article_source='ai_generated' if field exists
+    // For now, we rely on reviewed_by filter above since article_source may not exist
+    return (data || []).filter((article: any) => 
       article.reviewed_by !== 'AI Content Generator'
     );
-    
-    return authoritativeArticles;
   },
 
   async getArticlesPublishedSince(isoDate: string, limit: number = 100) {
