@@ -66,12 +66,26 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           cd nextjs-project
+          # 验证环境变量
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] || [ "$NEXT_PUBLIC_SUPABASE_URL" = "***/" ] || [ "$NEXT_PUBLIC_SUPABASE_URL" = "" ]; then
+            echo "❌ NEXT_PUBLIC_SUPABASE_URL is not set or invalid"
+            echo "   Please set NEXT_PUBLIC_SUPABASE_URL in GitHub Secrets"
+            exit 1
+          fi
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ] || [ "$SUPABASE_SERVICE_ROLE_KEY" = "***" ]; then
+            echo "❌ SUPABASE_SERVICE_ROLE_KEY is not set or invalid"
+            echo "   Please set SUPABASE_SERVICE_ROLE_KEY in GitHub Secrets"
+            exit 1
+          fi
           node -e "
           const { createClient } = require('@supabase/supabase-js');
-          const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL,
-            process.env.SUPABASE_SERVICE_ROLE_KEY
-          );
+          const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+          const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+          if (!supabaseUrl || !supabaseKey) {
+            console.error('❌ Missing required environment variables');
+            process.exit(1);
+          }
+          const supabase = createClient(supabaseUrl, supabaseKey);
 
           (async () => {
             // Total articles
@@ -80,31 +94,31 @@ jobs:
               .select('*', { count: 'exact', head: true })
               .eq('status', 'published');
 
-            // AI-generated insights
+            // AI-generated insights (using reviewed_by field, not article_source)
             const { count: aiCount } = await supabase
               .from('articles')
               .select('*', { count: 'exact', head: true })
               .eq('status', 'published')
-              .eq('article_source', 'ai_generated');
+              .eq('reviewed_by', 'AI Content Generator');
 
-            // Authoritative articles
+            // Authoritative articles (not AI-generated)
             const { count: authCount } = await supabase
               .from('articles')
               .select('*', { count: 'exact', head: true })
               .eq('status', 'published')
-              .eq('article_source', 'authoritative');
+              .neq('reviewed_by', 'AI Content Generator');
 
             console.log('📊 Article Statistics:');
             console.log(\`   Total published: \${totalCount}\`);
             console.log(\`   AI-generated insights: \${aiCount}\`);
             console.log(\`   Authoritative articles: \${authCount}\`);
 
-            // Latest AI-generated insights
+            // Latest AI-generated insights (using reviewed_by field)
             const { data: latestInsights } = await supabase
               .from('articles')
               .select('title, hub, created_at')
               .eq('status', 'published')
-              .eq('article_source', 'ai_generated')
+              .eq('reviewed_by', 'AI Content Generator')
               .order('created_at', { ascending: false })
               .limit(5);
 
