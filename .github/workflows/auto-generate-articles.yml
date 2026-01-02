@@ -126,12 +126,15 @@ jobs:
           SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com' }}
         run: |
           echo "🔄 Triggering page revalidation..."
+          echo "📍 SITE_URL: ${SITE_URL}"
           if [ -z "$REVALIDATION_SECRET" ]; then
             echo "⚠️  REVALIDATION_SECRET not set, skipping revalidation"
-            echo "   Note: Pages will still update via ISR (revalidate: 3600)"
+            echo "   Note: Pages will still update via ISR (revalidate: 300)"
             exit 0
           fi
+          echo "✅ REVALIDATION_SECRET is set (length: ${#REVALIDATION_SECRET})"
           
+          echo "📡 Calling revalidation API: ${SITE_URL}/api/revalidate"
           response=$(curl -s -w "\n%{http_code}" -X POST \
             "${SITE_URL}/api/revalidate" \
             -H "Authorization: Bearer ${REVALIDATION_SECRET}" \
@@ -141,13 +144,16 @@ jobs:
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
           
+          echo "📥 Response HTTP code: ${http_code}"
+          echo "📥 Response body: ${body}"
+          
           if [ "$http_code" = "200" ]; then
             echo "✅ Revalidation successful"
             echo "$body" | jq '.' 2>/dev/null || echo "$body"
           else
             echo "⚠️  Revalidation failed (HTTP $http_code)"
             echo "$body"
-            echo "   Note: Pages will still update via ISR (revalidate: 3600)"
+            echo "   Note: Pages will still update via ISR (revalidate: 300) in about 5 minutes"
           fi
 
       - name: Upload logs
