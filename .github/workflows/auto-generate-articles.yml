@@ -66,28 +66,47 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           cd nextjs-project
-          # 验证环境变量
-          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] || [ "$NEXT_PUBLIC_SUPABASE_URL" = "***/" ] || [ "$NEXT_PUBLIC_SUPABASE_URL" = "" ]; then
-            echo "❌ NEXT_PUBLIC_SUPABASE_URL is not set or invalid"
-            echo "   Please set NEXT_PUBLIC_SUPABASE_URL in GitHub Secrets"
+          # 验证环境变量是否存在
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
+            echo "❌ NEXT_PUBLIC_SUPABASE_URL is not set in GitHub Secrets"
+            echo "   Please add NEXT_PUBLIC_SUPABASE_URL to GitHub Secrets"
+            echo "   Expected format: https://your-project-id.supabase.co"
             exit 1
           fi
-          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ] || [ "$SUPABASE_SERVICE_ROLE_KEY" = "***" ]; then
-            echo "❌ SUPABASE_SERVICE_ROLE_KEY is not set or invalid"
-            echo "   Please set SUPABASE_SERVICE_ROLE_KEY in GitHub Secrets"
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "❌ SUPABASE_SERVICE_ROLE_KEY is not set in GitHub Secrets"
+            echo "   Please add SUPABASE_SERVICE_ROLE_KEY to GitHub Secrets"
             exit 1
           fi
+          # 验证URL格式（不暴露实际值）
+          if [[ ! "$NEXT_PUBLIC_SUPABASE_URL" =~ ^https://[a-z0-9-]+\.supabase\.co$ ]]; then
+            echo "❌ NEXT_PUBLIC_SUPABASE_URL has invalid format"
+            echo "   Expected format: https://your-project-id.supabase.co"
+            echo "   Current value starts with: ${NEXT_PUBLIC_SUPABASE_URL:0:20}..."
+            echo "   Make sure there's no trailing slash and it's a valid Supabase URL"
+            exit 1
+          fi
+          echo "✅ Environment variables validated"
           node -e "
           const { createClient } = require('@supabase/supabase-js');
           const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
           const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-          if (!supabaseUrl || !supabaseKey) {
-            console.error('❌ Missing required environment variables');
+          if (!supabaseUrl) {
+            console.error('❌ NEXT_PUBLIC_SUPABASE_URL is missing');
             process.exit(1);
           }
-          const supabase = createClient(supabaseUrl, supabaseKey);
-
-          (async () => {
+          if (!supabaseKey) {
+            console.error('❌ SUPABASE_SERVICE_ROLE_KEY is missing');
+            process.exit(1);
+          }
+          if (!supabaseUrl.startsWith('https://') || !supabaseUrl.endsWith('.supabase.co')) {
+            console.error('❌ NEXT_PUBLIC_SUPABASE_URL has invalid format');
+            console.error('   Expected: https://your-project-id.supabase.co');
+            process.exit(1);
+          }
+          try {
+            const supabase = createClient(supabaseUrl, supabaseKey);
+            (async () => {
             // Total articles
             const { count: totalCount } = await supabase
               .from('articles')
@@ -131,6 +150,10 @@ jobs:
               console.log('   No insights yet');
             }
           })();
+          } catch (error) {
+            console.error('❌ Error creating Supabase client:', error.message);
+            process.exit(1);
+          }
           "
 
       - name: Trigger page revalidation
