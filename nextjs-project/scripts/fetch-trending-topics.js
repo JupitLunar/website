@@ -75,7 +75,11 @@ async function fetchFromGoogleTrends() {
           });
         }
       } catch (dailyErr) {
-        console.log(`⚠️  Google Trends dailyTrends 失败: ${dailyErr.message}`);
+        // dailyTrends经常失败（Google限制），但relatedQueries作为备用方法通常能成功
+        // 只在debug模式下显示详细错误，避免日志噪音
+        if (process.env.DEBUG) {
+          console.log(`⚠️  Google Trends dailyTrends 失败: ${dailyErr.message}`);
+        }
       }
       
       // 方法2: 如果今日趋势没有足够结果，尝试搜索特定关键词的相关趋势

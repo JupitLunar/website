@@ -165,33 +165,45 @@ jobs:
           echo "🔄 Triggering page revalidation..."
           echo "📍 SITE_URL: ${SITE_URL}"
           if [ -z "$REVALIDATION_SECRET" ]; then
-            echo "⚠️  REVALIDATION_SECRET not set, skipping revalidation"
-            echo "   Note: Pages will still update via ISR (revalidate: 300)"
-            exit 0
+            echo "❌ REVALIDATION_SECRET not set, cannot revalidate"
+            echo "   Please set REVALIDATION_SECRET in GitHub Secrets"
+            exit 1
           fi
           echo "✅ REVALIDATION_SECRET is set (length: ${#REVALIDATION_SECRET})"
           
           echo "📡 Calling revalidation API: ${SITE_URL}/api/revalidate"
-          response=$(curl -s -w "\n%{http_code}" -X POST \
-            "${SITE_URL}/api/revalidate" \
-            -H "Authorization: Bearer ${REVALIDATION_SECRET}" \
-            -H "Content-Type: application/json" \
-            -d '{"path": "/insight"}')
+          max_attempts=3
+          attempt=1
+          while [ $attempt -le $max_attempts ]; do
+            echo "⏱️  Attempt ${attempt}/${max_attempts}"
+            response=$(curl -s -w "\n%{http_code}" -X POST \
+              "${SITE_URL}/api/revalidate" \
+              -H "Authorization: Bearer ${REVALIDATION_SECRET}" \
+              -H "Content-Type: application/json" \
+              -d '{"path": "/insight"}')
+            
+            http_code=$(echo "$response" | tail -n1)
+            body=$(echo "$response" | sed '$d')
+            
+            echo "📥 Response HTTP code: ${http_code}"
+            echo "📥 Response body: ${body}"
+            
+            if [ "$http_code" = "200" ]; then
+              echo "✅ Revalidation successful"
+              echo "$body" | jq '.' 2>/dev/null || echo "$body"
+              exit 0
+            fi
+            
+            if [ $attempt -lt $max_attempts ]; then
+              echo "⚠️  Revalidation failed (HTTP $http_code), retrying in 5s..."
+              sleep 5
+            fi
+            attempt=$((attempt + 1))
+          done
           
-          http_code=$(echo "$response" | tail -n1)
-          body=$(echo "$response" | sed '$d')
-          
-          echo "📥 Response HTTP code: ${http_code}"
-          echo "📥 Response body: ${body}"
-          
-          if [ "$http_code" = "200" ]; then
-            echo "✅ Revalidation successful"
-            echo "$body" | jq '.' 2>/dev/null || echo "$body"
-          else
-            echo "⚠️  Revalidation failed (HTTP $http_code)"
-            echo "$body"
-            echo "   Note: Pages will still update via ISR (revalidate: 300) in about 5 minutes"
-          fi
+          echo "❌ Revalidation failed after ${max_attempts} attempts"
+          echo "   Check REVALIDATION_SECRET and SITE_URL configuration"
+          exit 1
 
       - name: Upload logs
         if: always()
