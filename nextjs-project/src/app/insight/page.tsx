@@ -1,11 +1,10 @@
 import { Metadata } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import { unstable_cache } from 'next/cache';
 import Link from 'next/link';
 import Script from 'next/script';
 import InsightFilters from '@/components/InsightFilters';
 import { filterCleanKeywords } from '@/lib/supabase';
-
-export const dynamic = 'force-dynamic';
 
 // Generate CollectionPage schema for AEO with enhanced keywords
 function generateInsightsPageSchema(articles: any[], allKeywords: string[]) {
@@ -135,35 +134,39 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const revalidate = 300; // Revalidate every 5 minutes (fallback if revalidation API fails)
 
-async function getInsightArticles() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+const getInsightArticles = unstable_cache(
+  async () => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
-  // 使用 reviewed_by 字段识别 AI 生成的文章
-  // 注意：article_source 字段可能因 schema cache 问题无法使用
-  const { data: articles, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('reviewed_by', 'AI Content Generator')
-    .eq('status', 'published')
-    .order('created_at', { ascending: false })
-    .limit(50);
+    // 使用 reviewed_by 字段识别 AI 生成的文章
+    // 注意：article_source 字段可能因 schema cache 问题无法使用
+    const { data: articles, error } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('reviewed_by', 'AI Content Generator')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false })
+      .limit(50);
 
-  if (error) {
-    console.error('[Insight Page] Error fetching articles:', error);
-    return [];
-  }
+    if (error) {
+      console.error('[Insight Page] Error fetching articles:', error);
+      return [];
+    }
 
-  // 添加调试日志（生产环境也记录，便于排查问题）
-  console.log(`[Insight Page] Fetched ${articles?.length || 0} articles from database`);
-  if (articles && articles.length > 0) {
-    console.log(`[Insight Page] Latest article: ${articles[0].title} (${articles[0].slug})`);
-  }
+    // 添加调试日志（生产环境也记录，便于排查问题）
+    console.log(`[Insight Page] Fetched ${articles?.length || 0} articles from database`);
+    if (articles && articles.length > 0) {
+      console.log(`[Insight Page] Latest article: ${articles[0].title} (${articles[0].slug})`);
+    }
 
-  return articles || [];
-}
+    return articles || [];
+  },
+  ['insights-list'],
+  { tags: ['insights'], revalidate: 300 }
+);
 
 function formatDate(dateString: string | null) {
   if (!dateString) return '';

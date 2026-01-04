@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
+import { unstable_cache } from 'next/cache';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
@@ -130,38 +131,12 @@ function generateArticleSchema(article: any, aeoData: ReturnType<typeof extractA
 }
 
 export async function generateStaticParams() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  // 使用 reviewed_by 字段识别 AI 生成的文章
-  const { data: articles } = await supabase
-    .from('articles')
-    .select('slug')
-    .eq('reviewed_by', 'AI Content Generator')
-    .eq('status', 'published')
-    .limit(100);
-
-  return (articles || []).map((article) => ({
-    slug: article.slug,
-  }));
+  const articles = await getInsightSlugs();
+  return articles.map((article) => ({ slug: article.slug }));
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  // 使用 reviewed_by 字段识别 AI 生成的文章
-  const { data: article } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('slug', params.slug)
-    .eq('reviewed_by', 'AI Content Generator')
-    .eq('status', 'published')
-    .single();
+  const article = await getInsightBySlug(params.slug);
 
   if (!article) {
     return {
@@ -188,6 +163,72 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export const revalidate = 300; // Revalidate every 5 minutes (fallback if revalidation API fails)
+
+const getInsightSlugs = unstable_cache(
+  async () => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // 使用 reviewed_by 字段识别 AI 生成的文章
+    const { data: articles } = await supabase
+      .from('articles')
+      .select('slug')
+      .eq('reviewed_by', 'AI Content Generator')
+      .eq('status', 'published')
+      .limit(100);
+
+    return articles || [];
+  },
+  ['insights-slugs'],
+  { tags: ['insights'], revalidate: 300 }
+);
+
+const getInsightBySlug = unstable_cache(
+  async (slug: string) => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // 使用 reviewed_by 字段识别 AI 生成的文章
+    const { data: article } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('slug', slug)
+      .eq('reviewed_by', 'AI Content Generator')
+      .eq('status', 'published')
+      .single();
+
+    return article || null;
+  },
+  ['insight-by-slug'],
+  { tags: ['insights'], revalidate: 300 }
+);
+
+const getRelatedInsights = unstable_cache(
+  async (hub: string, excludeId: string) => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    const { data: relatedArticles } = await supabase
+      .from('articles')
+      .select('*')
+      .eq('reviewed_by', 'AI Content Generator')
+      .eq('status', 'published')
+      .neq('id', excludeId)
+      .eq('hub', hub)
+      .order('created_at', { ascending: false })
+      .limit(6);
+
+    return relatedArticles || [];
+  },
+  ['insights-related'],
+  { tags: ['insights'], revalidate: 300 }
+);
 
 function getHubColor(hub: string) {
   const colors: Record<string, string> = {
@@ -225,23 +266,10 @@ function formatDate(dateString: string | null) {
 
 // Related Articles Component
 async function RelatedArticlesSection({ currentArticle }: { currentArticle: any }) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
   const currentKeywords = filterCleanKeywords(currentArticle.keywords || []);
   
   // Find related articles by hub and keywords
-  const { data: relatedArticles } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('reviewed_by', 'AI Content Generator')
-    .eq('status', 'published')
-    .neq('id', currentArticle.id)
-    .eq('hub', currentArticle.hub)
-    .order('created_at', { ascending: false })
-    .limit(6);
+  const relatedArticles = await getRelatedInsights(currentArticle.hub, currentArticle.id);
 
   if (!relatedArticles || relatedArticles.length === 0) {
     return null;
@@ -307,21 +335,9 @@ async function RelatedArticlesSection({ currentArticle }: { currentArticle: any 
 }
 
 export default async function InsightArticlePage({ params }: { params: { slug: string } }) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const article = await getInsightBySlug(params.slug);
 
-  // 使用 reviewed_by 字段识别 AI 生成的文章
-  const { data: article, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('slug', params.slug)
-    .eq('reviewed_by', 'AI Content Generator')
-    .eq('status', 'published')
-    .single();
-
-  if (error || !article) {
+  if (!article) {
     notFound();
   }
 

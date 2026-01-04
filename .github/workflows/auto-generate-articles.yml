@@ -180,7 +180,7 @@ jobs:
               "${SITE_URL}/api/revalidate" \
               -H "Authorization: Bearer ${REVALIDATION_SECRET}" \
               -H "Content-Type: application/json" \
-              -d '{"path": "/insight"}')
+            -d '{"path": "/insight", "tag": "insights"}')
             
             http_code=$(echo "$response" | tail -n1)
             body=$(echo "$response" | sed '$d')
