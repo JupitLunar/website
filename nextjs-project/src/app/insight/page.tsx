@@ -5,6 +5,8 @@ import Script from 'next/script';
 import InsightFilters from '@/components/InsightFilters';
 import { filterCleanKeywords } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 // Generate CollectionPage schema for AEO with enhanced keywords
 function generateInsightsPageSchema(articles: any[], allKeywords: string[]) {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
