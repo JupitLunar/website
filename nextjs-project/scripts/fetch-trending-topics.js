@@ -2,7 +2,7 @@
 
 /**
  * 获取 Trending Topics 脚本
- * 优先使用 Google Trends，如果失败则降级到 Reddit
+ * 优先使用 Google Trends RSS，如果失败则降级到 Google Trends API，再降级到 Reddit
  * 返回原始 trending topics 字符串数组
  */
 
@@ -10,6 +10,13 @@ const path = require('path');
 
 // 加载环境变量
 require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
+
+const isQuiet = process.env.QUIET_TRENDS === 'true';
+const logInfo = (...args) => {
+  if (!isQuiet) {
+    console.log(...args);
+  }
+};
 
 // 母婴相关关键词列表
 const MATERNAL_INFANT_KEYWORDS = [
@@ -43,8 +50,10 @@ const REDDIT_SUBREDDITS = [
   'BabyBumps'
 ];
 
+const GOOGLE_TRENDS_RSS_URL = 'https://trends.google.com/trends/trendingsearches/daily/rss?geo=US&hl=en-US';
+
 /**
- * 从 Google Trends 获取热门话题
+ * 从 Google Trends 获取热门话题（API）
  */
 async function fetchFromGoogleTrends() {
   try {
@@ -124,7 +133,7 @@ async function fetchFromGoogleTrends() {
     const uniqueTopics = [...new Set(topics)];
     
     if (uniqueTopics.length > 0) {
-      console.log(`✅ 从 Google Trends 获取到 ${uniqueTopics.length} 个热门话题`);
+      logInfo(`✅ 从 Google Trends 获取到 ${uniqueTopics.length} 个热门话题`);
       return uniqueTopics.slice(0, 20); // 最多返回20个
     }
     
@@ -137,6 +146,48 @@ async function fetchFromGoogleTrends() {
       console.log(`⚠️  Google Trends API 不可用: ${error.message}`);
     }
     return null; // 返回 null 表示失败，需要尝试 Reddit
+  }
+}
+
+/**
+ * 使用 Google Trends RSS 作为主源
+ */
+async function fetchFromGoogleTrendsRss() {
+  try {
+    const axios = require('axios');
+    const cheerio = require('cheerio');
+    const response = await axios.get(GOOGLE_TRENDS_RSS_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; TrendingTopicsBot/1.0)'
+      },
+      timeout: 8000
+    });
+
+    const topics = [];
+    const $ = cheerio.load(response.data, { xmlMode: true });
+    $('item > title').each((_, el) => {
+      const title = $(el).text().trim();
+      if (!title) return;
+      const lower = title.toLowerCase();
+      if (MATERNAL_INFANT_KEYWORDS.some(kw => lower.includes(kw.toLowerCase()))) {
+        topics.push(title);
+      }
+    });
+
+    const uniqueTopics = [...new Set(topics)];
+    if (uniqueTopics.length > 0) {
+      logInfo(`✅ 从 Google Trends RSS 获取到 ${uniqueTopics.length} 个热门话题`);
+      return uniqueTopics.slice(0, 20);
+    }
+
+    return [];
+  } catch (error) {
+    if (process.env.DEBUG) {
+      console.log(`⚠️  Google Trends RSS 不可用: ${error.message}`);
+    } else {
+      console.log('⚠️  Google Trends RSS 不可用');
+    }
+    return null;
   }
 }
 
@@ -183,7 +234,7 @@ async function fetchFromReddit() {
     const uniqueTopics = [...new Set(topics)];
     
     if (uniqueTopics.length > 0) {
-      console.log(`✅ 从 Reddit 获取到 ${uniqueTopics.length} 个热门话题`);
+      logInfo(`✅ 从 Reddit 获取到 ${uniqueTopics.length} 个热门话题`);
       return uniqueTopics.slice(0, 20); // 最多返回20个
     }
     
@@ -196,30 +247,36 @@ async function fetchFromReddit() {
 
 /**
  * 主函数：获取 trending topics
- * 优先 Google Trends，失败则降级到 Reddit
+ * 优先 Google Trends RSS，失败则降级到 Google Trends API，再降级到 Reddit
  */
 async function fetchTrendingTopics() {
-  console.log('🔍 开始获取 Trending Topics...\n');
+  logInfo('🔍 开始获取 Trending Topics...\n');
   
-  // 优先尝试 Google Trends
-  let topics = await fetchFromGoogleTrends();
+  // 优先尝试 Google Trends RSS
+  let topics = await fetchFromGoogleTrendsRss();
   
-  // 如果 Google Trends 失败（返回 null）或没有结果，尝试 Reddit
+  // 如果 RSS 失败（返回 null）或没有结果，尝试 Google Trends API
   if (topics === null || topics.length === 0) {
-    console.log('📱 降级到 Reddit 数据源...\n');
+    logInfo('📈 降级到 Google Trends API...\n');
+    topics = await fetchFromGoogleTrends();
+  }
+
+  // 如果 RSS/API 失败（返回 null）或没有结果，尝试 Reddit
+  if (topics === null || topics.length === 0) {
+    logInfo('📱 降级到 Reddit 数据源...\n');
     topics = await fetchFromReddit();
   }
   
   if (topics.length === 0) {
-    console.log('⚠️  未能获取到 trending topics，将使用预设主题列表\n');
+    logInfo('⚠️  未能获取到 trending topics，将使用预设主题列表\n');
     return [];
   }
   
-  console.log(`\n📊 获取到的 Trending Topics (前10个):`);
+  logInfo(`\n📊 获取到的 Trending Topics (前10个):`);
   topics.slice(0, 10).forEach((topic, i) => {
-    console.log(`   ${i + 1}. ${topic}`);
+    logInfo(`   ${i + 1}. ${topic}`);
   });
-  console.log('');
+  logInfo('');
   
   return topics;
 }
@@ -228,7 +285,7 @@ async function fetchTrendingTopics() {
 if (require.main === module) {
   fetchTrendingTopics()
     .then(topics => {
-      console.log(`\n✅ 总共获取到 ${topics.length} 个 trending topics`);
+      logInfo(`\n✅ 总共获取到 ${topics.length} 个 trending topics`);
       process.exit(0);
     })
     .catch(error => {
