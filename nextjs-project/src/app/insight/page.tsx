@@ -4,6 +4,7 @@ import { unstable_cache } from 'next/cache';
 import Link from 'next/link';
 import Script from 'next/script';
 import InsightFilters from '@/components/InsightFilters';
+import InsightList from '@/components/InsightList';
 import { filterCleanKeywords } from '@/lib/supabase';
 
 // Generate CollectionPage schema for AEO with enhanced keywords
@@ -89,6 +90,8 @@ function generateOrganizationSchema() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+  const rssUrl = `${baseUrl}/insight/rss.xml`;
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -127,7 +130,15 @@ export async function generateMetadata(): Promise<Metadata> {
       url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight`,
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight`
+      canonical: `${baseUrl}/insight`,
+      types: {
+        'application/rss+xml': [
+          {
+            url: rssUrl,
+            title: 'Mom AI Agent Insights RSS'
+          }
+        ]
+      }
     }
   };
 }
@@ -208,6 +219,22 @@ export default async function InsightPage({
   searchParams?: { hub?: string; age?: string; keyword?: string };
 }) {
   const articles = await getInsightArticles();
+  const selectedHub = searchParams?.hub || '';
+  const selectedAge = searchParams?.age || '';
+  const selectedKeyword = searchParams?.keyword || '';
+  const hasActiveFilters = Boolean(selectedHub || selectedAge || selectedKeyword);
+  
+  const filteredArticles = articles.filter((article: any) => {
+    if (selectedHub && article.hub !== selectedHub) return false;
+    if (selectedAge && article.age_range !== selectedAge) return false;
+    if (selectedKeyword) {
+      const cleanKeywords = filterCleanKeywords(article.keywords || []);
+      if (!cleanKeywords.some((k: string) => k.toLowerCase().includes(selectedKeyword.toLowerCase()))) {
+        return false;
+      }
+    }
+    return true;
+  });
   
   // Extract unique values for filters
   const allHubs = Array.from(new Set(articles.map((a: any) => a.hub).filter(Boolean)));
@@ -222,8 +249,12 @@ export default async function InsightPage({
   const allKeywords = Array.from(allKeywordsSet).sort();
   
   // Generate schemas for AEO
-  const collectionSchema = generateInsightsPageSchema(articles, allKeywords);
+  const schemaArticles = filteredArticles.length > 0 ? filteredArticles : articles;
+  const collectionSchema = generateInsightsPageSchema(schemaArticles, allKeywords);
   const orgSchema = generateOrganizationSchema();
+  const updatedAt = articles[0]?.date_modified || articles[0]?.updated_at || articles[0]?.created_at || null;
+  const updatedLabel = updatedAt ? formatDate(updatedAt) : null;
+  const updatedIso = updatedAt ? new Date(updatedAt).toISOString() : null;
 
   return (
     <div className="min-h-screen bg-gradient-elegant">
@@ -252,9 +283,14 @@ export default async function InsightPage({
             Short explainers that translate public guidance into practical next steps for real-life parenting decisions.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <span className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-400">
-              Updated regularly
-            </span>
+            {updatedLabel && updatedIso && (
+              <time
+                dateTime={updatedIso}
+                className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-400"
+              >
+                Updated {updatedLabel}
+              </time>
+            )}
             <span className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-400">
               Evidence informed
             </span>
@@ -265,6 +301,53 @@ export default async function InsightPage({
             >
               Explore Topics
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="bg-white/80 border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-lg font-light text-slate-700 mb-4">Explore by hub</h2>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { slug: 'feeding', label: 'Feeding & Nutrition' },
+                { slug: 'sleep', label: 'Sleep & Routines' },
+                { slug: 'mom-health', label: 'Mom Health' },
+                { slug: 'development', label: 'Development' },
+                { slug: 'safety', label: 'Safety' },
+                { slug: 'recipes', label: 'Recipes' }
+              ].map((hub) => (
+                <Link
+                  key={hub.slug}
+                  href={`/hub/${hub.slug}`}
+                  className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
+                >
+                  {hub.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="bg-white/80 border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h2 className="text-lg font-light text-slate-700 mb-4">Resources</h2>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {[
+                { href: '/topics', label: 'Parenting topics' },
+                { href: '/trust', label: 'Methods & sources' },
+                { href: '/latest-articles', label: 'Latest articles' },
+                { href: '/feed.json', label: 'JSON feed' },
+                { href: '/insight/rss.xml', label: 'Insights RSS' },
+                { href: '/sitemap.xml', label: 'Sitemap' }
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -286,12 +369,19 @@ export default async function InsightPage({
             </Link>
           </div>
         ) : (
-          <InsightFilters
-            articles={articles}
-            allKeywords={allKeywords}
-            allHubs={allHubs}
-            allAgeRanges={allAgeRanges}
-          />
+          <>
+            <InsightFilters
+              articles={articles}
+              allKeywords={allKeywords}
+              allHubs={allHubs}
+              allAgeRanges={allAgeRanges}
+            />
+            <InsightList
+              articles={filteredArticles}
+              hasActiveFilters={hasActiveFilters}
+              clearFiltersUrl="/insight"
+            />
+          </>
         )}
       </div>
 
