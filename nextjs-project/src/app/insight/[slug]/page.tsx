@@ -8,6 +8,7 @@ import { filterCleanKeywords } from '@/lib/supabase';
 import SocialShare from '@/components/SocialShare';
 import CitationBox from '@/components/CitationBox';
 
+import { generateMedicalWebPageSchema } from '@/lib/aeo-optimizations';
 // AEO Helper: Extract FAQ data from keywords
 function extractAEOData(keywords: string[]) {
   const faqs: { question: string; answer: string }[] = [];
@@ -20,12 +21,12 @@ function extractAEOData(keywords: string[]) {
       try {
         const faqData = JSON.parse(keyword.replace('__AEO_FAQS__', ''));
         faqs.push(...faqData);
-      } catch (e) {}
+      } catch (e) { }
     } else if (keyword.startsWith('__AEO_STEPS__')) {
       try {
         const stepData = JSON.parse(keyword.replace('__AEO_STEPS__', ''));
         steps.push(...stepData);
-      } catch (e) {}
+      } catch (e) { }
     } else if (keyword.startsWith('__AEO_QUICK__')) {
       quickAnswer = keyword.replace('__AEO_QUICK__', '');
     } else {
@@ -38,96 +39,92 @@ function extractAEOData(keywords: string[]) {
 
 // Generate JSON-LD structured data for AEO
 function generateArticleSchema(article: any, aeoData: ReturnType<typeof extractAEOData>) {
-  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
-  
-  // Article Schema
-  const articleSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.meta_description || article.one_liner,
-    image: `${baseUrl}/heroimage.png`,
-    datePublished: article.date_published || article.created_at,
-    dateModified: article.date_modified || article.updated_at,
-    author: {
-      '@type': 'Organization',
-      name: 'Mom AI Agent',
-      url: baseUrl,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Mom AI Agent',
-      logo: {
-        '@type': 'ImageObject',
-        url: `${baseUrl}/Logo.png`,
-      },
-    },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${baseUrl}/insight/${article.slug}`,
-    },
-    about: {
-      '@type': 'Thing',
+  try {
+    // Use the advanced MedicalWebPage schema from our AEO library
+    // This includes critical fields for Trust, E-E-A-T, and Voice Search
+    const articleSchema = generateMedicalWebPageSchema({
+      ...article,
+      // Ensure these fields align with what generateMedicalWebPageSchema expects
+      one_liner: article.one_liner || article.meta_description,
+      age_range: article.age_range,
+      region: article.region,
+      // Use AEO-extracted keywords
+      keywords: aeoData.cleanKeywords,
+      // Pass citation data as empty array if missing (schema generator handles it)
+      citations: article.citations || []
+    });
+
+    // FAQ Schema (Critical for AI search engines)
+    const faqSchema = aeoData.faqs.length > 0 ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: aeoData.faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
+    } : null;
+
+    // HowTo Schema (if steps exist)
+    const howToSchema = aeoData.steps.length > 0 ? {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
       name: article.title,
-    },
-    keywords: aeoData.cleanKeywords.join(', '),
-  };
+      description: article.one_liner,
+      step: aeoData.steps.map((step, index) => ({
+        '@type': 'HowToStep',
+        position: index + 1,
+        name: step.title,
+        text: step.description,
+      })),
+    } : null;
 
-  // FAQ Schema (Critical for AI search engines)
-  const faqSchema = aeoData.faqs.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: aeoData.faqs.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
-  } : null;
+    // BreadcrumbList Schema
+    const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: baseUrl,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Insights',
+          item: `${baseUrl}/insight`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: article.title,
+          item: `${baseUrl}/insight/${article.slug}`,
+        },
+      ],
+    };
 
-  // HowTo Schema (if steps exist)
-  const howToSchema = aeoData.steps.length > 0 ? {
-    '@context': 'https://schema.org',
-    '@type': 'HowTo',
-    name: article.title,
-    description: article.one_liner,
-    step: aeoData.steps.map((step, index) => ({
-      '@type': 'HowToStep',
-      position: index + 1,
-      name: step.title,
-      text: step.description,
-    })),
-  } : null;
-
-  // BreadcrumbList Schema
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: baseUrl,
+    return { articleSchema, faqSchema, howToSchema, breadcrumbSchema };
+  } catch (error) {
+    console.error('Error generating schema:', error);
+    // Return empty/minimal schemas to prevent page crash
+    return {
+      articleSchema: {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: article.title,
+        description: article.one_liner || article.meta_description,
       },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Insights',
-        item: `${baseUrl}/insight`,
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: article.title,
-        item: `${baseUrl}/insight/${article.slug}`,
-      },
-    ],
-  };
-
-  return { articleSchema, faqSchema, howToSchema, breadcrumbSchema };
+      faqSchema: null,
+      howToSchema: null,
+      breadcrumbSchema: null
+    };
+  }
 }
 
 export async function generateStaticParams() {
@@ -171,11 +168,11 @@ const getInsightSlugs = unstable_cache(
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 使用 reviewed_by 字段识别 AI 生成的文章
+    // Allow both AI generated and Medical Board reviewed articles
     const { data: articles } = await supabase
       .from('articles')
       .select('slug')
-      .eq('reviewed_by', 'AI Content Generator')
+      .in('reviewed_by', ['AI Content Generator', 'Medical Review Board'])
       .eq('status', 'published')
       .limit(100);
 
@@ -192,12 +189,12 @@ const getInsightBySlug = unstable_cache(
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // 使用 reviewed_by 字段识别 AI 生成的文章
+    // Allow both AI generated and Medical Board reviewed articles
     const { data: article } = await supabase
       .from('articles')
       .select('*')
       .eq('slug', slug)
-      .eq('reviewed_by', 'AI Content Generator')
+      .in('reviewed_by', ['AI Content Generator', 'Medical Review Board'])
       .eq('status', 'published')
       .single();
 
@@ -217,7 +214,7 @@ const getRelatedInsights = unstable_cache(
     const { data: relatedArticles } = await supabase
       .from('articles')
       .select('*')
-      .eq('reviewed_by', 'AI Content Generator')
+      .in('reviewed_by', ['AI Content Generator', 'Medical Review Board'])
       .eq('status', 'published')
       .neq('id', excludeId)
       .eq('hub', hub)
@@ -257,17 +254,17 @@ function getHubName(hub: string) {
 function formatDate(dateString: string | null) {
   if (!dateString) return '';
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
 }
 
 // Related Articles Component
 async function RelatedArticlesSection({ currentArticle }: { currentArticle: any }) {
   const currentKeywords = filterCleanKeywords(currentArticle.keywords || []);
-  
+
   // Find related articles by hub and keywords
   const relatedArticles = await getRelatedInsights(currentArticle.hub, currentArticle.id);
 
@@ -343,7 +340,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
 
   // Extract AEO data from keywords
   const aeoData = extractAEOData(article.keywords || []);
-  
+
   // Generate JSON-LD schemas
   const schemas = generateArticleSchema(article, aeoData);
 
@@ -395,9 +392,9 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
                 Age {article.age_range}
               </span>
             )}
-              <span className="text-xs uppercase tracking-[0.2em] text-slate-400">
+            <span className="text-xs uppercase tracking-[0.2em] text-slate-400">
               Evidence-based
-              </span>
+            </span>
           </div>
         </div>
       </div>
@@ -410,7 +407,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
           <h1 className="text-4xl md:text-5xl font-light text-slate-700 mb-4" itemProp="headline">
             {article.title}
           </h1>
-          
+
           <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 mb-6">
             <span>Published {formatDate(article.date_published)}</span>
             {article.date_modified && (
@@ -468,7 +465,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
         {/* Article Body */}
         <div className="prose prose-slate lg:prose-lg max-w-none mb-12" itemProp="articleBody">
           {article.body_md ? (
-            <div 
+            <div
               dangerouslySetInnerHTML={{ __html: article.body_md }}
             />
           ) : (
@@ -487,11 +484,11 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
             </h2>
             <div className="space-y-4">
               {aeoData.faqs.map((faq, idx) => (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   className="bg-white/80 border border-slate-200 rounded-xl p-5 shadow-sm"
-                  itemScope 
-                  itemProp="mainEntity" 
+                  itemScope
+                  itemProp="mainEntity"
                   itemType="https://schema.org/Question"
                 >
                   <h3 className="text-lg font-medium text-slate-700 mb-2" itemProp="name">
@@ -519,11 +516,11 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
             </h2>
             <div className="space-y-4">
               {aeoData.steps.map((step, idx) => (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   className="flex gap-4 bg-white/80 border border-slate-200 rounded-xl p-5 shadow-sm"
-                  itemScope 
-                  itemProp="step" 
+                  itemScope
+                  itemProp="step"
                   itemType="https://schema.org/HowToStep"
                 >
                   <span className="flex-shrink-0 w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-semibold text-sm">
@@ -568,12 +565,12 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
 
         {/* Social Share & Citation */}
         <div className="mt-12 space-y-6">
-          <SocialShare 
+          <SocialShare
             url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${article.slug}`}
             title={article.title}
             description={article.one_liner || article.meta_description}
           />
-          
+
           <CitationBox
             title={article.title}
             url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${article.slug}`}

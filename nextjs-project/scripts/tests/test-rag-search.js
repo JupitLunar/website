@@ -10,7 +10,7 @@ const readline = require('readline');
 
 require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
 
-const API_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002';
+const API_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
 
 const rl = readline.createInterface({
   input: process.stdin,

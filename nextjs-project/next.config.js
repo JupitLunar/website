@@ -113,11 +113,11 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://*.vercel-insights.com https://www.googletagmanager.com https://*.google-analytics.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://*.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://*.google-analytics.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",
               "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://api.openai.com https://*.supabase.co https://*.vercel-insights.com https://www.momaiagent.com https://momaiagent.com https://www.google-analytics.com https://*.google-analytics.com",
+              "connect-src 'self' https://api.openai.com https://*.supabase.co https://*.vercel-insights.com https://va.vercel-scripts.com https://www.momaiagent.com https://momaiagent.com https://www.google-analytics.com https://*.google-analytics.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

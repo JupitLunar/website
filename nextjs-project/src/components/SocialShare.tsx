@@ -10,7 +10,7 @@ interface SocialShareProps {
 
 export default function SocialShare({ url, title, description }: SocialShareProps) {
   const [copied, setCopied] = useState(false);
-  const fullUrl = typeof window !== 'undefined' ? window.location.href : url;
+  const fullUrl = url;
   const shareText = description ? `${title} - ${description}` : title;
 
   const shareLinks = {

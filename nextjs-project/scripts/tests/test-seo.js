@@ -5,26 +5,25 @@ const path = require('path');
 
 console.log('🧪 Testing SEO & GEO Optimization Features...\n');
 
-// 测试1: 检查robots.txt
+// Test 1: Check robots.ts
 function testRobotsTxt() {
-  console.log('1. Testing robots.txt...');
+  console.log('1. Testing robots.ts...');
   try {
-    const robotsPath = path.join(__dirname, '../public/robots.txt');
+    const robotsPath = path.join(__dirname, '../src/app/robots.ts');
     const robotsContent = fs.readFileSync(robotsPath, 'utf8');
-    
+
+    // Check for correct configuration in typescript file
     const requiredElements = [
-      'User-agent: GPTBot',
-      'User-agent: ChatGPT-User',
-      'User-agent: CCBot',
-      'User-agent: anthropic-ai',
-      'User-agent: Claude-Web',
-      'User-agent: Omgilibot',
-      'Sitemap: https://jupitlunar.com/sitemap.xml',
-      'Disallow: /api/ingest',
-      'Disallow: /admin/',
-      'Crawl-delay: 1'
+      "import { MetadataRoute } from 'next';",
+      "export default function robots(): MetadataRoute.Robots",
+      "userAgent: '*'",
+      "allow: '/'",
+      "disallow: ['/admin/', '/api/auth/', '/private/']",
+      "userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'Amazonbot', 'ClaudeBot', 'PerplexityBot']",
+      "sitemap: `${siteUrl}/sitemap.xml`",
+      "host: siteUrl"
     ];
-    
+
     let passed = 0;
     requiredElements.forEach(element => {
       if (robotsContent.includes(element)) {
@@ -34,11 +33,11 @@ function testRobotsTxt() {
         console.log(`   ❌ Missing: ${element}`);
       }
     });
-    
-    console.log(`   📊 Robots.txt test: ${passed}/${requiredElements.length} passed\n`);
+
+    console.log(`   📊 Robots.ts test: ${passed}/${requiredElements.length} passed\n`);
     return passed === requiredElements.length;
   } catch (error) {
-    console.log(`   ❌ Error reading robots.txt: ${error.message}\n`);
+    console.log(`   ❌ Error reading robots.ts: ${error.message}\n`);
     return false;
   }
 }
@@ -49,17 +48,17 @@ function testSitemapTs() {
   try {
     const sitemapPath = path.join(__dirname, '../src/app/sitemap.ts');
     const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
-    
+
     const requiredElements = [
       'MetadataRoute.Sitemap',
       'contentManager.getAllArticles()',
       'contentManager.getContentHubs()',
-      'baseUrl = \'https://jupitlunar.com\'',
+      "const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\\/$/, '')",
       'changeFrequency',
       'priority',
       'lastModified'
     ];
-    
+
     let passed = 0;
     requiredElements.forEach(element => {
       if (sitemapContent.includes(element)) {
@@ -69,7 +68,7 @@ function testSitemapTs() {
         console.log(`   ❌ Missing: ${element}`);
       }
     });
-    
+
     console.log(`   📊 Sitemap.ts test: ${passed}/${requiredElements.length} passed\n`);
     return passed === requiredElements.length;
   } catch (error) {
@@ -84,7 +83,7 @@ function testJsonLdGenerator() {
   try {
     const jsonLdPath = path.join(__dirname, '../src/lib/json-ld.ts');
     const jsonLdContent = fs.readFileSync(jsonLdPath, 'utf8');
-    
+
     const requiredFunctions = [
       'generateArticleStructuredData',
       'generateHubStructuredData',
@@ -94,7 +93,7 @@ function testJsonLdGenerator() {
       'generateFAQStructuredData',
       'generateProductStructuredData'
     ];
-    
+
     const requiredSchemas = [
       '@type": "Article"',
       '@type": "CollectionPage"',
@@ -104,7 +103,7 @@ function testJsonLdGenerator() {
       '@type": "FAQPage"',
       '@type": "SoftwareApplication"'
     ];
-    
+
     let functionsPassed = 0;
     requiredFunctions.forEach(func => {
       if (jsonLdContent.includes(func)) {
@@ -114,7 +113,7 @@ function testJsonLdGenerator() {
         console.log(`   ❌ Missing function: ${func}`);
       }
     });
-    
+
     let schemasPassed = 0;
     requiredSchemas.forEach(schema => {
       if (jsonLdContent.includes(schema)) {
@@ -124,7 +123,7 @@ function testJsonLdGenerator() {
         console.log(`   ❌ Missing schema: ${schema}`);
       }
     });
-    
+
     console.log(`   📊 JSON-LD test: ${functionsPassed}/${requiredFunctions.length} functions, ${schemasPassed}/${requiredSchemas.length} schemas\n`);
     return functionsPassed === requiredFunctions.length && schemasPassed === requiredSchemas.length;
   } catch (error) {
@@ -139,10 +138,10 @@ function testDynamicPages() {
   try {
     const articlePagePath = path.join(__dirname, '../src/app/[slug]/page.tsx');
     const hubPagePath = path.join(__dirname, '../src/app/hub/[hub-slug]/page.tsx');
-    
+
     const articleContent = fs.readFileSync(articlePagePath, 'utf8');
     const hubContent = fs.readFileSync(hubPagePath, 'utf8');
-    
+
     const articleRequired = [
       'generateMetadata',
       'generateStaticParams',
@@ -151,14 +150,14 @@ function testDynamicPages() {
       'openGraph',
       'twitter'
     ];
-    
+
     const hubRequired = [
       'generateMetadata',
       'generateStaticParams',
       'generateHubStructuredData',
       'generateBreadcrumbStructuredData'
     ];
-    
+
     let articlePassed = 0;
     articleRequired.forEach(element => {
       if (articleContent.includes(element)) {
@@ -168,7 +167,7 @@ function testDynamicPages() {
         console.log(`   ❌ Article page missing: ${element}`);
       }
     });
-    
+
     let hubPassed = 0;
     hubRequired.forEach(element => {
       if (hubContent.includes(element)) {
@@ -178,7 +177,7 @@ function testDynamicPages() {
         console.log(`   ❌ Hub page missing: ${element}`);
       }
     });
-    
+
     console.log(`   📊 Dynamic pages test: Article ${articlePassed}/${articleRequired.length}, Hub ${hubPassed}/${hubRequired.length}\n`);
     return articlePassed === articleRequired.length && hubPassed === hubRequired.length;
   } catch (error) {
@@ -193,7 +192,7 @@ function testNotFoundPage() {
   try {
     const notFoundPath = path.join(__dirname, '../src/app/not-found.tsx');
     const notFoundContent = fs.readFileSync(notFoundPath, 'utf8');
-    
+
     const requiredElements = [
       'Page Not Found',
       'Go Home',
@@ -205,7 +204,7 @@ function testNotFoundPage() {
       'health-safety',
       'parenting-tips'
     ];
-    
+
     let passed = 0;
     requiredElements.forEach(element => {
       if (notFoundContent.includes(element)) {
@@ -215,7 +214,7 @@ function testNotFoundPage() {
         console.log(`   ❌ Missing: ${element}`);
       }
     });
-    
+
     console.log(`   📊 404 page test: ${passed}/${requiredElements.length} passed\n`);
     return passed === requiredElements.length;
   } catch (error) {
@@ -233,22 +232,22 @@ function runAllTests() {
     testDynamicPages,
     testNotFoundPage
   ];
-  
+
   let passedTests = 0;
   const totalTests = tests.length;
-  
+
   tests.forEach(test => {
     if (test()) {
       passedTests++;
     }
   });
-  
+
   console.log('🎯 Test Results Summary:');
   console.log(`   📊 Total tests: ${totalTests}`);
   console.log(`   ✅ Passed: ${passedTests}`);
   console.log(`   ❌ Failed: ${totalTests - passedTests}`);
   console.log(`   📈 Success rate: ${Math.round((passedTests / totalTests) * 100)}%`);
-  
+
   if (passedTests === totalTests) {
     console.log('\n🎉 All SEO & GEO optimization tests passed!');
     console.log('   Your website is ready for AI crawlers and search engines.');
