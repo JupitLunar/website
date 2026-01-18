@@ -39,11 +39,11 @@ export function filterCleanKeywords(keywords: string[] | null | undefined): stri
 // Admin client for server-side operations
 export const createAdminClient = () => {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
+
   if (!serviceRoleKey) {
     throw new Error('Missing Supabase service role key');
   }
-  
+
   return createClient(supabaseUrl, serviceRoleKey);
 };
 
@@ -71,9 +71,9 @@ export const contentManager = {
       .neq('reviewed_by', 'AI Content Generator')  // Exclude AI-generated articles
       .order('date_published', { ascending: false })
       .limit(limit);
-    
+
     if (error) throw error;
-    
+
     // 缓存5分钟
     clientCache.set(cacheKey, data, 5 * 60 * 1000);
     return data;
@@ -100,7 +100,7 @@ export const contentManager = {
       .eq('status', 'published')
       .neq('reviewed_by', 'AI Content Generator')  // Exclude AI-generated articles
       .single();
-    
+
     if (error) {
       if ((error as any).code === 'PGRST116') {
         return null;
@@ -127,7 +127,7 @@ export const contentManager = {
       .select('*')
       .eq('slug', slug)
       .single();
-    
+
     if (error) {
       if ((error as any).code === 'PGRST116') {
         return null;
@@ -150,12 +150,12 @@ export const contentManager = {
       .eq('status', 'published')
       .neq('reviewed_by', 'AI Content Generator')  // Primary filter using reviewed_by
       .order('date_published', { ascending: false });
-    
+
     if (error) throw error;
-    
+
     // Additional filtering in code: exclude articles with article_source='ai_generated' if field exists
     // For now, we rely on reviewed_by filter above since article_source may not exist
-    return (data || []).filter((article: any) => 
+    return (data || []).filter((article: any) =>
       article.reviewed_by !== 'AI Content Generator'
     );
   },
@@ -194,7 +194,7 @@ export const contentManager = {
       .eq('status', 'published')
       .order('date_published', { ascending: false })
       .limit(limit);
-    
+
     if (error) throw error;
     return data;
   },
@@ -202,17 +202,17 @@ export const contentManager = {
   // Search articles with filters
   async searchArticles(query: SearchQuery): Promise<PaginatedResponse<any>> {
     const { query: searchQuery, filters, limit = 20, offset = 0, sort_by = 'date_published', sort_order = 'desc' } = query;
-    
+
     let queryBuilder = supabase
       .from('articles')
       .select('*', { count: 'exact' })
       .eq('status', 'published');
-    
+
     // Apply text search using generated search vector
     if (searchQuery) {
       queryBuilder = queryBuilder.textSearch('search_vector', searchQuery);
     }
-    
+
     // Apply filters
     if (filters) {
       if (filters.hub) queryBuilder = queryBuilder.eq('hub', filters.hub);
@@ -224,20 +224,20 @@ export const contentManager = {
       if (filters.date_from) queryBuilder = queryBuilder.gte('date_published', filters.date_from);
       if (filters.date_to) queryBuilder = queryBuilder.lte('date_published', filters.date_to);
     }
-    
+
     // Apply sorting and pagination
     queryBuilder = queryBuilder
       .order(sort_by, { ascending: sort_order === 'asc' })
       .range(offset, offset + limit - 1);
-    
+
     const { data, error, count } = await queryBuilder;
-    
+
     if (error) throw error;
-    
+
     const total = count || 0;
     const total_pages = Math.ceil(total / limit);
     const page = Math.floor(offset / limit) + 1;
-    
+
     return {
       data: data || [],
       pagination: {
@@ -256,21 +256,21 @@ export const contentManager = {
     const { data: articles, error: articlesError } = await supabase
       .from('articles')
       .select('hub, type, lang, status, date_published');
-    
+
     if (articlesError) throw articlesError;
-    
+
     const { count: citationsCount, error: citationsError } = await supabase
       .from('citations')
       .select('*', { count: 'exact', head: true });
-    
+
     if (citationsError) throw citationsError;
-    
+
     const { count: faqCount, error: faqError } = await supabase
       .from('qas')
       .select('*', { count: 'exact', head: true });
-    
+
     if (faqError) throw faqError;
-    
+
     const stats: ContentStats = {
       total_articles: articles.length,
       articles_by_hub: {
@@ -285,11 +285,11 @@ export const contentManager = {
       total_citations: citationsCount || 0,
       total_faq_items: faqCount || 0
     };
-    
+
     // Calculate statistics
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
+
     articles.forEach(article => {
       if (article.hub && article.hub in stats.articles_by_hub) {
         stats.articles_by_hub[article.hub as ContentHub]++;
@@ -303,12 +303,12 @@ export const contentManager = {
       if (article.status && article.status in stats.articles_by_status) {
         stats.articles_by_status[article.status as ContentStatus]++;
       }
-      
+
       if (new Date(article.date_published) >= sevenDaysAgo) {
         stats.recent_articles++;
       }
     });
-    
+
     return stats;
   },
 
@@ -322,9 +322,9 @@ export const contentManager = {
       .from('content_hubs')
       .select('*')
       .order('id');
-    
+
     if (error) throw error;
-    
+
     // 缓存30分钟（内容中心很少变化）
     clientCache.set(cacheKey, data, 30 * 60 * 1000);
     return data;
@@ -338,7 +338,7 @@ export const contentManager = {
       .eq('status', 'published')
       .order('date_published', { ascending: false })
       .limit(limit);
-    
+
     if (error) throw error;
     return data;
   },
@@ -350,7 +350,7 @@ export const contentManager = {
       .select('hub, type, entities')
       .eq('id', articleId)
       .single();
-    
+
     if (currentError) {
       if ((currentError as any).code === 'PGRST116') {
         return [];
@@ -363,15 +363,15 @@ export const contentManager = {
       .select('*')
       .eq('status', 'published')
       .neq('id', articleId);
-    
+
     // If hub is provided, prioritize it, otherwise use current article's hub
     const targetHub = hub || currentArticle.hub;
     queryBuilder = queryBuilder.eq('hub', targetHub);
-    
+
     const { data, error } = await queryBuilder
       .order('published_at', { ascending: false })
       .limit(limit);
-    
+
     if (error) throw error;
     return data || [];
   }
@@ -718,7 +718,7 @@ export const aiFeedManager = {
 
       // 判断证据等级
       const evidenceLevel = hasGovernmentSource && citationCount >= 3 ? 'A' :
-                            citationCount >= 2 ? 'B' : 'C';
+        citationCount >= 2 ? 'B' : 'C';
 
       // 内容新鲜度（天数）
       const lastReviewedDate = article.last_reviewed || article.date_modified;
@@ -728,7 +728,7 @@ export const aiFeedManager = {
 
       return {
         id: `${article.slug}-${article.id}`,
-        url: `/${article.type}/${article.hub}/${article.slug}`,
+        url: `/insight/${article.slug}`,
         title: article.title,
         lang: article.lang,
         summary: article.one_liner,
@@ -788,7 +788,7 @@ export const aiFeedManager = {
       );
 
       const evidenceLevel = hasGovernmentSource && citationCount >= 3 ? 'A' :
-                            citationCount >= 2 ? 'B' : 'C';
+        citationCount >= 2 ? 'B' : 'C';
 
       // 新鲜度
       const lastReviewed = article.last_reviewed || qa.last_updated;
@@ -830,7 +830,7 @@ export const userManager = {
       .upsert({ email }, { onConflict: 'email' })
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -842,7 +842,7 @@ export const userManager = {
       .upsert({ email }, { onConflict: 'email' })
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
@@ -854,7 +854,7 @@ export const userManager = {
       .insert({ email, message, category })
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   }
@@ -865,7 +865,7 @@ export const ingestionManager = {
   // Ingest content bundle using RPC function
   async ingestContentBundle(contentBundle: ContentBundle) {
     const adminSupabase = createAdminClient();
-    
+
     const { data, error } = await adminSupabase.rpc('upsert_article_bundle', {
       p_slug: contentBundle.slug,
       p_type: contentBundle.type,
@@ -888,7 +888,7 @@ export const ingestionManager = {
       p_meta_description: contentBundle.meta_description,
       p_keywords: contentBundle.keywords
     });
-    
+
     if (error) throw error;
     return data;
   },
@@ -896,19 +896,19 @@ export const ingestionManager = {
   // Get ingestion logs
   async getIngestionLogs(batchId?: string, limit: number = 100) {
     const adminSupabase = createAdminClient();
-    
+
     let query = adminSupabase
       .from('ingestion_logs')
       .select('*')
       .order('created_at', { ascending: false })
       .limit(limit);
-    
+
     if (batchId) {
       query = query.eq('batch_id', batchId);
     }
-    
+
     const { data, error } = await query;
-    
+
     if (error) throw error;
     return data;
   }
@@ -967,10 +967,7 @@ export const foodManager = {
   async getFoodBySlug(slug: string) {
     const { data, error } = await supabase
       .from('kb_foods')
-      .select(`
-        *,
-        kb_sources(*)
-      `)
+      .select('*')
       .eq('slug', slug)
       .eq('status', 'published')
       .single();
@@ -980,6 +977,18 @@ export const foodManager = {
         return null;
       }
       throw error;
+    }
+
+    if (data && data.source_ids && data.source_ids.length > 0) {
+      try {
+        const sources = await knowledgeBase.getSources(data.source_ids);
+        data.kb_sources = sources;
+      } catch (err) {
+        console.error('Error fetching sources for food:', err);
+        data.kb_sources = [];
+      }
+    } else {
+      data.kb_sources = [];
     }
 
     return data;

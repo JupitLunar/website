@@ -12,7 +12,11 @@
  * - SUPABASE_SERVICE_ROLE_KEY
  */
 
-require('dotenv').config({ path: '.env.local' });
+const path = require('path');
+const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 const { createClient } = require('@supabase/supabase-js');
 const https = require('https');
 

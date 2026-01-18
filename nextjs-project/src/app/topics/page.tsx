@@ -51,10 +51,36 @@ const TOPIC_CARDS = [
 const GRADE_ORDER: Record<string, number> = { A: 0, B: 1, C: 2, D: 3 };
 const DATE_FORMAT = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+
 export const metadata = {
   title: 'Topics Library | Mom AI Agent',
   description:
     'Browse evidence-led playbooks and the public health sources that power the Mom AI Agent knowledge base.',
+  keywords: ['parenting topics', 'feeding guidelines', 'infant safety', 'allergen introduction', 'CDC guidelines', 'AAP recommendations', 'Health Canada', 'evidence-based parenting'],
+  openGraph: {
+    title: 'Topics Library - Evidence-Based Parenting Playbooks',
+    description: 'Browse evidence-led playbooks and the public health sources that power the Mom AI Agent knowledge base.',
+    url: `${siteUrl}/topics`,
+    type: 'website',
+    images: [
+      {
+        url: `${siteUrl}/og-image.svg`,
+        width: 1200,
+        height: 630,
+        alt: 'Topics Library - Mom AI Agent',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Topics Library - Evidence-Based Parenting Playbooks',
+    description: 'Browse evidence-led playbooks and the public health sources that power the Mom AI Agent knowledge base.',
+    images: [`${siteUrl}/og-image.svg`],
+  },
+  alternates: {
+    canonical: `${siteUrl}/topics`,
+  },
 };
 
 function formatSourceDate(value: string | null | undefined) {
@@ -62,6 +88,25 @@ function formatSourceDate(value: string | null | undefined) {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
   return DATE_FORMAT.format(parsed);
+}
+
+function generateTopicsSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Topics Library",
+    "description": "Evidence-led playbooks for feeding, safety, and development",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": TOPIC_CARDS.map((topic, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": topic.title,
+        "description": topic.blurb,
+        "url": `https://www.momaiagent.com/topics/${topic.slug}`
+      }))
+    }
+  };
 }
 
 export default async function TopicsLibraryPage() {
@@ -82,9 +127,14 @@ export default async function TopicsLibraryPage() {
   }, null);
 
   const updatedLabel = latestRetrieved ? `Updated ${DATE_FORMAT.format(latestRetrieved)}` : 'Continuously updated';
+  const structuredData = generateTopicsSchema();
 
   return (
     <div className="min-h-screen bg-gradient-elegant">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <section className="relative overflow-hidden py-16 px-4 sm:px-8">
         <div className="absolute top-0 right-0 h-72 w-72 rounded-full bg-gradient-to-br from-violet-100/40 to-purple-100/10 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-gradient-to-br from-slate-100/70 to-violet-100/10 blur-3xl"></div>

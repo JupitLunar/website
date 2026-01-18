@@ -8,7 +8,10 @@
 const path = require('path');
 const readline = require('readline');
 
-require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
+const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
 const API_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
 

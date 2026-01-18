@@ -11,7 +11,10 @@ const path = require('path');
 const { extractArticle, generateSlug, extractKeywords, delay } = require('./scraper-utils');
 const { GLOBAL_SOURCES, getAllSources } = require('./global-sources-config');
 
-require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
+const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

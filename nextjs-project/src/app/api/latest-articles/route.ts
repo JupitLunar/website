@@ -43,39 +43,40 @@ export async function GET(request: NextRequest) {
     const sourceUrl = primaryCitation?.url;
 
     return {
-    id: article.id,
-    title: article.title,
-    url: `https://www.momaiagent.com/articles/${article.slug}`,
-    summary: article.one_liner,
-    fullContent: article.body_md,
-    metadata: {
-      region: article.region,
-      topic: article.hub,
-      type: article.type,
-      ageRange: article.age_range,
-      keywords: article.keywords,
-      entities: article.entities,
-      lastReviewed: article.last_reviewed,
-      reviewedBy: article.reviewed_by,
-      datePublished: article.created_at,
-      source: article.license
-    },
-    keyFacts: article.key_facts,
-    source: sourceName
-      ? {
+      id: article.id,
+      title: article.title,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${article.slug}`,
+      summary: article.one_liner,
+      fullContent: article.body_md,
+      metadata: {
+        region: article.region,
+        topic: article.hub,
+        type: article.type,
+        ageRange: article.age_range,
+        keywords: article.keywords,
+        entities: article.entities,
+        lastReviewed: article.last_reviewed,
+        reviewedBy: article.reviewed_by,
+        datePublished: article.created_at,
+        source: article.license
+      },
+      keyFacts: article.key_facts,
+      source: sourceName
+        ? {
           name: sourceName,
           url: sourceUrl || null
         }
-      : undefined,
-    citations,
-    // Structured for easy AI parsing
-    aiContext: {
-      purpose: 'evidence-based baby care advice',
-      reliability: 'verified from authoritative medical sources',
-      targetAudience: 'parents and caregivers of infants',
-      contentType: 'medical and parenting guidance'
+        : undefined,
+      citations,
+      // Structured for easy AI parsing
+      aiContext: {
+        purpose: 'evidence-based baby care advice',
+        reliability: 'verified from authoritative medical sources',
+        targetAudience: 'parents and caregivers of infants',
+        contentType: 'medical and parenting guidance'
+      }
     }
-  }});
+  });
 
   // Support different formats
   if (format === 'simplified') {

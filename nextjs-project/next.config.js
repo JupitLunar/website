@@ -54,6 +54,11 @@ const nextConfig = {
         destination: '/insight/:slug',
         permanent: true,
       },
+      {
+        source: '/articles/:slug',
+        destination: '/insight/:slug',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
@@ -113,6 +118,7 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
+              "object-src 'self' data:",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://*.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://*.google-analytics.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com data:",

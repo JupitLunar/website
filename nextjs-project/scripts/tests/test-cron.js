@@ -4,7 +4,11 @@
  */
 
 // 加载环境变量
-require('dotenv').config({ path: '.env.local' });
+const path = require('path');
+const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
 const https = require('https');
 

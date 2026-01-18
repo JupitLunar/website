@@ -9,7 +9,10 @@
 const path = require('path');
 
 // 加载环境变量
-require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
+const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
 const isQuiet = process.env.QUIET_TRENDS === 'true';
 const logInfo = (...args) => {

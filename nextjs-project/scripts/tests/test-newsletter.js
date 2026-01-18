@@ -9,7 +9,7 @@ console.log('📧 Testing Newsletter & User Engagement Features...\n');
 function testNewsletterSignupComponent() {
   console.log('1. Testing Newsletter Signup Component...');
   try {
-    const componentPath = path.join(__dirname, '../src/components/NewsletterSignup.tsx');
+    const componentPath = path.join(__dirname, '../../src/components/NewsletterSignup.tsx');
     const componentContent = fs.readFileSync(componentPath, 'utf8');
     
     const requiredElements = [
@@ -52,9 +52,9 @@ function testNewsletterAPIEndpoints() {
   console.log('2. Testing Newsletter API Endpoints...');
   try {
     const requiredFiles = [
-      '../src/app/api/newsletter/subscribe/route.ts',
-      '../src/app/api/newsletter/manage/route.ts',
-      '../src/app/api/newsletter/stats/route.ts'
+      '../../src/app/api/newsletter/subscribe/route.ts',
+      '../../src/app/api/newsletter/manage/route.ts',
+      '../../src/app/api/newsletter/stats/route.ts'
     ];
     
     let passed = 0;
@@ -80,9 +80,9 @@ function testNewsletterAPIEndpoints() {
 function testNewsletterAPIContent() {
   console.log('3. Testing Newsletter API Content...');
   try {
-    const subscribePath = path.join(__dirname, '../src/app/api/newsletter/subscribe/route.ts');
-    const managePath = path.join(__dirname, '../src/app/api/newsletter/manage/route.ts');
-    const statsPath = path.join(__dirname, '../src/app/api/newsletter/stats/route.ts');
+    const subscribePath = path.join(__dirname, '../../src/app/api/newsletter/subscribe/route.ts');
+    const managePath = path.join(__dirname, '../../src/app/api/newsletter/manage/route.ts');
+    const statsPath = path.join(__dirname, '../../src/app/api/newsletter/stats/route.ts');
     
     const requiredElements = [
       { file: subscribePath, elements: ['POST', 'email', 'newsletter_subscribers', 'supabase', 'NextRequest', 'NextResponse'] },
@@ -124,7 +124,7 @@ function testNewsletterAPIContent() {
 function testNewsletterManagementPage() {
   console.log('4. Testing Newsletter Management Page...');
   try {
-    const pagePath = path.join(__dirname, '../src/app/admin/newsletter/page.tsx');
+    const pagePath = path.join(__dirname, '../../src/app/admin/newsletter/page.tsx');
     const pageContent = fs.readFileSync(pagePath, 'utf8');
     
     const requiredElements = [
@@ -166,7 +166,7 @@ function testNewsletterManagementPage() {
 function testFooterIntegration() {
   console.log('5. Testing Footer Integration...');
   try {
-    const footerPath = path.join(__dirname, '../src/components/layout/Footer.tsx');
+    const footerPath = path.join(__dirname, '../../src/components/layout/Footer.tsx');
     const footerContent = fs.readFileSync(footerPath, 'utf8');
     
     const requiredElements = [
@@ -199,7 +199,7 @@ function testFooterIntegration() {
 function testHeaderIntegration() {
   console.log('6. Testing Header Integration...');
   try {
-    const headerPath = path.join(__dirname, '../src/components/Header.tsx');
+    const headerPath = path.join(__dirname, '../../src/components/Header.tsx');
     const headerContent = fs.readFileSync(headerPath, 'utf8');
     
     const requiredElements = [
@@ -230,11 +230,11 @@ function testFileStructure() {
   console.log('7. Testing File Structure...');
   try {
     const requiredFiles = [
-      '../src/components/NewsletterSignup.tsx',
-      '../src/app/api/newsletter/subscribe/route.ts',
-      '../src/app/api/newsletter/manage/route.ts',
-      '../src/app/api/newsletter/stats/route.ts',
-      '../src/app/admin/newsletter/page.tsx'
+      '../../src/components/NewsletterSignup.tsx',
+      '../../src/app/api/newsletter/subscribe/route.ts',
+      '../../src/app/api/newsletter/manage/route.ts',
+      '../../src/app/api/newsletter/stats/route.ts',
+      '../../src/app/admin/newsletter/page.tsx'
     ];
     
     let passed = 0;

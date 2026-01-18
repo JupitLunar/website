@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     images: ['/og-latest-articles.jpg']
   },
   alternates: {
-    canonical: 'https://www.momaiagent.com/latest-articles'
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/latest-articles`
   },
   robots: {
     index: true,
@@ -95,7 +95,7 @@ export default async function LatestArticlesPage() {
         items={articles.slice(0, 50).map((article, index) => ({
           position: index + 1,
           name: article.title,
-          url: `https://www.momaiagent.com/articles/${article.slug}`,
+          url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${article.slug}`,
           description: article.one_liner || article.meta_description
         }))}
       />
@@ -119,7 +119,7 @@ export default async function LatestArticlesPage() {
                 item: {
                   '@type': 'Article',
                   headline: article.title,
-                  url: `https://www.momaiagent.com/articles/${article.slug}`,
+                  url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${article.slug}`,
                   description: article.one_liner,
                   datePublished: article.created_at,
                   author: {
@@ -132,7 +132,7 @@ export default async function LatestArticlesPage() {
             provider: {
               '@type': 'Organization',
               name: 'JupitLunar',
-              url: 'https://www.momaiagent.com'
+              url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'
             }
           })
         }}
@@ -232,10 +232,10 @@ export default async function LatestArticlesPage() {
                     <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
                       <span className="text-2xl">
                         {region === 'US' ? '🇺🇸' :
-                         region === 'UK' ? '🇬🇧' :
-                         region === 'CA' ? '🇨🇦' :
-                         region === 'AU' ? '🇦🇺' :
-                         region === 'Global' ? '🌍' : '🌐'}
+                          region === 'UK' ? '🇬🇧' :
+                            region === 'CA' ? '🇨🇦' :
+                              region === 'AU' ? '🇦🇺' :
+                                region === 'Global' ? '🌍' : '🌐'}
                       </span>
                       {region}
                     </h3>

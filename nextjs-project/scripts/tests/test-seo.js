@@ -9,7 +9,7 @@ console.log('🧪 Testing SEO & GEO Optimization Features...\n');
 function testRobotsTxt() {
   console.log('1. Testing robots.ts...');
   try {
-    const robotsPath = path.join(__dirname, '../src/app/robots.ts');
+    const robotsPath = path.join(__dirname, '../../src/app/robots.ts');
     const robotsContent = fs.readFileSync(robotsPath, 'utf8');
 
     // Check for correct configuration in typescript file
@@ -46,7 +46,7 @@ function testRobotsTxt() {
 function testSitemapTs() {
   console.log('2. Testing sitemap.ts...');
   try {
-    const sitemapPath = path.join(__dirname, '../src/app/sitemap.ts');
+    const sitemapPath = path.join(__dirname, '../../src/app/sitemap.ts');
     const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
 
     const requiredElements = [
@@ -81,7 +81,7 @@ function testSitemapTs() {
 function testJsonLdGenerator() {
   console.log('3. Testing JSON-LD generator...');
   try {
-    const jsonLdPath = path.join(__dirname, '../src/lib/json-ld.ts');
+    const jsonLdPath = path.join(__dirname, '../../src/lib/json-ld.ts');
     const jsonLdContent = fs.readFileSync(jsonLdPath, 'utf8');
 
     const requiredFunctions = [
@@ -136,8 +136,8 @@ function testJsonLdGenerator() {
 function testDynamicPages() {
   console.log('4. Testing dynamic pages...');
   try {
-    const articlePagePath = path.join(__dirname, '../src/app/[slug]/page.tsx');
-    const hubPagePath = path.join(__dirname, '../src/app/hub/[hub-slug]/page.tsx');
+    const articlePagePath = path.join(__dirname, '../../src/app/[slug]/page.tsx');
+    const hubPagePath = path.join(__dirname, '../../src/app/hub/[hub-slug]/page.tsx');
 
     const articleContent = fs.readFileSync(articlePagePath, 'utf8');
     const hubContent = fs.readFileSync(hubPagePath, 'utf8');
@@ -190,7 +190,7 @@ function testDynamicPages() {
 function testNotFoundPage() {
   console.log('5. Testing 404 page...');
   try {
-    const notFoundPath = path.join(__dirname, '../src/app/not-found.tsx');
+    const notFoundPath = path.join(__dirname, '../../src/app/not-found.tsx');
     const notFoundContent = fs.readFileSync(notFoundPath, 'utf8');
 
     const requiredElements = [

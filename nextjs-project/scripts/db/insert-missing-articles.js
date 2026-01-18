@@ -2,7 +2,10 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
+const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -40,6 +43,8 @@ const articles = [
         ],
         last_reviewed: new Date().toISOString().split('T')[0],
         reviewed_by: 'Medical Review Board',
+        date_published: new Date().toISOString(),
+        date_modified: new Date().toISOString(),
         body_md: `# Helping New Moms Navigate Feeding and First Foods
 
 ## 1. The First 6 Months: Milk Matters
@@ -109,6 +114,8 @@ _Always consult your pediatrician before changing your baby's diet, especially i
         ],
         last_reviewed: new Date().toISOString().split('T')[0],
         reviewed_by: 'Medical Review Board',
+        date_published: new Date().toISOString(),
+        date_modified: new Date().toISOString(),
         body_md: `# Safely Introducing Allergens to Your Baby
 
 Recent research (like the LEAP study) has completely changed guidelines: delaying allergens **increases** risk. We now recommend early introduction.
@@ -172,6 +179,8 @@ Once introduced and tolerated, keep the allergen in the diet regularly (e.g., 2-
         ],
         last_reviewed: new Date().toISOString().split('T')[0],
         reviewed_by: 'Medical Review Board',
+        date_published: new Date().toISOString(),
+        date_modified: new Date().toISOString(),
         body_md: `# Fever and Emergency Steps: A Midnight Guide
 
 Waking up to a burning hot baby is scary. Here is your step-by-step medical guide.
@@ -220,11 +229,12 @@ async function run() {
         const { data: exist } = await supabase.from('articles').select('id').eq('slug', article.slug).single();
         if (exist) {
             console.log('  - Exists, updating...');
-            await supabase.from('articles').update(article).eq('slug', article.slug);
+            const { error } = await supabase.from('articles').update(article).eq('slug', article.slug);
+            if (error) console.error('  ❌ Update Error:', error.message);
         } else {
             console.log('  - Inserting new...');
             const { error } = await supabase.from('articles').insert(article);
-            if (error) console.error('  ❌ Error:', error.message);
+            if (error) console.error('  ❌ Insert Error:', error.message);
         }
     }
 

@@ -9,7 +9,7 @@ console.log('📊 Testing Analytics & Monitoring Features...\n');
 function testAnalyticsLibrary() {
   console.log('1. Testing Analytics Library...');
   try {
-    const libPath = path.join(__dirname, '../src/lib/analytics.ts');
+    const libPath = path.join(__dirname, '../../src/lib/analytics.ts');
     const libContent = fs.readFileSync(libPath, 'utf8');
     
     const requiredElements = [
@@ -51,7 +51,7 @@ function testAnalyticsLibrary() {
 function testAnalyticsComponent() {
   console.log('2. Testing Analytics Component...');
   try {
-    const componentPath = path.join(__dirname, '../src/components/Analytics.tsx');
+    const componentPath = path.join(__dirname, '../../src/components/Analytics.tsx');
     const componentContent = fs.readFileSync(componentPath, 'utf8');
     
     const requiredElements = [
@@ -92,8 +92,8 @@ function testAnalyticsAPIEndpoints() {
   console.log('3. Testing Analytics API Endpoints...');
   try {
     const requiredFiles = [
-      '../src/app/api/analytics/events/route.ts',
-      '../src/app/api/analytics/stats/route.ts'
+      '../../src/app/api/analytics/events/route.ts',
+      '../../src/app/api/analytics/stats/route.ts'
     ];
     
     let passed = 0;
@@ -119,8 +119,8 @@ function testAnalyticsAPIEndpoints() {
 function testAnalyticsAPIContent() {
   console.log('4. Testing Analytics API Content...');
   try {
-    const eventsPath = path.join(__dirname, '../src/app/api/analytics/events/route.ts');
-    const statsPath = path.join(__dirname, '../src/app/api/analytics/stats/route.ts');
+    const eventsPath = path.join(__dirname, '../../src/app/api/analytics/events/route.ts');
+    const statsPath = path.join(__dirname, '../../src/app/api/analytics/stats/route.ts');
     
     const requiredElements = [
       { file: eventsPath, elements: ['POST', 'GET', 'analytics_events', 'event_type', 'event_data', 'supabase'] },
@@ -161,7 +161,7 @@ function testAnalyticsAPIContent() {
 function testAnalyticsDashboard() {
   console.log('5. Testing Analytics Dashboard...');
   try {
-    const dashboardPath = path.join(__dirname, '../src/app/admin/analytics/page.tsx');
+    const dashboardPath = path.join(__dirname, '../../src/app/admin/analytics/page.tsx');
     const dashboardContent = fs.readFileSync(dashboardPath, 'utf8');
     
     const requiredElements = [
@@ -203,7 +203,7 @@ function testAnalyticsDashboard() {
 function testLayoutIntegration() {
   console.log('6. Testing Layout Integration...');
   try {
-    const layoutPath = path.join(__dirname, '../src/app/layout.tsx');
+    const layoutPath = path.join(__dirname, '../../src/app/layout.tsx');
     const layoutContent = fs.readFileSync(layoutPath, 'utf8');
     
     const requiredElements = [
@@ -233,7 +233,7 @@ function testLayoutIntegration() {
 function testHeaderIntegration() {
   console.log('7. Testing Header Integration...');
   try {
-    const headerPath = path.join(__dirname, '../src/components/Header.tsx');
+    const headerPath = path.join(__dirname, '../../src/components/Header.tsx');
     const headerContent = fs.readFileSync(headerPath, 'utf8');
     
     const requiredElements = [
@@ -264,11 +264,11 @@ function testFileStructure() {
   console.log('8. Testing File Structure...');
   try {
     const requiredFiles = [
-      '../src/lib/analytics.ts',
-      '../src/components/Analytics.tsx',
-      '../src/app/api/analytics/events/route.ts',
-      '../src/app/api/analytics/stats/route.ts',
-      '../src/app/admin/analytics/page.tsx'
+      '../../src/lib/analytics.ts',
+      '../../src/components/Analytics.tsx',
+      '../../src/app/api/analytics/events/route.ts',
+      '../../src/app/api/analytics/stats/route.ts',
+      '../../src/app/admin/analytics/page.tsx'
     ];
     
     let passed = 0;

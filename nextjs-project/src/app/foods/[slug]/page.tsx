@@ -82,11 +82,10 @@ export default async function FoodDetailPage({ params }: PageProps) {
     },
     food.risk_level && food.risk_level !== 'none' ? {
       question: `Is ${food.name} a choking hazard?`,
-      answer: `${food.name} has a ${food.risk_level} choking risk. ${
-        food.risk_level === 'high'
+      answer: `${food.name} has a ${food.risk_level} choking risk. ${food.risk_level === 'high'
           ? 'Always supervise your child closely and ensure proper preparation according to age guidelines.'
           : 'Follow age-appropriate preparation methods and always supervise your child while eating.'
-      }`
+        }`
     } : null,
     food.why ? {
       question: `Why should I give ${food.name} to my baby?`,
@@ -138,7 +137,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-        {/* Breadcrumb */}
+      {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto max-w-7xl px-4 sm:px-8 py-4">
           <nav className="flex items-center gap-2 text-sm text-gray-600">
@@ -472,12 +471,11 @@ export default async function FoodDetailPage({ params }: PageProps) {
                         </svg>
                       </a>
                     </div>
-                    <span className={`px-2 py-1 rounded text-xs font-bold ${
-                      source.grade === 'A' ? 'bg-green-100 text-green-800' :
-                      source.grade === 'B' ? 'bg-blue-100 text-blue-800' :
-                      source.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span className={`px-2 py-1 rounded text-xs font-bold ${source.grade === 'A' ? 'bg-green-100 text-green-800' :
+                        source.grade === 'B' ? 'bg-blue-100 text-blue-800' :
+                          source.grade === 'C' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800'
+                      }`}>
                       Grade {source.grade}
                     </span>
                   </div>
@@ -573,7 +571,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
 
           <CitationBox
             title={`${food.name} for Babies and Toddlers`}
-            url={`https://www.momaiagent.com/foods/${slug}`}
+            url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/foods/${slug}`}
             lastReviewed={food.last_reviewed_at}
             siteName="JupitLunar"
           />

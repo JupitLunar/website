@@ -6,7 +6,11 @@
  */
 
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config({ path: '.env.local' });
+const path = require('path');
+const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
 // Check environment variables
 const requiredEnvVars = [
@@ -29,22 +33,22 @@ const supabase = createClient(
 
 async function testBasicConnection() {
   console.log('🔍 Testing basic Supabase connection...');
-  
+
   try {
     const { data, error } = await supabase
       .from('content_hubs')
       .select('*')
       .limit(1);
-    
+
     if (error) throw error;
-    
+
     console.log('✅ Database connection successful');
     console.log(`📊 Found ${data.length} content hub(s)`);
-    
+
     if (data.length > 0) {
       console.log('Sample hub:', data[0]);
     }
-    
+
     return true;
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
@@ -54,20 +58,20 @@ async function testBasicConnection() {
 
 async function testContentHubs() {
   console.log('\n🔍 Testing content hubs...');
-  
+
   try {
     const { data, error } = await supabase
       .from('content_hubs')
       .select('*')
       .order('id');
-    
+
     if (error) throw error;
-    
+
     console.log(`✅ Found ${data.length} content hubs:`);
     data.forEach(hub => {
       console.log(`  - ${hub.id}: ${hub.name} (${hub.content_count || 0} articles)`);
     });
-    
+
     return data.length === 6; // Should have 6 hubs
   } catch (error) {
     console.error('❌ Content hubs test failed:', error.message);
@@ -77,18 +81,18 @@ async function testContentHubs() {
 
 async function testArticlesTable() {
   console.log('\n🔍 Testing articles table...');
-  
+
   try {
     const { data, error } = await supabase
       .from('articles')
       .select('id, slug, title')
       .limit(1);
-    
+
     if (error) throw error;
-    
+
     console.log('✅ Articles table accessible');
     console.log(`📝 Found ${data.length} article(s)`);
-    
+
     return true;
   } catch (error) {
     console.error('❌ Articles table test failed:', error.message);
@@ -98,25 +102,25 @@ async function testArticlesTable() {
 
 async function runBasicTests() {
   console.log('🚀 Starting Basic Supabase Tests\n');
-  
+
   const tests = [
     { name: 'Connection', fn: testBasicConnection },
     { name: 'Content Hubs', fn: testContentHubs },
     { name: 'Articles Table', fn: testArticlesTable }
   ];
-  
+
   let passed = 0;
   let total = tests.length;
-  
+
   for (const test of tests) {
     const result = await test.fn();
     if (result) passed++;
   }
-  
+
   console.log('\n📊 Test Results:');
   console.log(`✅ Passed: ${passed}/${total}`);
   console.log(`❌ Failed: ${total - passed}/${total}`);
-  
+
   if (passed === total) {
     console.log('\n🎉 All basic tests passed! Database is ready for basic operations.');
     console.log('\n💡 To enable advanced features, run the advanced.sql file in Supabase.');

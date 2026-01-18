@@ -21,7 +21,10 @@
 const fs = require('fs');
 const path = require('path');
 try {
-  require('dotenv').config({ path: path.resolve(__dirname, '../.env.local'), override: false });
+  const dotenv = require('dotenv');
+// Load env vars from project root
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 } catch (error) {
   // dotenv is optional; ignore if not available
 }

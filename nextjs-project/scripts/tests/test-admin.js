@@ -9,7 +9,7 @@ console.log('🧪 Testing Admin Interface Features...\n');
 function testAdminMainPage() {
   console.log('1. Testing Admin Main Page...');
   try {
-    const adminPagePath = path.join(__dirname, '../src/app/admin/page.tsx');
+    const adminPagePath = path.join(__dirname, '../../src/app/admin/page.tsx');
     const adminPageContent = fs.readFileSync(adminPagePath, 'utf8');
     
     const requiredElements = [
@@ -48,7 +48,7 @@ function testAdminMainPage() {
 function testNewArticlePage() {
   console.log('2. Testing New Article Page...');
   try {
-    const newArticlePath = path.join(__dirname, '../src/app/admin/articles/new/page.tsx');
+    const newArticlePath = path.join(__dirname, '../../src/app/admin/articles/new/page.tsx');
     const newArticleContent = fs.readFileSync(newArticlePath, 'utf8');
     
     const requiredElements = [
@@ -97,8 +97,8 @@ function testFileStructure() {
   console.log('3. Testing File Structure...');
   try {
     const requiredFiles = [
-      '../src/app/admin/page.tsx',
-      '../src/app/admin/articles/new/page.tsx'
+      '../../src/app/admin/page.tsx',
+      '../../src/app/admin/articles/new/page.tsx'
     ];
     
     let passed = 0;

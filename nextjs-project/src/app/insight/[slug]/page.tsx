@@ -141,20 +141,42 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com';
+  const aeoData = extractAEOData(article.keywords || []);
+
   return {
     title: `${article.title} | Insights | Mom AI Agent`,
     description: article.meta_description || article.one_liner,
-    keywords: extractAEOData(article.keywords || []).cleanKeywords,
+    keywords: aeoData.cleanKeywords,
+    authors: [{ name: 'Mom AI Agent Editorial Team' }],
+    category: getHubName(article.hub),
     openGraph: {
       title: article.title,
       description: article.meta_description || article.one_liner,
       type: 'article',
-      url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${params.slug}`,
+      url: `${siteUrl}/insight/${params.slug}`,
       publishedTime: article.date_published,
       modifiedTime: article.date_modified,
+      authors: ['Mom AI Agent Editorial Team'],
+      section: getHubName(article.hub),
+      tags: aeoData.cleanKeywords.slice(0, 10),
+      images: [
+        {
+          url: `${siteUrl}/og-image.svg`,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.meta_description || article.one_liner,
+      images: [`${siteUrl}/og-image.svg`],
     },
     alternates: {
-      canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight/${params.slug}`,
+      canonical: `${siteUrl}/insight/${params.slug}`,
     },
   };
 }

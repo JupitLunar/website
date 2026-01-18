@@ -52,11 +52,45 @@ export const metadata = {
     'Single-page executive summary for 0–24 month feeding in the U.S. and Canada: TL;DR guidance, age-stage matrix, safety guardrails, and micronutrient quick reference built from CDC, Health Canada, AAP, and CPS sources.',
 };
 
+import Script from 'next/script';
+import { generateMedicalWebPageSchema } from '@/lib/aeo-optimizations';
+import { generateBreadcrumbSchema, BREADCRUMB_PATHS } from '@/lib/breadcrumbs';
+
 export default async function NorthAmericaOverviewPage() {
   const { guides, rules, foods } = await loadKnowledge();
 
+  const schema = generateMedicalWebPageSchema({
+    slug: 'topics/north-america-overview',
+    title: 'North America Infant Feeding Overview',
+    one_liner: 'Executive summary for 0–24 month feeding in the U.S. and Canada: TL;DR guidance, age-stage matrix, safety guardrails, and micronutrient quick reference.',
+    hub: 'Infant Feeding',
+    age_range: '0-24 months',
+    lang: 'en',
+    region: 'North America',
+    date_published: '2025-09-22',
+    date_modified: new Date().toISOString().split('T')[0],
+    last_reviewed: '2025-09-22',
+    keywords: ['infant feeding', 'baby food guide', 'North America feeding guidelines', 'starting solids'],
+    citations: [
+      { title: 'Infant and Toddler Nutrition', url: 'https://www.cdc.gov/nutrition/infantandtoddlernutrition', publisher: 'CDC' },
+      { title: 'Nutrition for Healthy Term Infants', url: 'https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding', publisher: 'Health Canada' },
+      { title: 'Starting Solid Foods', url: 'https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Starting-Solid-Foods.aspx', publisher: 'AAP' }
+    ]
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    BREADCRUMB_PATHS.home,
+    BREADCRUMB_PATHS.topics,
+    { name: 'North America Overview', url: '/topics/north-america-overview' }
+  ]);
+
   return (
     <div className="bg-gradient-to-br from-[#F8F6FC] to-[#EAE6F8] py-16">
+      <Script
+        id="aeo-schema-overview"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <div className="mx-auto max-w-6xl space-y-14 px-4">
         <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-8 py-10 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-6">

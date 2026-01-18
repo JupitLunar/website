@@ -64,7 +64,7 @@ export default function SolidStartProductPage() {
     date_modified: new Date().toISOString().split('T')[0],
     last_reviewed: "2025-12-23",
     citations: [
-      { title: "CDC: Complementary Foods", url: "https://www.cdc.gov/nutrition/infantandtoddlernutrition/foods-and-drinks/when-to-introduce-solid-foods.html", publisher: "CDC" },
+      { title: "CDC: Complementary Foods", url: "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html", publisher: "CDC" },
       { title: "AAP: Starting Solid Foods", url: "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Starting-Solid-Foods.aspx", publisher: "AAP" }
     ]
   };
@@ -103,17 +103,17 @@ export default function SolidStartProductPage() {
     },
     downloadUrl: 'https://apps.apple.com/us/app/dearbaby-solid-start/id6749838104',
     keywords: articleData.keywords.join(', '),
-            featureList: [
-              '700+ stage-appropriate baby food recipes including purees, mashed foods, and finger foods',
-              'Detailed step-by-step recipe guides with visual instructions and preparation photos',
-              'BLW (Baby-Led Weaning) meal planner and lunchbox builder',
-              'Allergen introduction guidance following WHO and AAP guidelines',
-              'Recipes organized by age (6m+, 9m+, 12m+) and texture (stage 1, 2, 3)',
-              'Top 10 first finger foods for 6 month old babies',
-              'Top 20 baby puree recipes for starting solids',
-              'Interactive lunchbox builder for balanced meal planning',
-              'Free to download and use - no subscription required',
-            ],
+    featureList: [
+      '700+ stage-appropriate baby food recipes including purees, mashed foods, and finger foods',
+      'Detailed step-by-step recipe guides with visual instructions and preparation photos',
+      'BLW (Baby-Led Weaning) meal planner and lunchbox builder',
+      'Allergen introduction guidance following WHO and AAP guidelines',
+      'Recipes organized by age (6m+, 9m+, 12m+) and texture (stage 1, 2, 3)',
+      'Top 10 first finger foods for 6 month old babies',
+      'Top 20 baby puree recipes for starting solids',
+      'Interactive lunchbox builder for balanced meal planning',
+      'Free to download and use - no subscription required',
+    ],
   };
 
   const medicalSchema = useMemo(() => generateMedicalWebPageSchema(articleData), []);
@@ -156,7 +156,7 @@ export default function SolidStartProductPage() {
                     <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
                     <span className="text-xs font-semibold tracking-widest text-orange-600 uppercase">Free Forever • Part of MomAI Ecosystem</span>
                   </motion.div>
-                  
+
                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-light text-slate-700 mb-6 sm:mb-8 leading-[1.1] tracking-tight">
                     Start Solids with
                     <br />
@@ -164,11 +164,11 @@ export default function SolidStartProductPage() {
                       Pure Joy.
                     </span>
                   </h1>
-                  
+
                   <p className="text-lg sm:text-xl lg:text-2xl text-slate-500/80 mb-8 sm:mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
                     The most intuitive free alternative to Solid Starts. 700+ dietitian-vetted recipes with step-by-step guidance, BLW planning, and calm guidance for every stage.
                   </p>
-                  
+
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
                     <a
                       href="https://apps.apple.com/us/app/dearbaby-solid-start/id6749838104"
@@ -186,7 +186,7 @@ export default function SolidStartProductPage() {
                       Explore Recipes
                     </Link>
                   </div>
-                  
+
                   <div className="mt-12 flex items-center justify-center lg:justify-start gap-5">
                     <div className="flex -space-x-4">
                       {[1, 2, 3, 4, 5].map((i) => (
@@ -215,14 +215,14 @@ export default function SolidStartProductPage() {
                   className="relative mx-auto w-full max-w-[480px] sm:max-w-[520px] lg:max-w-[450px] flex justify-center items-center"
                 >
                   {/* Hero Marketing Image - Three Phone Mockups */}
-                  <motion.div 
+                  <motion.div
                     className="relative z-20 w-full"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <Image 
-                      src="/Assets/image1.jpeg" 
-                      alt="DearBaby Solid Start - App Showcase" 
+                    <Image
+                      src="/Assets/image1.jpeg"
+                      alt="DearBaby Solid Start - App Showcase"
                       width={480}
                       height={640}
                       className="w-full h-auto object-contain rounded-3xl shadow-2xl"
@@ -268,7 +268,7 @@ export default function SolidStartProductPage() {
         {/* FEATURES GRID - Warm & Minimalist */}
         <section className="py-24 bg-gradient-to-b from-white to-orange-50/20">
           <div className="container mx-auto px-6">
-            <motion.div 
+            <motion.div
               className="text-center mb-20"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -361,16 +361,16 @@ export default function SolidStartProductPage() {
                   className="relative"
                 >
                   <div className="rounded-[2.5rem] sm:rounded-[3rem] lg:rounded-[4rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] lg:border-[16px] border-white relative group max-w-[400px] mx-auto lg:max-w-none">
-                    <Image 
-                      src="/Assets/d793618e9c9add843b516a40658cdf1f26774b4c.jpeg" 
-                      alt="Step-by-Step Recipe Guide - DearBaby Solid Start" 
+                    <Image
+                      src="/Assets/d793618e9c9add843b516a40658cdf1f26774b4c.jpeg"
+                      alt="Step-by-Step Recipe Guide - DearBaby Solid Start"
                       width={480}
                       height={640}
                       className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
-                  <motion.div 
+                  <motion.div
                     className="absolute -top-6 -left-6 sm:-top-8 sm:-left-8 p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-xl border border-rose-100 hidden md:block max-w-[180px] sm:max-w-none"
                     animate={{ y: [0, -8, 0] }}
                     transition={{ duration: 3, repeat: Infinity }}
@@ -405,15 +405,15 @@ export default function SolidStartProductPage() {
                   className="relative"
                 >
                   <div className="rounded-[2.5rem] sm:rounded-[3rem] lg:rounded-[4rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] lg:border-[16px] border-slate-50 relative group max-w-[400px] mx-auto lg:max-w-none">
-                    <Image 
-                      src="/Assets/screenshot-11-16-10.png" 
-                      alt="9 Finger Food Ideas - DearBaby Solid Start" 
+                    <Image
+                      src="/Assets/screenshot-11-16-10.png"
+                      alt="9 Finger Food Ideas - DearBaby Solid Start"
                       width={480}
                       height={640}
                       className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
                     />
                   </div>
-                  <motion.div 
+                  <motion.div
                     className="absolute -bottom-8 -right-8 p-8 bg-white rounded-3xl shadow-2xl border border-orange-100 max-w-[240px] hidden md:block"
                     animate={{ y: [0, -10, 0] }}
                     transition={{ duration: 4, repeat: Infinity }}
@@ -510,9 +510,9 @@ export default function SolidStartProductPage() {
                   className="relative"
                 >
                   <div className="rounded-[2.5rem] sm:rounded-[3rem] lg:rounded-[4rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] lg:border-[16px] border-white relative group max-w-[400px] mx-auto lg:max-w-none">
-                    <Image 
-                      src="/Assets/2ef4e556d640d61c153be8ea66d9cbd490abad3f.jpeg" 
-                      alt="Collections & Favorites - DearBaby Solid Start" 
+                    <Image
+                      src="/Assets/2ef4e556d640d61c153be8ea66d9cbd490abad3f.jpeg"
+                      alt="Collections & Favorites - DearBaby Solid Start"
                       width={480}
                       height={640}
                       className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
@@ -539,16 +539,16 @@ export default function SolidStartProductPage() {
                   className="relative"
                 >
                   <div className="rounded-[2.5rem] sm:rounded-[3rem] lg:rounded-[4rem] overflow-hidden shadow-2xl border-[8px] sm:border-[12px] lg:border-[16px] border-slate-50 relative group max-w-[400px] mx-auto lg:max-w-none">
-                    <Image 
-                      src="/Assets/image2.jpeg" 
-                      alt="Lunchbox Builder - DearBaby Solid Start" 
+                    <Image
+                      src="/Assets/image2.jpeg"
+                      alt="Lunchbox Builder - DearBaby Solid Start"
                       width={480}
                       height={640}
                       className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
                     />
                   </div>
                   {/* Floating stats card */}
-                  <motion.div 
+                  <motion.div
                     className="absolute -bottom-8 -right-8 p-8 bg-white rounded-3xl shadow-2xl border border-indigo-100 max-w-[280px] hidden md:block"
                     animate={{ y: [0, -12, 0] }}
                     transition={{ duration: 5, repeat: Infinity }}
@@ -607,7 +607,7 @@ export default function SolidStartProductPage() {
         {/* EVIDENCE-BASED LISTS - High AEO Value */}
         <section className="py-32 bg-white">
           <div className="container mx-auto px-6">
-            <motion.div 
+            <motion.div
               className="text-center mb-24"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -619,7 +619,7 @@ export default function SolidStartProductPage() {
                 Directly pulled from our RAG knowledge base, verified against CDC and AAP clinical guidelines for 2025.
               </p>
             </motion.div>
-            
+
             <div className="grid lg:grid-cols-2 gap-16">
               {/* Top Finger Foods */}
               <motion.div
@@ -683,7 +683,7 @@ export default function SolidStartProductPage() {
         <section className="py-32 bg-slate-50/40">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
-              <motion.div 
+              <motion.div
                 className="text-center mb-20"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -693,7 +693,7 @@ export default function SolidStartProductPage() {
                 <h2 className="text-5xl font-light text-slate-700 mb-6 tracking-tight">The Solid Start <span className="font-medium text-orange-400">Knowledge Hub.</span></h2>
                 <p className="text-xl text-slate-500 font-light">Direct answers to the most frequent caregiver concerns.</p>
               </motion.div>
-              
+
               <div className="grid gap-8">
                 {[
                   {
@@ -709,7 +709,7 @@ export default function SolidStartProductPage() {
                     a: "Every recipe and preparation guide is vetted against CDC, AAP, and WHO guidelines by our editorial team. We focus on nutrient density, safe textures, and age-appropriate portions."
                   }
                 ].map((faq, i) => (
-                  <motion.div 
+                  <motion.div
                     key={faq.q}
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -744,7 +744,7 @@ export default function SolidStartProductPage() {
               </div>
             </div>
 
-            <NewsletterSignup 
+            <NewsletterSignup
               variant="default"
               title="Weekly Weaning Wisdom"
               description="Join 18,000+ parents getting evidence-based feeding prompts and stage-appropriate recipes every Tuesday."

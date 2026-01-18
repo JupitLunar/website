@@ -212,31 +212,28 @@ export default function LatestArticlesTable({ articles }: Props) {
         <div className="flex gap-2">
           <button
             onClick={() => handleSort('date')}
-            className={`px-3 py-1 rounded ${
-              sortBy === 'date'
+            className={`px-3 py-1 rounded ${sortBy === 'date'
                 ? 'bg-purple-600 text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+              }`}
           >
             Date {sortBy === 'date' && (sortOrder === 'asc' ? '↑' : '↓')}
           </button>
           <button
             onClick={() => handleSort('title')}
-            className={`px-3 py-1 rounded ${
-              sortBy === 'title'
+            className={`px-3 py-1 rounded ${sortBy === 'title'
                 ? 'bg-purple-600 text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+              }`}
           >
             Title {sortBy === 'title' && (sortOrder === 'asc' ? '↑' : '↓')}
           </button>
           <button
             onClick={() => handleSort('region')}
-            className={`px-3 py-1 rounded ${
-              sortBy === 'region'
+            className={`px-3 py-1 rounded ${sortBy === 'region'
                 ? 'bg-purple-600 text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+              }`}
           >
             Region {sortBy === 'region' && (sortOrder === 'asc' ? '↑' : '↓')}
           </button>
@@ -273,7 +270,7 @@ export default function LatestArticlesTable({ articles }: Props) {
               >
                 <td className="px-6 py-4">
                   <Link
-                    href={`/articles/${article.slug}`}
+                    href={`/insight/${article.slug}`}
                     className="group"
                   >
                     <h3 className="font-semibold text-purple-600 group-hover:text-purple-800 line-clamp-2">
@@ -349,11 +346,10 @@ export default function LatestArticlesTable({ articles }: Props) {
                 <button
                   key={i}
                   onClick={() => setCurrentPage(pageNum)}
-                  className={`px-4 py-2 rounded-lg ${
-                    currentPage === pageNum
+                  className={`px-4 py-2 rounded-lg ${currentPage === pageNum
                       ? 'bg-purple-600 text-white'
                       : 'border hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   {pageNum}
                 </button>

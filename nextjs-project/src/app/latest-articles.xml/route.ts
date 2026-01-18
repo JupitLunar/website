@@ -13,7 +13,7 @@ export async function GET() {
     .order('created_at', { ascending: false })
     .limit(100);
 
-  const baseUrl = 'https://www.momaiagent.com';
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
   const rss = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -29,8 +29,8 @@ export async function GET() {
         (article) => `
     <item>
       <title><![CDATA[${article.title}]]></title>
-      <link>${baseUrl}/articles/${article.slug}</link>
-      <guid>${baseUrl}/articles/${article.slug}</guid>
+      <link>${baseUrl}/insight/${article.slug}</link>
+      <guid>${baseUrl}/insight/${article.slug}</guid>
       <pubDate>${new Date(article.created_at).toUTCString()}</pubDate>
       <description><![CDATA[${article.one_liner || ''}]]></description>
       <category>${article.region}</category>
