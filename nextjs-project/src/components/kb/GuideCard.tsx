@@ -56,29 +56,15 @@ export default function GuideCard({ guide, sources = [] }: GuideCardProps) {
             {guide.checklist.map((item, index) => (
               <li key={index}>
                 <span className="font-semibold text-gray-900">[{item.type || 'tip'}]</span> {item.label}
-                {item.detail ? `：${item.detail}` : ''}
+                {item.detail ? `: ${item.detail}` : ''}
               </li>
             ))}
           </ul>
         </section>
       )}
 
-      {(guide.related_rule_ids.length > 0 || guide.related_food_ids.length > 0) && (
-        <section className="grid gap-3 md:grid-cols-2">
-          {guide.related_rule_ids.length > 0 && (
-            <div className="rounded-lg bg-purple-50 p-3 text-sm text-purple-800">
-              <h4 className="font-semibold">Related rules</h4>
-              <p className="mt-1 text-xs text-purple-700">{guide.related_rule_ids.join(', ')}</p>
-            </div>
-          )}
-          {guide.related_food_ids.length > 0 && (
-            <div className="rounded-lg bg-teal-50 p-3 text-sm text-teal-800">
-              <h4 className="font-semibold">Suggested foods</h4>
-              <p className="mt-1 text-xs text-teal-700">{guide.related_food_ids.join(', ')}</p>
-            </div>
-          )}
-        </section>
-      )}
+      {/* TODO: Resolve UUIDs to actual rule/food names before displaying */}
+      {/* Temporarily hidden until we implement proper resolution */}
 
       <SourceList sources={sources} />
 

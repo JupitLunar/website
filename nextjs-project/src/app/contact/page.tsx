@@ -24,8 +24,8 @@ export default function ContactPage() {
                         <div className="space-y-4">
                             <p className="flex items-center text-slate-600">
                                 <span className="font-medium w-24">Email:</span>
-                                <a href="mailto:contact@jupitlunar.com" className="text-indigo-600 hover:text-indigo-800">
-                                    contact@jupitlunar.com
+                                <a href="mailto:support@momaiagent.com" className="text-indigo-600 hover:text-indigo-800">
+                                    support@momaiagent.com
                                 </a>
                             </p>
                             <p className="flex items-center text-slate-600">

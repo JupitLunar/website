@@ -91,6 +91,11 @@ export default async function NorthAmericaOverviewPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="mx-auto max-w-6xl space-y-14 px-4">
         <section className="space-y-8 rounded-3xl border border-slate-200 bg-white px-8 py-10 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-6">
