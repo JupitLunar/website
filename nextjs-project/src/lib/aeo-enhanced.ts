@@ -174,7 +174,7 @@ export function generateVoiceAssistantData(article: any, metadata: AEOEnhancedMe
         // Provide direct text for voice reading
         speakableText: metadata.quickAnswer || article.one_liner,
         // Estimated reading time for voice output
-        estimatedReadingTime: Math.ceil((metadata.quickAnswer?.length || 0) / 150) + ' seconds'
+        estimatedReadingTime: `${Math.ceil((metadata.quickAnswer?.length || 0) / 150)} seconds`
     };
 }
 
