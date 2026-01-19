@@ -83,44 +83,101 @@ export default function FoodsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16 px-4 sm:px-8">
-        <div className="container mx-auto max-w-7xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+      {/* Hero Section - Matching Home Page Style */}
+      <section className="relative overflow-hidden py-24 px-4 sm:px-8">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(148,163,184,0.05),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(167,139,250,0.05),transparent_50%)]"></div>
+
+        <div className="container mx-auto max-w-7xl relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            {/* Icon */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-slate-100 to-violet-100 rounded-3xl mb-8 shadow-sm"
+            >
+              <svg className="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <h1 className="text-4xl md:text-5xl font-bold">
-                Food Database
-              </h1>
-            </div>
-            <p className="text-xl text-purple-100 mb-8 max-w-2xl">
-              400+ foods with age-specific preparation guides, choking risk assessments, and nutritional information
-            </p>
+            </motion.div>
+
+            {/* Title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-light text-slate-800 mb-6 tracking-tight"
+            >
+              Food Database
+            </motion.h1>
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-xl md:text-2xl text-slate-500 mb-4 max-w-3xl mx-auto leading-relaxed font-light"
+            >
+              Evidence-based feeding guides for your baby's journey
+            </motion.p>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex flex-wrap justify-center gap-8 mb-12 text-sm text-slate-400"
+            >
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                  <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                </svg>
+                <span>30+ Foods</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                </svg>
+                <span>Age-Specific Guides</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span>Safety Assessed</span>
+              </div>
+            </motion.div>
 
             {/* Search Bar */}
-            <div className="max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="max-w-2xl mx-auto"
+            >
               <div className="relative">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search foods... (e.g., 'avocado', 'iron-rich')"
-                  className="w-full px-6 py-4 pr-14 text-lg rounded-2xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/30"
+                  className="w-full px-6 py-4 pr-14 text-lg rounded-2xl bg-white/80 backdrop-blur-sm border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-transparent shadow-sm transition-all"
                 />
                 <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -131,28 +188,30 @@ export default function FoodsPage() {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar Filters - Desktop */}
             <aside className="hidden lg:block lg:w-80 flex-shrink-0">
-              <FoodFilters
-                selectedFilters={selectedFilters}
-                onFilterChange={handleFilterChange}
-                onClearFilters={handleClearFilters}
-              />
+              <div className="sticky top-24">
+                <FoodFilters
+                  selectedFilters={selectedFilters}
+                  onFilterChange={handleFilterChange}
+                  onClearFilters={handleClearFilters}
+                />
+              </div>
             </aside>
 
             {/* Mobile Filters Toggle */}
             <div className="lg:hidden mb-6">
-              <details className="bg-white rounded-xl border-2 border-gray-100 p-4">
-                <summary className="font-bold text-gray-900 cursor-pointer flex items-center justify-between">
+              <details className="premium-card group">
+                <summary className="font-light text-slate-700 cursor-pointer flex items-center justify-between p-4">
                   <span className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                     </svg>
-                    Filters
+                    <span className="font-medium">Filters</span>
                   </span>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-slate-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <div className="mt-4">
+                <div className="mt-4 px-4 pb-4">
                   <FoodFilters
                     selectedFilters={selectedFilters}
                     onFilterChange={handleFilterChange}
@@ -165,36 +224,30 @@ export default function FoodsPage() {
             {/* Food Grid */}
             <main className="flex-1">
               {/* Results Header */}
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-light text-slate-700">
                   {loading ? (
-                    'Loading...'
+                    <span className="text-slate-400">Loading...</span>
                   ) : (
                     <>
-                      {foods.length} Food{foods.length !== 1 ? 's' : ''}
-                      {searchQuery && <span className="text-purple-600"> matching "{searchQuery}"</span>}
+                      <span className="font-medium text-slate-800">{foods.length}</span>{' '}
+                      <span className="text-slate-500">Food{foods.length !== 1 ? 's' : ''}</span>
+                      {searchQuery && <span className="text-slate-400 ml-2">matching "{searchQuery}"</span>}
                     </>
                   )}
                 </h2>
-
-                {/* Sort Options (future enhancement) */}
-                {/* <select className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
-                  <option>Sort: A-Z</option>
-                  <option>Sort: Age</option>
-                  <option>Sort: Risk Level</option>
-                </select> */}
               </div>
 
               {/* Loading State */}
               {loading && (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {[...Array(6)].map((_, i) => (
-                    <div key={i} className="bg-white rounded-xl border-2 border-gray-100 h-80 animate-pulse">
-                      <div className="h-48 bg-gray-200"></div>
-                      <div className="p-4 space-y-3">
-                        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                        <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                    <div key={i} className="premium-card h-80 animate-pulse">
+                      <div className="h-48 bg-slate-100 rounded-t-2xl"></div>
+                      <div className="p-6 space-y-3">
+                        <div className="h-4 bg-slate-100 rounded w-3/4"></div>
+                        <div className="h-3 bg-slate-100 rounded w-1/2"></div>
+                        <div className="h-3 bg-slate-100 rounded w-2/3"></div>
                       </div>
                     </div>
                   ))}
@@ -203,21 +256,27 @@ export default function FoodsPage() {
 
               {/* Empty State */}
               {!loading && foods.length === 0 && (
-                <div className="bg-white rounded-xl border-2 border-gray-100 p-12 text-center">
-                  <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No foods found</h3>
-                  <p className="text-gray-600 mb-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="premium-card p-12 text-center"
+                >
+                  <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-violet-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-light text-slate-700 mb-2">No foods found</h3>
+                  <p className="text-slate-500 mb-6 font-light">
                     Try adjusting your filters or search query
                   </p>
                   <button
                     onClick={handleClearFilters}
-                    className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors"
+                    className="btn-secondary"
                   >
                     Clear All Filters
                   </button>
-                </div>
+                </motion.div>
               )}
 
               {/* Food Grid */}
@@ -247,60 +306,77 @@ export default function FoodsPage() {
                   ))}
                 </motion.div>
               )}
-
-              {/* Load More (future enhancement) */}
-              {/* {!loading && foods.length > 0 && foods.length % 50 === 0 && (
-                <div className="mt-12 text-center">
-                  <button className="px-8 py-4 bg-white text-purple-600 border-2 border-purple-600 rounded-xl font-semibold hover:bg-purple-50 transition-colors">
-                    Load More Foods
-                  </button>
-                </div>
-              )} */}
             </main>
           </div>
         </div>
       </section>
 
-      {/* Info Section */}
-      <section className="py-16 px-4 sm:px-8 bg-white">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            How to Use This Database
-          </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Our food database is curated from CDC, AAP, and Health Canada guidelines to help you safely introduce foods to your baby.
-          </p>
+      {/* Info Section - Matching Home Page Style */}
+      <section className="py-24 px-4 sm:px-8 bg-gradient-to-br from-slate-50 to-white">
+        <div className="container mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-light text-slate-800 mb-4 tracking-tight">
+              How to Use This Database
+            </h2>
+            <p className="text-xl text-slate-500 font-light max-w-2xl mx-auto">
+              Evidence-based guidance from CDC, AAP, and Health Canada
+            </p>
+          </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 text-left">
-            <div>
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <span className="text-2xl">1️⃣</span>
+          <div className="grid md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="premium-card group hover:scale-105 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-violet-100 rounded-2xl flex items-center justify-center mb-6 group-hover:from-slate-200 group-hover:to-violet-200 transition-colors shadow-sm">
+                <span className="text-3xl">1️⃣</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Search by Food</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-xl font-light text-slate-700 mb-3">Search by Food</h3>
+              <p className="text-slate-500 text-sm leading-relaxed font-light">
                 Use the search bar to find specific foods or browse by category
               </p>
-            </div>
+            </motion.div>
 
-            <div>
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <span className="text-2xl">2️⃣</span>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="premium-card group hover:scale-105 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-indigo-100 rounded-2xl flex items-center justify-center mb-6 group-hover:from-slate-200 group-hover:to-indigo-200 transition-colors shadow-sm">
+                <span className="text-3xl">2️⃣</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Filter by Age & Risk</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-xl font-light text-slate-700 mb-3">Filter by Age & Risk</h3>
+              <p className="text-slate-500 text-sm leading-relaxed font-light">
                 Use filters to find age-appropriate foods with your preferred risk level
               </p>
-            </div>
+            </motion.div>
 
-            <div>
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <span className="text-2xl">3️⃣</span>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="premium-card group hover:scale-105 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-purple-100 rounded-2xl flex items-center justify-center mb-6 group-hover:from-slate-200 group-hover:to-purple-200 transition-colors shadow-sm">
+                <span className="text-3xl">3️⃣</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">View Preparation Guides</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-xl font-light text-slate-700 mb-3">View Preparation Guides</h3>
+              <p className="text-slate-500 text-sm leading-relaxed font-light">
                 Click on any food to see age-specific cutting and preparation instructions
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

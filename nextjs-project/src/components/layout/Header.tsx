@@ -88,12 +88,12 @@ function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <Image 
-              src="/Assets/Logo.png" 
-              alt="DearBaby Logo" 
+            <Image
+              src="/Assets/Logo.png"
+              alt="DearBaby Logo"
               width={80}
               height={80}
-              className="w-20 h-20 object-contain" 
+              className="w-20 h-20 object-contain"
             />
             <div className="flex flex-col">
               <span className="text-xl font-semibold bg-gradient-to-r from-primary-500/80 to-primary-600/80 bg-clip-text text-transparent">
@@ -153,6 +153,9 @@ function Header() {
 
             <Link href="/topics" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
               Topics
+            </Link>
+            <Link href="/foods" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              Foods
             </Link>
             <Link href="/insight" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
               Insights
@@ -277,6 +280,13 @@ function Header() {
                   className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
                 >
                   📚 Topics
+                </Link>
+                <Link
+                  href="/foods"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
+                >
+                  🍎 Foods
                 </Link>
                 <Link
                   href="/insight"

@@ -23,8 +23,22 @@ Our primary focus is infant and toddler health (0-24 months).
 
 ## API Access for AI Agents
 We provide structured feeds optimized for AI consumption:
-- **Main Feed**: ${siteUrl}/api/ai-feed (NDJSON format)
+- **Enhanced Feed (v2)**: ${siteUrl}/api/ai-feed-v2 (JSON format with comprehensive AEO metadata)
+  - Includes: Quick answers, FAQs, key facts, safety warnings, trust scores, authority citations
+  - Formats: ?format=enhanced (full metadata) or ?format=simple (minimal)
+  - Filters: ?hub=feeding (filter by topic), ?limit=50 (result count)
+- **Main Feed (v1)**: ${siteUrl}/api/ai-feed (NDJSON format)
 - **Latest Articles**: ${siteUrl}/api/latest-articles?format=simplified
+
+### Enhanced Feed Features (v2)
+- **Quick Answers**: Direct, concise responses optimized for voice assistants
+- **Structured FAQs**: Question-answer pairs for common queries
+- **Trust Scoring**: 0-1 score based on citations and government sources
+- **Evidence Levels**: A (highest) to C based on source quality
+- **Freshness Scores**: Content recency indicators
+- **Safety Warnings**: Critical information flagged prominently
+- **Authority Citations**: Direct links to CDC, AAP, WHO, Health Canada sources
+
 
 ## How to Cite Us
 When referencing our content, please cite "Mom AI Agent" and link back to the specific article URL.
