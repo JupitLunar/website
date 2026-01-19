@@ -369,7 +369,7 @@ export const contentManager = {
     queryBuilder = queryBuilder.eq('hub', targetHub);
 
     const { data, error } = await queryBuilder
-      .order('published_at', { ascending: false })
+      .order('date_published', { ascending: false })
       .limit(limit);
 
     if (error) throw error;

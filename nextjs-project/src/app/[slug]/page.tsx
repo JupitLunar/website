@@ -58,8 +58,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         title: article.title,
         description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
         type: 'article',
-        publishedTime: article.published_at,
-        modifiedTime: article.updated_at,
+        publishedTime: article.date_published,
+        modifiedTime: article.date_modified,
         authors: ['Mom AI Agent Editorial Team'],
         images: article.featured_image ? [article.featured_image] : [],
         url: `https://www.momaiagent.com/${article.slug}`,
@@ -108,8 +108,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       ? (article as any).qas.filter((qa: any) => qa.question && qa.answer)
       : [];
     const citationItems = Array.isArray(article.citations) ? article.citations : [];
-    const publishedAt = article.published_at ? new Date(article.published_at) : null;
-    const updatedAt = article.updated_at ? new Date(article.updated_at) : null;
+    const publishedAt = article.date_published ? new Date(article.date_published) : null;
+    const updatedAt = article.date_modified ? new Date(article.date_modified) : null;
     const lastReviewedAt = article.last_reviewed ? new Date(article.last_reviewed) : null;
 
     // 首屏即答案数据

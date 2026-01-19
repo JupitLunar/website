@@ -49,9 +49,9 @@ export function generateArticleStructuredData(article: any) {
         "url": logoUrl,
       },
     },
-    "datePublished": article.published_at,
-    "dateModified": article.updated_at || article.published_at,
-    "dateCreated": article.published_at,
+    "datePublished": article.date_published,
+    "dateModified": article.date_modified || article.date_published,
+    "dateCreated": article.date_published,
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": `${siteUrl}/${article.slug}`,
@@ -84,25 +84,25 @@ export function generateArticleStructuredData(article: any) {
       },
       "datePublished": citation.published_date
     })) || [
-      {
-        "@type": "WebPage",
-        "name": "CDC Infant and Toddler Nutrition Guidelines",
-        "url": "https://www.cdc.gov/infant-toddler-nutrition/",
-        "publisher": {
-          "@type": "GovernmentOrganization",
-          "name": "Centers for Disease Control and Prevention"
+        {
+          "@type": "WebPage",
+          "name": "CDC Infant and Toddler Nutrition Guidelines",
+          "url": "https://www.cdc.gov/infant-toddler-nutrition/",
+          "publisher": {
+            "@type": "GovernmentOrganization",
+            "name": "Centers for Disease Control and Prevention"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "name": "AAP Parenting Resources",
+          "url": "https://www.healthychildren.org/",
+          "publisher": {
+            "@type": "Organization",
+            "name": "American Academy of Pediatrics"
+          }
         }
-      },
-      {
-        "@type": "WebPage",
-        "name": "AAP Parenting Resources",
-        "url": "https://www.healthychildren.org/",
-        "publisher": {
-          "@type": "Organization",
-          "name": "American Academy of Pediatrics"
-        }
-      }
-    ],
+      ],
     "sourceOrganization": {
       "@type": "Organization",
       "name": "CDC, AAP, Health Canada (source references)",
@@ -139,7 +139,7 @@ export function generateArticleStructuredData(article: any) {
       "acceptedAnswer": {
         "@type": "Answer",
         "text": article.one_liner || article.body_md?.substring(0, 500),
-        "dateCreated": article.published_at,
+        "dateCreated": article.date_published,
         "upvoteCount": article.helpful_count || 0,
         "url": `${siteUrl}/${article.slug}#answer`
       }
@@ -201,16 +201,16 @@ export function generateArticleStructuredData(article: any) {
   if (article.type === 'recipe') {
     const ingredientList = Array.isArray(article.recipe_ingredients)
       ? article.recipe_ingredients.map((ingredient: any) =>
-          [ingredient.amount, ingredient.unit, ingredient.name].filter(Boolean).join(' ').trim()
-        )
+        [ingredient.amount, ingredient.unit, ingredient.name].filter(Boolean).join(' ').trim()
+      )
       : [];
     const instructions = Array.isArray(article.recipe_steps)
       ? article.recipe_steps.map((step: any) => ({
-          "@type": "HowToStep",
-          "position": step.step_number,
-          "name": step.title,
-          "text": step.description,
-        }))
+        "@type": "HowToStep",
+        "position": step.step_number,
+        "name": step.title,
+        "text": step.description,
+      }))
       : [];
 
     graph.push({
@@ -223,7 +223,7 @@ export function generateArticleStructuredData(article: any) {
       "recipeInstructions": instructions,
       "recipeCuisine": article.region,
       "author": "JupitLunar",
-      "datePublished": article.published_at,
+      "datePublished": article.date_published,
       "keywords": article.entities?.join(', '),
       "nutrition": article.nutrition || undefined,
     });
@@ -251,7 +251,7 @@ export function generateArticleStructuredData(article: any) {
       "@id": `${siteUrl}/${article.slug}#health-topic`,
       "name": article.title,
       "description": article.one_liner || article.body_md?.substring(0, 160),
-      "lastReviewed": article.last_reviewed || article.updated_at,
+      "lastReviewed": article.last_reviewed || article.date_modified,
       "hasHealthAspect": article.hub || "Infant and toddler health",
       "inLanguage": article.lang || 'en',
       "audience": {
@@ -307,8 +307,8 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
           "@type": "Article",
           "headline": article.title,
           "url": `${siteUrl}/${article.slug}`,
-          "datePublished": article.published_at,
-          "dateModified": article.updated_at || article.published_at
+          "datePublished": article.date_published,
+          "dateModified": article.date_modified || article.date_published
         }
       }))
     },
@@ -482,18 +482,18 @@ export function generateHomePageStructuredData({
     })),
     "potentialAction": [
       {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
       },
-      "query-input": "required name=search_term_string"
-    },
-    {
-      "@type": "SubscribeAction",
-      "name": "Download Feeding Roadmap",
-      "target": `${siteUrl}/#guide-download`
-    }
+      {
+        "@type": "SubscribeAction",
+        "name": "Download Feeding Roadmap",
+        "target": `${siteUrl}/#guide-download`
+      }
     ],
     "inLanguage": "en"
   };

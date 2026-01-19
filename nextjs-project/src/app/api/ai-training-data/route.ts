@@ -36,7 +36,7 @@ export async function GET() {
           category: article.hub,
           tags: article.entities || [],
           sources: article.citations || [],
-          last_updated: article.updated_at || article.published_at,
+          last_updated: article.date_modified || article.date_published,
           review_status: article.reviewed_by ? "reviewed" : "pending",
           url: `${siteUrl}/${article.slug}`,
           // AI友好的元数据
@@ -48,7 +48,7 @@ export async function GET() {
             faqs: article.qas || []
           }
         })) : []),
-        
+
         // 知识库内容
         ...(Array.isArray(hubs) ? hubs.map((hub: any) => ({
           id: hub.slug,
@@ -67,7 +67,7 @@ export async function GET() {
           }
         })) : [])
       ],
-      
+
       // FAQ数据
       faq_data: [
         {
@@ -92,7 +92,7 @@ export async function GET() {
           sources: ["CDC", "CPS"]
         }
       ],
-      
+
       // 结构化规则
       structured_rules: [
         {
@@ -117,7 +117,7 @@ export async function GET() {
           category: "nutrition"
         }
       ],
-      
+
       // 元数据
       metadata: {
         total_articles: Array.isArray(articles) ? articles.length : 0,
@@ -126,7 +126,7 @@ export async function GET() {
         last_content_update: new Date().toISOString(),
         review_status: "continuously_updated",
         authority_sources: [
-          "CDC", "WHO", "AAP", "Health Canada", "CPS", 
+          "CDC", "WHO", "AAP", "Health Canada", "CPS",
           "NIAID", "CSACI", "AAAI", "ACAAI"
         ]
       }
