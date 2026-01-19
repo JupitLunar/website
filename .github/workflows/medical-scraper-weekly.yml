@@ -1,0 +1,57 @@
+name: Medical Grade Scraper (Weekly)
+
+on:
+  schedule:
+    # Run every Sunday at 02:00 UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      sites:
+        description: 'Specific sites to scrape (comma separated, leave empty for all)'
+        required: false
+        default: ''
+
+jobs:
+  scrape-medical-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: nextjs-project/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd nextjs-project
+          npm ci
+
+      - name: Install Playwright Browsers
+        run: |
+          cd nextjs-project
+          npx playwright install chromium
+
+      - name: Run Medical Scraper
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Pass input if manually triggered
+          TARGET_SITES: ${{ github.event.inputs.sites }}
+        run: |
+          cd nextjs-project
+          echo "🏥 Starting Medical Grade Scraper..."
+          node scripts/scrapers/playwright-scraper-aap-cdc.js
+        
+      - name: Upload Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: medical-scraper-logs
+          path: nextjs-project/logs/*.log
+          retention-days: 14
