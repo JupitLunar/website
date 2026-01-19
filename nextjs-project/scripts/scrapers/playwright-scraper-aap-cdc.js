@@ -9,7 +9,8 @@ const { chromium } = require('playwright');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 const { generateSlug, extractKeywords, delay } = require('./scraper-utils');
-const { articleExists: checkArticleExists } = require('./article-dedup');
+const { articleExists: checkArticleExists } = require('../maintenance/article-dedup');
+const { GLOBAL_SOURCES, getSourcesByRegion } = require('./global-sources-config');
 
 const dotenv = require('dotenv');
 // Load env vars from project root
@@ -26,14 +27,11 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// 权威站点配置
+// 权威站点配置 - 整合 GLOBAL_SOURCES 的分级信息
 const AUTHORITY_SITES = {
+  // === United States ===
   'US_AAP': {
-    name: 'American Academy of Pediatrics',
-    organization: 'AAP',
-    baseUrl: 'https://www.healthychildren.org',
-    region: 'US',
-    language: 'en',
+    ...GLOBAL_SOURCES.US.AAP,
     categoryUrls: [
       'https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/default.aspx',
       'https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/default.aspx',
@@ -51,12 +49,7 @@ const AUTHORITY_SITES = {
     contentSelector: 'article, .article-content, main, #main-content'
   },
   'US_CDC': {
-    name: 'Centers for Disease Control and Prevention',
-    organization: 'CDC',
-    baseUrl: 'https://www.cdc.gov',
-    region: 'US',
-    language: 'en',
-    // 先尝试主页和主要分类页
+    ...GLOBAL_SOURCES.US.CDC,
     categoryUrls: [
       'https://www.cdc.gov/nutrition/',
       'https://www.cdc.gov/nutrition/infantandtoddlernutrition/'
@@ -71,6 +64,89 @@ const AUTHORITY_SITES = {
       /error/i
     ],
     contentSelector: '#main-content, article, .syndicate, main'
+  },
+
+  // === United Kingdom ===
+  'UK_NHS': {
+    ...GLOBAL_SOURCES.UK.NHS,
+    categoryUrls: [
+      'https://www.nhs.uk/conditions/baby/weaning-and-feeding/',
+      'https://www.nhs.uk/conditions/baby/breastfeeding-and-bottle-feeding/',
+      'https://www.nhs.uk/conditions/baby/babys-development/'
+    ],
+    linkPatterns: [
+      /\/conditions\/baby\//i
+    ],
+    excludePatterns: [
+      /search/i,
+      /service-search/i
+    ],
+    contentSelector: 'article, main, .nhsuk-main-wrapper'
+  },
+
+  // === Canada ===
+  'CA_HEALTH': {
+    ...GLOBAL_SOURCES.CA.HEALTH_CANADA,
+    categoryUrls: [
+      'https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding.html',
+      'https://www.canada.ca/en/public-health/services/pregnancy/babies.html'
+    ],
+    linkPatterns: [
+      /\/services\/food-nutrition\/healthy-eating\/infant-feeding/i,
+      /\/services\/pregnancy\/babies/i
+    ],
+    excludePatterns: [
+      /search/i,
+      /contact/i
+    ],
+    contentSelector: 'main, [role="main"], .mwstext'
+  },
+  'CA_CPS': {
+    ...GLOBAL_SOURCES.CA.CARING_FOR_KIDS,
+    categoryUrls: [
+      'https://caringforkids.cps.ca/handouts/pregnancy-and-babies'
+    ],
+    linkPatterns: [
+      /\/handouts\/pregnancy-and-babies\//i
+    ],
+    excludePatterns: [],
+    contentSelector: '.content-main, article, main'
+  },
+
+  // === Australia ===
+  'AU_RAISING_CHILDREN': {
+    ...GLOBAL_SOURCES.AU.RAISING_CHILDREN,
+    categoryUrls: [
+      'https://raisingchildren.net.au/babies/breastfeeding-bottle-feeding',
+      'https://raisingchildren.net.au/babies/solids-feeding',
+      'https://raisingchildren.net.au/babies/sleep'
+    ],
+    linkPatterns: [
+      /\/babies\//i
+    ],
+    excludePatterns: [
+      /videos/i,
+      /guides/i
+    ],
+    contentSelector: 'article, main, .main-content'
+  },
+
+  // === Global ===
+  'GLOBAL_WHO': {
+    ...GLOBAL_SOURCES.GLOBAL.WHO,
+    categoryUrls: [
+      'https://www.who.int/health-topics/breastfeeding',
+      'https://www.who.int/health-topics/infant-health'
+    ],
+    linkPatterns: [
+      /\/news-room\/fact-sheets\/detail\//i,
+      /\/health-topics\//i
+    ],
+    excludePatterns: [
+      /events/i,
+      /speeches/i
+    ],
+    contentSelector: '.sf-detail-body-wrapper, main, article'
   }
 };
 
@@ -83,68 +159,116 @@ const REGION_MAPPING = {
 };
 
 /**
+ * 更新或创建知识库来源 (Source Registry)
+ */
+async function upsertKnowledgeSource(siteInfo) {
+  try {
+    // 检查是否存在
+    const { data: existing } = await supabase
+      .from('kb_sources')
+      .select('id')
+      .eq('name', siteInfo.name)
+      .single();
+
+    const timestamp = new Date().toISOString();
+    const sourceData = {
+      name: siteInfo.name,
+      organization: siteInfo.organization,
+      url: siteInfo.baseUrl,
+      grade: siteInfo.grade || 'A', // 默认为 A 级
+      retrieved_at: timestamp,
+      updated_at: timestamp
+    };
+
+    if (existing) {
+      await supabase
+        .from('kb_sources')
+        .update(sourceData)
+        .eq('id', existing.id);
+      return { id: existing.id, isNew: false };
+    } else {
+      const { data: newSource, error } = await supabase
+        .from('kb_sources')
+        .insert([{
+          ...sourceData,
+          created_at: timestamp
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return { id: newSource.id, isNew: true };
+    }
+  } catch (error) {
+    console.error(`    ⚠️  Source Registry update failed: ${error.message}`);
+    return null;
+  }
+}
+
+/**
  * 发现文章链接
  */
 async function discoverArticles(site, browser) {
   const articles = new Set();
-  
+
   // 为每个 category URL 创建新页面
   for (const categoryUrl of site.categoryUrls) {
     const page = await browser.newPage();
-    
+
     try {
       console.log(`  📂 浏览分类页: ${categoryUrl}`);
-      
-      await page.goto(categoryUrl, { 
-        waitUntil: 'domcontentloaded', 
-        timeout: 60000 
+
+      await page.goto(categoryUrl, {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
       });
       await page.waitForTimeout(5000); // 等待 JS 渲染
 
-      const links = await page.evaluate(({ baseUrl, linkPatterns, excludePatterns, organization }) => {
+      const links = await page.evaluate(({ baseUrl, linkPatternSource, excludePatterns, organization }) => {
         const allLinks = Array.from(document.querySelectorAll('a[href]'));
         const found = [];
-        
+        const linkPatterns = linkPatternSource ? [{ source: linkPatternSource, flags: 'i' }] : [];
+
         allLinks.forEach(link => {
           let href = link.href;
           if (!href || !href.startsWith('http')) return;
-          
+
           // 转换为小写进行比较
           const lowerHref = href.toLowerCase();
           const baseUrlLower = baseUrl.toLowerCase().replace('https://', '');
-          
+
           // 必须包含 baseUrl
           if (!lowerHref.includes(baseUrlLower)) return;
-          
+
           // 对于 AAP，检查是否包含 /Pages/ 且以 .aspx 结尾，并且是在 /ages-stages/baby/ 路径下
           if (organization === 'AAP') {
-            if (href.includes('/Pages/') && 
-                href.endsWith('.aspx') && 
-                !href.includes('default.aspx') &&
-                (href.includes('/ages-stages/baby/') || href.includes('/English/ages-stages/baby/')) &&
-                !href.includes('find-pediatrician') &&
-                !href.includes('login') &&
-                !href.includes('register') &&
-                !href.includes('contact') &&
-                !href.includes('about-aap') &&
-                !href.includes('Editorial-Policy') &&
-                !href.includes('asthmatracker') &&
-                !href.includes('MediaPlan') &&
-                !href.includes('podcast') &&
-                !href.includes('sponsorship') &&
-                !href.includes('contributors')) {
+            if (href.includes('/Pages/') &&
+              href.endsWith('.aspx') &&
+              !href.includes('default.aspx') &&
+              (href.includes('/ages-stages/baby/') || href.includes('/English/ages-stages/baby/')) &&
+              !href.includes('find-pediatrician') &&
+              !href.includes('login') &&
+              !href.includes('register') &&
+              !href.includes('contact') &&
+              !href.includes('about-aap') &&
+              !href.includes('Editorial-Policy') &&
+              !href.includes('asthmatracker') &&
+              !href.includes('MediaPlan') &&
+              !href.includes('podcast') &&
+              !href.includes('sponsorship') &&
+              !href.includes('contributors')) {
               found.push(href);
             }
           } else {
             // 对于其他站点，使用正则模式
             const matchesPattern = linkPatterns.some(pattern => {
               try {
-                return pattern.test(href);
+                return new RegExp(pattern.source, pattern.flags).test(href);
               } catch {
                 return false;
               }
             });
-            
+
             // 检查是否应该排除
             const shouldExclude = excludePatterns.some(pattern => {
               try {
@@ -153,24 +277,24 @@ async function discoverArticles(site, browser) {
                 return false;
               }
             });
-            
+
             if (matchesPattern && !shouldExclude) {
               found.push(href);
             }
           }
         });
-        
+
         return [...new Set(found)]; // 去重
-      }, { 
-        baseUrl: site.baseUrl, 
+      }, {
+        baseUrl: site.baseUrl,
         organization: site.organization,
-        linkPatterns: site.linkPatterns.map(p => ({ source: p.source, flags: p.flags })),
+        linkPatternSource: site.linkPatterns?.[0]?.source, // 只传第一个正则源码，避免序列化问题
         excludePatterns: (site.excludePatterns || []).map(p => ({ source: p.source, flags: p.flags }))
       });
 
       links.forEach(url => articles.add(url));
       console.log(`    ✅ 发现 ${links.length} 个链接`);
-      
+
       // 如果是 CDC，也尝试从页面内容中提取链接（可能通过 JS 动态加载）
       if (site.organization === 'CDC') {
         // 等待更多内容加载
@@ -182,7 +306,7 @@ async function discoverArticles(site, browser) {
             .filter(href => href && href.includes(baseUrl.replace('https://', '')) && href.includes('.html'))
             .slice(0, 20);
         }, { baseUrl: site.baseUrl });
-        
+
         moreLinks.forEach(url => articles.add(url));
         if (moreLinks.length > 0) {
           console.log(`    ✅ 额外发现 ${moreLinks.length} 个链接`);
@@ -205,7 +329,7 @@ async function discoverArticles(site, browser) {
  */
 async function scrapeArticle(url, site, browser) {
   const page = await browser.newPage();
-  
+
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
     // 对于 AAP，增加更长的等待时间，让 JS 内容完全加载
@@ -225,9 +349,9 @@ async function scrapeArticle(url, site, browser) {
     }
 
     const content = await page.evaluate(({ selector, organization }) => {
-      const title = document.querySelector('h1')?.textContent?.trim() || 
-                    document.querySelector('.article-title')?.textContent?.trim() ||
-                    document.title;
+      const title = document.querySelector('h1')?.textContent?.trim() ||
+        document.querySelector('.article-title')?.textContent?.trim() ||
+        document.title;
 
       // 尝试多个选择器
       const selectors = selector ? [selector] : [
@@ -269,7 +393,7 @@ async function scrapeArticle(url, site, browser) {
 
       // 提取段落 - 对于 AAP，尝试更广泛的提取
       const paragraphs = [];
-      
+
       if (organization === 'AAP') {
         // AAP 特定：优先查找主要内容区域
         // 1. 首先尝试找到 article 或 main 标签内的内容
@@ -278,7 +402,7 @@ async function scrapeArticle(url, site, browser) {
           // 2. 查找包含大量文本的区域
           const contentDivs = clone.querySelectorAll('div');
           let mainContentDiv = null;
-          
+
           for (const div of contentDivs) {
             const text = div.textContent.trim();
             // 降低阈值，找到包含较多文本的 div
@@ -290,17 +414,17 @@ async function scrapeArticle(url, site, browser) {
           }
           articleElement = mainContentDiv || clone;
         }
-        
+
         // 从找到的元素中提取所有可能的文本内容
         const textElements = articleElement.querySelectorAll('p, li, td, dd, dt, blockquote, h2, h3, h4, div.section, div.content, div.body');
-        
+
         textElements.forEach(el => {
           const text = el.textContent.trim();
           // 降低最小长度要求，从 50 降到 30，提高上限
-          if (text.length >= 30 && 
-              text.length <= 5000 && 
-              !text.match(/^(Ages|Register|Login|Search|Menu|Navigation|Skip to|Share this)/i) &&
-              !el.closest('nav, header, footer, aside, .navigation, .menu, .breadcrumb, .sidebar')) {
+          if (text.length >= 30 &&
+            text.length <= 5000 &&
+            !text.match(/^(Ages|Register|Login|Search|Menu|Navigation|Skip to|Share this)/i) &&
+            !el.closest('nav, header, footer, aside, .navigation, .menu, .breadcrumb, .sidebar')) {
             // 过滤掉只有链接文本的段落
             const linkText = el.querySelectorAll('a');
             if (linkText.length === 0 || text.length > linkText.length * 20) {
@@ -308,7 +432,7 @@ async function scrapeArticle(url, site, browser) {
             }
           }
         });
-        
+
         // 如果段落还是太少，尝试从整个 body 提取（更激进）
         if (paragraphs.length < 2) {
           clone.querySelectorAll('p, div').forEach(el => {
@@ -344,13 +468,13 @@ async function scrapeArticle(url, site, browser) {
       });
 
       const content = uniqueParagraphs.join('\n\n');
-      
+
       // 检查是否是 404 或错误页面
-      const isError = title.includes('404') || 
-                     title.includes('Not Found') || 
-                     title.includes('Error') ||
-                     content.includes('Page not found') ||
-                     content.length < 200;
+      const isError = title.includes('404') ||
+        title.includes('Not Found') ||
+        title.includes('Error') ||
+        content.includes('Page not found') ||
+        content.length < 200;
 
       return {
         title,
@@ -404,14 +528,23 @@ async function saveArticle(articleData, siteInfo) {
   try {
     const slug = generateSlug(articleData.title);
     const region = REGION_MAPPING[siteInfo.region] || 'Global';
-    
+
+    // 1. 更新 Source Registry
+    const sourceResult = await upsertKnowledgeSource(siteInfo);
+    if (sourceResult && sourceResult.isNew) {
+      console.log(`    ⭐ 新增权威来源: ${siteInfo.name}`);
+    } else if (sourceResult) {
+      console.log(`    ✅ 更新权威来源: ${siteInfo.name}`);
+    }
+
+    // 2. 检查文章是否存在
     const existsCheck = await checkArticleExists(articleData.url, articleData.title);
     if (existsCheck.exists) {
       return { success: false, reason: existsCheck.reason };
     }
 
     const oneLiner = articleData.content.substring(0, 200);
-    const paddedOneLiner = oneLiner.length < 50 
+    const paddedOneLiner = oneLiner.length < 50
       ? oneLiner + ' Evidence-based information from trusted health organizations.'
       : oneLiner;
 
@@ -424,7 +557,7 @@ async function saveArticle(articleData, siteInfo) {
       one_liner: paddedOneLiner.substring(0, 200),
       key_facts: [
         `Source: ${siteInfo.name}`,
-        `Region: ${siteInfo.region}`,
+        `Evidence Grade: ${siteInfo.grade || 'A'}`,
         'Evidence-based information for parents'
       ],
       body_md: articleData.content,
@@ -432,12 +565,12 @@ async function saveArticle(articleData, siteInfo) {
       age_range: '0-12 months',
       region: region,
       last_reviewed: new Date().toISOString().split('T')[0],
-      reviewed_by: 'Playwright Scraper Bot',
-      license: `Source: ${siteInfo.name} (${siteInfo.organization}) | Region: ${siteInfo.region} | URL: ${articleData.url}`,
+      reviewed_by: siteInfo.name, // 使用来源名称作为审核者
+      license: `Source: ${siteInfo.name} (${siteInfo.organization}) | Grade: ${siteInfo.grade || 'A'} | URL: ${articleData.url}`,
       meta_title: articleData.title.substring(0, 60),
       meta_description: articleData.content.substring(0, 157) + '...',
       keywords: extractKeywords(articleData.content),
-      status: 'draft'
+      status: 'published' // 直接发布，因为是权威来源
     };
 
     const { data, error } = await supabase
@@ -466,7 +599,7 @@ async function saveArticle(articleData, siteInfo) {
  * 主函数
  */
 async function main() {
-  console.log('🌐 Playwright 爬虫 - AAP 和 CDC 权威站点\n');
+  console.log('🌐 Playwright 爬虫 - AAP 和 CDC 权威站点 (Medical Grade)\n');
   console.log('='.repeat(70));
 
   const browser = await chromium.launch({
@@ -495,9 +628,9 @@ async function main() {
 
   try {
     for (const [siteKey, site] of Object.entries(AUTHORITY_SITES)) {
-      console.log(`\n📌 处理站点: ${site.name} (${site.organization})`);
+      console.log(`\n📌 处理站点: ${site.name} (${site.organization}) - Grade ${site.grade || 'A'}`);
       console.log('─'.repeat(70));
-      
+
       stats.sitesProcessed++;
       stats.bySite[site.name] = {
         discovered: 0,
@@ -509,7 +642,7 @@ async function main() {
       try {
         console.log(`\n🔍 发现文章链接...`);
         const articleUrls = await discoverArticles(site, context);
-        
+
         console.log(`  ✅ 发现 ${articleUrls.length} 篇文章`);
         stats.totalDiscovered += articleUrls.length;
         stats.bySite[site.name].discovered = articleUrls.length;
@@ -519,8 +652,8 @@ async function main() {
           continue;
         }
 
-        // 处理所有文章（移除限制以处理全部116篇）
-        const urlsToProcess = articleUrls;
+        // 处理所有文章
+        const urlsToProcess = articleUrls.slice(0, 50); // 限制每次最多 50 篇，避免过长
 
         for (let i = 0; i < urlsToProcess.length; i++) {
           const url = urlsToProcess[i];
@@ -552,11 +685,14 @@ async function main() {
             console.log(`    ✅ 提取成功: ${content.title.substring(0, 60)}`);
             console.log(`       ${content.content.length} 字符, ${content.paragraphCount || 'N/A'} 段落`);
 
+            // 传递完整 site 信息，包含 grade
             const siteInfo = {
               name: site.name,
               organization: site.organization,
               region: site.region,
-              language: site.language
+              language: site.language,
+              grade: site.grade,
+              baseUrl: site.baseUrl
             };
 
             const result = await saveArticle(content, siteInfo);
@@ -603,7 +739,7 @@ async function main() {
   console.log(`尝试抓取: ${stats.attempted} 篇`);
   console.log(`成功保存: ${stats.successful} 篇 ✅`);
   console.log(`失败: ${stats.failed} 篇 ❌`);
-  
+
   if (stats.attempted > 0) {
     console.log(`成功率: ${((stats.successful / stats.attempted) * 100).toFixed(1)}%\n`);
   }

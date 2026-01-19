@@ -7,7 +7,7 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
-const { generateSlug } = require('./scraper-utils');
+const { generateSlug } = require('../scrapers/scraper-utils');
 
 const dotenv = require('dotenv');
 // Load env vars from project root
@@ -28,7 +28,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
  */
 function normalizeUrl(url) {
   if (!url) return '';
-  
+
   try {
     const urlObj = new URL(url);
     // 移除 fragment 和 query
@@ -61,7 +61,7 @@ async function articleExists(url, title) {
   // 检查 1: 通过规范化 URL
   if (url) {
     const normalizedUrl = normalizeUrl(url);
-    
+
     // 查询所有文章，检查 license 字段中的 URL
     const { data: articles, error } = await supabase
       .from('articles')
@@ -73,8 +73,8 @@ async function articleExists(url, title) {
         if (licenseUrl) {
           const existingNormalizedUrl = normalizeUrl(licenseUrl[1]);
           if (existingNormalizedUrl === normalizedUrl) {
-            return { 
-              exists: true, 
+            return {
+              exists: true,
               reason: 'URL已存在（规范化后匹配）',
               existingId: article.id
             };
@@ -91,8 +91,8 @@ async function articleExists(url, title) {
       .limit(1);
 
     if (urlMatch && urlMatch.length > 0) {
-      return { 
-        exists: true, 
+      return {
+        exists: true,
         reason: 'URL已存在',
         existingId: urlMatch[0].id
       };
@@ -116,17 +116,17 @@ async function articleExists(url, title) {
           const normalizedExisting = normalizeUrl(existingUrl[1]);
           const normalizedNew = normalizeUrl(url);
           if (normalizedExisting === normalizedNew) {
-            return { 
-              exists: true, 
+            return {
+              exists: true,
               reason: 'URL和标题都已存在（完全重复）',
               existingId: slugMatch[0].id
             };
           }
         }
       }
-      
-      return { 
-        exists: true, 
+
+      return {
+        exists: true,
         reason: '标题已存在（Slug重复）',
         existingId: slugMatch[0].id
       };
