@@ -23,7 +23,7 @@ const newFoods = [
         why: 'Apples are rich in fiber and vitamin C, supporting digestive health and immune function. They are a versatile first food.',
         how_to: ['Wash and peel the apple', 'Steam until very soft (about 10-15 minutes)', 'Cut into thin slices or mash for younger babies', 'For older babies, offer as finger food'],
         portion_hint: '1-2 tablespoons for beginners, up to 1/4 apple for older babies',
-        media: [{ type: 'image', url: '/images/foods/apple.png', alt: 'apple for babies', caption: 'Professional food photography of apple' }],
+        media: [{ type: 'image', url: '/images/foods/apple.webp', alt: 'apple for babies', caption: 'Professional food photography of apple' }],
         status: 'published'
     },
     {
@@ -40,7 +40,7 @@ const newFoods = [
         why: 'Avocados are packed with healthy fats essential for brain development, plus they are naturally soft and easy to digest.',
         how_to: ['Cut avocado in half and remove pit', 'Scoop out flesh or cut into wedges with skin on', 'For puree, mash with a fork', 'Serve immediately to prevent browning'],
         portion_hint: '1-2 tablespoons mashed or 1-2 wedges',
-        media: [{ type: 'image', url: '/images/foods/avocado.png', alt: 'avocado for babies', caption: 'Professional food photography of avocado' }],
+        media: [{ type: 'image', url: '/images/foods/avocado.webp', alt: 'avocado for babies', caption: 'Professional food photography of avocado' }],
         status: 'published'
     },
     {
@@ -57,7 +57,7 @@ const newFoods = [
         why: 'Bananas are naturally sweet, easy to digest, and rich in potassium for healthy muscle and nerve function.',
         how_to: ['Peel banana', 'For younger babies, mash with a fork', 'For baby-led weaning, cut in half and leave peel strip on one end', 'Or slice into rounds'],
         portion_hint: '1-2 tablespoons mashed or 1/4 to 1/2 banana',
-        media: [{ type: 'image', url: '/images/foods/banana.png', alt: 'banana for babies', caption: 'Professional food photography of banana' }],
+        media: [{ type: 'image', url: '/images/foods/banana.webp', alt: 'banana for babies', caption: 'Professional food photography of banana' }],
         status: 'published'
     },
     {
@@ -74,7 +74,7 @@ const newFoods = [
         why: 'Blueberries are packed with antioxidants that support brain development and immune health.',
         how_to: ['Wash blueberries thoroughly', 'Quarter each berry lengthwise', 'For younger babies, mash or puree', 'Serve at room temperature'],
         portion_hint: '5-10 quartered berries',
-        media: [{ type: 'image', url: '/images/foods/blueberry.png', alt: 'blueberry for babies', caption: 'Professional food photography of blueberry' }],
+        media: [{ type: 'image', url: '/images/foods/blueberry.webp', alt: 'blueberry for babies', caption: 'Professional food photography of blueberry' }],
         status: 'published'
     },
     {
@@ -91,7 +91,7 @@ const newFoods = [
         why: 'Whole grain bread provides energy, fiber, and essential B vitamins for growth and development.',
         how_to: ['Choose soft whole wheat bread', 'Lightly toast if desired', 'Cut into strips about 2-3 inches long', 'Remove crusts for younger babies'],
         portion_hint: '1-2 strips or 1/4 slice',
-        media: [{ type: 'image', url: '/images/foods/bread.png', alt: 'bread for babies', caption: 'Professional food photography of bread' }],
+        media: [{ type: 'image', url: '/images/foods/bread.webp', alt: 'bread for babies', caption: 'Professional food photography of bread' }],
         status: 'published'
     },
     {
@@ -108,7 +108,7 @@ const newFoods = [
         why: 'Broccoli is a nutrient powerhouse, rich in vitamins C and K, supporting immune health and bone development.',
         how_to: ['Wash broccoli thoroughly', 'Cut into florets with long stems', 'Steam for 8-10 minutes until very soft', 'Test softness by pressing with a fork'],
         portion_hint: '1-2 small florets',
-        media: [{ type: 'image', url: '/images/foods/broccoli.png', alt: 'broccoli for babies', caption: 'Professional food photography of broccoli' }],
+        media: [{ type: 'image', url: '/images/foods/broccoli.webp', alt: 'broccoli for babies', caption: 'Professional food photography of broccoli' }],
         status: 'published'
     },
     {
@@ -125,7 +125,7 @@ const newFoods = [
         why: 'Cauliflower is mild in flavor and rich in vitamins, making it an excellent vegetable for early introduction.',
         how_to: ['Wash and cut into florets with stems', 'Steam for 10-12 minutes until very soft', 'For puree, blend with breast milk or formula', 'Serve warm'],
         portion_hint: '1-2 small florets or 2-3 tablespoons pureed',
-        media: [{ type: 'image', url: '/images/foods/cauliflower.png', alt: 'cauliflower for babies', caption: 'Professional food photography of cauliflower' }],
+        media: [{ type: 'image', url: '/images/foods/cauliflower.webp', alt: 'cauliflower for babies', caption: 'Professional food photography of cauliflower' }],
         status: 'published'
     },
     {
@@ -142,7 +142,7 @@ const newFoods = [
         why: 'Cheese provides calcium and protein essential for bone development and growth.',
         how_to: ['Choose mild cheddar or mozzarella', 'Cut into small cubes (pea-sized)', 'For younger babies, shred finely', 'Serve at room temperature'],
         portion_hint: '1-2 tablespoons shredded or 3-4 small cubes',
-        media: [{ type: 'image', url: '/images/foods/cheese.png', alt: 'cheese for babies', caption: 'Professional food photography of cheese' }],
+        media: [{ type: 'image', url: '/images/foods/cheese.webp', alt: 'cheese for babies', caption: 'Professional food photography of cheese' }],
         status: 'published'
     },
     {
@@ -159,7 +159,7 @@ const newFoods = [
         why: 'Chicken is an excellent source of protein and iron, essential for growth and development.',
         how_to: ['Cook chicken breast thoroughly', 'Shred finely for younger babies', 'Cut into strips for baby-led weaning', 'Mix with vegetables or broth to keep moist'],
         portion_hint: '1-2 tablespoons shredded or 1-2 strips',
-        media: [{ type: 'image', url: '/images/foods/chicken.png', alt: 'chicken for babies', caption: 'Professional food photography of chicken' }],
+        media: [{ type: 'image', url: '/images/foods/chicken.webp', alt: 'chicken for babies', caption: 'Professional food photography of chicken' }],
         status: 'published'
     },
     {
@@ -176,7 +176,7 @@ const newFoods = [
         why: 'Green beans are rich in vitamins and fiber, supporting digestive health and immune function.',
         how_to: ['Wash and trim ends', 'Steam for 8-10 minutes until very soft', 'Serve whole or cut into pieces', 'For puree, blend with water'],
         portion_hint: '3-5 whole beans or 2-3 tablespoons pureed',
-        media: [{ type: 'image', url: '/images/foods/green-beans.png', alt: 'green-beans for babies', caption: 'Professional food photography of green-beans' }],
+        media: [{ type: 'image', url: '/images/foods/green-beans.webp', alt: 'green-beans for babies', caption: 'Professional food photography of green-beans' }],
         status: 'published'
     },
     {
@@ -193,7 +193,7 @@ const newFoods = [
         why: 'Mangoes are rich in vitamins A and C, supporting vision, immune health, and skin development.',
         how_to: ['Peel mango', 'Cut flesh away from pit', 'Slice into strips or use hedgehog cut', 'For younger babies, mash or puree'],
         portion_hint: '2-3 tablespoons mashed or 2-3 strips',
-        media: [{ type: 'image', url: '/images/foods/mango.png', alt: 'mango for babies', caption: 'Professional food photography of mango' }],
+        media: [{ type: 'image', url: '/images/foods/mango.webp', alt: 'mango for babies', caption: 'Professional food photography of mango' }],
         status: 'published'
     },
     {
@@ -210,7 +210,7 @@ const newFoods = [
         why: 'Oatmeal is rich in fiber and iron, supporting digestive health and preventing anemia.',
         how_to: ['Cook oats according to package directions', 'Use breast milk or formula for creamier texture', 'Cool to safe temperature', 'Thin with liquid if too thick'],
         portion_hint: '2-4 tablespoons',
-        media: [{ type: 'image', url: '/images/foods/oatmeal.png', alt: 'oatmeal for babies', caption: 'Professional food photography of oatmeal' }],
+        media: [{ type: 'image', url: '/images/foods/oatmeal.webp', alt: 'oatmeal for babies', caption: 'Professional food photography of oatmeal' }],
         status: 'published'
     },
     {
@@ -227,7 +227,7 @@ const newFoods = [
         why: 'Pasta provides energy and B vitamins, and its various shapes help develop fine motor skills.',
         how_to: ['Cook pasta until very soft', 'Choose shapes like spirals or tubes', 'Drain and cool', 'Serve plain or with mild sauce'],
         portion_hint: '1/4 to 1/2 cup cooked',
-        media: [{ type: 'image', url: '/images/foods/pasta.png', alt: 'pasta for babies', caption: 'Professional food photography of pasta' }],
+        media: [{ type: 'image', url: '/images/foods/pasta.webp', alt: 'pasta for babies', caption: 'Professional food photography of pasta' }],
         status: 'published'
     },
     {
@@ -244,7 +244,7 @@ const newFoods = [
         why: 'Peaches are rich in vitamins A and C, supporting vision, immune health, and skin development.',
         how_to: ['Wash and peel peach', 'Remove pit', 'Slice into wedges', 'Steam if not very soft', 'For puree, mash or blend'],
         portion_hint: '2-3 tablespoons mashed or 2-3 slices',
-        media: [{ type: 'image', url: '/images/foods/peach.png', alt: 'peach for babies', caption: 'Professional food photography of peach' }],
+        media: [{ type: 'image', url: '/images/foods/peach.webp', alt: 'peach for babies', caption: 'Professional food photography of peach' }],
         status: 'published'
     },
     {
@@ -261,7 +261,7 @@ const newFoods = [
         why: 'Pears are gentle on the digestive system and rich in fiber, helping prevent constipation.',
         how_to: ['Wash and peel pear', 'Remove core and seeds', 'Steam for 10-15 minutes until soft', 'Slice or mash as needed'],
         portion_hint: '2-3 tablespoons mashed or 2-3 slices',
-        media: [{ type: 'image', url: '/images/foods/pear.png', alt: 'pear for babies', caption: 'Professional food photography of pear' }],
+        media: [{ type: 'image', url: '/images/foods/pear.webp', alt: 'pear for babies', caption: 'Professional food photography of pear' }],
         status: 'published'
     },
     {
@@ -278,7 +278,7 @@ const newFoods = [
         why: 'Peas are a good source of plant-based protein and fiber, supporting growth and digestive health.',
         how_to: ['Cook peas until very soft', 'For younger babies, mash slightly', 'For older babies, serve whole', 'Cool to safe temperature'],
         portion_hint: '2-3 tablespoons',
-        media: [{ type: 'image', url: '/images/foods/peas.png', alt: 'peas for babies', caption: 'Professional food photography of peas' }],
+        media: [{ type: 'image', url: '/images/foods/peas.webp', alt: 'peas for babies', caption: 'Professional food photography of peas' }],
         status: 'published'
     },
     {
@@ -295,7 +295,7 @@ const newFoods = [
         why: 'Rice is easy to digest and often fortified with iron, making it a good first food for babies.',
         how_to: ['Cook rice until very soft and sticky', 'Mix with breast milk or formula for creamier texture', 'For baby-led weaning, form into small balls', 'Serve warm'],
         portion_hint: '2-4 tablespoons',
-        media: [{ type: 'image', url: '/images/foods/rice.png', alt: 'rice for babies', caption: 'Professional food photography of rice' }],
+        media: [{ type: 'image', url: '/images/foods/rice.webp', alt: 'rice for babies', caption: 'Professional food photography of rice' }],
         status: 'published'
     },
     {
@@ -312,7 +312,7 @@ const newFoods = [
         why: 'Strawberries are packed with vitamin C and antioxidants, supporting immune health and development.',
         how_to: ['Wash strawberries thoroughly', 'Remove stems', 'Quarter lengthwise', 'For younger babies, mash or puree', 'Serve fresh'],
         portion_hint: '3-5 quartered berries',
-        media: [{ type: 'image', url: '/images/foods/strawberry.png', alt: 'strawberry for babies', caption: 'Professional food photography of strawberry' }],
+        media: [{ type: 'image', url: '/images/foods/strawberry.webp', alt: 'strawberry for babies', caption: 'Professional food photography of strawberry' }],
         status: 'published'
     },
     {
@@ -329,7 +329,7 @@ const newFoods = [
         why: 'Sweet potatoes are rich in vitamin A for vision and immune health, and naturally sweet for baby appeal.',
         how_to: ['Wash sweet potato', 'Roast at 400°F for 45 minutes or steam until soft', 'For wedges, cut with skin on', 'For puree, scoop out flesh and mash'],
         portion_hint: '2-3 tablespoons mashed or 1-2 wedges',
-        media: [{ type: 'image', url: '/images/foods/sweet-potato.png', alt: 'sweet-potato for babies', caption: 'Professional food photography of sweet-potato' }],
+        media: [{ type: 'image', url: '/images/foods/sweet-potato.webp', alt: 'sweet-potato for babies', caption: 'Professional food photography of sweet-potato' }],
         status: 'published'
     },
     {
@@ -346,7 +346,7 @@ const newFoods = [
         why: 'Watermelon is hydrating and rich in vitamins, perfect for hot days and developing taste preferences.',
         how_to: ['Cut watermelon into triangular wedges', 'Remove all seeds', 'Leave rind on for easier gripping', 'Serve chilled or room temperature'],
         portion_hint: '1-2 wedges',
-        media: [{ type: 'image', url: '/images/foods/watermelon.png', alt: 'watermelon for babies', caption: 'Professional food photography of watermelon' }],
+        media: [{ type: 'image', url: '/images/foods/watermelon.webp', alt: 'watermelon for babies', caption: 'Professional food photography of watermelon' }],
         status: 'published'
     },
     {
@@ -363,7 +363,7 @@ const newFoods = [
         why: 'Zucchini is mild in flavor and easy to digest, making it an excellent vegetable for early introduction.',
         how_to: ['Wash zucchini', 'Cut into finger-sized sticks', 'Steam for 5-7 minutes until soft', 'For puree, blend with water or broth'],
         portion_hint: '2-3 sticks or 2-3 tablespoons pureed',
-        media: [{ type: 'image', url: '/images/foods/zucchini.png', alt: 'zucchini for babies', caption: 'Professional food photography of zucchini' }],
+        media: [{ type: 'image', url: '/images/foods/zucchini.webp', alt: 'zucchini for babies', caption: 'Professional food photography of zucchini' }],
         status: 'published'
     }
 ];
