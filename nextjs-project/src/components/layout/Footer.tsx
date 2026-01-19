@@ -70,7 +70,7 @@ function Footer() {
                     alt="JupitLunar Logo"
                     width={40}
                     height={40}
-                    className="w-full h-full object-contain scale-[1.6] p-0.5 translate-x-2 translate-y-1"
+                    className="w-full h-full object-contain p-0.5"
                   />
                 </div>
               </div>
