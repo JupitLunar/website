@@ -65,12 +65,12 @@ function Footer() {
             <Link href="/" className="flex items-center space-x-3 mb-6">
               <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-r from-primary-500/80 to-primary-600/80 p-[1.5px]">
                 <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                  <Image 
-                    src="/Assets/Logo.png" 
-                    alt="JupitLunar Logo" 
+                  <Image
+                    src="/Assets/Logo.png"
+                    alt="JupitLunar Logo"
                     width={40}
                     height={40}
-                    className="w-full h-full object-contain scale-[1.6] p-0.5 translate-x-2 translate-y-1" 
+                    className="w-full h-full object-contain scale-[1.6] p-0.5 translate-x-2 translate-y-1"
                   />
                 </div>
               </div>
@@ -79,7 +79,7 @@ function Footer() {
               </span>
             </Link>
             <p className="text-gray-300 mb-6 leading-relaxed">
-              AI-powered health intelligence for maternal and infant wellness. 
+              AI-powered health intelligence for maternal and infant wellness.
               Expert-curated, evidence-based guidance for every stage of your parenting journey.
             </p>
             <div className="flex space-x-4">
@@ -113,7 +113,7 @@ function Footer() {
             <ul className="space-y-3">
               {contentHubs.map((hub) => (
                 <li key={hub.name}>
-                  <Link 
+                  <Link
                     href={hub.href}
                     className="text-gray-300 hover:text-white transition-colors text-sm"
                   >
@@ -130,7 +130,7 @@ function Footer() {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <Link 
+                  <Link
                     href={link.href}
                     className="text-gray-300 hover:text-white transition-colors text-sm"
                   >

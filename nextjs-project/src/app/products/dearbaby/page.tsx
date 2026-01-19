@@ -158,7 +158,7 @@ export default function DearBabyProductPage() {
                     <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
                     <span className="text-xs font-semibold tracking-widest text-indigo-600 uppercase">AI-Powered • Part of MomAI Ecosystem</span>
                   </motion.div>
-                  
+
                   <h1 className="text-6xl lg:text-8xl font-light text-slate-700 mb-8 leading-[1.1] tracking-tight">
                     Calm, Data-Driven
                     <br />
@@ -166,11 +166,11 @@ export default function DearBabyProductPage() {
                       Support.
                     </span>
                   </h1>
-                  
+
                   <p className="text-2xl text-slate-500/80 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
                     The smartest free baby tracker with GPT-4o insights, Apple Watch sync, and automatic growth pattern recognition.
                   </p>
-                  
+
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
                     <a
                       href="https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368"
@@ -188,7 +188,7 @@ export default function DearBabyProductPage() {
                       How it Works
                     </Link>
                   </div>
-                  
+
                   <div className="mt-12 flex items-center justify-center lg:justify-start gap-5">
                     <div className="flex -space-x-4">
                       {[1, 2, 3, 4, 5].map((i) => (
@@ -217,21 +217,21 @@ export default function DearBabyProductPage() {
                   className="relative mx-auto w-full max-w-[450px] flex justify-center items-center"
                 >
                   {/* Dashboard Mockup */}
-                  <motion.div 
+                  <motion.div
                     className="relative z-20 w-[260px] sm:w-[320px] border-[12px] border-slate-900 rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] bg-white"
                     whileHover={{ y: -10 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <Image 
-                      src="/Assets/babydashboard.png" 
-                      alt="DearBaby App Dashboard" 
+                    <Image
+                      src="/Assets/babydashboard.png"
+                      alt="DearBaby App Dashboard"
                       width={320}
                       height={690}
                       className="w-full h-auto object-cover"
                       priority
                     />
                   </motion.div>
-                  
+
                   {/* Floating AI Mockup */}
                   <motion.div
                     animate={{ y: [0, -20, 0], x: [0, -10, 0] }}
@@ -239,9 +239,9 @@ export default function DearBabyProductPage() {
                     className="absolute -left-12 -bottom-10 z-30 w-[180px] sm:w-[220px] hidden sm:block"
                   >
                     <div className="border-[8px] border-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl bg-white">
-                      <Image 
-                        src="/Assets/babygpt1.png" 
-                        alt="DearBaby AI Assistant" 
+                      <Image
+                        src="/Assets/babygpt1.png"
+                        alt="DearBaby AI Assistant"
                         width={220}
                         height={475}
                         className="w-full h-auto object-cover"
@@ -287,7 +287,7 @@ export default function DearBabyProductPage() {
         {/* FEATURES GRID */}
         <section className="py-24 bg-gradient-to-b from-white to-indigo-50/20">
           <div className="container mx-auto px-6">
-            <motion.div 
+            <motion.div
               className="text-center mb-20"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -336,16 +336,16 @@ export default function DearBabyProductPage() {
                   className="relative"
                 >
                   <div className="rounded-[4rem] overflow-hidden shadow-2xl border-[16px] border-slate-50 relative group">
-                    <Image 
-                      src="/Assets/scanme.png" 
-                      alt="DearBaby Apple Watch Integration" 
+                    <Image
+                      src="/Assets/scanme.png"
+                      alt="DearBaby Apple Watch Integration"
                       width={600}
                       height={800}
                       className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-110"
                     />
                   </div>
                   {/* Floating info card */}
-                  <motion.div 
+                  <motion.div
                     className="absolute -bottom-8 -right-8 p-8 bg-white rounded-3xl shadow-2xl border border-indigo-100 max-w-[240px] hidden md:block"
                     animate={{ y: [0, -10, 0] }}
                     transition={{ duration: 4, repeat: Infinity }}
@@ -442,9 +442,9 @@ export default function DearBabyProductPage() {
                   className="relative"
                 >
                   <div className="rounded-[4rem] overflow-hidden shadow-2xl border-[16px] border-white relative group">
-                    <Image 
-                      src="/Assets/babygpt1.png" 
-                      alt="DearBaby AI GPT Assistant" 
+                    <Image
+                      src="/Assets/babygpt1.png"
+                      alt="DearBaby AI GPT Assistant"
                       width={600}
                       height={800}
                       className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-110"
@@ -461,7 +461,7 @@ export default function DearBabyProductPage() {
         {/* EVIDENCE-BASED GUIDES - High AEO Value */}
         <section className="py-32 bg-white">
           <div className="container mx-auto px-6">
-            <motion.div 
+            <motion.div
               className="text-center mb-24"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -473,7 +473,7 @@ export default function DearBabyProductPage() {
                 Directly pulled from our RAG knowledge base, verified against WHO and CDC clinical guidelines for 2025.
               </p>
             </motion.div>
-            
+
             <div className="grid lg:grid-cols-2 gap-16">
               {/* Top 10 Things to Track */}
               <motion.div
@@ -538,7 +538,7 @@ export default function DearBabyProductPage() {
         <section className="py-32 bg-slate-50/40">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
-              <motion.div 
+              <motion.div
                 className="text-center mb-20"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -548,7 +548,7 @@ export default function DearBabyProductPage() {
                 <h2 className="text-5xl font-light text-slate-700 mb-6 tracking-tight">The DearBaby <span className="font-medium text-indigo-400">Knowledge Hub.</span></h2>
                 <p className="text-xl text-slate-500 font-light">Direct answers to the most frequent caregiver concerns.</p>
               </motion.div>
-              
+
               <div className="grid gap-8">
                 {[
                   {
@@ -564,7 +564,7 @@ export default function DearBabyProductPage() {
                     a: "Absolutely. DearBaby supports multi-user synchronization, so everyone on your baby's care team can log and view data in real-time across multiple devices."
                   }
                 ].map((faq, i) => (
-                  <motion.div 
+                  <motion.div
                     key={faq.q}
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -599,7 +599,7 @@ export default function DearBabyProductPage() {
               </div>
             </div>
 
-            <NewsletterSignup 
+            <NewsletterSignup
               variant="default"
               title="Parenting Patterns Weekly"
               description="Join 18,000+ parents getting AI-powered insights and development tips every Tuesday."

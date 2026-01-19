@@ -206,7 +206,16 @@ function HomePage() {
       }
 
       setGuideStatus('success');
-      setGuideFeedback('Guide sent! Check your inbox for the personalized roadmap within a few minutes.');
+      setGuideFeedback('Success! Your roadmap is downloading. Check your "Downloads" folder.');
+
+      // Trigger immediate download
+      const link = document.createElement('a');
+      link.href = '/assets/downloads/Medical_Grade_Baby_Feeding_Roadmap.pdf';
+      link.download = 'Medical_Grade_Baby_Feeding_Roadmap.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
       setGuideEmail('');
       setGuideName('');
     } catch (error) {

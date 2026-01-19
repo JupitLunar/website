@@ -51,7 +51,7 @@ export default function Header() {
               <Link href="/" className="text-gray-700 hover:text-purple-600 transition-colors">
                 Home
               </Link>
-              
+
               {/* Content Dropdown */}
               <div className="relative">
                 <button
@@ -64,7 +64,7 @@ export default function Header() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-                
+
                 {isContentDropdownOpen && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}

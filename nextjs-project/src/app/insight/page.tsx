@@ -10,14 +10,14 @@ import { filterCleanKeywords } from '@/lib/supabase';
 // Generate CollectionPage schema for AEO with enhanced keywords
 function generateInsightsPageSchema(articles: any[], allKeywords: string[]) {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
-  
+
   // Collect all unique keywords from articles
   const articleKeywords = new Set<string>();
   articles.forEach((article) => {
     const cleanKeywords = filterCleanKeywords(article.keywords || []);
     cleanKeywords.forEach((k: string) => articleKeywords.add(k));
   });
-  
+
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -72,7 +72,7 @@ function generateInsightsPageSchema(articles: any[], allKeywords: string[]) {
 // Generate Organization schema
 function generateOrganizationSchema() {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
-  
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -182,10 +182,10 @@ const getInsightArticles = unstable_cache(
 function formatDate(dateString: string | null) {
   if (!dateString) return '';
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
 }
 
@@ -223,7 +223,7 @@ export default async function InsightPage({
   const selectedAge = searchParams?.age || '';
   const selectedKeyword = searchParams?.keyword || '';
   const hasActiveFilters = Boolean(selectedHub || selectedAge || selectedKeyword);
-  
+
   const filteredArticles = articles.filter((article: any) => {
     if (selectedHub && article.hub !== selectedHub) return false;
     if (selectedAge && article.age_range !== selectedAge) return false;
@@ -235,11 +235,11 @@ export default async function InsightPage({
     }
     return true;
   });
-  
+
   // Extract unique values for filters
   const allHubs = Array.from(new Set(articles.map((a: any) => a.hub).filter(Boolean)));
   const allAgeRanges = Array.from(new Set(articles.map((a: any) => a.age_range).filter(Boolean)));
-  
+
   // Collect all unique keywords
   const allKeywordsSet = new Set<string>();
   articles.forEach((article: any) => {
@@ -247,7 +247,7 @@ export default async function InsightPage({
     cleanKeywords.forEach((k: string) => allKeywordsSet.add(k));
   });
   const allKeywords = Array.from(allKeywordsSet).sort();
-  
+
   // Generate schemas for AEO
   const schemaArticles = filteredArticles.length > 0 ? filteredArticles : articles;
   const collectionSchema = generateInsightsPageSchema(schemaArticles, allKeywords);

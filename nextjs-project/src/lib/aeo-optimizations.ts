@@ -98,7 +98,7 @@ export function generateClaimReviewSchema({
   articleUrl: string;
 }) {
   const ratingValue = rating === 'True' ? 5 : rating === 'False' ? 1 : 3;
-  
+
   return {
     "@context": "https://schema.org",
     "@type": "ClaimReview",
@@ -168,7 +168,7 @@ export function generateComparisonTableSchema({
           }
         },
         {
-          "@type": "TableCell", 
+          "@type": "TableCell",
           "text": caData[key],
           "additionalProperty": {
             "@type": "PropertyValue",
@@ -236,14 +236,14 @@ export function generateBottomLineSummary(article: any): string {
   const keyFacts = Array.isArray(article.key_facts) ? article.key_facts : [];
   const ageRange = article.age_range || '0-24 months';
   const region = article.region === 'Global' ? 'North America' : article.region;
-  
+
   // 提取关键数字和事实
-  const numbers = keyFacts.filter((fact: any) => 
+  const numbers = keyFacts.filter((fact: any) =>
     typeof fact === 'string' && /\d+/.test(fact)
   );
-  
+
   const mainFacts = keyFacts.slice(0, 3);
-  
+
   return `${article.title.replace('?', '')}: ${mainFacts.join('; ')}. Based on ${region} guidelines for ${ageRange}.`;
 }
 
@@ -313,7 +313,7 @@ export function generateAIOptimizedSummary(content: string): {
 // 生成权威来源引用
 export function generateAuthorityCitations(article: any) {
   const citations = article.citations || [];
-  
+
   return citations.map((citation: any) => ({
     "@type": "WebPage",
     "@id": citation.url,
@@ -324,7 +324,7 @@ export function generateAuthorityCitations(article: any) {
       "name": citation.author || citation.publisher
     },
     "publisher": {
-      "@type": "Organization", 
+      "@type": "Organization",
       "name": citation.publisher
     },
     "datePublished": citation.date,
