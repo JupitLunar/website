@@ -1,0 +1,21 @@
+# Exclude files from Vercel build to prevent micromatch stack overflow
+node_modules
+.next
+.git
+.env*
+*.log
+*.cache
+.DS_Store
+coverage
+.nyc_output
+.vscode
+.idea
+*.swp
+*.swo
+data/scraped
+cache/scraper
+reports
+scripts
+docs
+*.md
+!README.md
