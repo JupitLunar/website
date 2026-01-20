@@ -39,7 +39,7 @@ const openai = new OpenAI({ apiKey: openaiApiKey });
 const { MATERNAL_INFANT_TOPICS } = require('./topics-list');
 
 // 导入 trending topics 获取函数
-const { fetchTrendingTopics } = require('./fetch-trending-topics');
+const { fetchTrendingTopics } = require('../scrapers/fetch-trending-topics');
 
 /**
  * 生成slug
@@ -57,7 +57,7 @@ function generateSlug(title) {
  */
 async function articleExists(title) {
   const slug = generateSlug(title);
-  
+
   // 检查slug
   const { data: slugMatch } = await supabase
     .from('articles')
@@ -112,18 +112,36 @@ async function findMissingTopics(filterHub = null) {
     if (filterHub && topic.hub !== filterHub) {
       return false;
     }
-    
+
     // 检查是否已存在相似主题
     const topicLower = topic.topic.toLowerCase();
-    const isMissing = !Array.from(existingTitles).some(title => 
+    const isMissing = !Array.from(existingTitles).some(title =>
       title.includes(topicLower) || topicLower.includes(title.substring(0, 20))
     );
-    
+
     return isMissing;
   });
 
   return missingTopics;
 }
+
+const fs = require('fs');
+// Load AEO Rules
+let aeoRules;
+try {
+  aeoRules = require('../../config/aeo-generation-rules.json');
+} catch (e) {
+  // Fallback defaults if file missing
+  aeoRules = {
+    rules: {
+      quick_answer: { required: true },
+      faqs: { min_count: 5, max_count: 8 },
+      citations: { min_count: 3 }
+    }
+  };
+}
+
+// ... imports ...
 
 /**
  * 使用OpenAI生成文章 - AEO优化版本
@@ -131,6 +149,9 @@ async function findMissingTopics(filterHub = null) {
  */
 async function generateArticle(topicInfo) {
   console.log(`\n🤖 正在生成文章: ${topicInfo.topic}...`);
+  console.log(`📜 应用 AEO 规则版本: ${aeoRules.last_updated || 'Default'}`);
+
+  const rules = aeoRules.rules;
 
   const systemPrompt = `You are an expert content writer specializing in evidence-based maternal and infant health information. 
 Your content is optimized for AI search engines (AEO - Answer Engine Optimization) and will be cited by ChatGPT, Perplexity, Google AI Overview, and Claude.
@@ -146,7 +167,12 @@ Write a comprehensive, authoritative article in English about: "${topicInfo.topi
 
 ## AEO REQUIREMENTS (CRITICAL FOR AI CITATIONS):
 
-1. **QUICK ANSWER** (First 2-3 sentences):
+${rules.latest_ai_insight ? `0. **DYNAMIC AI OBSERVATION** (New Success Pattern):
+   - ${rules.latest_ai_insight}
+   - This rule is derived from currently top-performing content. FOLLOW IT STRICTLY.
+` : ''}
+
+1. **QUICK ANSWER** (First 2-3 sentences)${rules.quick_answer.required ? ' - REQUIRED' : ''}:
    - Start with a direct, concise answer to the main question
    - Use the format: "[Topic] involves/requires/means [direct answer]."
    - This snippet should be quotable by AI assistants
@@ -162,7 +188,7 @@ Write a comprehensive, authoritative article in English about: "${topicInfo.topi
    - Include specific numbers, percentages, or time frames when possible
 
 5. **FAQ Section** (CRITICAL FOR AEO):
-   - Generate 5-8 frequently asked questions related to the topic
+   - Generate ${rules.faqs.min_count}-${rules.faqs.max_count} frequently asked questions related to the topic
    - Each answer should be 2-4 sentences, directly answering the question
    - Questions should be natural, how real parents would ask
    - Example: "At what age can babies start solid foods?" → "Most babies are ready for solid foods around 6 months..."
@@ -192,7 +218,7 @@ Write a comprehensive, authoritative article in English about: "${topicInfo.topi
    - Use specific recommendations: "The CDC recommends..."
    - Include year when available: "2024 WHO guidelines suggest..."
    - Include evidence statements: "Studies published in [journal] indicate...", "Research shows that..."
-   - Minimum 3-5 citations to CDC, AAP, or WHO in the body content
+   - Minimum ${rules.citations.min_count} citations to CDC, AAP, or WHO in the body content
 
 9. **Semantic Entities**: Include relevant medical/parenting entities for knowledge graph
 
@@ -244,7 +270,8 @@ CRITICAL: The body_md field MUST be valid HTML (use <h2>, <p>, <ul>, <li>, <stro
       model: 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Write an authoritative, evidence-based article about: ${topicInfo.topic}. 
+        {
+          role: 'user', content: `Write an authoritative, evidence-based article about: ${topicInfo.topic}. 
 Ensure you cite CDC, AAP, or WHO guidelines at least 3-5 times throughout the article. 
 Include safety considerations and medical disclaimers. 
 All information must be factual and based on official health organization guidelines.` }
@@ -260,7 +287,7 @@ All information must be factual and based on official health organization guidel
     }
 
     const articleData = JSON.parse(content);
-    
+
     // 验证必需字段
     if (!articleData.title || !articleData.body_md) {
       throw new Error('生成的文章缺少必需字段');
@@ -275,7 +302,7 @@ All information must be factual and based on official health organization guidel
     const hasEvidence = bodyText.includes('evidence') || bodyText.includes('studies') || bodyText.includes('research');
     const hasSafety = bodyText.includes('safety') || bodyText.includes('safe') || bodyText.includes('risk');
     const hasDisclaimer = bodyText.includes('consult') || bodyText.includes('pediatrician') || bodyText.includes('medical advice');
-    
+
     // 警告但不阻止（允许一些灵活性）
     if (!hasAAP && !hasCDC && !hasWHO) {
       console.log('⚠️  警告: 文章缺少权威组织引用 (AAP/CDC/WHO)');
@@ -302,7 +329,7 @@ All information must be factual and based on official health organization guidel
  */
 async function insertArticle(articleData, topicInfo) {
   const slug = generateSlug(articleData.title);
-  
+
   // 再次检查重复
   const existsCheck = await articleExists(articleData.title);
   if (existsCheck.exists) {
@@ -312,7 +339,7 @@ async function insertArticle(articleData, topicInfo) {
 
   // 先不包含article_source，避免schema cache问题
   // AEO优化：将 FAQ 和 AEO 数据存储在 entities 字段中（已有的 JSON 字段）
-  
+
   // 构建增强的 entities 数组，包含 AEO 元数据
   const enhancedEntities = [
     ...(articleData.entities || []),
@@ -327,7 +354,7 @@ async function insertArticle(articleData, topicInfo) {
     // 将 quick_answer 作为第一个 key fact
     enhancedKeyFacts = [articleData.quick_answer, ...enhancedKeyFacts];
   }
-  
+
   const article = {
     slug,
     type: topicInfo.type,
@@ -398,7 +425,7 @@ async function insertArticle(articleData, topicInfo) {
         .from('articles')
         .update({ article_source: 'ai_generated' })
         .eq('id', data.id);
-      
+
       if (updateError) {
         if (updateError.message.includes('schema cache')) {
           // Schema cache问题，稍后可以通过运行 update-article-source.js 批量更新
@@ -420,7 +447,7 @@ async function insertArticle(articleData, topicInfo) {
     console.log(`✅ 文章插入成功: ${articleData.title}`);
     console.log(`   ID: ${data.id}`);
     console.log(`   Slug: ${data.slug}`);
-    
+
     return { success: true, article: data };
   } catch (error) {
     console.error(`❌ 插入失败:`, error.message);
@@ -474,7 +501,7 @@ Return format: { "topics": [{ "topic": "...", "hub": "...", "type": "...", "age_
     }
 
     const parsed = JSON.parse(content);
-    
+
     // 处理不同的响应格式
     let convertedTopics = [];
     if (Array.isArray(parsed)) {
@@ -502,9 +529,9 @@ Return format: { "topics": [{ "topic": "...", "hub": "...", "type": "...", "age_
     }
 
     // 验证格式
-    const validTopics = convertedTopics.filter(topic => 
-      topic.topic && 
-      topic.hub && 
+    const validTopics = convertedTopics.filter(topic =>
+      topic.topic &&
+      topic.hub &&
       ['feeding', 'sleep', 'mom-health', 'development', 'safety', 'recipes'].includes(topic.hub) &&
       topic.type &&
       ['explainer', 'howto', 'recipe'].includes(topic.type) &&
@@ -534,7 +561,7 @@ async function main() {
   const args = process.argv.slice(2);
   const topicIndex = args.indexOf('--topic');
   const hubIndex = args.indexOf('--hub');
-  
+
   const specifiedTopic = topicIndex >= 0 ? args[topicIndex + 1] : null;
   const specifiedHub = hubIndex >= 0 ? args[hubIndex + 1] : null;
 
@@ -542,7 +569,7 @@ async function main() {
 
   if (specifiedTopic) {
     // 如果指定了topic，查找匹配的主题
-    const topic = MATERNAL_INFANT_TOPICS.find(t => 
+    const topic = MATERNAL_INFANT_TOPICS.find(t =>
       t.topic.toLowerCase().includes(specifiedTopic.toLowerCase())
     );
     if (topic) {
@@ -554,15 +581,15 @@ async function main() {
   } else {
     // 没有指定 topic 或 hub 时，尝试使用 trending topics
     let trendingTopicsConverted = [];
-    
+
     try {
       // 1. 获取 trending topics
       const rawTrendingTopics = await fetchTrendingTopics();
-      
+
       if (rawTrendingTopics && rawTrendingTopics.length > 0) {
         // 2. 转换为标准格式
         trendingTopicsConverted = await convertTrendingTopicsToStandardFormat(rawTrendingTopics);
-        
+
         if (trendingTopicsConverted.length > 0) {
           // 3. 检查这些主题是否已存在于数据库
           const filteredTrendingTopics = [];
@@ -571,7 +598,7 @@ async function main() {
             if (specifiedHub && topic.hub !== specifiedHub) {
               continue;
             }
-            
+
             const existsCheck = await articleExists(topic.topic);
             if (!existsCheck.exists) {
               filteredTrendingTopics.push(topic);
@@ -579,7 +606,7 @@ async function main() {
               console.log(`⏭️  Trending topic 已存在: ${topic.topic}`);
             }
           }
-          
+
           if (filteredTrendingTopics.length > 0) {
             console.log(`\n✅ 找到 ${filteredTrendingTopics.length} 个新的 trending topics`);
             topicsToGenerate = filteredTrendingTopics;
@@ -590,19 +617,19 @@ async function main() {
       console.log(`⚠️  获取 trending topics 时出错: ${error.message}`);
       console.log('   将回退到预设主题列表\n');
     }
-    
+
     // 如果 trending topics 不足或失败，使用预设主题补充
     let missingPresetTopics = [];
     let hasQueriedPresetTopics = false;
-    
-    if (topicsToGenerate.length < 3) {
+
+    if (topicsToGenerate.length < 10) {
       missingPresetTopics = await findMissingTopics(specifiedHub);
       hasQueriedPresetTopics = true;
-      
+
       if (missingPresetTopics.length > 0) {
-        const needed = 3 - topicsToGenerate.length;
+        const needed = 10 - topicsToGenerate.length;
         const presetTopicsToAdd = missingPresetTopics.slice(0, needed);
-        
+
         if (presetTopicsToAdd.length > 0) {
           // 合并 trending topics 和预设主题
           topicsToGenerate = [...topicsToGenerate, ...presetTopicsToAdd];
@@ -610,7 +637,7 @@ async function main() {
         }
       }
     }
-    
+
     // 如果仍然没有主题，完全回退到预设主题（重用之前查询的结果）
     if (topicsToGenerate.length === 0) {
       console.log('📋 回退到预设主题列表\n');
@@ -640,8 +667,8 @@ async function main() {
     console.log('🎲 随机选择主题顺序\n');
   }
 
-  // 每天最多生成3篇文章
-  const maxArticles = 3;
+  // 每天最多生成10篇文章
+  const maxArticles = 10;
   const topicsToProcess = topicsToGenerate.slice(0, maxArticles);
 
   const results = {
@@ -680,7 +707,7 @@ async function main() {
 
       // 插入数据库
       const insertResult = await insertArticle(articleData, topicInfo);
-      
+
       if (insertResult.success) {
         results.success++;
       } else {

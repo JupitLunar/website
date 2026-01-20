@@ -1,0 +1,34 @@
+{
+    "version": "1.0.0",
+    "last_updated": "2026-01-19T00:00:00.000Z",
+    "updated_by": "initial_setup",
+    "rules": {
+        "quick_answer": {
+            "required": true,
+            "max_sentences": 4,
+            "style": "direct_answer"
+        },
+        "faqs": {
+            "min_count": 5,
+            "max_count": 8,
+            "style": "natural_question"
+        },
+        "citations": {
+            "min_count": 3,
+            "preferred_sources": [
+                "AAP",
+                "CDC",
+                "WHO"
+            ]
+        },
+        "structure": {
+            "use_h2_for_sections": true,
+            "include_safety_section": true,
+            "include_key_facts": true
+        },
+        "tone": {
+            "level": "authoritative",
+            "reading_level": "8th_grade"
+        }
+    }
+}

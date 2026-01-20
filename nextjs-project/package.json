@@ -41,7 +41,9 @@
     "check:duplicates": "node scripts/maintenance/check-duplicates.js",
     "generate:articles": "node scripts/content/auto-generate-articles.js",
     "generate:articles:topic": "node scripts/content/auto-generate-articles.js --topic",
-    "generate:articles:hub": "node scripts/content/auto-generate-articles.js --hub"
+    "generate:articles:hub": "node scripts/content/auto-generate-articles.js --hub",
+    "analyze:llm": "node scripts/analyze-llm-traffic.js",
+    "optimize:aeo": "node scripts/optimize-aeo-loop.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.65.0",

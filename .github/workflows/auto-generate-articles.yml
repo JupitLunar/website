@@ -43,6 +43,15 @@ jobs:
           cd nextjs-project
           npm ci
 
+      - name: Optimize AEO Rules
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd nextjs-project
+          echo "🧬 Optimizing content generation rules based on AI traffic..."
+          node scripts/optimize-aeo-loop.js
+
       - name: Generate articles
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
