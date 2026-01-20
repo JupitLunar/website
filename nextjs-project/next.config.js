@@ -4,24 +4,8 @@ const nextConfig = {
     optimizePackageImports: ['framer-motion'],
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3001',
-        pathname: '/Assets/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.momaiagent.com',
-        pathname: '/Assets/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'momaiagent.com',
-        pathname: '/Assets/**',
-      },
-    ],
+    // Use domains to avoid micromatch recursion during builds with many pages.
+    domains: ['localhost', 'www.momaiagent.com', 'momaiagent.com'],
     formats: ['image/webp', 'image/avif'],
   },
   output: 'standalone',
