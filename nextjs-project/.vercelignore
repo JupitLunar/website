@@ -1,5 +1,4 @@
-# Exclude files from Vercel build to prevent micromatch stack overflow
-# Use simple patterns - avoid complex globs that cause recursion
+# Exclude files from Vercel build
 node_modules
 .next
 .git
@@ -18,11 +17,3 @@ cache
 reports
 scripts
 docs
-supabase/migrations
-supabase/seed
-*.test.js
-*.test.ts
-*.spec.js
-*.spec.ts
-.eslintrc.json
-.prettierrc

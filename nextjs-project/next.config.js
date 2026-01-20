@@ -2,34 +2,6 @@
 const nextConfig = {
   experimental: {
     optimizePackageImports: ['framer-motion'],
-    // Limit output file tracing to prevent stack overflow
-    // Use simple, specific patterns instead of complex globs
-    outputFileTracingExcludes: {
-      '*': [
-        // Exclude entire node_modules except what's needed
-        'node_modules/@swc/core-linux-x64-gnu/**',
-        'node_modules/@swc/core-linux-x64-musl/**',
-        'node_modules/@esbuild/linux-x64/**',
-        // Exclude large directories completely
-        'node_modules/.cache/**',
-        'node_modules/.bin/**',
-        // Exclude project directories
-        'scripts/**',
-        'docs/**',
-        'data/**',
-        'cache/**',
-        'reports/**',
-        'supabase/migrations/**',
-        'supabase/seed/**',
-        // Exclude test and config files
-        '*.test.js',
-        '*.test.ts',
-        '*.spec.js',
-        '*.spec.ts',
-        '.eslintrc.json',
-        '.prettierrc',
-      ],
-    },
   },
   images: {
     // Use domains to avoid micromatch recursion during builds with many pages.
