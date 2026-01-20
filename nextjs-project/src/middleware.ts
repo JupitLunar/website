@@ -77,13 +77,20 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
     return NextResponse.next();
 }
 
-// Matcher config removed to bypass picomatch stack overflow bug in build environment.
-// Exclusions are handled via manual checks in the middleware function above.
-// Simplified matcher without negative lookahead to bypass picomatch stack overflow bug.
-// Matcher config simplified to a catch-all to prevent picomatch stack overflow bug in build environments.
-// All filtering (skipping /api, /_next, etc.) is handled inside the middleware function above.
+// Use Next.js recommended matcher pattern to avoid picomatch stack overflow
+// This excludes static files, _next internals, and favicon
 export const config = {
-    matcher: ['/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)'],
+    matcher: [
+        /*
+         * Match all request paths except for the ones starting with:
+         * - api (API routes)
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         * - public files with extensions (e.g., .png, .jpg, .svg, etc.)
+         */
+        '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'
+    ],
 };
 
 
