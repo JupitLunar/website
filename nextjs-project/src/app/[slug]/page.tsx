@@ -10,13 +10,12 @@ import { generateHreflangMetadata, generateBottomLineSummary } from '@/lib/aeo-o
 import { BottomLineAnswer } from '@/components/BottomLineAnswer';
 import { USCanadaComparison } from '@/components/USCanadaComparison';
 
-// 生成静态路径 - 限制数量以避免构建时栈溢出
+// 生成静态路径 - 生成所有文章（已优化构建配置，不再需要限制）
 export async function generateStaticParams() {
   try {
     const articles = await contentManager.getAllArticles();
-    // Limit to first 600 articles to prevent stack overflow during build
-    // Remaining pages will be generated on-demand via ISR
-    return articles.slice(0, 600).map((article) => ({
+    // Generate all articles statically - build optimizations allow for full generation
+    return articles.map((article) => ({
       slug: article.slug,
     }));
   } catch (error) {
