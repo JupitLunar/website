@@ -14,9 +14,9 @@ import { USCanadaComparison } from '@/components/USCanadaComparison';
 export async function generateStaticParams() {
   try {
     const articles = await contentManager.getAllArticles();
-    // Limit to first 250 articles to prevent stack overflow during build
+    // Limit to first 400 articles to prevent stack overflow during build
     // Remaining pages will be generated on-demand via ISR
-    return articles.slice(0, 250).map((article) => ({
+    return articles.slice(0, 400).map((article) => ({
       slug: article.slug,
     }));
   } catch (error) {
