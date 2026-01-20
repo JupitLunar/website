@@ -129,9 +129,9 @@ function generateArticleSchema(article: any, aeoData: ReturnType<typeof extractA
 
 export async function generateStaticParams() {
   const articles = await getInsightSlugs();
-  // Limit to first 100 articles to prevent stack overflow during build
+  // Limit to first 250 articles to prevent stack overflow during build
   // Remaining pages will be generated on-demand via ISR
-  return articles.slice(0, 100).map((article) => ({ slug: article.slug }));
+  return articles.slice(0, 250).map((article) => ({ slug: article.slug }));
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
