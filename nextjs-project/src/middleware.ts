@@ -28,6 +28,8 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
         // so the page component can theoretically adapt content
         const response = NextResponse.rewrite(new URL(pathAfterLocale, request.url));
         response.headers.set('x-current-locale', locale);
+        // Add security headers to rewritten response
+        addSecurityHeaders(response);
         return response;
     }
 
@@ -74,7 +76,35 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
         );
     }
 
-    return NextResponse.next();
+    // Create response and add security headers
+    const response = NextResponse.next();
+    addSecurityHeaders(response);
+    return response;
+}
+
+// Helper function to add security headers (moved from next.config.js to avoid micromatch stack overflow)
+function addSecurityHeaders(response: NextResponse) {
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('Referrer-Policy', 'origin-when-cross-origin');
+    response.headers.set('X-XSS-Protection', '1; mode=block');
+    response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
+    
+    // Content Security Policy
+    const csp = [
+        "default-src 'self'",
+        "object-src 'self' data:",
+        "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://*.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://*.google-analytics.com",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com data:",
+        "img-src 'self' data: https: blob:",
+        "connect-src 'self' https://api.openai.com https://*.supabase.co https://*.vercel-insights.com https://va.vercel-scripts.com https://www.momaiagent.com https://momaiagent.com https://www.google-analytics.com https://*.google-analytics.com",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+    ].join('; ');
+    response.headers.set('Content-Security-Policy', csp);
 }
 
 // No matcher config - middleware runs on all routes.

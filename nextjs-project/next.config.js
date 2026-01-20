@@ -49,62 +49,8 @@ const nextConfig = {
   async rewrites() {
     return [];
   },
-  async headers() {
-    return [
-      {
-        // Using '/(.*) instead of '/:path*' to avoid micromatch stack overflow
-        source: '/(.*)',
-        headers: [
-          // Prevent clickjacking attacks
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          // Prevent MIME type sniffing
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          // Control referrer information
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-          // Enable browser XSS protection
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          // Strict Transport Security (HTTPS only)
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
-          // Permissions Policy (formerly Feature Policy)
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
-          },
-          // Content Security Policy
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "object-src 'self' data:",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://*.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://*.google-analytics.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com data:",
-              "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://api.openai.com https://*.supabase.co https://*.vercel-insights.com https://va.vercel-scripts.com https://www.momaiagent.com https://momaiagent.com https://www.google-analytics.com https://*.google-analytics.com",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-            ].join('; '),
-          },
-        ],
-      },
-    ];
-  },
+  // Headers moved to middleware.ts to avoid micromatch stack overflow
+  // The middleware handles security headers for all routes
 };
 
 module.exports = nextConfig;
