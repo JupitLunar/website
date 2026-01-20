@@ -77,20 +77,8 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
     return NextResponse.next();
 }
 
-// Use Next.js recommended matcher pattern to avoid picomatch stack overflow
-// This excludes static files, _next internals, and favicon
-export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - public files with extensions (e.g., .png, .jpg, .svg, etc.)
-         */
-        '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'
-    ],
-};
+// No matcher config - middleware runs on all routes.
+// Internal logic (lines 9-15) filters out static files and API routes.
+// This avoids picomatch stack overflow issues during build with 885+ static pages.
 
 
