@@ -2,6 +2,14 @@
 const nextConfig = {
   experimental: {
     optimizePackageImports: ['framer-motion'],
+    // Limit output file tracing to prevent stack overflow with many pages
+    outputFileTracingExcludes: {
+      '*': [
+        'node_modules/@swc/core-linux-x64-gnu',
+        'node_modules/@swc/core-linux-x64-musl',
+        'node_modules/@esbuild/linux-x64',
+      ],
+    },
   },
   images: {
     // Use domains to avoid micromatch recursion during builds with many pages.
