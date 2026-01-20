@@ -107,8 +107,12 @@ function addSecurityHeaders(response: NextResponse) {
     response.headers.set('Content-Security-Policy', csp);
 }
 
-// No matcher config - middleware runs on all routes.
-// Internal logic (lines 9-15) filters out static files and API routes.
-// This avoids picomatch stack overflow issues during build with 885+ static pages.
-
-
+// Matcher config - use minimal pattern to avoid picomatch stack overflow during build
+// Only match specific paths, not all routes, to prevent build-time processing of 500+ pages
+export const config = {
+  matcher: [
+    // Only match root and specific paths - let internal logic handle filtering
+    '/',
+    '/((?!_next|api|favicon|.*\\..*).*)',
+  ],
+};
