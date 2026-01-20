@@ -47,17 +47,19 @@ const nextConfig = {
         destination: '/insight/:slug',
         permanent: true,
       },
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'momaiagent.com',
-          },
-        ],
-        destination: 'https://www.momaiagent.com/:path*',
-        permanent: true,
-      },
+      // Non-www to www redirect - commented out to avoid micromatch stack overflow
+      // Configure this at the CDN/Vercel domain level instead
+      // {
+      //   source: '/:path*',
+      //   has: [
+      //     {
+      //       type: 'host',
+      //       value: 'momaiagent.com',
+      //     },
+      //   ],
+      //   destination: 'https://www.momaiagent.com/:path*',
+      //   permanent: true,
+      // },
     ];
   },
   async rewrites() {
@@ -66,7 +68,8 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/:path*',
+        // Using '/(.*) instead of '/:path*' to avoid micromatch stack overflow
+        source: '/(.*)',
         headers: [
           // Prevent clickjacking attacks
           {
