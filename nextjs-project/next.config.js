@@ -8,7 +8,8 @@ const nextConfig = {
     domains: ['localhost', 'www.momaiagent.com', 'momaiagent.com'],
     formats: ['image/webp', 'image/avif'],
   },
-  output: 'standalone',
+  // Temporarily disable standalone to avoid collect-build-traces stack overflow
+  // output: 'standalone',
   async redirects() {
     return [
       {
