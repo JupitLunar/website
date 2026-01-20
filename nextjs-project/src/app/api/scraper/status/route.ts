@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
+
 import { createClient } from '@supabase/supabase-js';
 
 /**
@@ -9,10 +11,10 @@ import { createClient } from '@supabase/supabase-js';
 function validateApiKey(request: NextRequest): boolean {
   const authHeader = request.headers.get('authorization');
   const apiKey = process.env.SCRAPER_API_KEY;
-  
+
   if (!apiKey) return false;
   if (!authHeader || !authHeader.startsWith('Bearer ')) return false;
-  
+
   const token = authHeader.substring(7);
   return token === apiKey;
 }
@@ -26,19 +28,19 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
+
     if (!supabaseUrl || !supabaseKey) {
       throw new Error('Missing Supabase credentials');
     }
-    
+
     const supabase = createClient(supabaseUrl, supabaseKey);
-    
+
     // 获取最近24小时内创建的文章
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    
+
     const { data: recentArticles, error: articlesError } = await supabase
       .from('articles')
       .select('id, title, slug, hub, created_at, reviewed_by')
@@ -46,22 +48,22 @@ export async function GET(request: NextRequest) {
       .gte('created_at', oneDayAgo)
       .order('created_at', { ascending: false })
       .limit(20);
-    
+
     if (articlesError) throw articlesError;
-    
+
     // 获取来源统计
     const { data: sources, error: sourcesError } = await supabase
       .from('kb_sources')
       .select('id, name, organization, grade, retrieved_at');
-    
+
     if (sourcesError) throw sourcesError;
-    
+
     // 统计信息
     const { count: totalArticles } = await supabase
       .from('articles')
       .select('*', { count: 'exact', head: true })
       .eq('reviewed_by', 'Web Scraper Bot');
-    
+
     return NextResponse.json({
       success: true,
       data: {
@@ -72,10 +74,10 @@ export async function GET(request: NextRequest) {
         timestamp: new Date().toISOString()
       }
     });
-    
+
   } catch (error: any) {
     console.error('❌ 状态查询错误:', error);
-    
+
     return NextResponse.json(
       {
         success: false,

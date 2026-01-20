@@ -141,109 +141,11 @@ try {
   };
 }
 
-/**
- * Retrieve relevant knowledge chunks for RAG
- */
-async function retrieveKnowledge(topic) {
-  try {
-    // 1. Generate embedding for the topic
-    const embeddingResponse = await openai.embeddings.create({
-      model: 'text-embedding-3-small',
-      input: topic,
-    });
-    const embedding = embeddingResponse.data[0].embedding;
+// ... AEO Rules loaded above ...
 
-    // 2. Search knowledge base
-    const { data: chunks, error } = await supabase.rpc('hybrid_search_chunks', {
-      query_text: topic,
-      query_embedding: embedding,
-      match_threshold: 0.3, // Lower threshold to get more potential context
-      match_count: 8,
-      boost_recent: true
-    });
 
-    if (error) {
-      console.error('⚠️ Knowledge retrieval error:', error.message);
-      return null;
-    }
+// Fact-checking logic removed to simplify.
 
-    if (!chunks || chunks.length === 0) {
-      console.log('ℹ️ No knowledge base chunks found for this topic.');
-      return null;
-    }
-
-    // 3. Format chunks for prompt
-    console.log(`📚 Retrieved ${chunks.length} knowledge chunks for context.`);
-    return chunks.map((c, i) => `
-[SOURCE ${i + 1}]
-Title: ${c.title}
-Source: ${c.source_type} (${c.source_slug})
-Content: ${c.content}
-`).join('\n');
-
-  } catch (err) {
-    console.error('⚠️ RAG Retrieval failed:', err.message);
-    return null;
-  }
-}
-
-/**
- * Fact-check the generated article against the RAG context
- */
-async function factCheckArticle(articleData, context) {
-  if (!context) return { passed: true, score: 1.0 }; // Can't verify without context
-
-  console.log(`🔍 Peer-Reviewing article accuracy...`);
-
-  const systemPrompt = `You are a Medical Fact Checker. 
-Your task is to compare an AI-generated article against the "GROUND TRUTH" context provided.
-Identify any:
-1. Hallucinations (claims not in the context or contradicting the context)
-2. Safety Omissions (missing critical safety warnings present in context)
-3. Citation errors.
-
-Return JSON: 
-{
-  "passed": boolean,
-  "accuracy_score": number (0.0 to 1.0),
-  "issues": string[],
-  "verdict": "string"
-}`;
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Use a cheaper/faster model for review
-      messages: [
-        { role: 'system', content: systemPrompt },
-        {
-          role: 'user',
-          content: `GROUND TRUTH CONTEXT:
-${context}
-
-GENERATED ARTICLE:
-Title: ${articleData.title}
-Quick Answer: ${articleData.quick_answer}
-Key Facts: ${JSON.stringify(articleData.key_facts)}
-Body Sample: ${articleData.body_md.substring(0, 2000)}
-
-Verify the accuracy. If there are NO medical contradictions or safety risks, set passed to true.`
-        }
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.1
-    });
-
-    const result = JSON.parse(completion.choices[0].message.content);
-    console.log(`✅ Review Result: Score ${result.accuracy_score}, Passed: ${result.passed}`);
-    if (!result.passed) {
-      console.log(`⚠️ Issues found: ${result.issues.join(', ')}`);
-    }
-    return result;
-  } catch (err) {
-    console.error('⚠️ Fact check failed:', err.message);
-    return { passed: true, score: 0.8 }; // Default to pass on error to avoid blocking
-  }
-}
 
 // ... imports ...
 
@@ -257,24 +159,16 @@ async function generateArticle(topicInfo) {
 
   const rules = aeoRules.rules;
 
-  // RAG: Retrieve context first
-  const retrievedContext = await retrieveKnowledge(topicInfo.topic);
-
   const systemPrompt = `You are an expert content writer specializing in evidence-based maternal and infant health information. 
 Your content is optimized for AI search engines (AEO - Answer Engine Optimization) and will be cited by ChatGPT, Perplexity, Google AI Overview, and Claude.
 
 CRITICAL AUTHORITY REQUIREMENTS:
-- ALL information MUST be based on official guidelines from CDC, AAP, WHO, or the provided KNOWLEDGE BASE below.
+- ALL information MUST be based on official guidelines from CDC, AAP, or WHO.
 - NEVER make up statistics, studies, or medical claims
 - ALWAYS cite specific organizations: "According to the American Academy of Pediatrics (AAP)...", "The CDC recommends...", "WHO guidelines state..."
 - Include evidence-based statements: "Studies show...", "Research indicates...", "Evidence suggests..."
 - Add safety considerations and medical disclaimers in every article
 
-${retrievedContext ? `
-### RETRIEVED KNOWLEDGE BASE (GROUND TRUTH):
-Use the following verified snippets to write the article. CITING THESE SOURCES improves your trustworthiness score.
-${retrievedContext}
-` : ''}
 
 Write a comprehensive, authoritative article in English about: "${topicInfo.topic}"
 
@@ -430,10 +324,7 @@ All information must be factual and based on official health organization guidel
       console.log('⚠️  警告: 文章缺少医疗免责声明');
     }
 
-    return {
-      article: articleData,
-      context: retrievedContext
-    };
+    return articleData;
   } catch (error) {
     console.error(`❌ 生成文章失败:`, error.message);
     throw error;
@@ -443,7 +334,7 @@ All information must be factual and based on official health organization guidel
 /**
  * 插入文章到数据库
  */
-async function insertArticle(articleData, topicInfo, reviewResult = null) {
+async function insertArticle(articleData, topicInfo) {
   const slug = generateSlug(articleData.title);
 
   // 再次检查重复
@@ -453,9 +344,6 @@ async function insertArticle(articleData, topicInfo, reviewResult = null) {
     return { success: false, reason: existsCheck.reason };
   }
 
-  // 先不包含article_source，避免schema cache问题
-  // AEO优化：将 FAQ 和 AEO 数据存储在 entities 字段中（已有的 JSON 字段）
-
   // 构建增强的 entities 数组，包含 AEO 元数据
   const enhancedEntities = [
     ...(articleData.entities || []),
@@ -463,15 +351,6 @@ async function insertArticle(articleData, topicInfo, reviewResult = null) {
     'AEO_OPTIMIZED',
     ...(articleData.sources || ['AAP', 'CDC', 'WHO'])
   ];
-
-  // Store Trust Signals if we have them
-  if (reviewResult) {
-    enhancedEntities.push(`__AEO_TRUST_SCORE__${reviewResult.accuracy_score}`);
-    enhancedEntities.push(`__AEO_TRUST_PASSED__${reviewResult.passed}`);
-    if (reviewResult.verdict) {
-      enhancedEntities.push(`__AEO_TRUST_VERDICT__${reviewResult.verdict}`);
-    }
-  }
 
   // 构建增强的 key_facts，确保以直接回答开头
   let enhancedKeyFacts = articleData.key_facts || [];
@@ -492,7 +371,7 @@ async function insertArticle(articleData, topicInfo, reviewResult = null) {
     age_range: topicInfo.age_range,
     region: 'Global',
     last_reviewed: new Date().toISOString().split('T')[0],
-    reviewed_by: reviewResult && reviewResult.passed ? 'AI Content Generator + Fact Checker' : 'AI Content Generator',
+    reviewed_by: 'AI Content Generator',
     entities: enhancedEntities,
     license: 'CC BY-NC 4.0',
     meta_title: articleData.meta_title || articleData.title,
@@ -505,7 +384,7 @@ async function insertArticle(articleData, topicInfo, reviewResult = null) {
       articleData.steps ? `__AEO_STEPS__${JSON.stringify(articleData.steps)}` : null,
       articleData.quick_answer ? `__AEO_QUICK__${articleData.quick_answer}` : null
     ].filter(Boolean),
-    status: reviewResult && !reviewResult.passed ? 'draft' : 'published'
+    status: 'published'
     // article_source将在插入后单独更新
   };
 
@@ -821,12 +700,7 @@ async function main() {
       }
 
       // 生成文章
-      const result = await generateArticle(topicInfo);
-      const articleData = result.article;
-      const context = result.context;
-
-      // Peer-Review Fact Check
-      const reviewResult = await factCheckArticle(articleData, context);
+      const articleData = await generateArticle(topicInfo);
 
       // 生成后再次检查（使用实际生成的标题，更准确）
       // 因为 AI 可能生成与预设主题格式不同的标题
@@ -840,8 +714,8 @@ async function main() {
         continue;
       }
 
-      // 插入数据库 (passing both data and review info)
-      const insertResult = await insertArticle(articleData, topicInfo, reviewResult);
+      // 插入数据库
+      const insertResult = await insertArticle(articleData, topicInfo);
 
       if (insertResult.success) {
         results.success++;

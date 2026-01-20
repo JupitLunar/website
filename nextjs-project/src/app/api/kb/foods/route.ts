@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
+
 import { knowledgeBase } from '@/lib/supabase';
 import type { KnowledgeFood, KnowledgeLocale, RiskLevel } from '@/types/content';
 

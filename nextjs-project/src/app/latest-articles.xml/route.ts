@@ -1,4 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
+export const dynamic = 'force-dynamic';
+
 import { filterCleanKeywords } from '@/lib/supabase';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;

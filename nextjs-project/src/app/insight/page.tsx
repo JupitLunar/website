@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
+export const dynamic = 'force-dynamic';
 import { Suspense } from 'react';
+
 import { createClient } from '@supabase/supabase-js';
 import { unstable_cache } from 'next/cache';
 import Link from 'next/link';

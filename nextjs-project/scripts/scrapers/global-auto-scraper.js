@@ -9,12 +9,12 @@ const cheerio = require('cheerio');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 const { getAllSources, getSourcesByRegion, getAllRegions } = require('./global-sources-config');
-const { 
-  extractArticle, 
-  generateSlug, 
-  extractKeywords, 
-  delay, 
-  fetchWithRetry 
+const {
+  extractArticle,
+  generateSlug,
+  extractKeywords,
+  delay,
+  fetchWithRetry
 } = require('./scraper-utils');
 
 const dotenv = require('dotenv');
@@ -32,20 +32,28 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// 参数解析
+function getArg(flag, fallback) {
+  const idx = process.argv.indexOf(flag);
+  if (idx !== -1 && process.argv[idx + 1]) return process.argv[idx + 1];
+  return fallback;
+}
+
+const argLimit = parseInt(getArg('--limit', '500'));
+const argRegions = getArg('--regions', '');
+const quickMode = process.argv.includes('--quick');
+
 // 配置
 const CONFIG = {
-  delayBetweenRequests: 1500,  // 增加到1.5秒（更礼貌）
-  delayBetweenArticles: 2500,  // 增加到2.5秒
-  maxArticlesPerRun: 500,      // 增加到500篇
-  minContentLength: 300,       // 降低到300字符（更宽松）
-  maxContentLength: 150000,    // 放宽以容纳长篇权威指南
-  minParagraphs: 3,            // 至少3段
-  debugMode: process.env.DEBUG === 'true', // 调试模式
-  // 可以指定抓取的地区，留空则抓取所有
-  targetRegions: [],  // 例如: ['US', 'UK', 'CA'] 或 [] 表示全部
-  // 仅抓取喂养/营养相关主题
+  delayBetweenRequests: quickMode ? 500 : 1500,  // 快速模式下减少延迟
+  delayBetweenArticles: quickMode ? 1000 : 2500,
+  maxArticlesPerRun: argLimit,
+  minContentLength: 300,
+  maxContentLength: 150000,
+  minParagraphs: 3,
+  debugMode: process.env.DEBUG === 'true',
+  targetRegions: argRegions ? argRegions.split(',') : [],
   topicFilterEnabled: true,
-  // Puppeteer 兜底用于反爬站点
   usePuppeteerFallback: true,
   puppeteerDomains: [
     'healthychildren.org',
@@ -55,7 +63,7 @@ const CONFIG = {
     'mayoclinic.org'
   ],
   fetchRetryCount: 3,
-  fetchRetryDelay: 1200
+  fetchRetryDelay: 2000
 };
 
 // Region 映射 - 将所有 region 映射到数据库支持的值
@@ -196,8 +204,8 @@ async function discoverArticlesFromSource(source) {
         const fullUrl = href.startsWith('http')
           ? href
           : href.startsWith('/')
-          ? `${source.baseUrl}${href}`
-          : `${source.baseUrl}/${href}`;
+            ? `${source.baseUrl}${href}`
+            : `${source.baseUrl}/${href}`;
 
         // 使用 linkPattern + 主题过滤
         if (source.linkPattern && source.linkPattern.test(fullUrl)) {
@@ -238,8 +246,8 @@ async function discoverArticlesFromSource(source) {
         const fullUrl = href.startsWith('http')
           ? href
           : href.startsWith('/')
-          ? `${source.baseUrl}${href}`
-          : `${source.baseUrl}/${href}`;
+            ? `${source.baseUrl}${href}`
+            : `${source.baseUrl}/${href}`;
 
         if (source.linkPattern && source.linkPattern.test(fullUrl)) {
           if (!shouldExclude(fullUrl, source) && matchesTopic(fullUrl)) {
@@ -378,7 +386,7 @@ async function saveArticle(articleData) {
 
     // 确保 one_liner 至少 50 字符
     const oneLiner = articleData.content.substring(0, 200);
-    const paddedOneLiner = oneLiner.length < 50 
+    const paddedOneLiner = oneLiner.length < 50
       ? oneLiner + ' Evidence-based information from trusted health organizations.'
       : oneLiner;
 
@@ -501,13 +509,16 @@ async function main() {
   for (const article of allArticles) {
     if (articlesToScrape.length >= CONFIG.maxArticlesPerRun) break;
 
-    // 只检查 URL，标题检查在保存时进行
+    // 只检查 URL
     const existsCheck = await articleExists(article.url, '');
     if (!existsCheck.exists) {
       articlesToScrape.push(article);
-    } else {
-      console.log(`  ⏭️  跳过: ${article.url} (${existsCheck.reason})`);
+    } else if (CONFIG.debugMode) {
+      // console.log(`  ⏭️  跳过: ${article.url} (${existsCheck.reason})`);
     }
+
+    // 在收集到足够文章后停止检查
+    if (articlesToScrape.length >= CONFIG.maxArticlesPerRun) break;
   }
 
   console.log(`📝 本次将抓取 ${articlesToScrape.length} 篇新文章（最多${CONFIG.maxArticlesPerRun}篇）\n`);
@@ -574,7 +585,7 @@ async function main() {
     console.log(`ℹ️  还有 ${stats.discovered - CONFIG.maxArticlesPerRun} 篇文章未抓取`);
     console.log(`   可以再次运行此脚本来抓取更多文章\n`);
   }
-  
+
   // 返回统计结果（用于API调用）
   return {
     total: stats.discovered,

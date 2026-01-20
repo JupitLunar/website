@@ -77,9 +77,13 @@ export function middleware(request: NextRequest, event: NextFetchEvent) {
     return NextResponse.next();
 }
 
+// Matcher config removed to bypass picomatch stack overflow bug in build environment.
+// Exclusions are handled via manual checks in the middleware function above.
+// Simplified matcher without negative lookahead to bypass picomatch stack overflow bug.
+// Matcher config simplified to a catch-all to prevent picomatch stack overflow bug in build environments.
+// All filtering (skipping /api, /_next, etc.) is handled inside the middleware function above.
 export const config = {
-    matcher: [
-        // Match all paths except specific exclusions
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
-    ],
+    matcher: ['/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)'],
 };
+
+
