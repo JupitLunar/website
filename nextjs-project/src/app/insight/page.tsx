@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { unstable_cache } from 'next/cache';
 import Link from 'next/link';
@@ -370,12 +371,14 @@ export default async function InsightPage({
           </div>
         ) : (
           <>
-            <InsightFilters
-              articles={articles}
-              allKeywords={allKeywords}
-              allHubs={allHubs}
-              allAgeRanges={allAgeRanges}
-            />
+            <Suspense fallback={<div className="h-20 animate-pulse bg-slate-100 rounded-xl mb-6"></div>}>
+              <InsightFilters
+                articles={articles}
+                allKeywords={allKeywords}
+                allHubs={allHubs}
+                allAgeRanges={allAgeRanges}
+              />
+            </Suspense>
             <InsightList
               articles={filteredArticles}
               hasActiveFilters={hasActiveFilters}

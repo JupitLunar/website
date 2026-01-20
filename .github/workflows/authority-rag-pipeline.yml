@@ -1,0 +1,145 @@
+name: Authority RAG & Content Pipeline
+
+on:
+  schedule:
+    # Run daily at 1:00 AM UTC (before the peak search times)
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      force_scrape:
+        description: 'Force global scrape'
+        required: false
+        type: boolean
+        default: false
+      max_articles:
+        description: 'Max articles to generate'
+        required: false
+        type: string
+        default: '10'
+
+jobs:
+  authority-sync:
+    name: Authority Sync & RAG Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: nextjs-project/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd nextjs-project
+          npm ci
+
+      - name: Create logs directory
+        run: mkdir -p nextjs-project/logs
+
+      # PHASE 1: Authority Ingestion (Scraping)
+      - name: 🌍 Phase 1: Global Authority Scraper
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DEBUG: 'true'
+        run: |
+          cd nextjs-project
+          echo "📡 Scraping latest guidelines from AAP, CDC, WHO, and Health Canada..."
+          node scripts/scrapers/global-auto-scraper.js
+
+      # PHASE 2: RAG Indexing
+      - name: 🔄 Phase 2a: Sync Chunks to RAG
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd nextjs-project
+          echo "🧬 Populating knowledge chunks from new authority articles..."
+          node scripts/ops/sync-to-rag.js
+
+      - name: 🧠 Phase 2b: Generate Vector Embeddings
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd nextjs-project
+          echo "🛰️ Generating embeddings for knowledge retrieval..."
+          node scripts/ops/generate-embeddings.js
+
+      # PHASE 3: AEO Intelligence
+      - name: 📊 Phase 3: AEO Loop Optimization
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd nextjs-project
+          echo "🧠 Analyzing AI search patterns and updating generation rules..."
+          node scripts/optimize-aeo-loop.js
+
+      # PHASE 4: Content Generation (Grounded in RAG)
+      - name: ✍️ Phase 4: Auto-Generate Grounded Articles
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd nextjs-project
+          echo "📝 Generating new articles with RAG grounding and fact-checking..."
+          node scripts/content/auto-generate-articles.js --limit ${{ github.event.inputs.max_articles || '10' }}
+
+      - name: 📊 Get Pipeline Statistics
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd nextjs-project
+          node -e "
+          const { createClient } = require('@supabase/supabase-js');
+          const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+          (async () => {
+            const { count: articles } = await supabase.from('articles').select('*', { count: 'exact', head: true });
+            const { count: chunks } = await supabase.from('knowledge_chunks').select('*', { count: 'exact', head: true });
+            const { count: embedded } = await supabase.from('knowledge_chunks').select('*', { count: 'exact', head: true }).not('embedding', 'is', null);
+            
+            console.log('--- PIPELINE STATUS ---');
+            console.log(\`✅ Total Articles: \${articles}\`);
+            console.log(\`✅ Knowledge Chunks: \${chunks}\`);
+            console.log(\`✅ Embedded Chunks: \${embedded}\`);
+            console.log('-----------------------');
+          })();
+          "
+
+      # PHASE 5: Freshness & Revalidation
+      - name: 🔄 Phase 5: Trigger Revalidation
+        if: success()
+        env:
+          REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
+          SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com' }}
+        run: |
+          cd nextjs-project
+          echo "📡 Pinging revalidation API for instant site update..."
+          curl -X POST "${SITE_URL}/api/revalidate" \
+            -H "Authorization: Bearer ${REVALIDATION_SECRET}" \
+            -H "Content-Type: application/json" \
+            -d '{"path": "/insight", "tag": "insights"}'
+
+      - name: 📁 Archive Sync Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: authority-sync-logs
+          path: nextjs-project/logs/
+          retention-days: 7
+
+      - name: 🚨 Notify on Pipeline Failure
+        if: failure()
+        run: |
+          echo "::error::Authority RAG Pipeline Failed. Check logs for scraping or embedding errors."

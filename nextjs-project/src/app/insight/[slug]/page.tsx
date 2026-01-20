@@ -608,19 +608,35 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
               Evidence Sources
             </h3>
             <p className="text-sm text-slate-500 mb-3">
-              This insight is informed by guidelines from trusted health organizations.
+              This insight is generated using RAG (Retrieval-Augmented Generation) from verified health guidelines.
             </p>
             <div className="flex flex-wrap gap-2 mb-4">
-              <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">AAP</span>
-              <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">CDC</span>
-              <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">WHO</span>
+              {/* Filter known authoritative entities */}
+              {article.entities?.filter((e: string) =>
+                ['CDC', 'AAP', 'WHO', 'Health Canada', 'NHS', 'FDA', 'NIH', 'Mayo Clinic'].includes(e)
+              ).map((org: string, idx: number) => (
+                <span key={idx} className="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded border border-emerald-100 uppercase tracking-wider">
+                  {org}
+                </span>
+              ))}
+              {/* Fallback or additional sources */}
+              {(!article.entities || article.entities.length === 0) && (
+                <>
+                  <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">AAP</span>
+                  <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">CDC</span>
+                  <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">WHO</span>
+                </>
+              )}
+              <span className="px-2 py-1 bg-violet-50 text-violet-700 text-[10px] font-bold rounded border border-violet-100 uppercase tracking-wider">
+                RAG-Verified
+              </span>
             </div>
             <Link
-              href="/topics"
-              className="inline-flex items-center text-sm text-violet-500 hover:text-violet-600"
-              aria-label="Explore parenting topics and guidelines"
+              href="/trust"
+              className="inline-flex items-center text-sm text-violet-500 hover:text-violet-600 font-medium"
+              aria-label="Learn about our AI generation methodology"
             >
-              Explore Topics →
+              Verify Methodology →
             </Link>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm">

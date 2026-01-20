@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import { contentManager } from '@/lib/supabase';
@@ -8,7 +8,7 @@ import type { BaseContent, ContentHub } from '@/types/content';
 import ArticleCard from '@/components/geo/ArticleCard';
 import Header from '@/components/Header';
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [results, setResults] = useState<BaseContent[]>([]);
@@ -112,7 +112,7 @@ export default function SearchPage() {
   return (
     <div className="min-h-screen bg-gradient-elegant">
       <Header />
-      
+
       {/* Search Header - 淡雅风格 */}
       <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50/20 via-white to-violet-50/10">
         <div className="max-w-4xl mx-auto text-center">
@@ -265,7 +265,7 @@ export default function SearchPage() {
                     {loading ? 'Searching...' : `${totalResults} results found for "${query}"`}
                   </p>
                 </div>
-                
+
                 {filters.hub || filters.type || filters.lang !== 'en' ? (
                   <div className="flex flex-wrap gap-2">
                     {filters.hub && (
@@ -323,11 +323,11 @@ export default function SearchPage() {
                       >
                         Previous
                       </button>
-                      
+
                       <span className="px-4 py-2 text-gray-700">
                         Page {currentPage} of {Math.ceil(totalResults / ITEMS_PER_PAGE)}
                       </span>
-                      
+
                       <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={!hasMore}
@@ -407,5 +407,17 @@ export default function SearchPage() {
         </motion.section>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-elegant flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600"></div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }

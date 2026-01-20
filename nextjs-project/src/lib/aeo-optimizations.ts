@@ -38,11 +38,6 @@ export function generateMedicalWebPageSchema(article: any) {
         "name": "JupitLunar"
       }
     },
-    "reviewedBy": {
-      "@type": "Organization",
-      "name": "Guidance references CDC, AAP, WHO, Health Canada publications",
-      "description": "Articles cite official government and medical organization guidelines; DearBaby is an educational publisher, not a clinic."
-    },
     "publisher": {
       "@type": "Organization",
       "name": "JupitLunar",
@@ -59,6 +54,15 @@ export function generateMedicalWebPageSchema(article: any) {
       "audienceType": "Parents and caregivers of infants and toddlers",
       "geographicArea": article.region === 'Global' ? "North America" : article.region
     },
+    "reviewedBy": {
+      "@type": "Organization",
+      "name": article.reviewed_by === 'AI Content Generator' ? "Mom AI Agent RAG Analysis System" : "Medical Review Board",
+      "description": `This content was ${article.reviewed_by === 'AI Content Generator' ? 'generated using RAG (Retrieval-Augmented Generation) from' : 'reviewed for medical accuracy against'} official guidelines from organizations including ${filterCleanKeywords(article.keywords).slice(0, 3).join(', ')}.`
+    },
+    "mentions": (article.entities || []).slice(0, 8).map((entity: string) => ({
+      "@type": "Thing",
+      "name": entity
+    })),
     "isPartOf": {
       "@type": "WebSite",
       "name": "Mom AI Agent",

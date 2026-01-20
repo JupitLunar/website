@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import React, { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
@@ -104,7 +105,9 @@ export default function RootLayout({
         </main>
         <Footer />
         <ContactChatbot />
-        <Analytics />
+        <Suspense fallback={null}>
+          <Analytics />
+        </Suspense>
         <SpeedInsights />
       </body>
     </html>

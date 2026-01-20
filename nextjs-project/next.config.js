@@ -8,19 +8,7 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3000',
-        pathname: '/Assets/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
         port: '3001',
-        pathname: '/Assets/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3002',
         pathname: '/Assets/**',
       },
       {
@@ -59,24 +47,21 @@ const nextConfig = {
         destination: '/insight/:slug',
         permanent: true,
       },
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'momaiagent.com',
+          },
+        ],
+        destination: 'https://www.momaiagent.com/:path*',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
-    return {
-      beforeFiles: [
-        // Redirect non-www to www
-        {
-          source: '/:path*',
-          has: [
-            {
-              type: 'host',
-              value: 'momaiagent.com',
-            },
-          ],
-          destination: 'https://www.momaiagent.com/:path*',
-        },
-      ],
-    };
+    return [];
   },
   async headers() {
     return [
