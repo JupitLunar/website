@@ -1,26 +1,13 @@
-name: Auto Generate Trending Insights
+name: Auto Generate Parent + Development Insights
 
 on:
   schedule:
-    # 每天凌晨3点运行（UTC时间）
-    - cron: '0 3 * * *'
+    # Twice a week to deepen coverage on parent health + development
+    - cron: '0 4 * * 1,4'
   workflow_dispatch:
-    inputs:
-      hub:
-        description: 'Content hub (optional - leave empty for random selection from trending topics or preset topics)'
-        required: false
-        type: choice
-        options:
-          - ''
-          - feeding
-          - sleep
-          - mom-health
-          - development
-          - safety
-          - recipes
 
 jobs:
-  generate-articles:
+  generate-focused-insights:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -52,21 +39,18 @@ jobs:
           echo "🧬 Optimizing content generation rules based on AI traffic..."
           node scripts/optimize-aeo-loop.js
 
-      - name: Generate articles
+      - name: Generate development + parent health insights
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          HUB: ${{ github.event.inputs.hub }}
         working-directory: ./nextjs-project
         run: |
-          if [ -n "$HUB" ]; then
-            echo "📋 Generating articles for hub: $HUB"
-            npm run generate:articles -- --hub "$HUB" | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
-          else
-            echo "🎲 No hub specified, using trend-first insights"
-            npm run generate:articles | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
-          fi
+          set -euo pipefail
+          echo "📋 Generating development insights (trend-first, allow preset fallback)"
+          npm run generate:articles -- --hub development --allow-preset | tee logs/article-generation-development-$(date +%Y-%m-%d-%H%M%S).log
+          echo "📋 Generating parent health insights (trend-first, allow preset fallback)"
+          npm run generate:articles -- --hub mom-health --allow-preset | tee logs/article-generation-mom-health-$(date +%Y-%m-%d-%H%M%S).log
 
       - name: Get statistics
         env:
@@ -115,20 +99,17 @@ jobs:
           try {
             const supabase = createClient(supabaseUrl, supabaseKey);
             (async () => {
-            // Total articles
             const { count: totalCount } = await supabase
               .from('articles')
               .select('*', { count: 'exact', head: true })
               .eq('status', 'published');
 
-            // AI-generated insights (using reviewed_by field, not article_source)
             const { count: aiCount } = await supabase
               .from('articles')
               .select('*', { count: 'exact', head: true })
               .eq('status', 'published')
               .eq('reviewed_by', 'AI Content Generator');
 
-            // Authoritative articles (not AI-generated)
             const { count: authCount } = await supabase
               .from('articles')
               .select('*', { count: 'exact', head: true })
@@ -139,24 +120,6 @@ jobs:
             console.log(\`   Total published: \${totalCount}\`);
             console.log(\`   AI-generated insights: \${aiCount}\`);
             console.log(\`   Authoritative articles: \${authCount}\`);
-
-            // Latest AI-generated insights (using reviewed_by field)
-            const { data: latestInsights } = await supabase
-              .from('articles')
-              .select('title, hub, created_at')
-              .eq('status', 'published')
-              .eq('reviewed_by', 'AI Content Generator')
-              .order('created_at', { ascending: false })
-              .limit(5);
-
-            console.log('\n💡 Latest 5 AI-generated insights:');
-            if (latestInsights && latestInsights.length > 0) {
-              latestInsights.forEach((a, i) => {
-                console.log(\`  \${i+1}. [\${a.hub}] \${a.title.substring(0, 60)}\`);
-              });
-            } else {
-              console.log('   No insights yet');
-            }
           })();
           } catch (error) {
             console.error('❌ Error creating Supabase client:', error.message);
@@ -217,12 +180,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: article-generation-logs
+          name: parent-dev-article-generation-logs
           path: nextjs-project/logs/article-generation-*.log
           retention-days: 30
 
       - name: Notify on failure
         if: failure()
         run: |
-          echo "::warning::Article generation failed"
-          # 可以在这里添加Slack/Email通知
+          echo "::warning::Parent + Development insight generation failed"

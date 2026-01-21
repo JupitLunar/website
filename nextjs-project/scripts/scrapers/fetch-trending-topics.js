@@ -21,7 +21,7 @@ const logInfo = (...args) => {
   }
 };
 
-// 母婴相关关键词列表
+// 母婴 + 父母健康相关关键词列表
 const MATERNAL_INFANT_KEYWORDS = [
   'baby',
   'infant',
@@ -33,14 +33,91 @@ const MATERNAL_INFANT_KEYWORDS = [
   'newborn',
   'parenting',
   'baby development',
+  'child development',
+  'development games',
+  'baby games',
+  'baby play',
+  'sensory play',
+  'tummy time',
+  'milestones',
+  'gross motor',
+  'fine motor',
+  'language development',
+  'speech delay',
+  'social emotional',
   'baby health',
   'maternal health',
+  'parent health',
+  'parental stress',
+  'parental burnout',
+  'postpartum recovery',
+  'postpartum anxiety',
+  'postpartum depression',
+  'postnatal',
+  'pelvic floor',
+  'pelvic floor therapy',
+  'diastasis recti',
+  'lochia',
+  'mastitis',
+  'lactation',
+  'c-section',
+  'cesarean',
+  'postpartum checkup',
+  'postpartum warning signs',
+  'birth control',
+  'contraception',
+  'fertility',
+  'family planning',
   'postpartum',
   'baby safety',
   'baby food',
   'weaning',
   'baby sleep',
   'baby milestones'
+];
+
+// 专门用于 relatedQueries 的种子关键词（更偏向发展/父母健康）
+const TREND_SEED_KEYWORDS = [
+  'baby development',
+  'child development',
+  'baby development games',
+  'sensory play',
+  'tummy time',
+  'language development',
+  'speech delay',
+  'gross motor milestones',
+  'fine motor milestones',
+  'postpartum recovery',
+  'postpartum anxiety',
+  'postpartum depression',
+  'birth control',
+  'contraception',
+  'pelvic floor exercises',
+  'c-section recovery',
+  'postnatal care',
+  'postpartum checkup',
+  'postpartum warning signs',
+  'birth control while breastfeeding',
+  'parent health'
+];
+
+const GOOGLE_NEWS_RSS_QUERIES = [
+  'baby development milestones',
+  'baby development games',
+  'sensory play baby',
+  'tummy time baby',
+  'speech delay toddler',
+  'language development baby',
+  'postpartum recovery',
+  'postpartum depression',
+  'postpartum anxiety',
+  'postpartum warning signs',
+  'postpartum checkup',
+  'birth control after birth',
+  'contraception while breastfeeding',
+  'pelvic floor therapy postpartum',
+  'c-section recovery',
+  'parental burnout'
 ];
 
 // Reddit 相关子版块
@@ -50,10 +127,15 @@ const REDDIT_SUBREDDITS = [
   'NewParents',
   'Mommit',
   'daddit',
-  'BabyBumps'
+  'BabyBumps',
+  'ScienceBasedParenting',
+  'toddlers',
+  'pregnant'
 ];
 
 const GOOGLE_TRENDS_RSS_URL = 'https://trends.google.com/trends/trendingsearches/daily/rss?geo=US&hl=en-US';
+const GOOGLE_NEWS_RSS_BASE = 'https://news.google.com/rss/search?q=';
+const BING_NEWS_RSS_BASE = 'https://www.bing.com/news/search?q=';
 
 /**
  * 从 Google Trends 获取热门话题（API）
@@ -96,7 +178,7 @@ async function fetchFromGoogleTrends() {
       
       // 方法2: 如果今日趋势没有足够结果，尝试搜索特定关键词的相关趋势
       if (topics.length < 5) {
-        for (const keyword of MATERNAL_INFANT_KEYWORDS.slice(0, 5)) {
+        for (const keyword of TREND_SEED_KEYWORDS.slice(0, 6)) {
           try {
             const relatedQueries = await googleTrends.relatedQueries({
               keyword: keyword,
@@ -195,6 +277,102 @@ async function fetchFromGoogleTrendsRss() {
 }
 
 /**
+ * 从 Google News RSS 查询获取热门话题
+ */
+async function fetchFromGoogleNewsRss() {
+  try {
+    const axios = require('axios');
+    const cheerio = require('cheerio');
+    const topics = [];
+
+    for (const query of GOOGLE_NEWS_RSS_QUERIES) {
+      try {
+        const url = `${GOOGLE_NEWS_RSS_BASE}${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`;
+        const response = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; TrendingTopicsBot/1.0)'
+          },
+          timeout: 8000
+        });
+
+        const $ = cheerio.load(response.data, { xmlMode: true });
+        $('item > title').each((_, el) => {
+          const title = $(el).text().trim();
+          if (!title) return;
+          const lower = title.toLowerCase();
+          if (MATERNAL_INFANT_KEYWORDS.some(kw => lower.includes(kw.toLowerCase()))) {
+            topics.push(title);
+          }
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (err) {
+        console.log(`⚠️  Google News RSS 查询 "${query}" 获取失败: ${err.message}`);
+      }
+    }
+
+    const uniqueTopics = [...new Set(topics)];
+    if (uniqueTopics.length > 0) {
+      logInfo(`✅ 从 Google News RSS 获取到 ${uniqueTopics.length} 个相关话题`);
+      return uniqueTopics.slice(0, 20);
+    }
+
+    return [];
+  } catch (error) {
+    console.log(`⚠️  Google News RSS 不可用: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * 从 Bing News RSS 查询获取热门话题
+ */
+async function fetchFromBingNewsRss() {
+  try {
+    const axios = require('axios');
+    const cheerio = require('cheerio');
+    const topics = [];
+
+    for (const query of GOOGLE_NEWS_RSS_QUERIES) {
+      try {
+        const url = `${BING_NEWS_RSS_BASE}${encodeURIComponent(query)}&format=rss`;
+        const response = await axios.get(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; TrendingTopicsBot/1.0)'
+          },
+          timeout: 8000
+        });
+
+        const $ = cheerio.load(response.data, { xmlMode: true });
+        $('item > title').each((_, el) => {
+          const title = $(el).text().trim();
+          if (!title) return;
+          const lower = title.toLowerCase();
+          if (MATERNAL_INFANT_KEYWORDS.some(kw => lower.includes(kw.toLowerCase()))) {
+            topics.push(title);
+          }
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (err) {
+        console.log(`⚠️  Bing News RSS 查询 "${query}" 获取失败: ${err.message}`);
+      }
+    }
+
+    const uniqueTopics = [...new Set(topics)];
+    if (uniqueTopics.length > 0) {
+      logInfo(`✅ 从 Bing News RSS 获取到 ${uniqueTopics.length} 个相关话题`);
+      return uniqueTopics.slice(0, 20);
+    }
+
+    return [];
+  } catch (error) {
+    console.log(`⚠️  Bing News RSS 不可用: ${error.message}`);
+    return null;
+  }
+}
+
+/**
  * 从 Reddit 获取热门话题
  */
 async function fetchFromReddit() {
@@ -264,14 +442,26 @@ async function fetchTrendingTopics() {
     topics = await fetchFromGoogleTrends();
   }
 
-  // 如果 RSS/API 失败（返回 null）或没有结果，尝试 Reddit
+  // 如果 RSS/API 失败（返回 null）或没有结果，尝试 Google News RSS
+  if (topics === null || topics.length === 0) {
+    logInfo('📰 降级到 Google News RSS...\n');
+    topics = await fetchFromGoogleNewsRss();
+  }
+
+  // 如果仍然没有结果，尝试 Bing News RSS
+  if (topics === null || topics.length === 0) {
+    logInfo('📰 降级到 Bing News RSS...\n');
+    topics = await fetchFromBingNewsRss();
+  }
+
+  // 如果仍然没有结果，尝试 Reddit
   if (topics === null || topics.length === 0) {
     logInfo('📱 降级到 Reddit 数据源...\n');
     topics = await fetchFromReddit();
   }
   
   if (topics.length === 0) {
-    logInfo('⚠️  未能获取到 trending topics，将使用预设主题列表\n');
+    logInfo('⚠️  未能获取到 trending topics\n');
     return [];
   }
   

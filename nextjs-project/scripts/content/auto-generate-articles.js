@@ -52,6 +52,57 @@ function generateSlug(title) {
     .substring(0, 100);
 }
 
+function shuffleArray(items) {
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+}
+
+const HUB_MINIMUMS = {
+  development: 2,
+  'mom-health': 2
+};
+
+function selectTopicsForRun(topics, maxArticles, specifiedHub) {
+  if (!Array.isArray(topics) || topics.length === 0) return [];
+
+  const shuffled = [...topics];
+  shuffleArray(shuffled);
+
+  if (specifiedHub) {
+    return shuffled.slice(0, maxArticles);
+  }
+
+  // Ensure baseline coverage for development + parent health when possible.
+  const selected = [];
+  const selectedKeys = new Set();
+  const byHub = new Map();
+
+  for (const topic of shuffled) {
+    if (!byHub.has(topic.hub)) {
+      byHub.set(topic.hub, []);
+    }
+    byHub.get(topic.hub).push(topic);
+  }
+
+  for (const [hub, minCount] of Object.entries(HUB_MINIMUMS)) {
+    const hubTopics = byHub.get(hub) || [];
+    if (hubTopics.length === 0) continue;
+    const takeCount = Math.min(minCount, hubTopics.length);
+    for (const topic of hubTopics.slice(0, takeCount)) {
+      const key = topic.topic;
+      if (!selectedKeys.has(key)) {
+        selected.push(topic);
+        selectedKeys.add(key);
+      }
+    }
+  }
+
+  const remaining = shuffled.filter(topic => !selectedKeys.has(topic.topic));
+  return [...selected, ...remaining].slice(0, maxArticles);
+}
+
 /**
  * 检查文章是否已存在
  */
@@ -469,8 +520,8 @@ async function convertTrendingTopicsToStandardFormat(rawTrendingTopics) {
 
   console.log(`\n🤖 正在使用 AI 转换 ${rawTrendingTopics.length} 个 trending topics...`);
 
-  const systemPrompt = `You are an expert content strategist for maternal and infant health content.
-Convert trending topics into question-format article topics suitable for evidence-based maternal/infant health content.
+  const systemPrompt = `You are an expert content strategist for maternal, infant, and parent health content.
+Convert trending topics into question-format article topics suitable for evidence-based maternal/infant and parent health content.
 
 For each trending topic that is related to maternal/infant health, determine:
 - topic: Question format (How to / What is / When should / Why does / Can I)
@@ -479,7 +530,7 @@ For each trending topic that is related to maternal/infant health, determine:
 - age_range: Appropriate age range (e.g., "0-3 months", "6-12 months", "12-24 months")
 
 IMPORTANT:
-- Only include topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, or child development
+- Only include topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, child development, or parent health/wellbeing
 - Convert to question format when possible
 - Match to the most appropriate hub
 - If a topic is not related to maternal/infant health, skip it
@@ -492,7 +543,7 @@ Return format: { "topics": [{ "topic": "...", "hub": "...", "type": "...", "age_
       model: 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Convert these trending topics into standard article topics for maternal/infant health content:\n${JSON.stringify(rawTrendingTopics.slice(0, 20), null, 2)}\n\nOnly convert topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, or child development. Skip topics about baby products, baby names, or unrelated topics. Return a JSON object with a "topics" array.` }
+        { role: 'user', content: `Convert these trending topics into standard article topics for maternal/infant and parent health content:\n${JSON.stringify(rawTrendingTopics.slice(0, 20), null, 2)}\n\nOnly convert topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, child development, or parent health/wellbeing. Skip topics about baby products, baby names, or unrelated topics. Return a JSON object with a "topics" array.` }
       ],
       temperature: 0.7,
       max_tokens: 2000,
@@ -565,6 +616,7 @@ async function main() {
   const args = process.argv.slice(2);
   const topicIndex = args.indexOf('--topic');
   const hubIndex = args.indexOf('--hub');
+  const allowPresetFallback = args.includes('--allow-preset');
 
   const specifiedTopic = topicIndex >= 0 ? args[topicIndex + 1] : null;
   const specifiedHub = hubIndex >= 0 ? args[hubIndex + 1] : null;
@@ -627,34 +679,16 @@ async function main() {
       console.log('   将回退到预设主题列表\n');
     }
 
-    // 如果 trending topics 不足或失败，使用预设主题补充
-    let missingPresetTopics = [];
-    let hasQueriedPresetTopics = false;
-
-    if (topicsToGenerate.length < 10) {
-      missingPresetTopics = await findMissingTopics(specifiedHub);
-      hasQueriedPresetTopics = true;
-
-      if (missingPresetTopics.length > 0) {
-        const needed = 10 - topicsToGenerate.length;
-        const presetTopicsToAdd = missingPresetTopics.slice(0, needed);
-
-        if (presetTopicsToAdd.length > 0) {
-          // 合并 trending topics 和预设主题
-          topicsToGenerate = [...topicsToGenerate, ...presetTopicsToAdd];
-          console.log(`📋 使用 ${presetTopicsToAdd.length} 个预设主题补充，总共 ${topicsToGenerate.length} 个主题\n`);
-        }
-      }
-    }
-
-    // 如果仍然没有主题，完全回退到预设主题（重用之前查询的结果）
     if (topicsToGenerate.length === 0) {
-      console.log('📋 回退到预设主题列表\n');
-      // 如果之前已经查询过，直接使用结果（即使结果为空）；否则才查询
-      if (hasQueriedPresetTopics) {
+      if (allowPresetFallback) {
+        const missingPresetTopics = await findMissingTopics(specifiedHub);
         topicsToGenerate = missingPresetTopics;
+        if (topicsToGenerate.length > 0) {
+          console.log(`📋 允许回退到预设主题，共 ${topicsToGenerate.length} 个主题\n`);
+        }
       } else {
-        topicsToGenerate = await findMissingTopics(specifiedHub);
+        console.log('✅ 未找到趋势主题，未启用预设回退，退出本次生成');
+        return;
       }
     }
   }
@@ -666,19 +700,15 @@ async function main() {
 
   console.log(`📋 找到 ${topicsToGenerate.length} 个缺失的主题\n`);
 
-  // 如果没有指定topic，随机打乱顺序（实现随机选择）
-  if (!specifiedTopic) {
-    // Fisher-Yates shuffle algorithm for random selection
-    for (let i = topicsToGenerate.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [topicsToGenerate[i], topicsToGenerate[j]] = [topicsToGenerate[j], topicsToGenerate[i]];
-    }
-    console.log('🎲 随机选择主题顺序\n');
-  }
-
   // 每天最多生成10篇文章
   const maxArticles = 10;
-  const topicsToProcess = topicsToGenerate.slice(0, maxArticles);
+  const topicsToProcess = specifiedTopic
+    ? topicsToGenerate.slice(0, maxArticles)
+    : selectTopicsForRun(topicsToGenerate, maxArticles, specifiedHub);
+
+  if (!specifiedTopic && !specifiedHub) {
+    console.log('🎯 优先覆盖 development 与 mom-health 主题\n');
+  }
 
   const results = {
     success: 0,

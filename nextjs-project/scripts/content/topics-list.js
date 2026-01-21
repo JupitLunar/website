@@ -1,6 +1,6 @@
 /**
  * 母婴相关主题列表 - AEO优化版本
- * 用于自动生成Insights文章
+ * 用于自动生成 Insights 文章（仅在开启 --allow-preset 回退时使用）
  * 
  * AEO最佳实践:
  * - 使用问题形式的标题 (How, What, When, Why, Can)
@@ -54,6 +54,14 @@ const MATERNAL_INFANT_TOPICS = [
   { topic: 'How to Play with My Newborn', hub: 'development', type: 'howto', age_range: '0-3 months' },
   { topic: 'When Do Babies Start Walking', hub: 'development', type: 'explainer', age_range: '9-18 months' },
   { topic: 'How to Support My Baby Learning to Stand', hub: 'development', type: 'howto', age_range: '8-12 months' },
+  { topic: 'When Should My Baby Roll Over', hub: 'development', type: 'explainer', age_range: '3-6 months' },
+  { topic: 'When Should My Baby Sit Up', hub: 'development', type: 'explainer', age_range: '4-8 months' },
+  { topic: 'How Much Tummy Time Does My Baby Need Each Day', hub: 'development', type: 'howto', age_range: '0-6 months' },
+  { topic: 'How to Encourage Social Smiles in Babies', hub: 'development', type: 'howto', age_range: '1-4 months' },
+  { topic: 'How to Support Early Language Development', hub: 'development', type: 'howto', age_range: '0-24 months' },
+  { topic: 'What Is Separation Anxiety in Babies', hub: 'development', type: 'explainer', age_range: '6-18 months' },
+  { topic: 'What Are Typical 12 to 18 Month Milestones', hub: 'development', type: 'explainer', age_range: '12-18 months' },
+  { topic: 'What Are Typical 18 to 24 Month Milestones', hub: 'development', type: 'explainer', age_range: '18-24 months' },
   
   // ============ SAFETY ============
   { topic: 'How to Baby-Proof Your Home Room by Room', hub: 'safety', type: 'howto', age_range: '0-12 months' },
@@ -78,6 +86,14 @@ const MATERNAL_INFANT_TOPICS = [
   { topic: 'What Is Normal Postpartum Bleeding', hub: 'mom-health', type: 'explainer', age_range: '0-2 months' },
   { topic: 'How to Get Enough Sleep as a New Parent', hub: 'mom-health', type: 'howto', age_range: '0-12 months' },
   { topic: 'When Will My Period Return After Baby', hub: 'mom-health', type: 'explainer', age_range: '0-24 months' },
+  { topic: 'What Are Postpartum Warning Signs I Should Not Ignore', hub: 'mom-health', type: 'explainer', age_range: '0-6 months' },
+  { topic: 'How to Recognize Postpartum Anxiety', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'When Is My Postpartum Checkup and What Happens', hub: 'mom-health', type: 'explainer', age_range: '0-3 months' },
+  { topic: 'When Can I Have Sex After Giving Birth', hub: 'mom-health', type: 'explainer', age_range: '0-6 months' },
+  { topic: 'What Birth Control Options Are Safe While Breastfeeding', hub: 'mom-health', type: 'explainer', age_range: '0-12 months' },
+  { topic: 'How to Support a Partner During Postpartum Recovery', hub: 'mom-health', type: 'howto', age_range: '0-6 months' },
+  { topic: 'How to Manage Parental Burnout', hub: 'mom-health', type: 'howto', age_range: '0-24 months' },
+  { topic: 'How to Cope With Sleep Deprivation as a New Parent', hub: 'mom-health', type: 'howto', age_range: '0-12 months' },
   
   // ============ RECIPES ============
   { topic: 'What Are the Best First Foods for Babies', hub: 'recipes', type: 'recipe', age_range: '4-6 months' },
