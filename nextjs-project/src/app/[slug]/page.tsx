@@ -15,11 +15,15 @@ export async function generateStaticParams() {
   try {
     const articles = await contentManager.getAllArticles();
     // Generate all articles statically - build optimizations allow for full generation
-    return articles.map((article) => ({
-      slug: article.slug,
-    }));
+    // Filter out any articles without valid slugs
+    return articles
+      .filter((article) => article.slug && article.slug.trim().length > 0)
+      .map((article) => ({
+        slug: article.slug,
+      }));
   } catch (error) {
     console.error('Error generating static params:', error);
+    // Return empty array on error to allow build to continue
     return [];
   }
 }
@@ -30,9 +34,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const article = await contentManager.getArticleBySlug(params.slug);
 
     if (!article) {
+      // Return basic metadata for not found - Next.js will handle 404
       return {
-        title: 'Article Not Found',
+        title: 'Article Not Found | Mom AI Agent',
         description: 'The requested article could not be found.',
+        robots: {
+          index: false,
+          follow: false,
+        },
       };
     }
 
@@ -75,20 +84,30 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         site: '@jupitlunar',
       },
     };
-  } catch (error) {
-    console.error('Error generating metadata:', error);
+  } catch (error: any) {
+    // Only log unexpected errors, not database connection issues during build
+    if (error?.digest !== 'NEXT_NOT_FOUND') {
+      console.error('Error generating metadata:', error);
+    }
     return {
       title: 'Article | Mom AI Agent',
       description: 'Expert insights on maternal and infant health.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 }
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
+  let article;
   try {
-    const article = await contentManager.getArticleBySlug(params.slug);
+    article = await contentManager.getArticleBySlug(params.slug);
 
     if (!article) {
+      // Article not found - this is expected for some slugs that may have been removed
+      // Silently return 404 without logging as error
       notFound();
     }
 
@@ -418,8 +437,11 @@ export default async function ArticlePage({ params }: { params: { slug: string }
         </div>
       </>
     );
-  } catch (error) {
-    console.error('Error loading article:', error);
+  } catch (error: any) {
+    // Only log unexpected errors, not NEXT_NOT_FOUND which is expected for missing articles
+    if (error?.digest !== 'NEXT_NOT_FOUND') {
+      console.error('Error loading article:', error);
+    }
     notFound();
   }
 }
