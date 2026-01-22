@@ -12,8 +12,8 @@ coverage
 .idea
 *.swp
 *.swo
-data
-cache
-reports
-scripts
-docs
+/data
+/cache
+/reports
+/scripts
+/docs
