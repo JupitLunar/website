@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from '@/components/ui/Button';
+import { trackNewsletterSubscription } from '@/lib/analytics';
 
 interface NewsletterSignupProps {
   variant?: 'default' | 'compact' | 'inline';
@@ -10,6 +11,7 @@ interface NewsletterSignupProps {
   onSuccess?: () => void;
   title?: string;
   description?: string;
+  source?: string;
 }
 
 export default function NewsletterSignup({ 
@@ -17,7 +19,8 @@ export default function NewsletterSignup({
   className = '',
   onSuccess,
   title,
-  description
+  description,
+  source
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +49,22 @@ export default function NewsletterSignup({
         setIsSuccess(true);
         setMessage('Thank you for subscribing! Check your email for confirmation.');
         setEmail('');
+        if (source) {
+          trackNewsletterSubscription(email.trim(), source);
+          const emailDomain = email.trim().split('@')[1] || null;
+          try {
+            await fetch('/api/analytics/events', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                event_type: 'newsletter_subscription',
+                event_data: { source, email_domain: emailDomain }
+              })
+            });
+          } catch (trackError) {
+            // Do not block signup success if analytics tracking fails
+          }
+        }
         onSuccess?.();
       } else {
         setMessage(data.error || 'Something went wrong. Please try again.');
@@ -177,4 +196,3 @@ export default function NewsletterSignup({
     </motion.div>
   );
 }
-

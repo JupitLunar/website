@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import InsightFilters from '@/components/InsightFilters';
 import InsightList from '@/components/InsightList';
+import NewsletterSignup from '@/components/NewsletterSignup';
 import { filterCleanKeywords } from '@/lib/supabase';
 
 // Generate CollectionPage schema for AEO with enhanced keywords
@@ -389,6 +390,50 @@ export default async function InsightPage({
           </>
         )}
       </div>
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-2xl border border-slate-200 bg-white/85 p-8 shadow-sm space-y-6">
+            <div>
+              <h3 className="text-xl font-light text-slate-700 mb-2">Follow a weekly pathway</h3>
+              <p className="text-sm text-slate-500">
+                Insights are great for quick answers. Programs turn them into weekly steps for development and parent
+                health.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Link
+                href="/programs/development"
+                className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-left hover:border-violet-200 transition-colors"
+              >
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Development</p>
+                <p className="text-sm text-slate-600">Weekly play tasks and milestone signals for 0-24 months.</p>
+              </Link>
+              <Link
+                href="/programs/parent-health"
+                className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-left hover:border-violet-200 transition-colors"
+              >
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Parent Health</p>
+                <p className="text-sm text-slate-600">Postpartum recovery and mental health check-ins for 0-12 months.</p>
+              </Link>
+            </div>
+            <Link
+              href="/programs"
+              className="inline-flex items-center text-sm text-slate-500 hover:text-violet-500 transition-colors"
+            >
+              View all programs ->
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm">
+            <NewsletterSignup
+              variant="compact"
+              title="Get the weekly pathway plan"
+              description="Short, evidence-informed tasks for baby development and parent health."
+              source="insight-programs-cta"
+            />
+          </div>
+        </div>
+      </section>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="bg-white/80 border border-slate-200 rounded-2xl p-8 shadow-sm">

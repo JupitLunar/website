@@ -95,6 +95,9 @@ export default function Header() {
               <Link href="/insight" className="text-gray-700 hover:text-purple-600 transition-colors">
                 Insights
               </Link>
+              <Link href="/programs" className="text-gray-700 hover:text-purple-600 transition-colors">
+                Programs
+              </Link>
               <Link href="/about" className="text-gray-700 hover:text-purple-600 transition-colors">
                 About
               </Link>
@@ -149,6 +152,9 @@ export default function Header() {
               </Link>
               <Link href="/insight" className="block text-gray-700 hover:text-purple-600 transition-colors">
                 Insights
+              </Link>
+              <Link href="/programs" className="block text-gray-700 hover:text-purple-600 transition-colors">
+                Programs
               </Link>
               <Link href="/about" className="block text-gray-700 hover:text-purple-600 transition-colors">
                 About

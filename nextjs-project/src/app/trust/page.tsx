@@ -182,6 +182,41 @@ export default async function TrustCenterPage() {
           </div>
         </section>
 
+        <section className="space-y-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">Program Standards</h2>
+          </div>
+          <p className="text-sm text-slate-600">
+            Our development and parent health pathways translate public health guidance into weekly plans. These
+            pathways are educational and are not medical advice.
+          </p>
+          <ul className="space-y-2 text-sm text-slate-600 list-disc list-inside">
+            <li>Guidance is sourced from CDC, AAP, WHO, and national health authorities.</li>
+            <li>Each week includes a red-flag checklist to encourage timely medical follow-up.</li>
+            <li>We recommend professional care for diagnosis, treatment, or urgent concerns.</li>
+            <li>Content is reviewed on a 12-month cycle or sooner when guidelines change.</li>
+          </ul>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/programs/development"
+              className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
+            >
+              Baby development pathway
+            </Link>
+            <Link
+              href="/programs/parent-health"
+              className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
+            >
+              Parent health pathway
+            </Link>
+          </div>
+        </section>
+
         <section id="sources" className="grid gap-6 md:grid-cols-2">
           <div className="space-y-4 rounded-3xl border-2 border-gray-200 bg-white p-8 shadow-sm hover:shadow-lg transition-shadow">
             <div className="flex items-center gap-2 mb-4">
