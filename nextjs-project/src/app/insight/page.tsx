@@ -421,7 +421,7 @@ export default async function InsightPage({
               href="/programs"
               className="inline-flex items-center text-sm text-slate-500 hover:text-violet-500 transition-colors"
             >
-              View all programs ->
+              View all programs →
             </Link>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm">

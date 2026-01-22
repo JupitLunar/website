@@ -37,10 +37,10 @@ export default function MedicalDisclaimer({
             />
           </svg>
           <div className="flex-1 text-sm">
-            <p className="font-semibold text-amber-800 mb-1">Medical Disclaimer</p>
+            <p className="font-semibold text-amber-800 mb-1">Official Guidelines Summary</p>
             <p className="text-amber-700">
-              This content is for educational purposes only. Always consult your pediatrician before
-              introducing new foods, especially if your child has a history of allergies.
+              This summarizes CDC/AAP/Health Canada guidance. Always consult your pediatrician for
+              personalized advice, especially if your child has allergies or medical conditions.
             </p>
           </div>
         </div>
@@ -51,10 +51,10 @@ export default function MedicalDisclaimer({
   if (variant === 'compact') {
     return (
       <div className="text-xs text-slate-600 bg-slate-50 rounded-lg p-3 border border-slate-200">
-        <p className="font-semibold text-slate-800 mb-1">⚕️ Medical Disclaimer</p>
+        <p className="font-semibold text-slate-800 mb-1">⚕️ Official Guidelines Summary</p>
         <p>
-          Educational content only. Not medical advice. Consult your pediatrician for personalized
-          guidance.
+          Curated from CDC/AAP/Health Canada. Not personalized advice. Always consult your
+          pediatrician for guidance specific to your child.
         </p>
         {lastReviewed && (
           <p className="mt-2 text-slate-500">
@@ -81,11 +81,11 @@ export default function MedicalDisclaimer({
           </svg>
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-blue-900 mb-2">Medical Disclaimer</h3>
+          <h3 className="text-lg font-bold text-blue-900 mb-2">How to Use This Information</h3>
           <p className="text-sm text-blue-800 leading-relaxed">
-            This content is provided for <strong>educational purposes only</strong> and does not
-            constitute medical advice, diagnosis, or treatment. While we curate information from
-            official health guidelines (CDC, AAP, Health Canada), individual circumstances vary.
+            This content <strong>summarizes official health guidelines</strong> from CDC, American Academy
+            of Pediatrics, and Health Canada. We organize their recommendations—we don't create our own.
+            Official guidelines are general; your child's needs may differ.
           </p>
         </div>
       </div>

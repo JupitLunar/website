@@ -52,8 +52,8 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              At JupitLunar, we believe every mother deserves access to reliable, evidence-based information
-              to make confident decisions for her family's health and wellbeing.
+              We don't create medical advice—we organize it. JupitLunar curates official health guidelines
+              from CDC, AAP, and Health Canada, making expert recommendations accessible to every parent.
             </motion.p>
           </motion.div>
         </div>
@@ -73,8 +73,8 @@ export default function AboutPage() {
               Our Mission
             </h2>
             <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed">
-              To help every mom navigate the journey of motherhood with confidence, backed by
-              trustworthy information and compassionate support
+              To make official health guidelines from CDC, AAP, and Health Canada easily accessible
+              and understandable for every parent navigating infant and toddler care
             </p>
           </motion.div>
 
@@ -91,10 +91,10 @@ export default function AboutPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
-              <h3 className="font-light text-slate-500 mb-3 text-xl text-center">Evidence-Based Knowledge</h3>
+              <h3 className="font-light text-slate-500 mb-3 text-xl text-center">Content Curation, Not Creation</h3>
               <p className="text-sm text-slate-400 leading-relaxed text-center">
-                We curate and synthesize information from the world's leading health organizations
-                and peer-reviewed research to provide accurate, actionable guidance.
+                We exclusively curate guidance from official health authorities—CDC, AAP, Health Canada, WHO.
+                We don't create medical advice; we organize theirs into accessible formats.
               </p>
             </motion.div>
 
@@ -129,10 +129,10 @@ export default function AboutPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <h3 className="font-light text-slate-500 mb-3 text-xl text-center">Innovation with Care</h3>
+              <h3 className="font-light text-slate-500 mb-3 text-xl text-center">Technology-Driven Organization</h3>
               <p className="text-sm text-slate-400 leading-relaxed text-center">
-                We leverage AI technology to make expert knowledge accessible and personalized,
-                while maintaining the highest standards of safety and accuracy.
+                We use AI and software engineering to make dense government PDFs and medical guidelines
+                searchable, organized by age, region, and topic—without altering official recommendations.
               </p>
             </motion.div>
           </div>
@@ -154,33 +154,34 @@ export default function AboutPage() {
 
             <div className="space-y-6 text-lg text-slate-400 leading-relaxed font-light">
               <p>
-                JupitLunar was founded on a simple yet powerful belief: that every mother deserves access
-                to reliable, evidence-based information to guide her through one of life's most important journeys.
+                JupitLunar started from a personal frustration: as a new mom, I spent hours digging through
+                CDC PDFs, AAP position papers, and Health Canada's website trying to answer simple questions
+                about feeding my baby. The authoritative information existed—it was just scattered and hard to navigate.
               </p>
 
               <p>
-                As mothers ourselves, we experienced firsthand the overwhelming amount of conflicting information
-                available online, the anxiety of making crucial decisions about our children's health, and the
-                isolation that can come with modern motherhood. We knew there had to be a better way.
+                I'm Cathleen, a software engineer and mother of two in Edmonton, Canada. I'm not a doctor,
+                nutritionist, or medical professional. But I realized I could use my technical skills to solve
+                a problem many parents face: making official health guidelines more accessible.
               </p>
 
               <p>
-                That's why we created JupitLunar—a comprehensive platform that combines the latest research
-                from trusted health organizations with AI-powered personalization to provide mothers with
-                clear, actionable guidance tailored to their unique situations.
+                That's why I built JupitLunar—not as a medical advice website, but as an intelligent organizing
+                system for authoritative guidance. Think of it as a librarian for government health guidelines,
+                helping you quickly find what the CDC, AAP, or Health Canada says about your specific question.
               </p>
 
               <p>
-                Our platform synthesizes information from leading health authorities including the CDC,
-                American Academy of Pediatrics, WHO, Health Canada, and the Canadian Paediatric Society.
-                We continuously update our content to reflect the latest research and guidelines, ensuring
-                that you always have access to the most current, evidence-based information.
+                We systematically aggregate guidance from North America's leading health authorities: CDC,
+                American Academy of Pediatrics, Health Canada, WHO, and the Canadian Paediatric Society.
+                Every piece of information is linked directly to its official source, graded for authority level,
+                and updated when guidelines change.
               </p>
 
               <p>
-                But we're more than just a knowledge base. We're a community of mothers supporting mothers,
-                sharing experiences, and empowering each other to make confident, informed decisions.
-                From pregnancy through early childhood, we're here to support you every step of the way.
+                What makes us different is radical transparency. We don't claim to have medical experts on staff.
+                We don't modify official recommendations. We simply organize them by topic, age range, and region,
+                then present them in formats that are easier to understand and search than the original PDFs.
               </p>
             </div>
           </motion.div>
@@ -217,10 +218,10 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-light text-slate-500 mb-2">Trustworthy</h3>
+                  <h3 className="text-xl font-light text-slate-500 mb-2">Source Transparency</h3>
                   <p className="text-slate-400 leading-relaxed font-light">
-                    We source all information from official health organizations and peer-reviewed research,
-                    with transparent citations for every recommendation.
+                    Every piece of information links directly to its official source. We grade each source
+                    (A/B/C/D) based on authority level and display verification dates publicly.
                   </p>
                 </div>
               </div>
@@ -263,10 +264,10 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-light text-slate-500 mb-2">Accessible</h3>
+                  <h3 className="text-xl font-light text-slate-500 mb-2">Organization, Not Interpretation</h3>
                   <p className="text-slate-400 leading-relaxed font-light">
-                    We make complex medical information easy to understand and apply, so every
-                    mother can access the knowledge she needs, when she needs it.
+                    We transform 200-page PDF guidelines into searchable, age-specific formats. But we
+                    never modify the recommendations—if CDC says "6 months," we say "6 months."
                   </p>
                 </div>
               </div>
@@ -286,10 +287,10 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-light text-slate-500 mb-2">Continuously Improving</h3>
+                  <h3 className="text-xl font-light text-slate-500 mb-2">Guideline Monitoring</h3>
                   <p className="text-slate-400 leading-relaxed font-light">
-                    We regularly update our content to reflect the latest research and listen
-                    to our community to continually enhance our platform.
+                    We monitor official sources for guideline changes every 3 months. When recommendations
+                    are updated, we reflect those changes within 90 days and log all updates publicly.
                   </p>
                 </div>
               </div>
@@ -313,15 +314,15 @@ export default function AboutPage() {
             </h2>
 
             <p className="text-xl text-slate-400 leading-relaxed font-light max-w-3xl mx-auto mb-8">
-              At JupitLunar, we're not just building technology—we're building a community.
-              Our team combines expertise in healthcare, technology, and most importantly,
-              real-world motherhood experience.
+              As a mom and software engineer, I built this tool to solve a problem I personally faced:
+              finding reliable answers at 3am when my baby wouldn't eat, wouldn't sleep, or showed signs
+              that worried me. I needed to know what the experts actually said—fast.
             </p>
 
             <p className="text-lg text-slate-400 leading-relaxed font-light max-w-3xl mx-auto">
-              We believe in the power of mothers supporting mothers, of sharing knowledge and experience
-              to lift each other up. Every feature we build, every piece of content we create, is guided
-              by one simple question: "Will this help a mother feel more confident and supported?"
+              Every feature is guided by one question: "Will this help a parent quickly find what CDC, AAP,
+              or Health Canada says about their specific situation?" We're not trying to replace your
+              pediatrician—we're helping you find the official guidelines before your next appointment.
             </p>
           </motion.div>
         </div>
