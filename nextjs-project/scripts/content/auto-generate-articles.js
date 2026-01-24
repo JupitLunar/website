@@ -325,7 +325,7 @@ CRITICAL: The body_md field MUST be valid HTML (use <h2>, <p>, <ul>, <li>, <stro
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         {
@@ -540,7 +540,7 @@ Return format: { "topics": [{ "topic": "...", "hub": "...", "type": "...", "age_
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Convert these trending topics into standard article topics for maternal/infant and parent health content:\n${JSON.stringify(rawTrendingTopics.slice(0, 20), null, 2)}\n\nOnly convert topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, child development, or parent health/wellbeing. Skip topics about baby products, baby names, or unrelated topics. Return a JSON object with a "topics" array.` }

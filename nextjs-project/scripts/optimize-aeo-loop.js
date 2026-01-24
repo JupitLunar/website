@@ -137,7 +137,7 @@ async function optimizeAEORules() {
 
         try {
             const completion = await openai.chat.completions.create({
-                model: 'gpt-4o', // Use intelligent model for analysis
+                model: 'gpt-4o-mini', // Use intelligent model for analysis
                 messages: [
                     {
                         role: 'system',
