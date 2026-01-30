@@ -54,6 +54,13 @@ const nextConfig = {
         source: '/complete/tiktokEwh2iNpVtFm2pBHesG8d4YJWz7J1A2Ne.txt/',
         destination: '/complete/tiktokEwh2iNpVtFm2pBHesG8d4YJWz7J1A2Ne.txt',
       },
+
+      // TikTok may request the signature file under the chosen URL prefix path.
+      // Map it to /complete/<signature-file> where we store it.
+      {
+        source: '/complete/tiktokEwh2iNpVtFm2pBHesG8d4YJWz7J1A2Ne.txt/:sig',
+        destination: '/complete/:sig',
+      },
     ];
   },
   // Headers moved to middleware.ts to avoid micromatch stack overflow
