@@ -48,7 +48,13 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    return [];
+    return [
+      // TikTok URL properties verification: avoid 301/302 when trailing slash is used
+      {
+        source: '/complete/tiktokEwh2iNpVtFm2pBHesG8d4YJWz7J1A2Ne.txt/',
+        destination: '/complete/tiktokEwh2iNpVtFm2pBHesG8d4YJWz7J1A2Ne.txt',
+      },
+    ];
   },
   // Headers moved to middleware.ts to avoid micromatch stack overflow
   // The middleware handles security headers for all routes
