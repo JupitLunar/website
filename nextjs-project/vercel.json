@@ -33,5 +33,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/complete/tiktokEwh2iNpVtFm2pBHesG8d4YJWz7J1A2Ne.txt/",
+      "destination": "/complete/tiktokEwh2iNpVtFm2pBHesG8d4YJWz7J1A2Ne.txt"
+    }
   ]
 }
