@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+Site: https://momaiagent.com
+Name: MomAI Agent
+Description: AI-powered support and guidance for mom and baby wellness.
+
+Key pages:
+- https://momaiagent.com/
+- https://momaiagent.com/blog
+- https://momaiagent.com/products
+- https://momaiagent.com/pricing
+- https://momaiagent.com/contact
