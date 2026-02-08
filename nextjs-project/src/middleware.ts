@@ -3,7 +3,27 @@ import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 const PUBLIC_FILE = /\.(.*)$/;
 
 export function middleware(request: NextRequest, event: NextFetchEvent) {
-    const { pathname } = request.nextUrl;
+    const { pathname, search } = request.nextUrl;
+    const host = request.headers.get('host') || '';
+
+    // Canonical host redirect: momaiagent.com -> www.momaiagent.com
+    if (host === 'momaiagent.com') {
+        const redirectUrl = new URL(request.url);
+        redirectUrl.host = 'www.momaiagent.com';
+        redirectUrl.protocol = 'https:';
+        return NextResponse.redirect(redirectUrl, 301);
+    }
+
+    // Legacy HTML URLs -> clean URLs
+    if (pathname === '/index.html') {
+        return NextResponse.redirect(new URL(`/${search}`, request.url), 301);
+    }
+
+    if (pathname.endsWith('.html') && pathname !== '/index.html') {
+        const cleanPath = pathname.slice(0, -5);
+        const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+        return NextResponse.redirect(new URL(`${normalizedPath}${search}`, request.url), 301);
+    }
 
     // Skip public files and api routes
     if (

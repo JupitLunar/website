@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
             {
                 userAgent: '*',
                 allow: '/',
-                disallow: ['/admin/', '/api/auth/', '/private/'],
+                disallow: ['/admin/', '/api/', '/private/', '/search', '/complete', '/tasks'],
             },
             // Explicitly allow AI bots to crawl generally, but we might want to gate specific areas if needed
             // For AEO, we WANT them to read our high-quality content

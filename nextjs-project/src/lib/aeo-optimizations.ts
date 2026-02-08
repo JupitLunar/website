@@ -202,7 +202,7 @@ export function generateComparisonTableSchema({
 // 生成hreflang元数据
 export function generateHreflangMetadata(slug: string, region?: string) {
   const baseUrl = siteUrl;
-  const allowed = (process.env.NEXT_PUBLIC_HREFLANG_LANGS || 'en-US,en-CA,x-default')
+  const allowed = (process.env.NEXT_PUBLIC_HREFLANG_LANGS || 'x-default')
     .split(',')
     .map(l => l.trim())
     .filter(Boolean);

@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
         headers.set('Content-Type', 'application/json');
         headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400');
         headers.set('X-Content-Type-Options', 'nosniff');
-        headers.set('X-Robots-Tag', 'index, follow');
+        headers.set('X-Robots-Tag', 'noindex, follow');
         headers.set('X-AI-Feed-Version', '2.0');
         headers.set('X-AI-Feed-Format', format);
         headers.set('X-AI-Feed-Generated', new Date().toISOString());

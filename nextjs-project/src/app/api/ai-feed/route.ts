@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400'); // 1 hour client, 24 hours CDN
     headers.set('X-Content-Type-Options', 'nosniff');
     headers.set('X-Frame-Options', 'DENY');
-    headers.set('X-Robots-Tag', 'index, follow');
+    headers.set('X-Robots-Tag', 'noindex, follow');
 
     // Add custom headers for AI crawlers
     headers.set('X-AI-Feed-Version', '1.0');

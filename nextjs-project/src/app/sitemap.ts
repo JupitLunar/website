@@ -72,25 +72,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.85,
     },
-    // AI feed endpoints - Critical for LLM discovery (AEO)
-    {
-      url: `${siteUrl}/api/ai-feed`,
-      lastModified: new Date(),
-      changeFrequency: 'hourly', // AI feeds update frequently
-      priority: 1.0, // MAX priority for AI bots
-    },
-    {
-      url: `${siteUrl}/api/llm/answers`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
-    },
-    {
-      url: `${siteUrl}/api/kb/feed`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
   ];
 
   // Get all articles (authoritative content)
