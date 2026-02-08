@@ -52,6 +52,14 @@ jobs:
           echo "📋 Generating parent health insights (trend-first, allow preset fallback)"
           npm run generate:articles -- --hub mom-health --allow-preset | tee logs/article-generation-mom-health-$(date +%Y-%m-%d-%H%M%S).log
 
+      - name: Quality gate - duplicate check
+        working-directory: ./nextjs-project
+        run: npm run check:duplicates
+
+      - name: Quality gate - build
+        working-directory: ./nextjs-project
+        run: npm run build
+
       - name: Get statistics
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}

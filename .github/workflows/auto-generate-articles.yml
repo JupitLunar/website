@@ -68,6 +68,14 @@ jobs:
             npm run generate:articles | tee logs/article-generation-$(date +%Y-%m-%d-%H%M%S).log
           fi
 
+      - name: Quality gate - duplicate check
+        working-directory: ./nextjs-project
+        run: npm run check:duplicates
+
+      - name: Quality gate - build
+        working-directory: ./nextjs-project
+        run: npm run build
+
       - name: Get statistics
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
