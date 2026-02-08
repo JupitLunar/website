@@ -1,0 +1,86 @@
+name: Daily SEO Health
+
+on:
+  schedule:
+    - cron: "25 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seo-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check SEO and AEO endpoints
+        env:
+          BASE_URL: https://momaiagent.com
+          SITEMAP_URL: https://momaiagent.com/sitemap.xml
+          ROBOTS_URL: https://momaiagent.com/robots.txt
+          LLMS_URL: https://momaiagent.com/llms.txt
+        run: |
+          set -euo pipefail
+
+          failures=0
+          touch summary.txt
+
+          pass() { echo "✅ $1" | tee -a summary.txt; }
+          fail() { echo "❌ $1" | tee -a summary.txt; failures=$((failures + 1)); }
+
+          check_status() {
+            local url="$1"
+            local expected="$2"
+            local code
+            code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 25 "$url" || true)
+            if [[ "$code" == "$expected" ]]; then
+              pass "$url returned $code"
+            else
+              fail "$url returned $code (expected $expected)"
+            fi
+          }
+
+          check_status "$BASE_URL" "200"
+          check_status "$SITEMAP_URL" "200"
+          check_status "$ROBOTS_URL" "200"
+          check_status "$LLMS_URL" "200"
+
+          homepage=$(curl -sS --max-time 25 "$BASE_URL" || true)
+          if echo "$homepage" | tr '\n' ' ' | grep -qi 'rel="canonical"'; then
+            pass "Canonical tag found on homepage"
+          else
+            fail "Canonical tag missing on homepage"
+          fi
+
+          if echo "$homepage" | grep -qi 'noindex'; then
+            fail "Unexpected noindex found on homepage"
+          else
+            pass "No noindex on homepage"
+          fi
+
+          mapfile -t sitemap_urls < <(curl -sS --max-time 25 "$SITEMAP_URL" | grep -oE '<loc>[^<]+' | sed 's#<loc>##' | head -n 8)
+          if [[ ${#sitemap_urls[@]} -eq 0 ]]; then
+            fail "No URLs extracted from sitemap"
+          else
+            pass "Extracted ${#sitemap_urls[@]} URLs from sitemap"
+            for u in "${sitemap_urls[@]}"; do
+              code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 25 "$u" || true)
+              if [[ "$code" == "200" ]]; then
+                pass "Sitemap URL ok: $u"
+              else
+                fail "Sitemap URL bad ($code): $u"
+              fi
+            done
+          fi
+
+          {
+            echo "## Daily SEO Health Result"
+            cat summary.txt
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "$failures" -gt 0 ]]; then
+            echo "SEO health check failed with $failures issue(s)."
+            exit 1
+          fi
