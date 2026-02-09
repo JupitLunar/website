@@ -53,6 +53,9 @@ jobs:
           npm run generate:articles -- --hub mom-health --allow-preset | tee logs/article-generation-mom-health-$(date +%Y-%m-%d-%H%M%S).log
 
       - name: Quality gate - duplicate check
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         working-directory: ./nextjs-project
         run: npm run check:duplicates
 
