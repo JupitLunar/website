@@ -33,12 +33,16 @@ jobs:
           check_status() {
             local url="$1"
             local expected="$2"
-            local code
-            code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 25 "$url" || true)
+            local result code effective_url redirects
+            result=$(curl -sS -L -o /dev/null -w "%{http_code}|%{url_effective}|%{num_redirects}" --max-time 25 "$url" || true)
+            code="${result%%|*}"
+            result="${result#*|}"
+            effective_url="${result%%|*}"
+            redirects="${result##*|}"
             if [[ "$code" == "$expected" ]]; then
-              pass "$url returned $code"
+              pass "$url returned $code (redirects: $redirects, final: $effective_url)"
             else
-              fail "$url returned $code (expected $expected)"
+              fail "$url returned $code (expected $expected, redirects: $redirects, final: $effective_url)"
             fi
           }
 
@@ -47,7 +51,7 @@ jobs:
           check_status "$ROBOTS_URL" "200"
           check_status "$LLMS_URL" "200"
 
-          homepage=$(curl -sS --max-time 25 "$BASE_URL" || true)
+          homepage=$(curl -sS -L --max-time 25 "$BASE_URL" || true)
           if echo "$homepage" | tr '\n' ' ' | grep -qi 'rel="canonical"'; then
             pass "Canonical tag found on homepage"
           else
@@ -60,13 +64,13 @@ jobs:
             pass "No noindex on homepage"
           fi
 
-          mapfile -t sitemap_urls < <(curl -sS --max-time 25 "$SITEMAP_URL" | grep -oE '<loc>[^<]+' | sed 's#<loc>##' | head -n 8)
+          mapfile -t sitemap_urls < <(curl -sS -L --max-time 25 "$SITEMAP_URL" | grep -oE '<loc>[^<]+' | sed 's#<loc>##' | head -n 8)
           if [[ ${#sitemap_urls[@]} -eq 0 ]]; then
             fail "No URLs extracted from sitemap"
           else
             pass "Extracted ${#sitemap_urls[@]} URLs from sitemap"
             for u in "${sitemap_urls[@]}"; do
-              code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 25 "$u" || true)
+              code=$(curl -sS -L -o /dev/null -w "%{http_code}" --max-time 25 "$u" || true)
               if [[ "$code" == "200" ]]; then
                 pass "Sitemap URL ok: $u"
               else

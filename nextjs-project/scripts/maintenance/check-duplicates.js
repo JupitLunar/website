@@ -7,7 +7,6 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
-const { generateSlug } = require('./scraper-utils');
 
 const dotenv = require('dotenv');
 // Load env vars from project root
@@ -245,5 +244,3 @@ if (require.main === module) {
 }
 
 module.exports = { checkUrlDuplicates, checkSlugDuplicates, checkSimilarTitles };
-
-
