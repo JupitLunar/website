@@ -22,12 +22,26 @@ import type {
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+let cachedSupabaseClient: ReturnType<typeof createClient> | null = null;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+function getSupabaseClient() {
+  if (cachedSupabaseClient) return cachedSupabaseClient;
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase environment variables');
+  }
+  cachedSupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+  return cachedSupabaseClient;
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Avoid build-time crashes when routes/pages import this module without Supabase envs.
+// The error is raised only when code actually tries to query Supabase.
+export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+  get(_target, prop, receiver) {
+    const client = getSupabaseClient();
+    const value = Reflect.get(client, prop, receiver);
+    return typeof value === 'function' ? value.bind(client) : value;
+  }
+});
 
 // Helper: Filter out AEO metadata from keywords array
 // AEO data is stored with __AEO_ prefix and should be excluded from public display
@@ -40,7 +54,7 @@ export function filterCleanKeywords(keywords: string[] | null | undefined): stri
 export const createAdminClient = () => {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!serviceRoleKey) {
+  if (!supabaseUrl || !serviceRoleKey) {
     throw new Error('Missing Supabase service role key');
   }
 
