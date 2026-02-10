@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
-import { aiFeedManager } from '@/lib/supabase';
-
 export async function GET(request: NextRequest) {
   try {
+    const { aiFeedManager } = await import('@/lib/supabase');
+
     // Get query parameters
     const { searchParams } = new URL(request.url);
     const format = searchParams.get('format') || 'ndjson';
