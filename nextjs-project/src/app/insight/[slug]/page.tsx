@@ -184,12 +184,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export const revalidate = 300; // Revalidate every 5 minutes (fallback if revalidation API fails)
 
+function getServerSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
+
 const getInsightSlugs = unstable_cache(
   async () => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = getServerSupabaseClient();
+    if (!supabase) return [];
 
     // Allow both AI generated and Medical Board reviewed articles
     const { data: articles } = await supabase
@@ -206,10 +211,8 @@ const getInsightSlugs = unstable_cache(
 
 const getInsightBySlug = unstable_cache(
   async (slug: string) => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = getServerSupabaseClient();
+    if (!supabase) return null;
 
     // Allow both AI generated and Medical Board reviewed articles
     const { data: article } = await supabase
@@ -228,10 +231,8 @@ const getInsightBySlug = unstable_cache(
 
 const getRelatedInsights = unstable_cache(
   async (hub: string, excludeId: string) => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = getServerSupabaseClient();
+    if (!supabase) return [];
 
     const { data: relatedArticles } = await supabase
       .from('articles')

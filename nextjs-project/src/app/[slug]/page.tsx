@@ -11,13 +11,13 @@ import { BottomLineAnswer } from '@/components/BottomLineAnswer';
 import { USCanadaComparison } from '@/components/USCanadaComparison';
 
 // 生成静态路径 - 生成所有文章（已优化构建配置，不再需要限制）
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   try {
-    const articles = await contentManager.getAllArticles();
+    const articles: Array<{ slug?: string | null }> = await contentManager.getAllArticles();
     // Generate all articles statically - build optimizations allow for full generation
     // Filter out any articles without valid slugs
     return articles
-      .filter((article) => article.slug && article.slug.trim().length > 0)
+      .filter((article): article is { slug: string } => Boolean(article.slug && article.slug.trim().length > 0))
       .map((article) => ({
         slug: article.slug,
       }));
@@ -112,7 +112,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     }
 
     // 获取相关文章
-    const relatedArticles = await contentManager.getRelatedArticles(article.id, article.hub, 3);
+    const relatedArticles: any[] = await contentManager.getRelatedArticles(article.id, article.hub, 3);
 
     // 生成结构化数据
     const structuredData = generateArticleStructuredData(article);

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { clientCache, cacheKeys, withCache } from './cache';
 import type {
   ContentHub,
@@ -22,20 +23,21 @@ import type {
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-let cachedSupabaseClient: ReturnType<typeof createClient> | null = null;
+type AppSupabaseClient = SupabaseClient<any, 'public', any>;
+let cachedSupabaseClient: AppSupabaseClient | null = null;
 
 function getSupabaseClient() {
   if (cachedSupabaseClient) return cachedSupabaseClient;
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing Supabase environment variables');
   }
-  cachedSupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+  cachedSupabaseClient = createClient(supabaseUrl, supabaseAnonKey) as AppSupabaseClient;
   return cachedSupabaseClient;
 }
 
 // Avoid build-time crashes when routes/pages import this module without Supabase envs.
 // The error is raised only when code actually tries to query Supabase.
-export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+export const supabase = new Proxy({} as AppSupabaseClient, {
   get(_target, prop, receiver) {
     const client = getSupabaseClient();
     const value = Reflect.get(client, prop, receiver);

@@ -545,7 +545,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Related Foods</h2>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {relatedFoods.map((relatedFood) => (
+              {relatedFoods.map((relatedFood: any) => (
                 <FoodCard
                   key={relatedFood.id}
                   slug={relatedFood.slug}

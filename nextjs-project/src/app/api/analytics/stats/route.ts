@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     }
 
     const uniqueVisitorCount = new Set(
-      uniqueVisitors?.map(v => v.user_id || v.session_id) || []
+      uniqueVisitors?.map((v: any) => v.user_id || v.session_id) || []
     ).size;
 
     // Get top pages
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching top pages:', topPagesError);
     }
 
-    const pageViews = topPages?.reduce((acc: any, event) => {
+    const pageViews = topPages?.reduce((acc: any, event: any) => {
       const page = event.event_data?.page || 'unknown';
       acc[page] = (acc[page] || 0) + 1;
       return acc;
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching search events:', searchError);
     }
 
-    const searchQueries = searchEvents?.reduce((acc: any, event) => {
+    const searchQueries = searchEvents?.reduce((acc: any, event: any) => {
       const query = event.event_data?.query || 'unknown';
       acc[query] = (acc[query] || 0) + 1;
       return acc;
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching article views:', articleViewsError);
     }
 
-    const hubViews = articleViews?.reduce((acc: any, event) => {
+    const hubViews = articleViews?.reduce((acc: any, event: any) => {
       const hub = event.event_data?.content_hub || 'unknown';
       acc[hub] = (acc[hub] || 0) + 1;
       return acc;
@@ -130,7 +130,7 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching performance metrics:', performanceError);
     }
 
-    const performanceMetrics = performanceEvents?.reduce((acc: any, event) => {
+    const performanceMetrics = performanceEvents?.reduce((acc: any, event: any) => {
       const metric = event.event_data?.metric_name;
       const value = event.event_data?.metric_value;
       if (metric && value !== undefined) {
@@ -189,8 +189,6 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-
 
 
 
