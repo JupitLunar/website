@@ -81,26 +81,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   // Get AI-generated insight articles
-  const supabase = createAdminClient();
   let insightArticles: any[] = [];
-  try {
-    // Use reviewed_by field to identify AI-generated articles
-    // This works even if article_source column doesn't exist yet
-    const { data, error } = await supabase
-      .from('articles')
-      .select('slug, date_published, date_modified, created_at')
-      .eq('status', 'published')
-      .eq('reviewed_by', 'AI Content Generator');
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+      const supabase = createAdminClient();
+      // Use reviewed_by field to identify AI-generated articles
+      // This works even if article_source column doesn't exist yet
+      const { data, error } = await supabase
+        .from('articles')
+        .select('slug, date_published, date_modified, created_at')
+        .eq('status', 'published')
+        .eq('reviewed_by', 'AI Content Generator');
 
-    if (error) {
+      if (error) {
+        console.error('Error fetching insight articles for sitemap:', error);
+        insightArticles = [];
+      } else {
+        insightArticles = data || [];
+      }
+    } catch (error) {
       console.error('Error fetching insight articles for sitemap:', error);
       insightArticles = [];
-    } else {
-      insightArticles = data || [];
     }
-  } catch (error) {
-    console.error('Error fetching insight articles for sitemap:', error);
-    insightArticles = [];
   }
 
   const hubRoutes: MetadataRoute.Sitemap = Array.isArray(hubs)

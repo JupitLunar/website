@@ -3,10 +3,21 @@ export const dynamic = 'force-dynamic';
 
 import { filterCleanKeywords } from '@/lib/supabase';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export async function GET() {
+  if (!supabaseUrl || !supabaseKey) {
+    const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+    const emptyRss = `<?xml version="1.0" encoding="UTF-8" ?>\n<rss version="2.0"><channel><title>Latest Baby Care Articles - JupitLunar</title><link>${baseUrl}/latest-articles</link><description>Feed unavailable in this build context.</description><lastBuildDate>${new Date().toUTCString()}</lastBuildDate></channel></rss>`;
+    return new Response(emptyRss, {
+      headers: {
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate'
+      }
+    });
+  }
+
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { data: articles } = await supabase

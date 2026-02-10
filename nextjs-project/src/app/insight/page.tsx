@@ -96,9 +96,20 @@ function generateOrganizationSchema() {
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
   const rssUrl = `${baseUrl}/insight/rss.xml`;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceRoleKey) {
+    return {
+      title: 'Parenting Insights | Mom AI Agent',
+      description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, development, and parenting.',
+      alternates: {
+        canonical: `${baseUrl}/insight`,
+      }
+    };
+  }
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    supabaseUrl,
+    serviceRoleKey
   );
 
   const { data: articles } = await supabase
@@ -151,9 +162,13 @@ export const revalidate = 300; // Revalidate every 5 minutes (fallback if revali
 
 const getInsightArticles = unstable_cache(
   async () => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!supabaseUrl || !serviceRoleKey) return [];
+
     const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+      supabaseUrl,
+      serviceRoleKey
     );
 
     // 使用 reviewed_by 字段识别 AI 生成的文章

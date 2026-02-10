@@ -23,6 +23,7 @@ import type {
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const hasPublicSupabaseEnv = Boolean(supabaseUrl && supabaseAnonKey);
 type AppSupabaseClient = SupabaseClient<any, 'public', any>;
 let cachedSupabaseClient: AppSupabaseClient | null = null;
 
@@ -158,6 +159,7 @@ export const contentManager = {
 
   // Get all articles for static generation
   async getAllArticles() {
+    if (!hasPublicSupabaseEnv) return [];
     // Query all published articles, then filter in code for reliability
     // Note: article_source field may not exist in all databases, so we select it but handle gracefully
     const { data, error } = await supabase
@@ -330,6 +332,7 @@ export const contentManager = {
 
   // Get content hubs with article counts
   async getContentHubs() {
+    if (!hasPublicSupabaseEnv) return [];
     const cacheKey = cacheKeys.hubs();
     const cached = clientCache.get(cacheKey);
     if (cached) return cached;
@@ -396,6 +399,7 @@ export const contentManager = {
 // Knowledge base accessors
 export const knowledgeBase = {
   async getSources(ids?: string[]): Promise<KnowledgeSource[]> {
+    if (!hasPublicSupabaseEnv) return [];
     if (!ids || ids.length === 0) {
       const cachedAll = clientCache.get(cacheKeys.kbSources());
       if (cachedAll) return cachedAll as KnowledgeSource[];
@@ -456,6 +460,7 @@ export const knowledgeBase = {
     return new Map(sources.map((source) => [source.id, source]));
   },
   async getRules(locale?: KnowledgeLocale): Promise<KnowledgeRule[]> {
+    if (!hasPublicSupabaseEnv) return [];
     const cacheKey = cacheKeys.kbRules(locale);
     const cached = clientCache.get(cacheKey);
     if (cached) return cached;
@@ -506,6 +511,7 @@ export const knowledgeBase = {
   },
 
   async getFoods(locale?: KnowledgeLocale): Promise<KnowledgeFood[]> {
+    if (!hasPublicSupabaseEnv) return [];
     const cacheKey = cacheKeys.kbFoods(locale);
     const cached = clientCache.get(cacheKey);
     if (cached) return cached;
@@ -533,6 +539,7 @@ export const knowledgeBase = {
   },
 
   async getFoodBySlug(slug: string): Promise<KnowledgeFood | null> {
+    if (!hasPublicSupabaseEnv) return null;
     const cacheKey = cacheKeys.kbFood(slug);
     const cached = clientCache.get(cacheKey);
     if (cached) return cached;
@@ -556,6 +563,7 @@ export const knowledgeBase = {
   },
 
   async getGuides(filters?: { locale?: KnowledgeLocale; guideType?: KnowledgeGuide['guide_type'] }): Promise<KnowledgeGuide[]> {
+    if (!hasPublicSupabaseEnv) return [];
     const locale = filters?.locale;
     const guideType = filters?.guideType;
     const cacheKey = cacheKeys.kbGuides(locale, guideType);
@@ -618,6 +626,7 @@ export const knowledgeBase = {
     topicSlug?: string;
     foodId?: string;
   }): Promise<KnowledgeFAQ[]> {
+    if (!hasPublicSupabaseEnv) return [];
     const { category, locale, topicSlug, foodId } = filters || {};
     const cacheKey = `faqs-${category || 'all'}-${locale || 'all'}-${topicSlug || 'all'}-${foodId || 'all'}`;
     const cached = clientCache.get(cacheKey);
