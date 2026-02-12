@@ -52,6 +52,16 @@ function generateSlug(title) {
     .substring(0, 100);
 }
 
+function normalizeTopicKey(topic) {
+  return String(topic || '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/['"`]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function shuffleArray(items) {
   for (let i = items.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -63,6 +73,24 @@ const HUB_MINIMUMS = {
   development: 2,
   'mom-health': 2
 };
+
+const TOPIC_FAMILY_LIMITS = {
+  milestones: 2
+};
+
+function detectTopicFamily(topic) {
+  const text = normalizeTopicKey(topic);
+  if (
+    text.includes('milestone') ||
+    text.includes('month by month') ||
+    text.includes('months old') ||
+    text.includes('development at') ||
+    text.includes('developmental milestones')
+  ) {
+    return 'milestones';
+  }
+  return 'general';
+}
 
 function selectTopicsForRun(topics, maxArticles, specifiedHub) {
   if (!Array.isArray(topics) || topics.length === 0) return [];
@@ -78,6 +106,31 @@ function selectTopicsForRun(topics, maxArticles, specifiedHub) {
   const selected = [];
   const selectedKeys = new Set();
   const byHub = new Map();
+  const hubCounts = new Map();
+  const familyCounts = new Map();
+  const maxPerHub = Math.max(2, Math.floor(maxArticles * 0.4));
+
+  const registerTopic = (topic) => {
+    selected.push(topic);
+    selectedKeys.add(topic.topic);
+    hubCounts.set(topic.hub, (hubCounts.get(topic.hub) || 0) + 1);
+    const family = detectTopicFamily(topic.topic);
+    familyCounts.set(family, (familyCounts.get(family) || 0) + 1);
+  };
+
+  const canSelectByDiversity = (topic) => {
+    const currentHubCount = hubCounts.get(topic.hub) || 0;
+    if (currentHubCount >= maxPerHub) {
+      return false;
+    }
+
+    const family = detectTopicFamily(topic.topic);
+    const familyLimit = TOPIC_FAMILY_LIMITS[family];
+    if (!familyLimit) return true;
+
+    const currentFamilyCount = familyCounts.get(family) || 0;
+    return currentFamilyCount < familyLimit;
+  };
 
   for (const topic of shuffled) {
     if (!byHub.has(topic.hub)) {
@@ -91,16 +144,31 @@ function selectTopicsForRun(topics, maxArticles, specifiedHub) {
     if (hubTopics.length === 0) continue;
     const takeCount = Math.min(minCount, hubTopics.length);
     for (const topic of hubTopics.slice(0, takeCount)) {
-      const key = topic.topic;
-      if (!selectedKeys.has(key)) {
-        selected.push(topic);
-        selectedKeys.add(key);
+      if (!selectedKeys.has(topic.topic)) {
+        registerTopic(topic);
       }
     }
   }
 
   const remaining = shuffled.filter(topic => !selectedKeys.has(topic.topic));
-  return [...selected, ...remaining].slice(0, maxArticles);
+
+  for (const topic of remaining) {
+    if (selected.length >= maxArticles) break;
+    if (!canSelectByDiversity(topic)) {
+      continue;
+    }
+    registerTopic(topic);
+  }
+
+  if (selected.length < maxArticles) {
+    for (const topic of remaining) {
+      if (selected.length >= maxArticles) break;
+      if (selectedKeys.has(topic.topic)) continue;
+      registerTopic(topic);
+    }
+  }
+
+  return selected.slice(0, maxArticles);
 }
 
 /**
@@ -533,6 +601,8 @@ IMPORTANT:
 - Only include topics that are clearly related to maternal/infant health, parenting, baby care, pregnancy, child development, or parent health/wellbeing
 - Convert to question format when possible
 - Match to the most appropriate hub
+- Keep topic distribution diverse across hubs; avoid over-concentrating in "development"
+- Do not output mostly milestone-style topics (month-by-month/developmental milestones). Cap those at about 20% of output.
 - If a topic is not related to maternal/infant health, skip it
 - Return a JSON object with a "topics" array containing the converted topics
 
@@ -654,11 +724,19 @@ async function main() {
         if (trendingTopicsConverted.length > 0) {
           // 3. 检查这些主题是否已存在于数据库
           const filteredTrendingTopics = [];
+          const seenTrendingTopicKeys = new Set();
           for (const topic of trendingTopicsConverted) {
             // 如果指定了 hub，只保留匹配的
             if (specifiedHub && topic.hub !== specifiedHub) {
               continue;
             }
+
+            const topicKey = normalizeTopicKey(topic.topic);
+            if (seenTrendingTopicKeys.has(topicKey)) {
+              console.log(`⏭️  跳过重复 trending topic: ${topic.topic}`);
+              continue;
+            }
+            seenTrendingTopicKeys.add(topicKey);
 
             const existsCheck = await articleExists(topic.topic);
             if (!existsCheck.exists) {

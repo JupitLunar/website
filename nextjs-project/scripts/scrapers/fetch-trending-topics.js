@@ -137,6 +137,42 @@ const GOOGLE_TRENDS_RSS_URL = 'https://trends.google.com/trends/trendingsearches
 const GOOGLE_NEWS_RSS_BASE = 'https://news.google.com/rss/search?q=';
 const BING_NEWS_RSS_BASE = 'https://www.bing.com/news/search?q=';
 
+function normalizeTopic(topic) {
+  return String(topic || '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/['"`]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function deduplicateTopics(topics) {
+  const seen = new Map();
+  const deduped = [];
+  const duplicates = [];
+
+  for (const topic of topics || []) {
+    const rawTopic = String(topic || '').trim();
+    if (!rawTopic) continue;
+    const key = normalizeTopic(rawTopic);
+    if (!key) continue;
+
+    if (seen.has(key)) {
+      duplicates.push({
+        canonical: seen.get(key),
+        duplicate: rawTopic
+      });
+      continue;
+    }
+
+    seen.set(key, rawTopic);
+    deduped.push(rawTopic);
+  }
+
+  return { deduped, duplicates };
+}
+
 /**
  * 从 Google Trends 获取热门话题（API）
  */
@@ -214,12 +250,9 @@ async function fetchFromGoogleTrends() {
       return null; // 返回 null 表示失败，需要尝试 Reddit
     }
     
-    // 去重
-    const uniqueTopics = [...new Set(topics)];
-    
-    if (uniqueTopics.length > 0) {
-      logInfo(`✅ 从 Google Trends 获取到 ${uniqueTopics.length} 个热门话题`);
-      return uniqueTopics.slice(0, 20); // 最多返回20个
+    if (topics.length > 0) {
+      logInfo(`✅ 从 Google Trends 获取到 ${topics.length} 个热门话题（原始）`);
+      return topics.slice(0, 50);
     }
     
     return [];
@@ -259,10 +292,9 @@ async function fetchFromGoogleTrendsRss() {
       }
     });
 
-    const uniqueTopics = [...new Set(topics)];
-    if (uniqueTopics.length > 0) {
-      logInfo(`✅ 从 Google Trends RSS 获取到 ${uniqueTopics.length} 个热门话题`);
-      return uniqueTopics.slice(0, 20);
+    if (topics.length > 0) {
+      logInfo(`✅ 从 Google Trends RSS 获取到 ${topics.length} 个热门话题（原始）`);
+      return topics.slice(0, 50);
     }
 
     return [];
@@ -311,10 +343,9 @@ async function fetchFromGoogleNewsRss() {
       }
     }
 
-    const uniqueTopics = [...new Set(topics)];
-    if (uniqueTopics.length > 0) {
-      logInfo(`✅ 从 Google News RSS 获取到 ${uniqueTopics.length} 个相关话题`);
-      return uniqueTopics.slice(0, 20);
+    if (topics.length > 0) {
+      logInfo(`✅ 从 Google News RSS 获取到 ${topics.length} 个相关话题（原始）`);
+      return topics.slice(0, 50);
     }
 
     return [];
@@ -359,10 +390,9 @@ async function fetchFromBingNewsRss() {
       }
     }
 
-    const uniqueTopics = [...new Set(topics)];
-    if (uniqueTopics.length > 0) {
-      logInfo(`✅ 从 Bing News RSS 获取到 ${uniqueTopics.length} 个相关话题`);
-      return uniqueTopics.slice(0, 20);
+    if (topics.length > 0) {
+      logInfo(`✅ 从 Bing News RSS 获取到 ${topics.length} 个相关话题（原始）`);
+      return topics.slice(0, 50);
     }
 
     return [];
@@ -411,12 +441,9 @@ async function fetchFromReddit() {
       }
     }
     
-    // 去重
-    const uniqueTopics = [...new Set(topics)];
-    
-    if (uniqueTopics.length > 0) {
-      logInfo(`✅ 从 Reddit 获取到 ${uniqueTopics.length} 个热门话题`);
-      return uniqueTopics.slice(0, 20); // 最多返回20个
+    if (topics.length > 0) {
+      logInfo(`✅ 从 Reddit 获取到 ${topics.length} 个热门话题（原始）`);
+      return topics.slice(0, 50);
     }
     
     return [];
@@ -431,35 +458,9 @@ async function fetchFromReddit() {
  * 优先 Google Trends RSS，失败则降级到 Google Trends API，再降级到 Reddit
  */
 async function fetchTrendingTopics() {
-  logInfo('🔍 开始获取 Trending Topics...\n');
-  
-  // 优先尝试 Google Trends RSS
-  let topics = await fetchFromGoogleTrendsRss();
-  
-  // 如果 RSS 失败（返回 null）或没有结果，尝试 Google Trends API
-  if (topics === null || topics.length === 0) {
-    logInfo('📈 降级到 Google Trends API...\n');
-    topics = await fetchFromGoogleTrends();
-  }
+  const audit = await fetchTrendingTopicsWithAudit();
+  const topics = audit.topics || [];
 
-  // 如果 RSS/API 失败（返回 null）或没有结果，尝试 Google News RSS
-  if (topics === null || topics.length === 0) {
-    logInfo('📰 降级到 Google News RSS...\n');
-    topics = await fetchFromGoogleNewsRss();
-  }
-
-  // 如果仍然没有结果，尝试 Bing News RSS
-  if (topics === null || topics.length === 0) {
-    logInfo('📰 降级到 Bing News RSS...\n');
-    topics = await fetchFromBingNewsRss();
-  }
-
-  // 如果仍然没有结果，尝试 Reddit
-  if (topics === null || topics.length === 0) {
-    logInfo('📱 降级到 Reddit 数据源...\n');
-    topics = await fetchFromReddit();
-  }
-  
   if (topics.length === 0) {
     logInfo('⚠️  未能获取到 trending topics\n');
     return [];
@@ -472,6 +473,74 @@ async function fetchTrendingTopics() {
   logInfo('');
   
   return topics;
+}
+
+async function fetchTrendingTopicsWithAudit() {
+  logInfo('🔍 开始获取 Trending Topics...\n');
+
+  const sourceChain = [
+    { name: 'google_trends_rss', fetcher: fetchFromGoogleTrendsRss, fallbackLog: '📈 降级到 Google Trends API...\n' },
+    { name: 'google_trends_api', fetcher: fetchFromGoogleTrends, fallbackLog: '📰 降级到 Google News RSS...\n' },
+    { name: 'google_news_rss', fetcher: fetchFromGoogleNewsRss, fallbackLog: '📰 降级到 Bing News RSS...\n' },
+    { name: 'bing_news_rss', fetcher: fetchFromBingNewsRss, fallbackLog: '📱 降级到 Reddit 数据源...\n' },
+    { name: 'reddit', fetcher: fetchFromReddit }
+  ];
+
+  const attempts = [];
+
+  for (let i = 0; i < sourceChain.length; i++) {
+    const source = sourceChain[i];
+    const startedAt = new Date();
+
+    let topics = null;
+    let error = null;
+    try {
+      topics = await source.fetcher();
+    } catch (err) {
+      topics = null;
+      error = err.message;
+    }
+
+    const rawTopics = Array.isArray(topics) ? topics : [];
+    const deduped = deduplicateTopics(rawTopics);
+    const uniqueTopics = deduped.deduped.slice(0, 20);
+
+    const status = topics === null
+      ? 'failed'
+      : uniqueTopics.length > 0
+        ? 'success'
+        : 'empty';
+
+    attempts.push({
+      source: source.name,
+      status,
+      started_at: startedAt.toISOString(),
+      finished_at: new Date().toISOString(),
+      raw_count: rawTopics.length,
+      unique_count: uniqueTopics.length,
+      duplicate_count: deduped.duplicates.length,
+      error: error || null,
+      top_topics: uniqueTopics.slice(0, 10)
+    });
+
+    if (uniqueTopics.length > 0) {
+      return {
+        source: source.name,
+        topics: uniqueTopics,
+        attempts
+      };
+    }
+
+    if (i < sourceChain.length - 1 && source.fallbackLog) {
+      logInfo(source.fallbackLog);
+    }
+  }
+
+  return {
+    source: 'none',
+    topics: [],
+    attempts
+  };
 }
 
 // 如果直接运行此脚本，执行获取
@@ -487,4 +556,13 @@ if (require.main === module) {
     });
 }
 
-module.exports = { fetchTrendingTopics, fetchFromReddit };
+module.exports = {
+  fetchTrendingTopics,
+  fetchTrendingTopicsWithAudit,
+  fetchFromGoogleTrendsRss,
+  fetchFromGoogleTrends,
+  fetchFromGoogleNewsRss,
+  fetchFromBingNewsRss,
+  fetchFromReddit,
+  deduplicateTopics
+};

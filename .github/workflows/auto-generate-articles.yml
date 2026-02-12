@@ -43,6 +43,11 @@ jobs:
         working-directory: ./nextjs-project
         run: npm ci
 
+      - name: Audit daily trend pipeline (Google Trends first)
+        working-directory: ./nextjs-project
+        run: |
+          node scripts/maintenance/audit-trending-topics.js | tee logs/trend-audit-$(date +%Y-%m-%d-%H%M%S).log
+
       - name: Optimize AEO Rules
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -229,7 +234,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: article-generation-logs
-          path: nextjs-project/logs/article-generation-*.log
+          path: |
+            nextjs-project/logs/article-generation-*.log
+            nextjs-project/logs/trend-audit-*.log
+            nextjs-project/logs/trend-audit-*.json
           retention-days: 30
 
       - name: Notify on failure
