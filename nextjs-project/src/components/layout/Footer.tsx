@@ -16,7 +16,7 @@ function Footer() {
 
   const quickLinks = [
     { name: 'About Us', href: '/about' },
-    { name: 'Latest Articles', href: '/latest-articles' },
+    { name: 'Article Library', href: '/articles' },
     { name: 'FAQ', href: '/faq' },
     { name: 'All Topics', href: '/topics' },
     { name: 'Trust & Methods', href: '/trust' },

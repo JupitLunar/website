@@ -164,7 +164,7 @@ export const contentManager = {
     // Note: article_source field may not exist in all databases, so we select it but handle gracefully
     const { data, error } = await supabase
       .from('articles')
-      .select('slug, hub, lang, type, date_published, date_modified, reviewed_by')
+      .select('slug, title, hub, lang, type, date_published, date_modified, reviewed_by')
       .eq('status', 'published')
       .neq('reviewed_by', 'AI Content Generator')  // Primary filter using reviewed_by
       .order('date_published', { ascending: false });

@@ -163,6 +163,9 @@ function Header() {
             <Link href="/insight" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
               Insights
             </Link>
+            <Link href="/articles" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              Articles
+            </Link>
             <Link href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
               FAQ
             </Link>
@@ -304,6 +307,13 @@ function Header() {
                   className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
                 >
                   💡 Insights
+                </Link>
+                <Link
+                  href="/articles"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
+                >
+                  📝 Articles
                 </Link>
                 <Link
                   href="/faq"
