@@ -447,7 +447,8 @@ export function generateHomePageStructuredData({
       "cssSelector": [
         "h1",
         ".hero-subtext",
-        "#guide-download h2"
+        "#guide-download h2",
+        "#homepage-aeo-summary"
       ]
     },
     "mainEntity": {
