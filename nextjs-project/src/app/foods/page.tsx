@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import FoodCard from '@/components/FoodCard';
 import FoodFilters, { FilterOptions } from '@/components/FoodFilters';
 import { foodManager } from '@/lib/supabase';
@@ -377,6 +378,33 @@ export default function FoodsPage() {
                 Click on any food to see age-specific cutting and preparation instructions
               </p>
             </motion.div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3 mt-12">
+            <Link
+              href="/products/solidstart"
+              className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Feeding app</span>
+              <h3 className="text-xl font-light text-slate-700 mb-3">Turn food lookups into a calmer solid-start plan</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Use Solid Start for recipes, BLW planning, allergen guidance, and lunchbox ideas once you know the food basics.</p>
+            </Link>
+            <Link
+              href="/faq"
+              className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">FAQ path</span>
+              <h3 className="text-xl font-light text-slate-700 mb-3">Need bigger-picture feeding answers?</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Jump into the baby feeding FAQ for solids readiness, allergen timing, portions, and food safety questions.</p>
+            </Link>
+            <Link
+              href="/trust"
+              className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Trust</span>
+              <h3 className="text-xl font-light text-slate-700 mb-3">See how our food guidance is sourced</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Review the CDC, AAP, WHO, CPS, and Health Canada content process behind the database.</p>
+            </Link>
           </div>
         </div>
       </section>

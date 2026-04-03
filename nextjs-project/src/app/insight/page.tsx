@@ -100,8 +100,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !serviceRoleKey) {
     return {
-      title: 'Parenting Insights | Mom AI Agent',
-      description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, development, and parenting.',
+      title: 'Parenting Insights | Feeding, Sleep, Safety & Postpartum | Mom AI Agent',
+      description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, safety, development, and postpartum questions.',
       alternates: {
         canonical: `${baseUrl}/insight`,
       }
@@ -129,18 +129,21 @@ export async function generateMetadata(): Promise<Metadata> {
   const keywordsArray = Array.from(allKeywords).slice(0, 30);
 
   return {
-    title: 'Parenting Insights | Mom AI Agent',
-    description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, development, and parenting.',
+    title: 'Parenting Insights | Feeding, Sleep, Safety & Postpartum | Mom AI Agent',
+    description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, safety, development, and postpartum questions.',
     keywords: [
       'parenting insights',
       'baby care articles',
       'infant care tips',
       'parenting explainers',
+      'baby feeding articles',
+      'newborn sleep articles',
+      'postpartum guidance',
       ...keywordsArray
     ],
     openGraph: {
-      title: 'Parenting Insights | Mom AI Agent',
-      description: 'Evidence-informed explainers and caregiver insights for baby care and parenting.',
+      title: 'Parenting Insights | Feeding, Sleep, Safety & Postpartum | Mom AI Agent',
+      description: 'Evidence-informed explainers and caregiver insights for baby care, feeding, sleep, safety, and postpartum recovery.',
       type: 'website',
       url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight`,
     },
@@ -368,6 +371,35 @@ export default async function InsightPage({
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="grid gap-4 md:grid-cols-3">
+          <Link
+            href="/faq"
+            className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm hover:shadow-md transition-all"
+          >
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">FAQ path</p>
+            <h2 className="text-xl font-light text-slate-700 mb-3">Need faster answers than a full article?</h2>
+            <p className="text-sm text-slate-500 leading-relaxed">Jump into the FAQ for common feeding, allergen, and safety questions when you want a faster summary.</p>
+          </Link>
+          <Link
+            href="/products/dearbaby"
+            className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm hover:shadow-md transition-all"
+          >
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">Tracking app</p>
+            <h2 className="text-xl font-light text-slate-700 mb-3">Turn insights into daily tracking with DearBaby</h2>
+            <p className="text-sm text-slate-500 leading-relaxed">Use DearBaby when reading about feeding and sleep patterns turns into something you want to monitor every day.</p>
+          </Link>
+          <Link
+            href="/products/solidstart"
+            className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm hover:shadow-md transition-all"
+          >
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">Feeding app</p>
+            <h2 className="text-xl font-light text-slate-700 mb-3">Move from articles into first-food planning</h2>
+            <p className="text-sm text-slate-500 leading-relaxed">Use Solid Start when you are ready to turn feeding research into recipes, BLW planning, and allergen routines.</p>
+          </Link>
         </div>
       </section>
 

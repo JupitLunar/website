@@ -4,9 +4,9 @@ import { knowledgeBase } from '@/lib/supabase';
 import type { KnowledgeRule, KnowledgeGuide, KnowledgeFood, KnowledgeSource } from '@/types/content';
 
 export const metadata = {
-  title: 'Trust & Content Curation Methods | JupitLunar',
+  title: 'Trust & Content Curation Methods | Mom AI Agent',
   description:
-    'See how JupitLunar curates and organizes evidence-based guidance from CDC, AAP, and Health Canada for North American infant and toddler feeding.',
+    'See how Mom AI Agent curates and organizes evidence-based guidance from CDC, AAP, WHO, CPS, and Health Canada for parenting answers, food guidance, and baby-care tools.',
 };
 
 function buildStructuredData({
@@ -31,9 +31,9 @@ function buildStructuredData({
   return {
     '@context': 'https://schema.org',
     '@type': 'HealthTopicContent',
-    name: 'JupitLunar Trust & Methods',
+    name: 'Mom AI Agent Trust & Methods',
     description:
-      "Content curation methodology and authoritative sources behind JupitLunar's infant and toddler feeding knowledge base.",
+      "Content curation methodology and authoritative sources behind Mom AI Agent's infant and toddler feeding knowledge base.",
     inLanguage: 'en',
     audience: {
       '@type': 'PeopleAudience',
@@ -41,7 +41,7 @@ function buildStructuredData({
     },
     publisher: {
       '@type': 'Organization',
-      name: 'JupitLunar',
+      name: 'Mom AI Agent',
       url: 'https://www.momaiagent.com',
     },
     about: [
@@ -101,7 +101,7 @@ export default async function TrustCenterPage() {
             Science-Based Content Curation
           </h1>
           <p className="mx-auto max-w-3xl text-lg text-slate-600 leading-relaxed">
-            JupitLunar doesn't create original medical advice. Instead, we systematically aggregate, organize, and present
+            Mom AI Agent doesn't create original medical advice. Instead, we systematically aggregate, organize, and present
             evidence-based guidance from North America's most trusted health authorities: the CDC, AAP (American Academy of Pediatrics),
             and Health Canada.
           </p>
@@ -131,6 +131,24 @@ export default async function TrustCenterPage() {
             <p className="text-3xl font-semibold text-slate-900">{(guides as KnowledgeGuide[]).length}</p>
             <p className="text-sm text-slate-600">Step-by-step guides</p>
           </div>
+        </section>
+
+        <section className="grid gap-6 md:grid-cols-3">
+          <Link href="/insight" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all">
+            <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Insights</span>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">See how source-backed explainers are packaged for parents</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">Move from trust and methods into practical parenting explainers and caregiver-oriented summaries.</p>
+          </Link>
+          <Link href="/foods" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all">
+            <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Food database</span>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">Open the food-by-food database</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">Check how curated source material turns into cut sizes, textures, and age-specific feeding guidance.</p>
+          </Link>
+          <Link href="/products/solidstart" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all">
+            <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Product path</span>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">Move from trust into Solid Start</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">See how the same evidence base powers recipes, BLW planning, and first-food tools inside the app.</p>
+          </Link>
         </section>
 
         <section className="space-y-6 rounded-3xl border-2 border-purple-100 bg-gradient-to-br from-purple-50 to-pink-50 p-8 shadow-lg">
@@ -313,7 +331,7 @@ export default async function TrustCenterPage() {
             <h2 className="text-2xl font-bold text-slate-900">Trusted Source Organizations</h2>
           </div>
           <p className="text-slate-700 leading-relaxed">
-            JupitLunar aggregates guidance exclusively from North America's most authoritative health organizations.
+            Mom AI Agent aggregates guidance exclusively from North America's most authoritative health organizations.
             We don't create our own medical advice—we organize theirs.
           </p>
           <div className="grid md:grid-cols-3 gap-4">
