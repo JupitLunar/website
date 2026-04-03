@@ -11,6 +11,27 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import { generateMedicalWebPageSchema } from '@/lib/aeo-optimizations';
 
+const RELATED_SOLIDSTART_PATHS = [
+  {
+    href: '/foods',
+    label: 'Food database',
+    title: 'Check cut sizes, textures, and food-by-food guidance',
+    description: 'Use the foods database when you need a quick answer about preparation, safety, or age fit.',
+  },
+  {
+    href: '/faq',
+    label: 'FAQ path',
+    title: 'Review feeding, allergen, and portion questions',
+    description: 'Move from recipe planning into higher-level questions about solids readiness and safe feeding.',
+  },
+  {
+    href: '/products/dearbaby',
+    label: 'Companion app',
+    title: 'Pair Solid Start with DearBaby tracking',
+    description: 'Use DearBaby for sleep and feed logs while Solid Start handles first foods and BLW planning.',
+  },
+];
+
 export default function SolidStartProductPage() {
   const features = [
     {
@@ -722,6 +743,20 @@ export default function SolidStartProductPage() {
                   </motion.div>
                 ))}
               </div>
+
+              <div className="grid gap-4 md:grid-cols-3 mt-10">
+                {RELATED_SOLIDSTART_PATHS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-[2rem] border border-orange-100/40 bg-white p-6 text-left shadow-sm hover:shadow-md transition-all"
+                  >
+                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{item.label}</span>
+                    <h3 className="text-xl font-light text-slate-700 mb-3">{item.title}</h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">{item.description}</p>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -738,9 +773,14 @@ export default function SolidStartProductPage() {
                 <p className="text-lg text-slate-500 font-light leading-relaxed">
                   Solid Start is powered by the same evidence-based RAG engine that fuels MomAI Agent. Our apps work together to provide a seamless, safe journey from pregnancy through early childhood.
                 </p>
-                <Link href="/" className="mt-6 inline-flex items-center gap-2 text-indigo-500 font-medium hover:text-indigo-600 transition-colors">
-                  Explore the full ecosystem →
-                </Link>
+                <div className="mt-6 flex flex-wrap gap-4">
+                  <Link href="/" className="inline-flex items-center gap-2 text-indigo-500 font-medium hover:text-indigo-600 transition-colors">
+                    Explore the full ecosystem →
+                  </Link>
+                  <Link href="/products/dearbaby" className="inline-flex items-center gap-2 text-slate-500 font-medium hover:text-indigo-600 transition-colors">
+                    Pair with DearBaby tracking →
+                  </Link>
+                </div>
               </div>
             </div>
 

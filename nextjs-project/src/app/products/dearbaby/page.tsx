@@ -10,6 +10,27 @@ import NewsletterSignup from '@/components/NewsletterSignup';
 import MedicalDisclaimer from '@/components/MedicalDisclaimer';
 import { generateMedicalWebPageSchema } from '@/lib/aeo-optimizations';
 
+const RELATED_DEARBABY_PATHS = [
+  {
+    href: '/products/solidstart',
+    label: 'Next app',
+    title: 'Explore Solid Start for first foods and BLW',
+    description: 'Move from tracking into recipes, allergen guidance, and starting-solids planning.',
+  },
+  {
+    href: '/faq',
+    label: 'FAQ path',
+    title: 'Browse common feeding and safety questions',
+    description: 'Use the main FAQ page for feeding readiness, portions, food safety, and allergen questions.',
+  },
+  {
+    href: '/',
+    label: 'Answer hub',
+    title: 'Return to the Mom AI Agent search homepage',
+    description: 'Search broader parenting questions across feeding, sleep, fever, safety, and postpartum recovery.',
+  },
+];
+
 export default function DearBabyProductPage() {
   const features = [
     {
@@ -577,6 +598,20 @@ export default function DearBabyProductPage() {
                   </motion.div>
                 ))}
               </div>
+
+              <div className="grid gap-4 md:grid-cols-3 mt-10">
+                {RELATED_DEARBABY_PATHS.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-[2rem] border border-indigo-100/40 bg-white p-6 text-left shadow-sm hover:shadow-md transition-all"
+                  >
+                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{item.label}</span>
+                    <h3 className="text-xl font-light text-slate-700 mb-3">{item.title}</h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">{item.description}</p>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -593,9 +628,14 @@ export default function DearBabyProductPage() {
                 <p className="text-lg text-slate-500 font-light leading-relaxed">
                   DearBaby is the core tracking component of the MomAI Agent mission. Together with Solid Start, we provide a unified evidence-based journey for modern parents.
                 </p>
-                <Link href="/" className="mt-6 inline-flex items-center gap-2 text-indigo-500 font-medium hover:text-indigo-600 transition-colors">
-                  Explore the full ecosystem →
-                </Link>
+                <div className="mt-6 flex flex-wrap gap-4">
+                  <Link href="/" className="inline-flex items-center gap-2 text-indigo-500 font-medium hover:text-indigo-600 transition-colors">
+                    Explore the full ecosystem →
+                  </Link>
+                  <Link href="/faq" className="inline-flex items-center gap-2 text-slate-500 font-medium hover:text-indigo-600 transition-colors">
+                    Browse feeding and safety FAQ →
+                  </Link>
+                </div>
               </div>
             </div>
 

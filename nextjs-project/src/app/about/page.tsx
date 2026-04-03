@@ -59,6 +59,44 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="py-16 px-4 sm:px-8 bg-white border-y border-slate-100">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            className="text-center mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <p className="uppercase tracking-[0.4em] text-xs text-slate-400 mb-4">Start here</p>
+            <h2 className="text-4xl md:text-5xl font-light text-slate-500 mb-6">
+              The fastest paths through the Mom AI Agent ecosystem
+            </h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed">
+              If you are new here, start with the answer hub for research, DearBaby for tracking, or Solid Start for first-food planning.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <Link href="/" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-violet-50/30 p-6 text-slate-600 hover:text-violet-500 transition-colors shadow-sm">
+              <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Answer hub</span>
+              <h3 className="text-2xl font-light text-slate-500 mb-3">Search feeding, sleep, safety, and postpartum questions</h3>
+              <p className="text-sm leading-relaxed">Use the main Mom AI Agent homepage to find structured answers and cited public-health guidance.</p>
+            </Link>
+            <Link href="/products/dearbaby" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-indigo-50/30 p-6 text-slate-600 hover:text-indigo-500 transition-colors shadow-sm">
+              <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Tracking app</span>
+              <h3 className="text-2xl font-light text-slate-500 mb-3">Use DearBaby for feeds, sleep, diapers, and growth</h3>
+              <p className="text-sm leading-relaxed">Move from research to daily logging with AI summaries and calmer infant routines.</p>
+            </Link>
+            <Link href="/products/solidstart" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-orange-50/30 p-6 text-slate-600 hover:text-orange-500 transition-colors shadow-sm">
+              <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Feeding app</span>
+              <h3 className="text-2xl font-light text-slate-500 mb-3">Use Solid Start for first foods, BLW, and allergen planning</h3>
+              <p className="text-sm leading-relaxed">Get recipes, cut sizes, lunchbox ideas, and a calmer route into starting solids.</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Mission Section */}
       <section className="py-20 px-4 sm:px-8 bg-white">
         <div className="container mx-auto max-w-6xl">
@@ -401,6 +439,18 @@ export default function AboutPage() {
               <div>
                 <h3 className="text-2xl font-light text-slate-500 mb-6">Quick Links</h3>
                 <div className="space-y-3">
+                  <Link href="/products/dearbaby" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    DearBaby App
+                  </Link>
+                  <Link href="/products/solidstart" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    Solid Start App
+                  </Link>
                   <Link href="/privacy" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -453,6 +503,12 @@ export default function AboutPage() {
                 className="px-10 py-5 bg-white text-slate-500 rounded-2xl font-light text-xl hover:bg-slate-50 transition-colors shadow-sm"
               >
                 Explore Knowledge Base
+              </Link>
+              <Link
+                href="/products/dearbaby"
+                className="px-10 py-5 bg-slate-500/50 backdrop-blur-sm text-white rounded-2xl font-light text-xl hover:bg-slate-500/70 transition-colors border-2 border-white/30"
+              >
+                Explore DearBaby
               </Link>
               <button
                 onClick={() => {

@@ -47,8 +47,8 @@ const FAQ_DATA = [
 ];
 
 export const metadata = {
-  title: 'Baby Feeding FAQ | Mom AI Agent',
-  description: 'Evidence-informed answers to common baby feeding questions, including solids readiness, safety, allergens, and nutrition.',
+  title: 'Baby Feeding FAQ | Solids, Allergens & Food Safety | Mom AI Agent',
+  description: 'Evidence-informed answers to baby feeding questions about starting solids, food safety, allergens, portions, and nutrition, with clear next steps into foods, Solid Start, and trust pages.',
   keywords: [
     'baby feeding FAQ', 'infant nutrition questions', 'baby food safety', 
     'when to start baby food', 'baby feeding problems', 'infant feeding guide',
@@ -94,6 +94,12 @@ export default function FAQPage() {
                 className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-500 hover:text-violet-500 transition-colors"
               >
                 Methods and sources
+              </Link>
+              <Link
+                href="/products/solidstart"
+                className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-500 hover:text-violet-500 transition-colors"
+              >
+                Solid Start app
               </Link>
             </div>
           </div>
@@ -141,6 +147,29 @@ export default function FAQPage() {
               >
                 <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Trust and transparency</span>
                 Review our methodology and the source registry behind each recommendation.
+              </Link>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3 mt-4">
+              <Link
+                href="/products/solidstart"
+                className="rounded-2xl border border-slate-200 bg-white/70 p-4 text-sm text-slate-600 hover:text-violet-500 transition-colors"
+              >
+                <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Starting solids app</span>
+                Move from feeding FAQs into DearBaby Solid Start recipes, BLW ideas, and allergen planning.
+              </Link>
+              <Link
+                href="/foods"
+                className="rounded-2xl border border-slate-200 bg-white/70 p-4 text-sm text-slate-600 hover:text-violet-500 transition-colors"
+              >
+                <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Food database</span>
+                Check cut sizes, textures, and age guidance for first foods and everyday meals.
+              </Link>
+              <Link
+                href="/"
+                className="rounded-2xl border border-slate-200 bg-white/70 p-4 text-sm text-slate-600 hover:text-violet-500 transition-colors"
+              >
+                <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">Ask Mom AI Agent</span>
+                Search feeding, sleep, safety, and postpartum questions from the main answer hub.
               </Link>
             </div>
           </div>
