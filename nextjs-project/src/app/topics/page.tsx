@@ -286,6 +286,33 @@ export default async function TopicsLibraryPage() {
           </div>
         </section>
 
+        <section className="grid gap-6 md:grid-cols-3">
+          <Link
+            href="/faq"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all"
+          >
+            <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">FAQ path</span>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">Need shorter feeding answers first?</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">Go to the FAQ for faster answers on solids readiness, allergen timing, portions, and food safety.</p>
+          </Link>
+          <Link
+            href="/products/dearbaby"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all"
+          >
+            <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Tracking app</span>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">Turn guidance into daily tracking with DearBaby</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">Use DearBaby when a topic leads to something you want to log every day, like feeds, sleep, diapers, or growth.</p>
+          </Link>
+          <Link
+            href="/products/solidstart"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-all"
+          >
+            <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Feeding app</span>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">Move from topic research into Solid Start</h2>
+            <p className="text-sm text-slate-600 leading-relaxed">Use Solid Start when your next step is recipes, BLW planning, allergen routines, or first-food prep.</p>
+          </Link>
+        </section>
+
         {/* Evidence Registry */}
         <section className="space-y-6">
           <div className="flex items-center justify-between pb-4 border-b border-slate-200">

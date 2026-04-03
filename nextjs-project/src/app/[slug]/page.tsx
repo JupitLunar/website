@@ -388,6 +388,33 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     </ol>
                   </div>
                 )}
+
+                <div className="grid gap-4 md:grid-cols-3 mb-8">
+                  <Link
+                    href="/faq"
+                    className="rounded-2xl border border-indigo-100 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
+                  >
+                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">FAQ</span>
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Need the faster answer?</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">Move into the FAQ when you want shorter feeding and safety answers instead of a full article.</p>
+                  </Link>
+                  <Link
+                    href="/products/dearbaby"
+                    className="rounded-2xl border border-indigo-100 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
+                  >
+                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">DearBaby</span>
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Need to track this in real life?</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">Use DearBaby for feeds, sleep, diapers, and growth when this advice turns into something ongoing.</p>
+                  </Link>
+                  <Link
+                    href="/products/solidstart"
+                    className="rounded-2xl border border-indigo-100 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
+                  >
+                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Solid Start</span>
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Need first-food planning next?</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">Go to Solid Start for recipes, BLW planning, and allergen routines when the article points toward feeding action.</p>
+                  </Link>
+                </div>
               </div>
             </div>
           </section>

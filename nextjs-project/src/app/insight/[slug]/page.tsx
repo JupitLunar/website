@@ -583,6 +583,41 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
           </section>
         )}
 
+        <section className="mb-12">
+          <h2 className="text-2xl font-light text-slate-700 mb-6 flex items-center gap-3">
+            <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Next Step
+          </h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <Link
+              href="/faq"
+              className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">FAQ</span>
+              <h3 className="text-lg font-medium text-slate-700 mb-2">Need a faster version?</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Jump to the feeding and safety FAQ for shorter answers when you do not need the full article.</p>
+            </Link>
+            <Link
+              href="/products/dearbaby"
+              className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">DearBaby</span>
+              <h3 className="text-lg font-medium text-slate-700 mb-2">Need to track this daily?</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Use DearBaby when this guidance needs to turn into feed logs, sleep patterns, or growth notes.</p>
+            </Link>
+            <Link
+              href="/products/solidstart"
+              className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
+            >
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Solid Start</span>
+              <h3 className="text-lg font-medium text-slate-700 mb-2">Need food planning next?</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Use Solid Start when the next step is recipes, BLW prep, allergen routines, or first-food planning.</p>
+            </Link>
+          </div>
+        </section>
+
         {/* Related Articles - Based on Keywords and Hub */}
         <RelatedArticlesSection currentArticle={article} />
 
