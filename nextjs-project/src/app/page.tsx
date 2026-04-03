@@ -105,6 +105,39 @@ const HOME_AEO_SUMMARY = [
   },
 ];
 
+const POPULAR_SEARCH_PATHS = [
+  {
+    title: 'Starting solids at 6 months',
+    href: '/insight/pain-new-mom-feeding-first-foods',
+    description: 'Readiness signs, first foods, and how to introduce solids without overwhelm.',
+  },
+  {
+    title: 'Baby fever when to worry',
+    href: '/insight/pain-midnight-emergency-fever-steps',
+    description: 'Temperature thresholds, red flags, and when urgent care matters most.',
+  },
+  {
+    title: 'How to introduce peanut safely',
+    href: '/insight/pain-allergy-introduction-safety',
+    description: 'A step-by-step allergen intro plan based on NIAID and pediatric guidance.',
+  },
+  {
+    title: 'Newborn sleep schedule',
+    href: '/insight',
+    description: 'Age-based sleep expectations, wake windows, and settling routines.',
+  },
+  {
+    title: 'Baby food database',
+    href: '/foods',
+    description: 'Cut sizes, textures, safety notes, and age guidance for first foods and beyond.',
+  },
+  {
+    title: 'Postpartum recovery guidance',
+    href: '/hub/mom-health',
+    description: 'Warning signs, recovery milestones, and evidence-based maternal care support.',
+  },
+];
+
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [aiQuery, setAiQuery] = useState('');
@@ -538,6 +571,46 @@ function HomePage() {
                 ))}
               </motion.div>
             </motion.div>
+          </div>
+        </section>
+
+        <section className="py-16 px-4 sm:px-8 bg-white/90 border-y border-slate-100">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div
+              className="text-center mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <p className="uppercase tracking-[0.4em] text-sm text-slate-400 mb-4">Popular searches</p>
+              <h2 className="text-4xl font-light text-slate-600 mb-4">The questions parents search before they panic-scroll</h2>
+              <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
+                These pages are organized around common caregiver search intent, with structured answers and linked public-health sources.
+              </p>
+            </motion.div>
+
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {POPULAR_SEARCH_PATHS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group rounded-3xl border border-slate-100 bg-gradient-to-br from-white to-violet-50/40 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-violet-200 hover:shadow-md"
+                >
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">Intent path</p>
+                  <h3 className="text-2xl font-light text-slate-600 mb-4 group-hover:text-violet-600 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-slate-500">{item.description}</p>
+                  <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-violet-500 group-hover:text-violet-600">
+                    Open guide
+                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 
