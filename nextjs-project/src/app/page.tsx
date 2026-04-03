@@ -138,6 +138,27 @@ const POPULAR_SEARCH_PATHS = [
   },
 ];
 
+const PRODUCT_ENTRY_PATHS = [
+  {
+    title: 'DearBaby baby tracker app',
+    href: '/products/dearbaby',
+    description: 'Track feeds, sleep, diapers, and growth with AI summaries and calmer routines.',
+    label: 'Tracking app',
+  },
+  {
+    title: 'Solid Start app alternative',
+    href: '/products/solidstart',
+    description: 'Recipes, BLW planning, allergen guidance, and lunchbox ideas for starting solids.',
+    label: 'Feeding app',
+  },
+  {
+    title: 'Ask evidence-based parenting questions',
+    href: '/faq',
+    description: 'Browse common questions about sleep, fever, solids, postpartum recovery, and safety.',
+    label: 'Answer hub',
+  },
+];
+
 function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [aiQuery, setAiQuery] = useState('');
@@ -342,7 +363,7 @@ function HomePage() {
     return {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "name": "Top caregiver FAQs answered by DearBaby Mom AI Agent",
+      "name": "Top caregiver FAQs answered by Mom AI Agent",
       "mainEntity": TOP_FAQ_ITEMS.map((item, index) => ({
         "@type": "Question",
         "@id": `${siteUrl}/#homepage-faq-${index + 1}`,
@@ -439,7 +460,7 @@ function HomePage() {
                     <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <span className="text-sm font-light text-slate-500">Mom AI Agent- Powered Maternal & Infant Knowledge Base</span>
+                <span className="text-sm font-light text-slate-500">Evidence-based parenting answers, tracking, and solid-start tools</span>
               </motion.div>
 
               {/* 淡雅的主标题 */}
@@ -449,7 +470,7 @@ function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                Trusted Care for
+                Evidence-Based Support for
                 <br />
                 <span className="bg-gradient-to-r from-slate-400 via-violet-400 to-slate-500 bg-clip-text text-transparent">
                   Mom & Baby
@@ -462,7 +483,7 @@ function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
-                Evidence-based guidance for your health journey together.
+                Find structured answers for feeding, sleep, fever, allergens, postpartum recovery, and baby safety, then move into DearBaby or Solid Start when you need daily tools.
               </motion.p>
 
               {/* 权威机构名称 - 淡雅小字 */}
@@ -544,6 +565,13 @@ function HomePage() {
                 >
                   Browse Food Database
                 </Link>
+                <Link
+                  href="/products/dearbaby"
+                  className="text-slate-500 hover:text-slate-700 text-lg px-8 py-4 transition-colors"
+                  aria-label="Explore DearBaby and Solid Start apps"
+                >
+                  Explore DearBaby Apps →
+                </Link>
                 <button
                   onClick={() => {
                     const aiSection = document.getElementById('ai-assistant-section');
@@ -604,6 +632,46 @@ function HomePage() {
                   <p className="text-sm leading-relaxed text-slate-500">{item.description}</p>
                   <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-violet-500 group-hover:text-violet-600">
                     Open guide
+                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 px-4 sm:px-8 bg-gradient-to-br from-white via-emerald-50/20 to-violet-50/20">
+          <div className="container mx-auto max-w-6xl">
+            <motion.div
+              className="text-center mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <p className="uppercase tracking-[0.4em] text-sm text-slate-400 mb-4">Product paths</p>
+              <h2 className="text-4xl font-light text-slate-600 mb-4">Start with answers, then move into the right tool</h2>
+              <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
+                Mom AI Agent works as both an evidence-first answer hub and a product ecosystem for daily parenting decisions.
+              </p>
+            </motion.div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {PRODUCT_ENTRY_PATHS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group rounded-3xl border border-slate-100 bg-white/90 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-md"
+                >
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">{item.label}</p>
+                  <h3 className="text-2xl font-light text-slate-600 mb-4 group-hover:text-emerald-600 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-slate-500">{item.description}</p>
+                  <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-emerald-600 group-hover:text-emerald-700">
+                    Open path
                     <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                     </svg>
@@ -1143,7 +1211,7 @@ function HomePage() {
                 Our Mobile Apps
               </h2>
               <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light">
-                Personalized guidance and tracking tools for your parenting journey
+                Move from research to action with daily-use apps for tracking and starting solids
               </p>
             </motion.div>
 
@@ -1171,6 +1239,13 @@ function HomePage() {
                 <p className="text-slate-400 mb-8 text-lg leading-relaxed font-light">
                   Your AI parenting co-pilot: log feeds & sleep in seconds, auto charts, predictive reminders, and personalized tips for calmer routines.
                 </p>
+
+                <div className="mb-8 rounded-2xl border border-violet-100 bg-violet-50/40 px-5 py-4">
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Best for</p>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    Newborn and infant tracking, feeding logs, sleep patterns, diaper counts, and parents who want an AI summary instead of scattered notes.
+                  </p>
+                </div>
 
                 <div className="space-y-4 mb-8">
                   <div className="flex items-center gap-3">
@@ -1241,6 +1316,13 @@ function HomePage() {
                 <p className="text-slate-400 mb-8 text-lg leading-relaxed font-light">
                   Purées, mashed, soft pieces, and beginner finger foods. Clean, calm interface designed for busy parents introducing solids around 6+ months.
                 </p>
+
+                <div className="mb-8 rounded-2xl border border-purple-100 bg-purple-50/40 px-5 py-4">
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Best for</p>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    Families starting solids, comparing first foods, building BLW meals, and looking for a calmer free alternative to Solid Starts.
+                  </p>
+                </div>
 
                 <div className="space-y-4 mb-8">
                   <div className="flex items-center gap-3">
