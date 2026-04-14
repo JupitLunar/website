@@ -1,3 +1,84 @@
-# https://www.robotstxt.org/robotstxt.html
+# robots.txt for momaiagent.com / DearBaby
+# Last updated: 2026-04-14
+
+# === Block pure SEO analysis tools (no traffic value, high bandwidth cost) ===
+
+User-agent: Barkrowler
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+# === Allow all search engines (traffic value) ===
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Petal
+Allow: /
+
+# === Allow AI crawlers (LLM indexing & AEO value) ===
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+# === Default: allow all others ===
+
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://www.momaiagent.com/sitemap.xml
