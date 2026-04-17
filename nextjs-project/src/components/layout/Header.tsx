@@ -7,21 +7,22 @@ import Image from 'next/image';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isAccessOpen, setIsAccessOpen] = useState(false);
+  const [isTopicsOpen, setIsTopicsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const [showNewsletterModal, setShowNewsletterModal] = useState(false);
-  const [email, setEmail] = useState('');
-  const [newsletterFeedback, setNewsletterFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const [isSubmittingNewsletter, setIsSubmittingNewsletter] = useState(false);
-  const productsMenuRef = useRef<HTMLDivElement>(null);
+  const accessMenuRef = useRef<HTMLDivElement>(null);
+  const topicsMenuRef = useRef<HTMLDivElement>(null);
   const aboutMenuRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
-    if (!isProductsOpen && !isAboutOpen) return;
+    if (!isAccessOpen && !isTopicsOpen && !isAboutOpen) return;
     function handleClickOutside(event: MouseEvent) {
-      if (productsMenuRef.current && !productsMenuRef.current.contains(event.target as Node)) {
-        setIsProductsOpen(false);
+      if (accessMenuRef.current && !accessMenuRef.current.contains(event.target as Node)) {
+        setIsAccessOpen(false);
+      }
+      if (topicsMenuRef.current && !topicsMenuRef.current.contains(event.target as Node)) {
+        setIsTopicsOpen(false);
       }
       if (aboutMenuRef.current && !aboutMenuRef.current.contains(event.target as Node)) {
         setIsAboutOpen(false);
@@ -29,58 +30,7 @@ function Header() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isProductsOpen, isAboutOpen]);
-
-  useEffect(() => {
-    if (!showNewsletterModal) {
-      setNewsletterFeedback(null);
-    }
-  }, [showNewsletterModal]);
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  // 提交邮箱到newsletter
-  async function submitNewsletter(email: string) {
-    if (!email) return false;
-    setNewsletterFeedback(null);
-    setIsSubmittingNewsletter(true);
-
-    try {
-      const response = await fetch('/api/newsletter/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Unable to subscribe right now.');
-      }
-
-      setNewsletterFeedback({
-        type: 'success',
-        message: 'Thanks! Check your inbox for a welcome note and guide.',
-      });
-      setEmail('');
-      return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Something went wrong.';
-      setNewsletterFeedback({
-        type: 'error',
-        message,
-      });
-      return false;
-    } finally {
-      setIsSubmittingNewsletter(false);
-    }
-  }
+  }, [isAccessOpen, isTopicsOpen, isAboutOpen]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100">
@@ -90,17 +40,17 @@ function Header() {
           <Link href="/" className="flex items-center space-x-3">
             <Image
               src="/Assets/Logo.png"
-              alt="DearBaby Logo"
+              alt="Mom AI Agent Logo"
               width={80}
               height={80}
               className="w-20 h-20 object-contain"
             />
             <div className="flex flex-col">
               <span className="text-xl font-semibold bg-gradient-to-r from-primary-500/80 to-primary-600/80 bg-clip-text text-transparent">
-                DearBaby
+                Mom AI Agent
               </span>
               <span className="text-xs text-gray-500 font-light">
-                powered by Mom AI Agent
+                Evidence Intelligence Platform for Mom & Baby
               </span>
             </div>
           </Link>
@@ -111,21 +61,21 @@ function Header() {
               Home
             </Link>
 
-            {/* Products Dropdown */}
-            <div className="relative" ref={productsMenuRef}>
+            {/* Access Dropdown */}
+            <div className="relative" ref={accessMenuRef}>
               <button
                 className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
-                onClick={() => setIsProductsOpen((v) => !v)}
+                onClick={() => setIsAccessOpen((v) => !v)}
                 aria-haspopup="true"
-                aria-expanded={isProductsOpen}
+                aria-expanded={isAccessOpen}
               >
-                <span>Products</span>
-                <svg className={`w-4 h-4 transition-transform duration-200 ${isProductsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span>Access</span>
+                <svg className={`w-4 h-4 transition-transform duration-200 ${isAccessOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
-              {isProductsOpen && (
+              {isAccessOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: -8, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -133,41 +83,95 @@ function Header() {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 py-2 overflow-hidden"
                 >
+                  <div className="px-4 pt-2 pb-1 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">
+                    Public hub
+                  </div>
                   <Link
-                    href="/products/dearbaby"
-                    onClick={() => setIsProductsOpen(false)}
+                    href="/search"
+                    onClick={() => setIsAccessOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    DearBaby Tracker
+                    Answer Hub
+                  </Link>
+                  <Link
+                    href="/foods"
+                    onClick={() => setIsAccessOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    Foods Database
+                  </Link>
+                  <div className="mx-4 my-2 border-t border-gray-100"></div>
+                  <div className="px-4 pt-1 pb-1 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">
+                    Companion apps
+                  </div>
+                  <Link
+                    href="/products/dearbaby"
+                    onClick={() => setIsAccessOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    DearBaby
                   </Link>
                   <Link
                     href="/products/solidstart"
-                    onClick={() => setIsProductsOpen(false)}
+                    onClick={() => setIsAccessOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    DearBaby Solid Food
+                    Solid Start
                   </Link>
                 </motion.div>
               )}
             </div>
 
-            <Link href="/topics" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
-              Topics
-            </Link>
-            <Link href="/programs" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
-              Programs
-            </Link>
-            <Link href="/foods" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
-              Foods
+            <div className="relative" ref={topicsMenuRef}>
+              <button
+                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
+                onClick={() => setIsTopicsOpen((v) => !v)}
+                aria-haspopup="true"
+                aria-expanded={isTopicsOpen}
+              >
+                <span>Topics</span>
+                <svg className={`w-4 h-4 transition-transform duration-200 ${isTopicsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isTopicsOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  className="absolute top-full left-0 mt-3 w-64 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-100/50 py-2 overflow-hidden"
+                >
+                  <Link
+                    href="/topics"
+                    onClick={() => setIsTopicsOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    Topics Library
+                  </Link>
+                  <Link
+                    href="/foods"
+                    onClick={() => setIsTopicsOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    Foods Database
+                  </Link>
+                  <Link
+                    href="/faq"
+                    onClick={() => setIsTopicsOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    FAQ
+                  </Link>
+                </motion.div>
+              )}
+            </div>
+            <Link href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+              FAQ
             </Link>
             <Link href="/insight" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
               Insights
-            </Link>
-            <Link href="/articles" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
-              Articles
-            </Link>
-            <Link href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
-              FAQ
             </Link>
 
             {/* About Dropdown */}
@@ -197,39 +201,52 @@ function Header() {
                     onClick={() => setIsAboutOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    Trust & Methods
+                    Trust Center
                   </Link>
                   <Link
-                    href="/trust#sources"
+                    href="/methodology"
                     onClick={() => setIsAboutOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    Our Sources
+                    Methodology
+                  </Link>
+                  <Link
+                    href="/clinical-review-policy"
+                    onClick={() => setIsAboutOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    Clinical Review Policy
                   </Link>
                   <Link
                     href="/about"
                     onClick={() => setIsAboutOpen(false)}
                     className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
                   >
-                    About Us
+                    About
+                  </Link>
+                  <Link
+                    href="/contact"
+                    onClick={() => setIsAboutOpen(false)}
+                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50/80 transition-all duration-200 text-sm font-medium"
+                  >
+                    Contact
                   </Link>
                 </motion.div>
               )}
             </div>
 
-            {/* Search & Newsletter */}
+            {/* Search & CTA */}
             <Link href="/search" className="text-gray-600 hover:text-gray-900 transition-colors">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </Link>
-            <button
-              onClick={() => setShowNewsletterModal(true)}
+            <Link
+              href="/search"
               className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
-              data-newsletter-trigger
             >
-              Subscribe
-            </button>
+              Ask the Hub
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -256,78 +273,90 @@ function Header() {
                 onClick={() => setIsMenuOpen(false)}
                 className="text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
               >
-                🏠 Home
+                Home
               </Link>
 
-              {/* Products Section */}
+              {/* Access Section */}
               <div className="border-t border-gray-100 pt-3">
-                <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 px-2">Products</div>
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 px-2">Access</div>
+                <Link
+                  href="/search"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  Answer Hub
+                </Link>
+                <Link
+                  href="/foods"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  Foods Database
+                </Link>
+                <div className="mt-2 mb-1 px-4 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">Companion apps</div>
                 <Link
                   href="/products/dearbaby"
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
-                  DearBaby Tracker
+                  DearBaby
                 </Link>
                 <Link
                   href="/products/solidstart"
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
-                  DearBaby Solid Food
+                  Solid Start
                 </Link>
               </div>
 
               {/* Other Links */}
-              <div className="border-t border-gray-100 pt-3 space-y-2">
+              <div className="border-t border-gray-100 pt-3">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 px-2">Topics</div>
                 <Link
                   href="/topics"
                   onClick={() => setIsMenuOpen(false)}
-                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
-                  📚 Topics
-                </Link>
-                <Link
-                  href="/programs"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
-                >
-                  🧭 Programs
+                  Topics Library
                 </Link>
                 <Link
                   href="/foods"
                   onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  Foods Guide
+                </Link>
+                <Link
+                  href="/faq"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  FAQ
+                </Link>
+              </div>
+
+              <div className="border-t border-gray-100 pt-3 space-y-2">
+                <Link
+                  href="/faq"
+                  onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
                 >
-                  🍎 Foods
+                  FAQ
                 </Link>
                 <Link
                   href="/insight"
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
                 >
-                  💡 Insights
-                </Link>
-                <Link
-                  href="/articles"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
-                >
-                  📝 Articles
-                </Link>
-                <Link
-                  href="/faq"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
-                >
-                  ❓ FAQ
+                  Insights
                 </Link>
                 <Link
                   href="/search"
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-700 hover:text-purple-600 transition-colors font-medium px-2 py-2"
                 >
-                  🔍 Search
+                  Search
                 </Link>
               </div>
 
@@ -339,84 +368,59 @@ function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
-                  Trust & Methods
+                  Trust Center
+                </Link>
+                <Link
+                  href="/methodology"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  Methodology
+                </Link>
+                <Link
+                  href="/clinical-review-policy"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  Clinical Review Policy
                 </Link>
                 <Link
                   href="/about"
                   onClick={() => setIsMenuOpen(false)}
                   className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
                 >
-                  About Us
+                  About
+                </Link>
+                <Link
+                  href="/contact"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  Contact
+                </Link>
+                <Link
+                  href="/faq"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-left text-gray-600 hover:text-purple-600 transition-colors text-sm px-4 py-1.5"
+                >
+                  FAQ
                 </Link>
               </div>
 
-              {/* Newsletter Button */}
+              {/* Primary CTA */}
               <div className="pt-3">
-                <button
-                  onClick={() => {
-                    setShowNewsletterModal(true);
-                    setIsMenuOpen(false);
-                  }}
+                <Link
+                  href="/search"
+                  onClick={() => setIsMenuOpen(false)}
                   className="w-full text-center px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
                 >
-                  Subscribe to Newsletter
-                </button>
+                  Ask the Hub
+                </Link>
               </div>
             </nav>
           </motion.div>
         )}
       </div>
-
-      {/* Newsletter 弹窗 */}
-      {showNewsletterModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-3xl p-10 max-w-sm w-full relative border-0 shadow-lg mx-auto my-auto">
-            <button
-              className="absolute top-4 right-4 text-gray-300 hover:text-gray-500 text-2xl font-light focus:outline-none"
-              onClick={() => setShowNewsletterModal(false)}
-              aria-label="Close"
-              style={{ background: 'none', border: 'none', lineHeight: 1 }}
-            >
-              ×
-            </button>
-            <h3 className="text-2xl font-semibold mb-6 text-gray-800 tracking-tight">Subscribe to Newsletter</h3>
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const success = await submitNewsletter(email);
-                if (success) {
-                  setShowNewsletterModal(false);
-                }
-              }}
-              className="space-y-6"
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="w-full px-5 py-3 rounded-xl border border-gray-100 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-200 focus:border-transparent text-base transition-all duration-200 placeholder-gray-400"
-                required
-              />
-              <button
-                type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl text-base font-semibold shadow-none hover:from-purple-700 hover:to-pink-700 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-                disabled={isSubmittingNewsletter}
-              >
-                {isSubmittingNewsletter ? 'Subscribing…' : 'Subscribe'}
-              </button>
-            </form>
-            {newsletterFeedback && (
-              <p
-                className={`mt-4 text-sm ${newsletterFeedback.type === 'success' ? 'text-emerald-500' : 'text-rose-500'}`}
-                role="status"
-              >
-                {newsletterFeedback.message}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
     </header>
   );
 }

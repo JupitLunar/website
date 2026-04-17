@@ -37,7 +37,7 @@ async function loadKnowledge() {
 }
 
 export const metadata = {
-  title: 'Nutrient Priorities: Iron, Vitamin D & Calcium | JupitLunar',
+  title: 'Nutrient Priorities: Iron, Vitamin D & Calcium | Mom AI Agent',
   description:
     'Plan daily iron foods, vitamin D supplementation, and balanced calcium servings for infants and toddlers using WHO, CPS, and NIH guidance.',
 };

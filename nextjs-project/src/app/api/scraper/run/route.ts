@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
+import { requireApiSecret } from '@/lib/api-auth';
 
 /**
  * Web Scraper API
@@ -17,55 +18,15 @@ import path from 'path';
  *   }
  */
 
-// 验证API密钥或Vercel Cron
-function validateRequest(request: NextRequest): boolean {
-  // 方法1: 检查 Vercel Cron 的特殊 header (生产环境)
-  const isVercelCron = request.headers.get('user-agent')?.includes('vercel-cron');
-  if (isVercelCron) {
-    console.log('✅ Vercel Cron 请求验证通过');
-    return true;
-  }
-  
-  // 方法2: 开发环境 - 允许本地测试
-  if (process.env.NODE_ENV === 'development') {
-    console.log('✅ 开发环境，跳过验证');
-    return true;
-  }
-  
-  // 方法3: 检查是否设置了 CRON_SECRET（可选）
-  const authHeader = request.headers.get('authorization');
-  if (process.env.CRON_SECRET && authHeader) {
-    if (authHeader === `Bearer ${process.env.CRON_SECRET}`) {
-      console.log('✅ CRON_SECRET 验证通过');
-      return true;
-    }
-  }
-  
-  // 方法4: 检查手动API调用密钥（可选）
-  if (process.env.SCRAPER_API_KEY && authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.substring(7);
-    if (token === process.env.SCRAPER_API_KEY) {
-      console.log('✅ SCRAPER_API_KEY 验证通过');
-      return true;
-    }
-  }
-  
-  console.log('❌ 验证失败 - 没有有效的认证');
-  return false;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    // 验证请求（API key或Cron secret）
-    if (!validateRequest(request)) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Unauthorized',
-          message: 'Invalid or missing API key or Cron secret'
-        },
-        { status: 401 }
-      );
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['CRON_SECRET', 'SCRAPER_API_KEY'],
+      context: 'scraper run endpoint',
+    });
+
+    if (unauthorized) {
+      return unauthorized;
     }
     
     // 解析请求体
@@ -125,16 +86,13 @@ export async function POST(request: NextRequest) {
 // GET请求 - 获取爬虫状态和配置
 export async function GET(request: NextRequest) {
   try {
-    // 验证请求（API key或Cron secret）
-    if (!validateRequest(request)) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Unauthorized',
-          message: 'Invalid or missing API key or Cron secret'
-        },
-        { status: 401 }
-      );
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['CRON_SECRET', 'SCRAPER_API_KEY'],
+      context: 'scraper run endpoint',
+    });
+
+    if (unauthorized) {
+      return unauthorized;
     }
     
     // 简单返回状态信息（不需要加载配置文件）
@@ -146,7 +104,7 @@ export async function GET(request: NextRequest) {
         endpoint: '/api/scraper/run',
         method: 'POST',
         schedule: '0 12 * * * (Daily at 12:00 UTC / 20:00 Beijing Time)',
-        authentication: 'Vercel Cron (automatic)',
+        authentication: 'Bearer token (CRON_SECRET or SCRAPER_API_KEY)',
         version: '2.0',
         timestamp: new Date().toISOString()
       }
@@ -165,4 +123,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

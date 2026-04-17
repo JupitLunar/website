@@ -14,6 +14,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const projectRef = supabaseUrl ? new URL(supabaseUrl).host.split('.')[0] : '_';
 
 if (!supabaseUrl || !supabaseServiceKey) {
   console.error('❌ Missing required environment variables');
@@ -33,7 +34,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 async function createFAQTable() {
   console.log('🚀 Creating kb_faqs table...\n');
 
-  const sqlPath = path.join(__dirname, '..', 'supabase', 'add_kb_faqs_table.sql');
+  const sqlPath = path.join(__dirname, '..', '..', 'supabase', 'add_kb_faqs_table.sql');
   const sql = fs.readFileSync(sqlPath, 'utf-8');
 
   try {
@@ -56,7 +57,7 @@ async function createFAQTable() {
       // If exec endpoint doesn't exist, we need to use alternative method
       console.log('⚠️  Direct SQL execution not available via API');
       console.log('📋 Please run SQL manually in Supabase dashboard:\n');
-      console.log('   1. Open: https://supabase.com/dashboard/project/_/sql');
+      console.log(`   1. Open: https://supabase.com/dashboard/project/${projectRef}/sql`);
       console.log(`   2. Copy SQL from: ${sqlPath}`);
       console.log('   3. Paste and click "Run"\n');
 
@@ -96,7 +97,7 @@ async function createFAQTable() {
     console.error('❌ Error:', error.message);
     console.log('\n📋 Alternative: Run SQL manually');
     console.log('   File:', sqlPath);
-    console.log('   Dashboard: https://supabase.com/dashboard/project/_/sql');
+    console.log(`   Dashboard: https://supabase.com/dashboard/project/${projectRef}/sql`);
     return;
   }
 

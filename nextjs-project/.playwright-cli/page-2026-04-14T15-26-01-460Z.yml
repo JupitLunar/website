@@ -1,0 +1,157 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Mom AI Agent Logo Mom AI Agent Evidence Intelligence Platform for Mom & Baby" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Mom AI Agent Logo" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Mom AI Agent
+          - generic [ref=e9]: Evidence Intelligence Platform for Mom & Baby
+      - generic [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - button "Products" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]: Products
+          - img [ref=e15]
+        - button "Topics" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: Topics
+          - img [ref=e20]
+        - link "Programs" [ref=e22] [cursor=pointer]:
+          - /url: /programs
+        - link "Insights" [ref=e23] [cursor=pointer]:
+          - /url: /insight
+        - button "About" [ref=e25] [cursor=pointer]:
+          - generic [ref=e26]: About
+          - img [ref=e27]
+        - link [ref=e29] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e30]
+        - link "Ask the Hub" [ref=e32] [cursor=pointer]:
+          - /url: /search
+  - main [ref=e33]:
+    - generic [ref=e34]:
+      - heading "Contact Mom AI Agent" [level=1] [ref=e35]
+      - generic [ref=e36]:
+        - paragraph [ref=e37]: Reach out for partnership conversations, product questions, content corrections, or source updates. Mom AI Agent is the public website, DearBaby is the product family, and JupitLunar is the company operating both.
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - paragraph [ref=e40]: Partnerships
+            - heading "JupitLunar partnerships" [level=2] [ref=e41]
+            - paragraph [ref=e42]: For clinics, employer programs, care teams, licensing, research, or business development conversations.
+            - link "Email partnerships →" [ref=e43] [cursor=pointer]:
+              - /url: mailto:support@momaiagent.com?subject=Partnership%20Inquiry%20for%20JupitLunar
+          - generic [ref=e44]:
+            - paragraph [ref=e45]: Product support
+            - heading "DearBaby support" [level=2] [ref=e46]
+            - paragraph [ref=e47]: For DearBaby tracking, DearBaby Solid Start, App Store issues, account questions, or product feedback.
+            - link "Email support →" [ref=e48] [cursor=pointer]:
+              - /url: mailto:support@momaiagent.com?subject=DearBaby%20Support
+          - generic [ref=e49]:
+            - paragraph [ref=e50]: Corrections
+            - heading "Content and source updates" [level=2] [ref=e51]
+            - paragraph [ref=e52]: For citation fixes, broken links, policy corrections, or evidence-review feedback on public website content.
+            - link "Report an issue →" [ref=e53] [cursor=pointer]:
+              - /url: mailto:support@momaiagent.com?subject=Content%20Correction%20Request
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - heading "Direct Contacts" [level=2] [ref=e56]
+            - generic [ref=e57]:
+              - paragraph [ref=e58]:
+                - generic [ref=e59]: "Email:"
+                - link "support@momaiagent.com" [ref=e60] [cursor=pointer]:
+                  - /url: mailto:support@momaiagent.com
+              - paragraph [ref=e61]:
+                - generic [ref=e62]: "LinkedIn:"
+                - link "DearBaby on LinkedIn" [ref=e63] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/company/dearbabyai
+          - generic [ref=e64]:
+            - heading "Before You Reach Out" [level=3] [ref=e65]
+            - paragraph [ref=e66]: For common parenting questions, use the Answer Hub first. For urgent symptoms or medical concerns, contact your pediatrician, obstetric team, nurse line, or emergency services instead.
+            - generic [ref=e67]:
+              - link "Open Answer Hub" [ref=e68] [cursor=pointer]:
+                - /url: /search
+              - link "Review Trust Center" [ref=e69] [cursor=pointer]:
+                - /url: /trust
+              - link "Browse FAQ" [ref=e70] [cursor=pointer]:
+                - /url: /faq
+      - generic [ref=e71]:
+        - paragraph [ref=e72]: © 2026 JupitLunar. Mom AI Agent and DearBaby are product brands.
+        - paragraph [ref=e73]: This contact page is for support and partnership requests, not for emergency or individualized medical care.
+  - contentinfo [ref=e74]:
+    - generic [ref=e75]:
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - link "Mom AI Agent Logo Mom AI Agent Evidence Intelligence Platform for Mom & Baby" [ref=e78] [cursor=pointer]:
+            - /url: /
+            - img "Mom AI Agent Logo" [ref=e81]
+            - generic [ref=e82]:
+              - generic [ref=e83]: Mom AI Agent
+              - text: Evidence Intelligence Platform for Mom & Baby
+          - paragraph [ref=e84]: Mom AI Agent is the public website. DearBaby and DearBaby Solid Start are consumer apps built by JupitLunar for tracking, feeding, and calmer daily family routines.
+          - generic [ref=e85]:
+            - link "Ask Mom AI Agent" [ref=e86] [cursor=pointer]:
+              - /url: /search
+            - link "Explore Insights" [ref=e87] [cursor=pointer]:
+              - /url: /insight
+            - link "Partner With Us" [ref=e88] [cursor=pointer]:
+              - /url: /contact
+        - generic [ref=e89]:
+          - heading "Explore" [level=3] [ref=e90]
+          - list [ref=e91]:
+            - listitem [ref=e92]:
+              - link "Topics Library" [ref=e93] [cursor=pointer]:
+                - /url: /topics
+            - listitem [ref=e94]:
+              - link "Insights" [ref=e95] [cursor=pointer]:
+                - /url: /insight
+            - listitem [ref=e96]:
+              - link "Foods Database" [ref=e97] [cursor=pointer]:
+                - /url: /foods
+            - listitem [ref=e98]:
+              - link "DearBaby" [ref=e99] [cursor=pointer]:
+                - /url: /products/dearbaby
+            - listitem [ref=e100]:
+              - link "Solid Start" [ref=e101] [cursor=pointer]:
+                - /url: /products/solidstart
+            - listitem [ref=e102]:
+              - link "FAQ" [ref=e103] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e104]:
+          - heading "Trust" [level=3] [ref=e105]
+          - list [ref=e106]:
+            - listitem [ref=e107]:
+              - link "Trust Center" [ref=e108] [cursor=pointer]:
+                - /url: /trust
+            - listitem [ref=e109]:
+              - link "Methodology" [ref=e110] [cursor=pointer]:
+                - /url: /methodology
+            - listitem [ref=e111]:
+              - link "Clinical Review Policy" [ref=e112] [cursor=pointer]:
+                - /url: /clinical-review-policy
+            - listitem [ref=e113]:
+              - link "Data Use Policy" [ref=e114] [cursor=pointer]:
+                - /url: /data-use-policy
+            - listitem [ref=e115]:
+              - link "Privacy" [ref=e116] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e117]:
+              - link "Disclaimer" [ref=e118] [cursor=pointer]:
+                - /url: /disclaimer
+        - generic [ref=e119]:
+          - heading "Stay Updated" [level=3] [ref=e120]
+          - paragraph [ref=e121]: Get website updates, source refreshes, and product news from Mom AI Agent and DearBaby.
+          - generic [ref=e122]:
+            - textbox "Enter your email" [ref=e123]
+            - button "Subscribe" [ref=e124] [cursor=pointer]
+      - generic [ref=e125]:
+        - paragraph [ref=e126]: © 2026 JupitLunar. Mom AI Agent and DearBaby are product brands.
+        - generic [ref=e127]:
+          - link "support@momaiagent.com" [ref=e128] [cursor=pointer]:
+            - /url: mailto:support@momaiagent.com
+          - link "DearBaby on LinkedIn" [ref=e129] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/dearbabyai
+          - link "DearBaby on Instagram" [ref=e130] [cursor=pointer]:
+            - /url: https://www.instagram.com/dearbabyai
+  - button "Open contact chatbot" [ref=e131] [cursor=pointer]:
+    - img [ref=e132]
+  - alert [ref=e134]

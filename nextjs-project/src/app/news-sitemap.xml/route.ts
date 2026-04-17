@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { contentManager } from '@/lib/supabase';
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'JupitLunar';
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Mom AI Agent';
 const newsCutoffHours = 48;
 const limit = 120;
 

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { filterCleanKeywords } from '@/lib/supabase';
+import { filterPublicFacingArticles, INSIGHT_REVIEWERS } from '@/lib/content-surface';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -21,7 +22,7 @@ export async function GET() {
   const { data: articles } = await supabase
     .from('articles')
     .select('slug, title, one_liner, created_at, date_published, date_modified, keywords, hub')
-    .eq('reviewed_by', 'AI Content Generator')
+    .in('reviewed_by', [...INSIGHT_REVIEWERS])
     .eq('status', 'published')
     .order('created_at', { ascending: false })
     .limit(100);
@@ -37,7 +38,7 @@ export async function GET() {
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/insight/rss.xml" rel="self" type="application/rss+xml" />
-    ${articles
+    ${filterPublicFacingArticles(articles || [])
       ?.map((article) => {
         const pubDate = article.date_published || article.created_at;
         const keywords = filterCleanKeywords(article.keywords);

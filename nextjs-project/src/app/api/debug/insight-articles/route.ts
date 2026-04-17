@@ -5,11 +5,21 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireApiSecret } from '@/lib/api-auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['INTERNAL_API_SECRET', 'REVALIDATION_SECRET'],
+      context: 'debug endpoint',
+    });
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     let supabaseHost: string | null = null;
     try {
       if (process.env.NEXT_PUBLIC_SUPABASE_URL) {

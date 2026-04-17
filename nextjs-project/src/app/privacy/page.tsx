@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Learn how we collect, use, and protect your information on MomAI Agent.',
+  description: 'Learn how Mom AI Agent handles website, newsletter, and assistant-related data across its public platform experience.',
 };
 
 export default function PrivacyPage() {
@@ -17,16 +17,15 @@ export default function PrivacyPage() {
             <h1 className="text-4xl md:text-5xl font-light text-slate-700 mb-4">
               Privacy Policy
             </h1>
-            <p className="text-slate-500 text-sm">Last Updated: January 2025</p>
+            <p className="text-slate-500 text-sm">Last Updated: April 2026</p>
           </div>
 
           {/* Introduction */}
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-6 rounded-lg mb-8">
             <h2 className="text-xl font-semibold text-blue-900 mb-3">Our Commitment to Your Privacy</h2>
             <p className="text-blue-800 leading-relaxed">
-              At MomAI Agent, we take your privacy seriously. This policy explains what information we collect,
-              how we use it, and your rights regarding your data. We are committed to transparency and protecting
-              your personal information.
+              This page explains the data boundary for the Mom AI Agent public website experience: what information
+              may be collected, how it is used, and where users should avoid sharing sensitive personal or medical details.
             </p>
           </div>
 
@@ -41,18 +40,18 @@ export default function PrivacyPage() {
 
               <h3 className="text-xl font-medium text-slate-600 mb-3">1.1 Information You Provide</h3>
               <p className="text-slate-600 leading-relaxed mb-4">
-                When you use our AI assistant, we collect:
+                When you use our website, forms, or assistant features, we may collect:
               </p>
               <ul className="list-disc pl-6 mb-6 text-slate-600 space-y-2">
-                <li><strong>Questions and queries</strong> you submit to our AI assistant</li>
-                <li><strong>Email addresses</strong> if you subscribe to our newsletter (optional)</li>
-                <li><strong>Feedback</strong> you provide about our content or services</li>
+                <li><strong>Questions and prompts</strong> you submit through the website experience</li>
+                <li><strong>Email addresses</strong> when you subscribe to updates or contact us</li>
+                <li><strong>Contact, support, partnership, or correction requests</strong> you send through website forms</li>
               </ul>
 
               <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-lg mb-6">
                 <p className="text-green-800">
-                  <strong>✓ We DO NOT collect:</strong> Personal health information, names, birthdates,
-                  medical records, or any personally identifiable health data.
+                  <strong>✓ Important boundary:</strong> The public website is not intended for medical-record storage.
+                  Please avoid entering unnecessary personal health information, full names, birthdates, or other sensitive identifiers into open text fields.
                 </p>
               </div>
 
@@ -88,7 +87,7 @@ export default function PrivacyPage() {
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
                   <h4 className="font-semibold text-slate-700 mb-2">Supabase</h4>
-                  <p className="text-sm text-slate-600">Stores our knowledge base and articles. No personal user data.</p>
+                  <p className="text-sm text-slate-600">Stores website operational records such as content data, newsletter subscriptions, and contact submissions.</p>
                   <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline">
                     Supabase Privacy Policy →
                   </a>
@@ -121,7 +120,7 @@ export default function PrivacyPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-700 mb-1">Provide AI Responses</h3>
-                    <p className="text-slate-600 text-sm">Process your queries through OpenAI to generate helpful, evidence-based responses.</p>
+                    <p className="text-slate-600 text-sm">Process submitted questions through AI providers so the site can return structured educational responses.</p>
                   </div>
                 </div>
 
@@ -179,7 +178,7 @@ export default function PrivacyPage() {
               <h3 className="text-xl font-medium text-slate-600 mb-3">How We Protect Your Data</h3>
               <ul className="list-disc pl-6 mb-6 text-slate-600 space-y-2">
                 <li><strong>Encryption:</strong> All data transmitted between your browser and our servers uses HTTPS encryption</li>
-                <li><strong>Secure hosting:</strong> Our website is hosted on Vercel with enterprise-grade security</li>
+                <li><strong>Secure hosting:</strong> Our website is hosted on managed infrastructure with transport security and operational safeguards</li>
                 <li><strong>Limited access:</strong> Only authorized personnel have access to backend systems</li>
                 <li><strong>Regular updates:</strong> We keep our systems and dependencies up to date with security patches</li>
                 <li><strong>No unnecessary storage:</strong> We don't store more data than necessary for our service</li>
@@ -188,10 +187,10 @@ export default function PrivacyPage() {
               <h3 className="text-xl font-medium text-slate-600 mb-3">Data Retention</h3>
               <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-6">
                 <ul className="space-y-2 text-slate-600">
-                  <li>• <strong>AI queries:</strong> Processed by OpenAI and may be retained per their policy (typically 30 days for API calls)</li>
-                  <li>• <strong>Analytics data:</strong> Anonymized usage data retained for 26 months</li>
-                  <li>• <strong>Newsletter emails:</strong> Retained until you unsubscribe</li>
-                  <li>• <strong>Cookies:</strong> Expire after the session or as specified in cookie settings</li>
+                  <li>• <strong>AI queries:</strong> Processed by third-party providers and subject to those providers&apos; operational and privacy policies</li>
+                  <li>• <strong>Analytics data:</strong> Retained according to configured analytics-provider settings and operational needs</li>
+                  <li>• <strong>Newsletter and contact records:</strong> Retained for service delivery, support follow-up, and reasonable business recordkeeping unless deletion is requested or the data is no longer needed</li>
+                  <li>• <strong>Cookies:</strong> Expire after the session or according to browser and tool settings</li>
                 </ul>
               </div>
             </section>
@@ -327,7 +326,7 @@ export default function PrivacyPage() {
               </p>
 
               <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
-                <p className="text-slate-700 mb-3"><strong>MomAI Agent</strong></p>
+                <p className="text-slate-700 mb-3"><strong>Mom AI Agent</strong></p>
                 <p className="text-slate-600 text-sm mb-1">
                   <strong>Email:</strong> <a href="mailto:support@momaiagent.com" className="text-blue-600 hover:underline">support@momaiagent.com</a>
                 </p>
@@ -349,7 +348,7 @@ export default function PrivacyPage() {
               <div className="space-y-3 text-slate-600">
                 <p className="flex items-start">
                   <span className="text-violet-500 mr-3 text-xl">✓</span>
-                  <span>We collect minimal data needed to provide our AI service</span>
+                  <span>We collect limited website and service data needed to operate the public platform experience</span>
                 </p>
                 <p className="flex items-start">
                   <span className="text-violet-500 mr-3 text-xl">✓</span>
@@ -357,7 +356,7 @@ export default function PrivacyPage() {
                 </p>
                 <p className="flex items-start">
                   <span className="text-violet-500 mr-3 text-xl">✓</span>
-                  <span>AI queries are processed by OpenAI with their privacy protections</span>
+                  <span>AI queries and website form submissions may be handled by third-party infrastructure providers used to operate the service</span>
                 </p>
                 <p className="flex items-start">
                   <span className="text-violet-500 mr-3 text-xl">✓</span>
@@ -365,7 +364,7 @@ export default function PrivacyPage() {
                 </p>
                 <p className="flex items-start">
                   <span className="text-violet-500 mr-3 text-xl">✓</span>
-                  <span>We use industry-standard security measures to protect your information</span>
+                  <span>We use common technical and operational safeguards to reduce risk and limit unnecessary retention</span>
                 </p>
               </div>
             </section>
@@ -381,7 +380,13 @@ export default function PrivacyPage() {
                   </svg>
                 </Link>
                 <Link href="/trust" className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition-colors">
-                  Trust & Methods
+                  Trust Center
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+                <Link href="/contact" className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition-colors">
+                  Contact
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

@@ -276,10 +276,14 @@ CREATE TABLE IF NOT EXISTS kb_faqs (
   answer_html TEXT,
 
   -- Categorization
-  category TEXT NOT NULL CHECK (category IN ('feeding', 'sleep', 'health-safety', 'development', 'behavior', 'daily-care')),
+  category TEXT NOT NULL CHECK (category IN ('platform-trust', 'feeding', 'sleep', 'fever-safety', 'postpartum', 'nutrition')),
   subcategory TEXT,
   age_range TEXT[] DEFAULT '{}',
   locale TEXT NOT NULL DEFAULT 'Global' CHECK (locale IN ('US', 'CA', 'Global')),
+  source_layer TEXT,
+  source_kind TEXT CHECK (source_kind IN ('platform', 'authority')),
+  source_label TEXT,
+  source_url TEXT,
 
   -- Relationships
   source_ids UUID[] DEFAULT '{}',

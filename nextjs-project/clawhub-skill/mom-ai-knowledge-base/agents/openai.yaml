@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mom AI Knowledge Base"
+  short_description: "Read-only mom and baby evidence retrieval"
+  default_prompt: "Use $mom-ai-knowledge-base to answer a mom-and-baby question from the public Mom AI Agent knowledge API."
+
+policy:
+  allow_implicit_invocation: true

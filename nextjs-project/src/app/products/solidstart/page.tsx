@@ -74,9 +74,9 @@ export default function SolidStartProductPage() {
 
   // AEO Optimized Article Data
   const articleData = {
-    title: "DearBaby Solid Start: The Best Free Alternative to Solid Starts App",
+    title: "DearBaby Solid Start: A Calm First-Foods App for Families",
     slug: "products/solidstart",
-    one_liner: "Comprehensive baby food app with 700+ step-by-step recipes, BLW lunchbox builder, and evidence-based allergen introduction guides.",
+    one_liner: "A first-foods app with recipe guidance, BLW planning tools, and structured support for introducing solids.",
     hub: "Feeding",
     age_range: "6-24 months",
     region: "Global",
@@ -104,11 +104,6 @@ export default function SolidStartProductPage() {
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      ratingCount: '1850',
-    },
     author: {
       '@type': 'Organization',
       name: 'Mom AI Agent',
@@ -116,7 +111,7 @@ export default function SolidStartProductPage() {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'JupitLunar',
+      name: 'Mom AI Agent',
       logo: {
         '@type': 'ImageObject',
         url: 'https://www.momaiagent.com/Assets/Logo.png',
@@ -175,7 +170,7 @@ export default function SolidStartProductPage() {
                     transition={{ duration: 0.6, delay: 0.2 }}
                   >
                     <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
-                    <span className="text-xs font-semibold tracking-widest text-orange-600 uppercase">Free Forever • Part of MomAI Ecosystem</span>
+                    <span className="text-xs font-semibold tracking-widest text-orange-600 uppercase">Feeding App • Part of Mom AI Agent</span>
                   </motion.div>
 
                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-light text-slate-700 mb-6 sm:mb-8 leading-[1.1] tracking-tight">
@@ -187,7 +182,7 @@ export default function SolidStartProductPage() {
                   </h1>
 
                   <p className="text-lg sm:text-xl lg:text-2xl text-slate-500/80 mb-8 sm:mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
-                    The most intuitive free alternative to Solid Starts. 700+ dietitian-vetted recipes with step-by-step guidance, BLW planning, and calm guidance for every stage.
+                    A first-foods app with step-by-step recipes, BLW planning, and calmer support for families introducing solids.
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
@@ -222,7 +217,7 @@ export default function SolidStartProductPage() {
                           <svg key={s} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                         ))}
                       </div>
-                      <span className="text-sm text-slate-400 font-light italic">Trusted by 18k+ North American families</span>
+                      <span className="text-sm text-slate-400 font-light italic">Designed for families who want more structure during the transition to solids</span>
                     </div>
                   </div>
                 </motion.div>
@@ -270,9 +265,9 @@ export default function SolidStartProductPage() {
               viewport={{ once: true }}
             >
               <BottomLineAnswer
-                question="What is the best free alternative to the Solid Starts app?"
-                answer="DearBaby Solid Start is the top-rated free alternative to subscription-based baby food apps. It offers 700+ dietitian-approved recipes with step-by-step guidance, a unique BLW lunchbox builder, and comprehensive allergen guidance without paywalls or subscriptions. It perfectly complements the MomAI Agent ecosystem for a holistic parenting experience."
-                keyNumbers={["700+ Free Recipes", "4.9⭐ Rating", "0 Subscription Fees"]}
+                question="What app can help families start solids with more structure?"
+                answer="DearBaby Solid Start helps families move into first foods with recipe guidance, BLW planning, allergen support, and a calmer meal-prep workflow. It also connects naturally with the broader Mom AI Agent platform for feeding and care guidance."
+                keyNumbers={["Recipe Guidance", "BLW Planning", "Allergen Support"]}
                 actionItems={[
                   "Download DearBaby Solid Start on the App Store",
                   "Filter recipes by development stage (6m+, 9m+, 12m+)",
@@ -637,7 +632,7 @@ export default function SolidStartProductPage() {
             >
               <h2 className="text-5xl lg:text-6xl font-light text-slate-700 mb-8 tracking-tight">Evidence-First <span className="font-medium">Feeding Protocols.</span></h2>
               <p className="text-xl text-slate-500 font-light max-w-3xl mx-auto leading-relaxed">
-                Directly pulled from our RAG knowledge base, verified against CDC and AAP clinical guidelines for 2025.
+                Built from the Mom AI Agent knowledge system and aligned with public-health guidance families commonly use during the transition to solids.
               </p>
             </motion.div>
 
@@ -719,15 +714,15 @@ export default function SolidStartProductPage() {
                 {[
                   {
                     q: "Is DearBaby Solid Start truly free?",
-                    a: "Yes, 100% free forever. No subscriptions, no locked recipes, and no in-app purchases. It's our contribution to the MomAI Agent mission of democratizing expert parenting guidance."
+                    a: "The current version is designed to be easy to access, with a focus on practical feeding guidance, recipes, and planning tools for families starting solids."
                   },
                   {
                     q: "How does it compare to Solid Starts?",
-                    a: "While Solid Starts is a great resource, DearBaby offers many of the same features—100+ recipes, stage-by-stage guidance, and allergen info—entirely for free. We also include a unique Lunchbox Builder and direct integration with MomAI Agent's clinical RAG database."
+                    a: "Solid Start focuses on a calmer feeding workflow: recipe guidance, stage-based planning, allergen support, and a lunchbox builder inside the wider Mom AI Agent platform."
                   },
                   {
-                    q: "Are the recipes approved by experts?",
-                    a: "Every recipe and preparation guide is vetted against CDC, AAP, and WHO guidelines by our editorial team. We focus on nutrient density, safe textures, and age-appropriate portions."
+                    q: "How are the recipes and feeding guides prepared?",
+                    a: "Recipes and preparation guides are written to reflect common public-health feeding guidance, with attention to textures, food safety, and age-appropriate progression."
                   }
                 ].map((faq, i) => (
                   <motion.div
@@ -771,7 +766,7 @@ export default function SolidStartProductPage() {
               <div className="text-center md:text-left">
                 <h4 className="text-2xl font-medium text-slate-700 mb-3 tracking-tight">Part of the MomAI Agent Ecosystem</h4>
                 <p className="text-lg text-slate-500 font-light leading-relaxed">
-                  Solid Start is powered by the same evidence-based RAG engine that fuels MomAI Agent. Our apps work together to provide a seamless, safe journey from pregnancy through early childhood.
+                  Solid Start is part of the Mom AI Agent platform. It connects first-food planning with the same wider knowledge system that supports tracking, feeding questions, and family guidance.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-4">
                   <Link href="/" className="inline-flex items-center gap-2 text-indigo-500 font-medium hover:text-indigo-600 transition-colors">
@@ -787,7 +782,7 @@ export default function SolidStartProductPage() {
             <NewsletterSignup
               variant="default"
               title="Weekly Weaning Wisdom"
-              description="Join 18,000+ parents getting evidence-based feeding prompts and stage-appropriate recipes every Tuesday."
+              description="Get feeding prompts, source-linked guidance, and stage-appropriate recipe ideas each week."
             />
           </div>
         </section>
@@ -811,7 +806,7 @@ export default function SolidStartProductPage() {
                 Feed with <span className="font-medium italic text-orange-400">Confidence.</span>
               </h2>
               <p className="text-2xl mb-16 text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-                Join thousands of families starting their baby's food journey with joy, safety, and expert-vetted guidance.
+                Start your baby's food journey with calmer planning, safer routines, and source-linked feeding guidance.
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
                 <a
@@ -830,9 +825,9 @@ export default function SolidStartProductPage() {
                 </Link>
               </div>
               <div className="mt-16 flex flex-wrap justify-center gap-8 opacity-40 grayscale brightness-200">
-                <span className="text-sm font-bold tracking-[0.3em]">CDC APPROVED</span>
-                <span className="text-sm font-bold tracking-[0.3em]">AAP COMPLIANT</span>
-                <span className="text-sm font-bold tracking-[0.3em]">WHO GUIDELINES</span>
+                <span className="text-sm font-bold tracking-[0.3em]">CDC SOURCES</span>
+                <span className="text-sm font-bold tracking-[0.3em]">AAP GUIDANCE</span>
+                <span className="text-sm font-bold tracking-[0.3em]">WHO REFERENCES</span>
               </div>
             </motion.div>
           </div>

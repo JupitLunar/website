@@ -23,7 +23,7 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 }
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
-const seedFile = path.resolve(__dirname, '../supabase/seed/knowledge_base.json');
+const seedFile = path.resolve(__dirname, '../../supabase/seed/knowledge_base.json');
 
 if (!fs.existsSync(seedFile)) {
   console.error(`❌ Seed file not found: ${seedFile}`);

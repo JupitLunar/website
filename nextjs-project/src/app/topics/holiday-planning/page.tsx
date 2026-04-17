@@ -37,7 +37,7 @@ async function loadKnowledge() {
 }
 
 export const metadata = {
-  title: 'Holiday Planning & Gatherings | JupitLunar',
+  title: 'Holiday Planning & Gatherings | Mom AI Agent',
   description:
     'Keep celebrations safe with choking prevention, allergen safeguards, and two-hour leftovers rules sourced from AAP, USDA, and allergy societies.',
 };

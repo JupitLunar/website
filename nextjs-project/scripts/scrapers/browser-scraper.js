@@ -7,7 +7,16 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
-const { extractArticle, generateSlug, extractKeywords, delay } = require('./scraper-utils');
+const {
+  extractArticle,
+  generateSlug,
+  extractKeywords,
+  buildContentOneLiner,
+  buildMetaTitle,
+  buildMetaDescription,
+  buildDefaultKeyFacts,
+  delay
+} = require('./scraper-utils');
 
 const dotenv = require('dotenv');
 // Load env vars from project root
@@ -261,10 +270,7 @@ async function saveArticle(articleData, sourceInfo) {
       return { success: false, reason: existsCheck.reason };
     }
 
-    const oneLiner = articleData.content.substring(0, 200);
-    const paddedOneLiner = oneLiner.length < 50 
-      ? oneLiner + ' Evidence-based information from trusted health organizations.'
-      : oneLiner;
+    const oneLiner = buildContentOneLiner(articleData.content, sourceInfo.name);
 
     const article = {
       slug,
@@ -272,12 +278,11 @@ async function saveArticle(articleData, sourceInfo) {
       hub: 'feeding',
       lang: sourceInfo.language || 'en',
       title: articleData.title.substring(0, 200),
-      one_liner: paddedOneLiner.substring(0, 200),
-      key_facts: [
-        `Source: ${sourceInfo.name}`,
-        `Region: ${sourceInfo.region}`,
-        'Evidence-based information for parents'
-      ],
+      one_liner: oneLiner,
+      key_facts: buildDefaultKeyFacts({
+        sourceName: sourceInfo.name,
+        region: sourceInfo.region
+      }),
       body_md: articleData.content,
       entities: extractKeywords(articleData.content),
       age_range: '0-12 months',
@@ -285,8 +290,8 @@ async function saveArticle(articleData, sourceInfo) {
       last_reviewed: new Date().toISOString().split('T')[0],
       reviewed_by: 'Browser Scraper Bot',
       license: `Source: ${sourceInfo.name} (${sourceInfo.organization}) | Region: ${sourceInfo.region} | URL: ${articleData.url}`,
-      meta_title: articleData.title.substring(0, 60),
-      meta_description: articleData.content.substring(0, 157) + '...',
+      meta_title: buildMetaTitle(articleData.title),
+      meta_description: buildMetaDescription(articleData.content, sourceInfo.name),
       keywords: extractKeywords(articleData.content),
       status: 'draft'
     };
@@ -463,4 +468,3 @@ if (require.main === module) {
 }
 
 module.exports = { scrapeWithBrowser, saveArticle };
-

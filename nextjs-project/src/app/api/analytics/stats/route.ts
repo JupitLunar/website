@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
-import { supabase } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
+import { requireApiSecret } from '@/lib/api-auth';
 
 export async function GET(request: NextRequest) {
   try {
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['INTERNAL_API_SECRET', 'REVALIDATION_SECRET'],
+      context: 'analytics stats endpoint',
+    });
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
+    const supabase = createAdminClient();
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get('start_date') || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
     const endDate = searchParams.get('end_date') || new Date().toISOString();
@@ -189,7 +200,6 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
 
 
 

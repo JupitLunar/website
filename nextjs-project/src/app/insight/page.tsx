@@ -10,6 +10,7 @@ import InsightFilters from '@/components/InsightFilters';
 import InsightList from '@/components/InsightList';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import { filterCleanKeywords } from '@/lib/supabase';
+import { filterPublicFacingArticles, INSIGHT_REVIEWERS } from '@/lib/content-surface';
 
 // Generate CollectionPage schema for AEO with enhanced keywords
 function generateInsightsPageSchema(articles: any[], allKeywords: string[]) {
@@ -25,14 +26,14 @@ function generateInsightsPageSchema(articles: any[], allKeywords: string[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: 'Parenting Insights | Mom AI Agent',
-    description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, development, and parenting.',
+    name: 'Insights & Explainers | Mom AI Agent',
+    description: 'Source-linked explainers and caregiving insights on baby care, feeding, sleep, development, and postpartum questions.',
     url: `${baseUrl}/insight`,
     keywords: Array.from(articleKeywords).slice(0, 20).join(', '),
     about: {
       '@type': 'Thing',
-      name: 'Parenting Insights',
-      description: 'Evidence-based parenting articles covering feeding, sleep, development, safety, and more.',
+      name: 'Insights & Explainers',
+      description: 'Short explainers covering feeding, sleep, development, safety, and postpartum questions.',
     },
     publisher: {
       '@type': 'Organization',
@@ -83,7 +84,7 @@ function generateOrganizationSchema() {
     name: 'Mom AI Agent',
     url: baseUrl,
     logo: `${baseUrl}/Logo.png`,
-    description: 'AI-powered parenting companion providing evidence-based guidance for baby care, feeding, sleep, and development.',
+    description: 'Evidence Intelligence Platform for Mom & Baby, with source-linked guidance for feeding, sleep, safety, development, and postpartum care.',
     sameAs: [],
     contactPoint: {
       '@type': 'ContactPoint',
@@ -95,13 +96,12 @@ function generateOrganizationSchema() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
-  const rssUrl = `${baseUrl}/insight/rss.xml`;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !serviceRoleKey) {
     return {
-      title: 'Parenting Insights | Feeding, Sleep, Safety & Postpartum | Mom AI Agent',
-      description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, safety, development, and postpartum questions.',
+      title: 'Insights & Explainers | Feeding, Sleep, Safety & Postpartum',
+      description: 'Source-linked explainers and caregiving insights on baby care, feeding, sleep, safety, development, and postpartum questions.',
       alternates: {
         canonical: `${baseUrl}/insight`,
       }
@@ -114,14 +114,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const { data: articles } = await supabase
     .from('articles')
-    .select('keywords')
-    .eq('reviewed_by', 'AI Content Generator')
+    .select('keywords, title, slug, status')
+    .in('reviewed_by', [...INSIGHT_REVIEWERS])
     .eq('status', 'published')
     .limit(50);
 
   // Collect all unique keywords
   const allKeywords = new Set<string>();
-  articles?.forEach((article) => {
+  filterPublicFacingArticles((articles || []) as any[]).forEach((article: any) => {
     const cleanKeywords = filterCleanKeywords(article.keywords || []);
     cleanKeywords.forEach((k: string) => allKeywords.add(k));
   });
@@ -129,8 +129,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const keywordsArray = Array.from(allKeywords).slice(0, 30);
 
   return {
-    title: 'Parenting Insights | Feeding, Sleep, Safety & Postpartum | Mom AI Agent',
-    description: 'Evidence-informed explainers and caregiver insights on baby care, feeding, sleep, safety, development, and postpartum questions.',
+    title: 'Insights & Explainers | Feeding, Sleep, Safety & Postpartum',
+    description: 'Source-linked explainers and caregiving insights on baby care, feeding, sleep, safety, development, and postpartum questions.',
     keywords: [
       'parenting insights',
       'baby care articles',
@@ -142,21 +142,13 @@ export async function generateMetadata(): Promise<Metadata> {
       ...keywordsArray
     ],
     openGraph: {
-      title: 'Parenting Insights | Feeding, Sleep, Safety & Postpartum | Mom AI Agent',
-      description: 'Evidence-informed explainers and caregiver insights for baby care, feeding, sleep, safety, and postpartum recovery.',
+      title: 'Insights & Explainers | Feeding, Sleep, Safety & Postpartum',
+      description: 'Source-linked explainers and caregiving insights for baby care, feeding, sleep, safety, and postpartum recovery.',
       type: 'website',
       url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/insight`,
     },
     alternates: {
       canonical: `${baseUrl}/insight`,
-      types: {
-        'application/rss+xml': [
-          {
-            url: rssUrl,
-            title: 'Mom AI Agent Insights RSS'
-          }
-        ]
-      }
     }
   };
 }
@@ -174,12 +166,10 @@ const getInsightArticles = unstable_cache(
       serviceRoleKey
     );
 
-    // 使用 reviewed_by 字段识别 AI 生成的文章
-    // 注意：article_source 字段可能因 schema cache 问题无法使用
     const { data: articles, error } = await supabase
       .from('articles')
       .select('*')
-      .eq('reviewed_by', 'AI Content Generator')
+      .in('reviewed_by', [...INSIGHT_REVIEWERS])
       .eq('status', 'published')
       .order('created_at', { ascending: false })
       .limit(50);
@@ -195,7 +185,7 @@ const getInsightArticles = unstable_cache(
       console.log(`[Insight Page] Latest article: ${articles[0].title} (${articles[0].slug})`);
     }
 
-    return articles || [];
+    return filterPublicFacingArticles(articles || []);
   },
   ['insights-list'],
   { tags: ['insights'], revalidate: 300 }
@@ -299,7 +289,7 @@ export default async function InsightPage({
         <div className="container mx-auto max-w-6xl relative z-10 text-center">
           <p className="uppercase tracking-[0.4em] text-xs text-slate-400 mb-4">Insights</p>
           <h1 className="text-4xl md:text-5xl font-light text-slate-700 mb-4">
-            Parenting insights built from evidence and caregiver signals
+            Insights and explainers for everyday caregiving decisions
           </h1>
           <p className="text-lg text-slate-500 max-w-3xl mx-auto font-light">
             Short explainers that translate public guidance into practical next steps for real-life parenting decisions.
@@ -318,11 +308,11 @@ export default async function InsightPage({
             </span>
             <Link
               href="/topics"
-              className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-500 hover:text-violet-500 transition-colors"
-              aria-label="Explore parenting topics and guidelines"
-            >
-              Explore Topics
-            </Link>
+                className="px-4 py-2 rounded-full bg-white/80 border border-slate-200 text-[11px] uppercase tracking-[0.25em] text-slate-500 hover:text-violet-500 transition-colors"
+                aria-label="Explore parenting topics and guidelines"
+              >
+              Topics Library
+              </Link>
           </div>
         </div>
       </section>
@@ -342,7 +332,7 @@ export default async function InsightPage({
               ].map((hub) => (
                 <Link
                   key={hub.slug}
-                  href={`/hub/${hub.slug}`}
+                  href={`/insight?hub=${hub.slug}`}
                   className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
                 >
                   {hub.label}
@@ -351,15 +341,13 @@ export default async function InsightPage({
             </div>
           </div>
           <div className="bg-white/80 border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <h2 className="text-lg font-light text-slate-700 mb-4">Resources</h2>
+            <h2 className="text-lg font-light text-slate-700 mb-4">Explore More</h2>
             <div className="grid gap-2 sm:grid-cols-2">
               {[
-                { href: '/topics', label: 'Parenting topics' },
-                { href: '/trust', label: 'Methods & sources' },
-                { href: '/latest-articles', label: 'Latest articles' },
-                { href: '/feed.json', label: 'JSON feed' },
-                { href: '/insight/rss.xml', label: 'Insights RSS' },
-                { href: '/sitemap.xml', label: 'Sitemap' }
+                { href: '/topics', label: 'Topics library' },
+                { href: '/trust', label: 'Trust Center' },
+                { href: '/foods', label: 'Foods Database' },
+                { href: '/search', label: 'Answer hub' }
               ].map((item) => (
                 <Link
                   key={item.href}
@@ -385,20 +373,20 @@ export default async function InsightPage({
             <p className="text-sm text-slate-500 leading-relaxed">Jump into the FAQ for common feeding, allergen, and safety questions when you want a faster summary.</p>
           </Link>
           <Link
-            href="/products/dearbaby"
+            href="/search"
             className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm hover:shadow-md transition-all"
           >
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">Tracking app</p>
-            <h2 className="text-xl font-light text-slate-700 mb-3">Turn insights into daily tracking with DearBaby</h2>
-            <p className="text-sm text-slate-500 leading-relaxed">Use DearBaby when reading about feeding and sleep patterns turns into something you want to monitor every day.</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">Answer hub</p>
+            <h2 className="text-xl font-light text-slate-700 mb-3">Need a broader answer path than one article?</h2>
+            <p className="text-sm text-slate-500 leading-relaxed">Use the answer hub when you want to compare multiple explainers, source-linked guidance paths, and fast topic matches.</p>
           </Link>
           <Link
-            href="/products/solidstart"
+            href="/trust"
             className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm hover:shadow-md transition-all"
           >
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">Feeding app</p>
-            <h2 className="text-xl font-light text-slate-700 mb-3">Move from articles into first-food planning</h2>
-            <p className="text-sm text-slate-500 leading-relaxed">Use Solid Start when you are ready to turn feeding research into recipes, BLW planning, and allergen routines.</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-3">Trust path</p>
+            <h2 className="text-xl font-light text-slate-700 mb-3">Want to inspect the evidence and review model?</h2>
+            <p className="text-sm text-slate-500 leading-relaxed">Open the trust center to see source grading, review cadence, and the platform boundaries behind these explainers.</p>
           </Link>
         </div>
       </section>
@@ -439,44 +427,37 @@ export default async function InsightPage({
       </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="rounded-2xl border border-slate-200 bg-white/85 p-8 shadow-sm space-y-6">
             <div>
-              <h3 className="text-xl font-light text-slate-700 mb-2">Follow a weekly pathway</h3>
+              <h3 className="text-xl font-light text-slate-700 mb-2">Continue from one insight into the wider hub</h3>
               <p className="text-sm text-slate-500">
-                Insights are great for quick answers. Programs turn them into weekly steps for development and parent
-                health.
+                Use one article as a starting point, then widen into foods, topics, and answer paths when you need more context.
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <Link
-                href="/programs/development"
+                href="/search"
                 className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-left hover:border-violet-200 transition-colors"
               >
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Development</p>
-                <p className="text-sm text-slate-600">Weekly play tasks and milestone signals for 0-24 months.</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Answer hub</p>
+                <p className="text-sm text-slate-600">Search across explainers, guides, and trust-backed paths when one article is not enough.</p>
               </Link>
               <Link
-                href="/programs/parent-health"
+                href="/foods"
                 className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-left hover:border-violet-200 transition-colors"
               >
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Parent Health</p>
-                <p className="text-sm text-slate-600">Postpartum recovery and mental health check-ins for 0-12 months.</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400 mb-2">Foods database</p>
+                <p className="text-sm text-slate-600">Move from general feeding guidance into food-specific texture, safety, and nutrient notes.</p>
               </Link>
             </div>
-            <Link
-              href="/programs"
-              className="inline-flex items-center text-sm text-slate-500 hover:text-violet-500 transition-colors"
-            >
-              View all programs →
-            </Link>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white/85 p-6 shadow-sm">
             <NewsletterSignup
               variant="compact"
-              title="Get the weekly pathway plan"
-              description="Short, evidence-informed tasks for baby development and parent health."
-              source="insight-programs-cta"
+              title="Get weekly evidence notes"
+              description="Short explainers, updated guidance signals, and practical caregiving notes from the answer hub."
+              source="insight-evidence-notes"
             />
           </div>
         </div>
@@ -495,10 +476,10 @@ export default async function InsightPage({
               <Link
                 href="/topics"
                 className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"
-                aria-label="Explore parenting topics and guidelines"
-              >
-                Explore Topics
-              </Link>
+              aria-label="Explore parenting topics and guidelines"
+            >
+              Topics Library
+            </Link>
               <Link
                 href="/trust"
                 className="px-4 py-2 rounded-xl border border-slate-200 text-sm text-slate-500 hover:text-violet-500 transition-colors"

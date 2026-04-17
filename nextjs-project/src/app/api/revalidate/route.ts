@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
+import { requireApiSecret } from '@/lib/api-auth';
 
 /**
  * Revalidation API
@@ -16,36 +17,16 @@ import { revalidatePath, revalidateTag } from 'next/cache';
  *   }
  */
 
-function validateRequest(request: NextRequest): boolean {
-  // 检查是否设置了 REVALIDATION_SECRET
-  const authHeader = request.headers.get('authorization');
-  if (process.env.REVALIDATION_SECRET && authHeader) {
-    if (authHeader === `Bearer ${process.env.REVALIDATION_SECRET}`) {
-      return true;
-    }
-  }
-  
-  // 开发环境允许无认证
-  if (process.env.NODE_ENV === 'development') {
-    return true;
-  }
-  
-  return false;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    // 验证请求
-    if (!validateRequest(request)) {
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['REVALIDATION_SECRET'],
+      context: 'revalidation endpoint',
+    });
+
+    if (unauthorized) {
       console.error('❌ Revalidation API: Unauthorized request');
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Unauthorized',
-          message: 'Invalid or missing revalidation secret'
-        },
-        { status: 401 }
-      );
+      return unauthorized;
     }
     
     // 解析请求体
@@ -128,16 +109,13 @@ export async function POST(request: NextRequest) {
 // GET请求 - 获取 revalidation 状态
 export async function GET(request: NextRequest) {
   try {
-    // 验证请求
-    if (!validateRequest(request)) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Unauthorized',
-          message: 'Invalid or missing revalidation secret'
-        },
-        { status: 401 }
-      );
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['REVALIDATION_SECRET'],
+      context: 'revalidation endpoint',
+    });
+
+    if (unauthorized) {
+      return unauthorized;
     }
     
     return NextResponse.json({

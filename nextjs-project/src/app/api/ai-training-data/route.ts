@@ -1,10 +1,20 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { contentManager } from '@/lib/supabase';
+import { requireApiSecret } from '@/lib/api-auth';
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['INTERNAL_API_SECRET', 'REVALIDATION_SECRET'],
+      context: 'AI training data export',
+    });
+
+    if (unauthorized) {
+      return unauthorized;
+    }
+
     // 获取所有文章和知识库内容
     const [articles, hubs] = await Promise.all([
       contentManager.getAllArticles().catch(() => []),
@@ -136,7 +146,6 @@ export async function GET() {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 's-maxage=3600, stale-while-revalidate=86400',
-        'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
@@ -150,4 +159,3 @@ export async function GET() {
     );
   }
 }
-

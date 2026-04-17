@@ -37,7 +37,7 @@ async function loadKnowledge() {
 }
 
 export const metadata = {
-  title: 'Travel & Daycare Logistics | JupitLunar',
+  title: 'Travel & Daycare Logistics | Mom AI Agent',
   description:
     'Keep expressed milk safe, brief childcare teams, and manage travel-day nourishment using CDC, TSA, and USDA guidance.',
 };

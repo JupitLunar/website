@@ -49,8 +49,8 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
 const today = new Date().toISOString().slice(0, 10);
 const defaultReviewers = {
-  en: 'Clinical review: JupitLunar Editorial Team (RN, IBCLC)',
-  zh: '临床审核：JupitLunar 团队（RN, IBCLC）'
+  en: 'Mom AI Agent Editorial Team',
+  zh: 'Mom AI Agent 编辑团队'
 };
 
 const citationsCommon = [
@@ -102,8 +102,8 @@ function withDefaults(entry) {
     steps: entry.steps,
     faq: entry.faq || [],
     citations: entry.citations || citationsCommon,
-    meta_title: entry.meta_title || `${entry.title} | JupitLunar`,
-    meta_description: entry.meta_description || entry.one_liner,
+    meta_title: entry.meta_title || `${entry.title} | Mom AI Agent`,
+    meta_description: entry.meta_description || entry.one_liner || entry.title,
     keywords: entry.keywords || (entry.entities ? entry.entities.slice(0, 6) : [])
   };
 
@@ -259,4 +259,3 @@ main().catch((error) => {
   console.error('❌ Fatal error:', error.message || error);
   process.exit(1);
 });
-

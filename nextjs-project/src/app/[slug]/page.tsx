@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
     return {
-      title: `${article.title} | Mom AI Agent`,
+      title: `${article.title} | Guidance`,
       description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
       keywords: [
         ...(article.meta_keywords || []),
@@ -80,8 +80,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         title: article.title,
         description: description.length > 160 ? `${description.substring(0, 157)}...` : description,
         images: article.featured_image ? [article.featured_image] : [],
-        creator: '@jupitlunar',
-        site: '@jupitlunar',
+        creator: '@momaiagent',
+        site: '@momaiagent',
       },
     };
   } catch (error: any) {
@@ -98,6 +98,27 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       },
     };
   }
+}
+
+function getReviewLabel(reviewedBy: string | null | undefined) {
+  if (!reviewedBy) return 'Public guidance';
+  if (/authority|who|cdc|aap|canadian|nhs|healthychildren|health canada/i.test(reviewedBy)) {
+    return 'Authority source';
+  }
+  return reviewedBy;
+}
+
+function getHubName(hub: string | null | undefined) {
+  const names: Record<string, string> = {
+    feeding: 'Feeding & Nutrition',
+    sleep: 'Sleep & Routines',
+    'mom-health': 'Mom Health',
+    development: 'Development',
+    safety: 'Safety',
+    recipes: 'Recipes',
+  };
+  if (!hub) return 'Guidance';
+  return names[hub] || hub;
 }
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
@@ -117,13 +138,16 @@ export default async function ArticlePage({ params }: { params: { slug: string }
     // 生成结构化数据
     const structuredData = generateArticleStructuredData(article);
     const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
+    const hubHref = `${baseUrl}/topics`;
     const breadcrumbData = generateBreadcrumbStructuredData([
       { name: 'Home', url: baseUrl },
-      { name: article.hub, url: `${baseUrl}/hub/${article.hub}` },
+      { name: getHubName(article.hub), url: hubHref },
       { name: article.title, url: `${baseUrl}/${article.slug}` }
     ]);
 
-    const tldrItems = Array.isArray(article.key_facts) ? article.key_facts.slice(0, 5) : [];
+    const tldrItems = Array.isArray(article.key_facts)
+      ? article.key_facts.filter((fact: string) => !fact.startsWith('__AEO')).slice(0, 5)
+      : [];
     const faqItems = Array.isArray((article as any).qas)
       ? (article as any).qas.filter((qa: any) => qa.question && qa.answer)
       : [];
@@ -141,6 +165,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       ? (article as any).how_to_steps.slice(0, 4).map((step: any) => step.title || step.description || '').filter(Boolean)
       : [];
     const sources = citationItems.slice(0, 4).map((citation: any) => citation.title || citation.url).filter(Boolean);
+    const reviewLabel = getReviewLabel(article.reviewed_by);
+    const continueHref = article.hub === 'feeding' ? '/foods' : '/topics';
+    const continueLabel = article.hub === 'feeding' ? 'Foods database' : 'Topics library';
     const comparisonData = (article as any).us_ca_comparison;
     const hasComparison = article.region === 'Global' &&
       comparisonData &&
@@ -186,8 +213,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     <span className="mx-2 text-slate-300">/</span>
                   </li>
                   <li>
-                    <Link href={`/hub/${article.hub}`} className="hover:text-violet-600 transition-colors font-light">
-                      {article.hub}
+                    <Link href="/topics" className="hover:text-violet-600 transition-colors font-light">
+                      {getHubName(article.hub)}
                     </Link>
                   </li>
                   <li>
@@ -200,7 +227,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
               {/* Article Header */}
               <div className="text-center mb-12">
                 <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-50/90 to-violet-50/60 backdrop-blur-sm rounded-full text-sm font-light mb-6 border border-slate-200/30">
-                  <span className="text-slate-600">{article.type}</span>
+                  <span className="text-slate-600">{article.type} • {reviewLabel}</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-light text-slate-600 mb-6 leading-tight">
                   {article.title}
@@ -218,7 +245,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     <span className="font-light">Updated: {updatedAt.toLocaleDateString()}</span>
                   )}
                   {article.reviewed_by && (
-                    <span className="font-light">Reviewed by {article.reviewed_by}</span>
+                    <span className="font-light">Source layer: {reviewLabel}</span>
                   )}
                   {lastReviewedAt && (
                     <span className="font-light">Last review: {lastReviewedAt.toLocaleDateString()}</span>
@@ -306,8 +333,8 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                   )}
                   {article.reviewed_by && (
                     <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-4">
-                      <p className="text-xs uppercase tracking-wide text-blue-600">Reviewed by</p>
-                      <p className="mt-1 text-base font-semibold text-blue-900">{article.reviewed_by}</p>
+                      <p className="text-xs uppercase tracking-wide text-blue-600">Source layer</p>
+                      <p className="mt-1 text-base font-semibold text-blue-900">{reviewLabel}</p>
                     </div>
                   )}
                   {article.region && (
@@ -399,20 +426,26 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                     <p className="text-sm text-slate-600 leading-relaxed">Move into the FAQ when you want shorter feeding and safety answers instead of a full article.</p>
                   </Link>
                   <Link
-                    href="/products/dearbaby"
+                    href="/search"
                     className="rounded-2xl border border-indigo-100 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
                   >
-                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">DearBaby</span>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Need to track this in real life?</h3>
-                    <p className="text-sm text-slate-600 leading-relaxed">Use DearBaby for feeds, sleep, diapers, and growth when this advice turns into something ongoing.</p>
+                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Answer hub</span>
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Need a wider answer path?</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">Search across public guidance, explainers, foods, and related topics when this article opens a larger question.</p>
                   </Link>
                   <Link
-                    href="/products/solidstart"
+                    href={continueHref}
                     className="rounded-2xl border border-indigo-100 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
                   >
-                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Solid Start</span>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-2">Need first-food planning next?</h3>
-                    <p className="text-sm text-slate-600 leading-relaxed">Go to Solid Start for recipes, BLW planning, and allergen routines when the article points toward feeding action.</p>
+                    <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{continueLabel}</span>
+                    <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                      {article.hub === 'feeding' ? 'Need a food-by-food view next?' : 'Need the broader guidance layer?'}
+                    </h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      {article.hub === 'feeding'
+                        ? 'Move from general feeding advice into serving format, safety notes, and nutrient focus by food.'
+                        : 'Open the topics library to review the broader guidance map that sits behind this article.'}
+                    </p>
                   </Link>
                 </div>
               </div>

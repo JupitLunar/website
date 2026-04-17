@@ -2,8 +2,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Medical Disclaimer & Terms of Service',
-  description: 'Important legal information about using MomAI Agent. This website provides educational information, not medical advice.',
+  title: 'Medical Disclaimer & Terms of Use',
+  description: 'Important use boundaries for Mom AI Agent. The platform provides educational, source-linked information and does not replace medical care.',
 };
 
 export default function DisclaimerPage() {
@@ -14,9 +14,9 @@ export default function DisclaimerPage() {
           {/* Header */}
           <div className="mb-8 pb-6 border-b border-slate-200">
             <h1 className="text-4xl md:text-5xl font-light text-slate-700 mb-4">
-              Medical Disclaimer & Terms of Service
+              Medical Disclaimer & Terms of Use
             </h1>
-            <p className="text-slate-500 text-sm">Last Updated: January 2025</p>
+            <p className="text-slate-500 text-sm">Last Updated: April 2026</p>
           </div>
 
           {/* Important Notice Banner */}
@@ -30,7 +30,7 @@ export default function DisclaimerPage() {
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-red-800 mb-2">Important Notice</h3>
                 <p className="text-red-700 leading-relaxed">
-                  This website provides general educational information only. It is NOT medical advice and should NOT replace consultation with qualified healthcare professionals. Always consult your doctor or pediatrician for personalized medical guidance.
+                  Mom AI Agent provides general educational and source-linked information only. It is not medical advice and should not replace consultation with qualified healthcare professionals.
                 </p>
               </div>
             </div>
@@ -59,13 +59,13 @@ export default function DisclaimerPage() {
 
               <h3 className="text-xl font-medium text-slate-600 mb-3 mt-6">AI-Generated Content</h3>
               <p className="text-slate-600 leading-relaxed mb-4">
-                Some responses on this website are generated using <strong>artificial intelligence (AI) technology</strong>. While we strive to provide accurate and helpful information based on reputable sources (CDC, AAP, WHO, Health Canada, etc.), AI-generated content:
+                Some responses on this website may involve <strong>artificial intelligence (AI) technology</strong>. While we aim to ground the platform in reputable public-health sources, AI-assisted content:
               </p>
               <ul className="list-disc pl-6 mb-4 text-slate-600 space-y-2">
                 <li>May contain errors or inaccuracies</li>
                 <li>Should not be relied upon as professional medical advice</li>
                 <li>Must be verified with your healthcare provider before taking any action</li>
-                <li>Is clearly marked with an AI indicator (💡)</li>
+                <li>May combine generated summaries with authored or curated material</li>
               </ul>
             </section>
 
@@ -106,7 +106,7 @@ export default function DisclaimerPage() {
 
               <h3 className="text-xl font-medium text-slate-600 mb-3">Evidence-Based Information</h3>
               <p className="text-slate-600 leading-relaxed mb-4">
-                We make every effort to provide evidence-based information sourced from:
+                We make every effort to provide source-linked information organized from:
               </p>
               <ul className="grid md:grid-cols-2 gap-3 mb-6">
                 <li className="flex items-center text-slate-600">
@@ -239,7 +239,7 @@ export default function DisclaimerPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-light text-slate-700 mb-4">Contact Us</h2>
               <p className="text-slate-600 leading-relaxed mb-4">
-                If you have questions about this disclaimer or need medical guidance, please contact us:
+                If you have questions about this disclaimer or our platform policies, please contact us. For medical guidance, contact a qualified healthcare professional.
               </p>
               <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
                 <p className="text-slate-700 mb-3"><strong>MomAI Agent</strong></p>
@@ -252,6 +252,24 @@ export default function DisclaimerPage() {
                 <p className="text-slate-600 text-sm mb-1">
                   <strong>Website:</strong> <a href="https://www.momaiagent.com" className="text-blue-600 hover:underline">www.momaiagent.com</a>
                 </p>
+              </div>
+            </section>
+
+            <section className="mb-8">
+              <h2 className="text-2xl font-light text-slate-700 mb-4">Related Pages</h2>
+              <div className="flex flex-wrap gap-4">
+                <a href="/trust" className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition-colors">
+                  Trust Center
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+                <a href="/privacy" className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 transition-colors">
+                  Privacy Policy
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
               </div>
             </section>
 

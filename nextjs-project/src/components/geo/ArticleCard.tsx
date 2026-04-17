@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
 import { ContentType, ContentHub } from '@/types/content';
+import { isInsightArticleReviewer } from '@/lib/content-surface';
 
 interface ArticleCardProps {
   article: {
@@ -22,7 +23,37 @@ interface ArticleCardProps {
   };
 }
 
+const TYPE_LABELS: Record<ContentType, string> = {
+  explainer: 'Explainer',
+  howto: 'Guide',
+  research: 'Research',
+  faq: 'FAQ',
+  recipe: 'Recipe',
+  news: 'Update',
+};
+
+const HUB_LABELS: Record<ContentHub, string> = {
+  feeding: 'Feeding',
+  sleep: 'Sleep',
+  'mom-health': 'Mom Health',
+  development: 'Development',
+  safety: 'Safety',
+  recipes: 'Recipes',
+};
+
+function sanitizeEntity(entity: string) {
+  return entity
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+  const href = isInsightArticleReviewer(article.reviewed_by)
+    ? `/insight/${article.slug}`
+    : `/${article.slug}`;
+  const reviewLabel = getReviewLabel(article.reviewed_by);
+
   const typeColors = {
     explainer: 'bg-blue-100 text-blue-800',
     howto: 'bg-green-100 text-green-800',
@@ -49,24 +80,39 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
     });
   };
 
+  const visibleKeyFacts = (article.key_facts || [])
+    .filter((fact) => fact && !fact.startsWith('__AEO'))
+    .slice(0, 3);
+
+  const visibleEntities = (article.entities || [])
+    .map(sanitizeEntity)
+    .filter((entity) => entity.length >= 3)
+    .filter((entity) => !/^aeo/i.test(entity))
+    .filter((entity) => !/optimized/i.test(entity))
+    .filter((entity) => !/integration/i.test(entity))
+    .filter((entity) => !/test/i.test(entity))
+    .filter((entity, index, all) => all.indexOf(entity) === index)
+    .slice(0, 4);
+
+  const publishedLabel = article.date_published ? formatDate(article.date_published) : null;
+  const reviewedLabel = article.last_reviewed ? formatDate(article.last_reviewed) : null;
+
   return (
-    <Link href={`/article/${article.slug}`} className="block">
-      <Card className="h-full transition-all duration-200 hover:shadow-lg hover:scale-[1.02] border-l-4 border-l-blue-500">
+    <Link href={href} className="block">
+      <Card className="h-full rounded-[28px] border border-slate-200/80 bg-white/90 transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <div className="flex items-center space-x-2 mb-2">
+              <div className="mb-3 flex flex-wrap items-center gap-2">
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${typeColors[article.type]}`}>
-                  {article.type}
+                  {TYPE_LABELS[article.type]}
                 </span>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${hubColors[article.hub]}`}>
-                  {article.hub}
+                  {HUB_LABELS[article.hub]}
                 </span>
-                {article.status === 'published' && (
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Published
-                  </span>
-                )}
+                <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-500">
+                  {reviewLabel}
+                </span>
               </div>
               <CardTitle className="text-lg font-semibold line-clamp-2 mb-2">
                 {article.title}
@@ -81,11 +127,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
           </CardDescription>
           
           {/* Key Facts */}
-          {article.key_facts && article.key_facts.length > 0 && (
-            <div className="mb-3">
-              <h4 className="text-sm font-medium text-gray-900 mb-2">Key Points:</h4>
+          {visibleKeyFacts.length > 0 && (
+            <div className="mb-4 rounded-2xl border border-slate-100 bg-slate-50/80 px-4 py-3">
+              <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Key Points</h4>
               <ul className="space-y-1">
-                {article.key_facts.slice(0, 3).map((fact, index) => (
+                {visibleKeyFacts.map((fact, index) => (
                   <li key={index} className="text-sm text-gray-600 flex items-start">
                     <span className="text-blue-500 mr-2">•</span>
                     <span className="line-clamp-2">{fact}</span>
@@ -96,9 +142,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
           )}
           
           {/* Entities for GEO */}
-          {article.entities && article.entities.length > 0 && (
+          {visibleEntities.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-3">
-              {article.entities.slice(0, 5).map((entity, index) => (
+              {visibleEntities.map((entity, index) => (
                 <span
                   key={index}
                   className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
@@ -111,12 +157,12 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
         </CardContent>
         
         <CardFooter className="pt-0">
-          <div className="flex items-center justify-between w-full text-xs text-gray-500">
-            <div className="flex items-center space-x-4">
-              <span>Published: {formatDate(article.date_published)}</span>
-              <span>Reviewed: {formatDate(article.last_reviewed)}</span>
+          <div className="flex items-center justify-between w-full gap-3 text-xs text-gray-500">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              {publishedLabel && <span>{publishedLabel}</span>}
+              {reviewedLabel && <span>Reviewed: {reviewedLabel}</span>}
             </div>
-            <span className="text-blue-600 font-medium">Read more →</span>
+            <span className="font-medium text-slate-500">Open article →</span>
           </div>
         </CardFooter>
       </Card>
@@ -125,3 +171,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
 };
 
 export default ArticleCard;
+
+function getReviewLabel(reviewedBy: string | null | undefined) {
+  if (reviewedBy === 'Medical Review Board') return 'Medical review';
+  if (reviewedBy === 'AI Content Generator') return 'Explainer';
+  return 'Authority source';
+}

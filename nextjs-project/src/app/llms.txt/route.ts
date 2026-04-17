@@ -28,7 +28,7 @@ We provide structured feeds optimized for AI consumption:
   - Formats: ?format=enhanced (full metadata) or ?format=simple (minimal)
   - Filters: ?hub=feeding (filter by topic), ?limit=50 (result count)
 - **Main Feed (v1)**: ${siteUrl}/api/ai-feed (NDJSON format)
-- **Latest Articles**: ${siteUrl}/api/latest-articles?format=simplified
+- **Guidance Archive Feed**: ${siteUrl}/api/latest-articles?format=simplified
 
 ### Enhanced Feed Features (v2)
 - **Quick Answers**: Direct, concise responses optimized for voice assistants

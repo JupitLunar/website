@@ -1,0 +1,125 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Mom AI Agent Logo Mom AI AgentEvidence Intelligence Platform for Mom & Baby" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Mom AI Agent Logo" [ref=e6]
+        - generic [ref=e7]: Mom AI AgentEvidence Intelligence Platform for Mom & Baby
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Products" [ref=e11]:
+          - text: Products
+          - img [ref=e12]
+        - button "Topics" [ref=e15]:
+          - text: Topics
+          - img [ref=e16]
+        - link "Programs" [ref=e18] [cursor=pointer]:
+          - /url: /programs
+        - link "Insights" [ref=e19] [cursor=pointer]:
+          - /url: /insight
+        - button "About" [ref=e21]:
+          - text: About
+          - img [ref=e22]
+        - link [ref=e24] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e25]
+        - link "Ask the Hub" [ref=e27] [cursor=pointer]:
+          - /url: /search
+      - button [ref=e28]:
+        - img
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e33]:
+        - heading "Search the Answer Hub" [level=1] [ref=e34]
+        - paragraph [ref=e35]: Search guidance, AI explainers, foods, topics, and programs across Mom AI Agent
+        - generic [ref=e37]:
+          - textbox "Search feeding, sleep, safety, postpartum, or keyword..." [ref=e39]: solid foods
+          - button "Search" [ref=e40]
+      - generic [ref=e42]:
+        - generic [ref=e45]:
+          - heading "Search Results" [level=2] [ref=e46]
+          - paragraph [ref=e47]: 0 results found for "solid foods"
+        - generic [ref=e48]:
+          - img [ref=e50]
+          - heading "No results found" [level=3] [ref=e52]
+          - paragraph [ref=e53]: Try a shorter keyword like "allergens", "sleep", "postpartum", or "iron".
+          - generic [ref=e54]:
+            - button "Clear Search" [ref=e55]
+            - link "Browse Topics" [ref=e56] [cursor=pointer]:
+              - /url: /topics
+  - contentinfo [ref=e57]:
+    - generic [ref=e58]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - link "Mom AI Agent Logo Mom AI AgentEvidence Intelligence Platform for Mom & Baby" [ref=e61] [cursor=pointer]:
+            - /url: /
+            - img "Mom AI Agent Logo" [ref=e64]
+            - generic [ref=e65]: Mom AI AgentEvidence Intelligence Platform for Mom & Baby
+          - paragraph [ref=e66]: Mom AI Agent is the public website. DearBaby and DearBaby Solid Start are consumer apps built by JupitLunar for tracking, feeding, and calmer daily family routines.
+          - generic [ref=e67]:
+            - link "Ask Mom AI Agent" [ref=e68] [cursor=pointer]:
+              - /url: /search
+            - link "Explore Insights" [ref=e69] [cursor=pointer]:
+              - /url: /insight
+            - link "Partner With Us" [ref=e70] [cursor=pointer]:
+              - /url: /contact
+        - generic [ref=e71]:
+          - heading "Explore" [level=3] [ref=e72]
+          - list [ref=e73]:
+            - listitem [ref=e74]:
+              - link "Topics Library" [ref=e75] [cursor=pointer]:
+                - /url: /topics
+            - listitem [ref=e76]:
+              - link "Insights" [ref=e77] [cursor=pointer]:
+                - /url: /insight
+            - listitem [ref=e78]:
+              - link "Foods Database" [ref=e79] [cursor=pointer]:
+                - /url: /foods
+            - listitem [ref=e80]:
+              - link "DearBaby" [ref=e81] [cursor=pointer]:
+                - /url: /products/dearbaby
+            - listitem [ref=e82]:
+              - link "Solid Start" [ref=e83] [cursor=pointer]:
+                - /url: /products/solidstart
+            - listitem [ref=e84]:
+              - link "FAQ" [ref=e85] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e86]:
+          - heading "Trust" [level=3] [ref=e87]
+          - list [ref=e88]:
+            - listitem [ref=e89]:
+              - link "Trust Center" [ref=e90] [cursor=pointer]:
+                - /url: /trust
+            - listitem [ref=e91]:
+              - link "Methodology" [ref=e92] [cursor=pointer]:
+                - /url: /methodology
+            - listitem [ref=e93]:
+              - link "Clinical Review Policy" [ref=e94] [cursor=pointer]:
+                - /url: /clinical-review-policy
+            - listitem [ref=e95]:
+              - link "Data Use Policy" [ref=e96] [cursor=pointer]:
+                - /url: /data-use-policy
+            - listitem [ref=e97]:
+              - link "Privacy" [ref=e98] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e99]:
+              - link "Disclaimer" [ref=e100] [cursor=pointer]:
+                - /url: /disclaimer
+        - generic [ref=e101]:
+          - heading "Stay Updated" [level=3] [ref=e102]
+          - paragraph [ref=e103]: Get website updates, source refreshes, and product news from Mom AI Agent and DearBaby.
+          - generic [ref=e104]:
+            - textbox "Enter your email" [ref=e105]
+            - button "Subscribe" [ref=e106]
+      - generic [ref=e107]:
+        - paragraph [ref=e108]: © 2026 JupitLunar. Mom AI Agent and DearBaby are product brands.
+        - generic [ref=e109]:
+          - link "support@momaiagent.com" [ref=e110] [cursor=pointer]:
+            - /url: mailto:support@momaiagent.com
+          - link "DearBaby on LinkedIn" [ref=e111] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/dearbabyai
+          - link "DearBaby on Instagram" [ref=e112] [cursor=pointer]:
+            - /url: https://www.instagram.com/dearbabyai
+  - button "Open contact chatbot":
+    - img

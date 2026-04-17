@@ -3,11 +3,15 @@ import { supabase } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 }
+      );
+    }
+
     const { name, email, message, contactType } = body;
-    
-    // Debug logging
-    console.log('Contact API called with:', { name, email, message, contactType });
 
     // Validate required fields
     if (!name || !email || !message || !contactType) {
@@ -56,17 +60,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use Supabase client with retry mechanism
-    console.log('Supabase client initialized:', !!supabase);
-    
     // Retry mechanism for database operations
     const maxRetries = 3;
     let lastError = null;
     
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(`Attempt ${attempt}/${maxRetries} to insert contact data`);
-        
         // Insert into user_feedback table
         const { data, error } = await supabase
           .from('user_feedback')
@@ -84,7 +83,7 @@ export async function POST(request: NextRequest) {
         
         if (error) {
           lastError = error;
-          console.error(`Attempt ${attempt} failed:`, error);
+          console.error(`Contact insert attempt ${attempt} failed:`, error);
           
           // If it's a connection issue and we have retries left, wait and try again
           if (attempt < maxRetries && (
@@ -92,7 +91,6 @@ export async function POST(request: NextRequest) {
             error.message.includes('timeout') ||
             error.code === 'PGRST301' // Connection timeout
           )) {
-            console.log(`Waiting 1 second before retry ${attempt + 1}...`);
             await new Promise(resolve => setTimeout(resolve, 1000));
             continue;
           }
@@ -100,13 +98,6 @@ export async function POST(request: NextRequest) {
           // If it's not a connection issue or we're out of retries, break
           break;
         }
-        
-        // Success! Log and return
-        console.log(`Contact form submitted successfully on attempt ${attempt}:`, {
-          id: data[0]?.id,
-          contactType,
-          timestamp: new Date().toISOString()
-        });
         
         return NextResponse.json(
           { 
@@ -119,10 +110,9 @@ export async function POST(request: NextRequest) {
         
       } catch (error) {
         lastError = error;
-        console.error(`Attempt ${attempt} threw error:`, error);
+        console.error(`Contact insert attempt ${attempt} threw error:`, error);
         
         if (attempt < maxRetries) {
-          console.log(`Waiting 1 second before retry ${attempt + 1}...`);
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }

@@ -13,6 +13,10 @@ const {
   extractArticle,
   generateSlug,
   extractKeywords,
+  buildContentOneLiner,
+  buildMetaTitle,
+  buildMetaDescription,
+  buildDefaultKeyFacts,
   delay,
   fetchWithRetry
 } = require('./scraper-utils');
@@ -385,10 +389,7 @@ async function saveArticle(articleData) {
     }
 
     // 确保 one_liner 至少 50 字符
-    const oneLiner = articleData.content.substring(0, 200);
-    const paddedOneLiner = oneLiner.length < 50
-      ? oneLiner + ' Evidence-based information from trusted health organizations.'
-      : oneLiner;
+    const oneLiner = buildContentOneLiner(articleData.content, articleData.source);
 
     const article = {
       slug,
@@ -396,12 +397,11 @@ async function saveArticle(articleData) {
       hub: 'feeding',
       lang: articleData.language || 'en',
       title: articleData.title.substring(0, 200),
-      one_liner: paddedOneLiner.substring(0, 200),
-      key_facts: [
-        `Source: ${articleData.source}`,
-        `Region: ${articleData.region}`,
-        'Evidence-based information for parents'
-      ],
+      one_liner: oneLiner,
+      key_facts: buildDefaultKeyFacts({
+        sourceName: articleData.source,
+        region: articleData.region
+      }),
       body_md: articleData.content,
       entities: extractKeywords(articleData.content),
       age_range: '0-12 months',
@@ -409,8 +409,8 @@ async function saveArticle(articleData) {
       last_reviewed: new Date().toISOString().split('T')[0],
       reviewed_by: 'Web Scraper Bot',
       license: `Source: ${articleData.source} (${articleData.organization}) | Region: ${articleData.region} | URL: ${articleData.url}`,
-      meta_title: articleData.title.substring(0, 60),
-      meta_description: articleData.content.substring(0, 157) + '...',
+      meta_title: buildMetaTitle(articleData.title),
+      meta_description: buildMetaDescription(articleData.content, articleData.source),
       keywords: extractKeywords(articleData.content),
       status: 'draft'
     };

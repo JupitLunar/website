@@ -43,8 +43,8 @@ export default function DearBabyProductPage() {
       )
     },
     {
-      title: "Milestone AI",
-      desc: "GPT-based forecasts of growth, development, and predictive reminders.",
+      title: "Milestone Signals",
+      desc: "Track growth, development, and routine patterns in a more organized daily view.",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -61,8 +61,8 @@ export default function DearBabyProductPage() {
       )
     },
     {
-      title: "Ask GPT Assistant",
-      desc: "Voice and image-based Q&A for instant parenting help and guidance.",
+      title: "Ask Assistant",
+      desc: "Voice and image-supported questions for everyday parenting guidance.",
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -73,13 +73,13 @@ export default function DearBabyProductPage() {
 
   // AEO Optimized Article Data
   const articleData = {
-    title: "DearBaby: AI Baby Tracker & Sleep Coach - Free App with GPT-4o",
+    title: "DearBaby: Baby Tracker & Sleep Support App",
     slug: "products/dearbaby",
-    one_liner: "The smartest free baby tracker with GPT-4o insights, Apple Watch sync, and automatic growth pattern recognition.",
+    one_liner: "A baby tracker for feeds, sleep, diapers, and growth with Apple Watch support and structured guidance from the Mom AI Agent platform.",
     hub: "Tracking",
     age_range: "0-24 months",
     region: "Global",
-    keywords: ["baby tracker", "AI baby assistant", "newborn sleep tracker", "feeding log", "growth chart app", "GPT-4o parenting", "Apple Watch baby app"],
+    keywords: ["baby tracker", "baby assistant", "newborn sleep tracker", "feeding log", "growth chart app", "parenting support", "Apple Watch baby app"],
     date_published: "2025-01-01",
     date_modified: new Date().toISOString().split('T')[0],
     last_reviewed: "2025-12-23",
@@ -103,11 +103,6 @@ export default function DearBabyProductPage() {
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      ratingCount: '2340',
-    },
     author: {
       '@type': 'Organization',
       name: 'Mom AI Agent',
@@ -115,7 +110,7 @@ export default function DearBabyProductPage() {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'JupitLunar',
+      name: 'Mom AI Agent',
       logo: {
         '@type': 'ImageObject',
         url: 'https://www.momaiagent.com/Assets/Logo.png',
@@ -128,11 +123,11 @@ export default function DearBabyProductPage() {
       'One-tap feeding tracking (nursing, bottle, solid foods)',
       'Automatic sleep tracking with pattern recognition',
       'Diaper and milestone logging with photos',
-      'GPT-4o powered AI parenting assistant',
+      'Parenting assistant for common caregiver questions',
       'Apple Watch integration for hands-free tracking',
       'Automatic growth charts and percentile tracking',
       'Smart feeding and sleep reminders',
-      'Pattern recognition and predictive insights',
+      'Routine summaries and pattern visibility',
       'Voice and image-based Q&A',
       'Apple Health synchronization',
       'Free to download with premium analytics option',
@@ -177,7 +172,7 @@ export default function DearBabyProductPage() {
                     transition={{ duration: 0.6, delay: 0.2 }}
                   >
                     <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-                    <span className="text-xs font-semibold tracking-widest text-indigo-600 uppercase">AI-Powered • Part of MomAI Ecosystem</span>
+                    <span className="text-xs font-semibold tracking-widest text-indigo-600 uppercase">Tracking App • Part of Mom AI Agent</span>
                   </motion.div>
 
                   <h1 className="text-6xl lg:text-8xl font-light text-slate-700 mb-8 leading-[1.1] tracking-tight">
@@ -189,7 +184,7 @@ export default function DearBabyProductPage() {
                   </h1>
 
                   <p className="text-2xl text-slate-500/80 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
-                    The smartest free baby tracker with GPT-4o insights, Apple Watch sync, and automatic growth pattern recognition.
+                    A baby tracker for feeds, sleep, diapers, and growth with Apple Watch support and structured guidance for daily family routines.
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
@@ -224,7 +219,7 @@ export default function DearBabyProductPage() {
                           <svg key={s} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                         ))}
                       </div>
-                      <span className="text-sm text-slate-400 font-light italic">Trusted by 18k+ North American families</span>
+                      <span className="text-sm text-slate-400 font-light italic">Built for modern families tracking daily routines with more clarity</span>
                     </div>
                   </div>
                 </motion.div>
@@ -290,8 +285,8 @@ export default function DearBabyProductPage() {
             >
               <BottomLineAnswer
                 question="What is the best baby tracker app with Apple Watch support and AI insights?"
-                answer="DearBaby is the most advanced free baby tracker app featuring full Apple Watch integration, GPT-4o powered parenting guidance, and automatic growth pattern analysis. It allows parents to log feeds, sleep, and diapers with one tap, while providing clinical-grade insights from the MomAI Agent ecosystem."
-                keyNumbers={["18k+ Users", "4.8⭐ Rating", "GPT-4o Engine"]}
+                answer="DearBaby is a baby tracker app with Apple Watch support, one-tap logging, and structured guidance from the Mom AI Agent platform. It helps parents keep feeds, sleep, diapers, and growth records in one calmer workflow."
+                keyNumbers={["Apple Watch Support", "One-Tap Logs", "Structured Guidance"]}
                 actionItems={[
                   "Download DearBaby on the App Store for iOS",
                   "Sync your Apple Watch for hands-free nighttime tracking",
@@ -319,7 +314,7 @@ export default function DearBabyProductPage() {
                 Intuitive <span className="font-medium text-indigo-400">Intelligence.</span>
               </h2>
               <p className="text-xl text-slate-500 max-w-2xl mx-auto font-light leading-relaxed">
-                DearBaby goes beyond simple logging. It analyzes your baby's unique data to predict patterns and provide proactive guidance.
+                DearBaby goes beyond simple logging by organizing everyday records into a clearer view of routines, patterns, and next questions.
               </p>
             </motion.div>
 
@@ -399,7 +394,7 @@ export default function DearBabyProductPage() {
                     {[
                       { t: "Apple Watch Integration", d: "Log nursing, bottles, and naps without reaching for your phone." },
                       { t: "Apple Health Sync", d: "Your baby's data lives alongside your wellness metrics for a full family view." },
-                      { t: "Predictive Reminders", d: "AI predicts the next hunger cue or nap window so you can stay ahead." }
+                      { t: "Routine Reminders", d: "Use recent logs and routine history to stay more prepared for feeds and naps." }
                     ].map((item, i) => (
                       <div key={item.t} className="flex items-start gap-5">
                         <div className="mt-1 w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0">
@@ -431,10 +426,10 @@ export default function DearBabyProductPage() {
                 >
                   <span className="uppercase tracking-[0.4em] text-xs font-bold text-purple-400 mb-6 block">Parenting Intelligence</span>
                   <h2 className="text-5xl md:text-6xl font-light text-slate-700 mb-10 leading-tight tracking-tight">
-                    An expert in your <span className="font-medium italic text-purple-500 underline decoration-purple-100 underline-offset-8">pocket</span>, 24/7.
+                    A calmer guide in your <span className="font-medium italic text-purple-500 underline decoration-purple-100 underline-offset-8">daily routine</span>.
                   </h2>
                   <p className="text-xl text-slate-500/80 mb-12 leading-relaxed font-light">
-                    Ask questions, upload photos, or just vent. Our GPT-4o assistant uses MomAI Agent's clinical RAG database to give you evidence-based answers tailored to your baby's age and history.
+                    Ask questions, upload photos, or capture concerns in the moment. The assistant connects everyday tracking with the wider Mom AI Agent knowledge layer for more structured guidance.
                   </p>
                   <div className="grid sm:grid-cols-2 gap-8">
                     <div className="p-10 rounded-[2.5rem] bg-white shadow-xl shadow-slate-200/40 border border-slate-100 group hover:border-purple-200 transition-all duration-300">
@@ -491,7 +486,7 @@ export default function DearBabyProductPage() {
             >
               <h2 className="text-5xl lg:text-6xl font-light text-slate-700 mb-8 tracking-tight">Essential <span className="font-medium text-indigo-400">Care Guides.</span></h2>
               <p className="text-xl text-slate-500 font-light max-w-3xl mx-auto leading-relaxed">
-                Directly pulled from our RAG knowledge base, verified against WHO and CDC clinical guidelines for 2025.
+                Organized from the Mom AI Agent knowledge system and aligned with public-health guidance families commonly reference.
               </p>
             </motion.div>
 
@@ -574,7 +569,7 @@ export default function DearBabyProductPage() {
                 {[
                   {
                     q: "What makes DearBaby different from other trackers?",
-                    a: "DearBaby integrates the latest GPT-4o intelligence with clinical-grade pattern recognition. It doesn't just store data; it understands it, helping you spot sleep regressions or feeding issues before they become overwhelming."
+                    a: "DearBaby combines tracking, summaries, and guidance pathways in one place. The goal is not just to store data, but to help families review routines and notice patterns more clearly."
                   },
                   {
                     q: "Is my baby's data private and secure?",
@@ -582,7 +577,7 @@ export default function DearBabyProductPage() {
                   },
                   {
                     q: "Can I share the account with my partner or nanny?",
-                    a: "Absolutely. DearBaby supports multi-user synchronization, so everyone on your baby's care team can log and view data in real-time across multiple devices."
+                    a: "Yes. DearBaby is designed for shared family workflows, so multiple caregivers can stay aligned around the same tracking history and routines."
                   }
                 ].map((faq, i) => (
                   <motion.div
@@ -626,7 +621,7 @@ export default function DearBabyProductPage() {
               <div className="text-center md:text-left">
                 <h4 className="text-2xl font-medium text-slate-700 mb-3 tracking-tight">Part of the MomAI Agent Ecosystem</h4>
                 <p className="text-lg text-slate-500 font-light leading-relaxed">
-                  DearBaby is the core tracking component of the MomAI Agent mission. Together with Solid Start, we provide a unified evidence-based journey for modern parents.
+                  DearBaby is the tracking layer within Mom AI Agent. Together with Solid Start, it helps connect everyday routines with broader feeding and care guidance.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-4">
                   <Link href="/" className="inline-flex items-center gap-2 text-indigo-500 font-medium hover:text-indigo-600 transition-colors">
@@ -642,7 +637,7 @@ export default function DearBabyProductPage() {
             <NewsletterSignup
               variant="default"
               title="Parenting Patterns Weekly"
-              description="Join 18,000+ parents getting AI-powered insights and development tips every Tuesday."
+              description="Get weekly guidance, development notes, and product updates from the Mom AI Agent platform."
             />
           </div>
         </section>
@@ -666,7 +661,7 @@ export default function DearBabyProductPage() {
                 Parent with <span className="font-medium italic text-indigo-400">Intelligence.</span>
               </h2>
               <p className="text-2xl mb-16 text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-                Join thousands of families turning data into calm, joyful parenting moments with DearBaby.
+                Use DearBaby to keep daily tracking simpler, calmer, and more connected to trusted guidance.
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
                 <a
@@ -686,8 +681,8 @@ export default function DearBabyProductPage() {
               </div>
               <div className="mt-16 flex flex-wrap justify-center gap-8 opacity-40 grayscale brightness-200">
                 <span className="text-sm font-bold tracking-[0.3em]">APPLE HEALTH SYNC</span>
-                <span className="text-sm font-bold tracking-[0.3em]">GPT-4o POWERED</span>
-                <span className="text-sm font-bold tracking-[0.3em]">WHO COMPLIANT</span>
+                <span className="text-sm font-bold tracking-[0.3em]">ASSISTED GUIDANCE</span>
+                <span className="text-sm font-bold tracking-[0.3em]">SOURCE-LINKED</span>
               </div>
             </motion.div>
           </div>

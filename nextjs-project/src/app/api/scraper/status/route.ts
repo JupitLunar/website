@@ -2,31 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 import { createClient } from '@supabase/supabase-js';
+import { requireApiSecret } from '@/lib/api-auth';
 
 /**
  * 爬虫状态查询API
  * 查看最近的爬取结果和统计信息
  */
 
-function validateApiKey(request: NextRequest): boolean {
-  const authHeader = request.headers.get('authorization');
-  const apiKey = process.env.SCRAPER_API_KEY;
-
-  if (!apiKey) return false;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) return false;
-
-  const token = authHeader.substring(7);
-  return token === apiKey;
-}
-
 export async function GET(request: NextRequest) {
   try {
-    // 验证API密钥
-    if (!validateApiKey(request)) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+    const unauthorized = requireApiSecret(request, {
+      secretNames: ['CRON_SECRET', 'SCRAPER_API_KEY'],
+      context: 'scraper status endpoint',
+    });
+
+    if (unauthorized) {
+      return unauthorized;
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -88,4 +79,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

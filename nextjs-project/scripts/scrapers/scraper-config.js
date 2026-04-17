@@ -5,6 +5,16 @@
  * 定义要爬取的权威网站和数据提取规则
  */
 
+const {
+  cleanTitleText,
+  buildContentOneLiner,
+  buildMetaTitle,
+  buildMetaDescription,
+  buildDefaultKeyFacts,
+  extractKeywords: sharedExtractKeywords,
+  generateSlug: sharedGenerateSlug
+} = require('./scraper-utils');
+
 // 权威来源配置
 const SOURCES = {
   // CDC - Centers for Disease Control and Prevention
@@ -186,7 +196,7 @@ const SCRAPER_CONFIG = {
   requestConfig: {
     timeout: 30000, // 30秒超时
     headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; JupitLunarBot/1.0; +https://jupitlunar.com/bot)',
+      'User-Agent': 'Mozilla/5.0 (compatible; MomAIAgentBot/1.0; +https://www.momaiagent.com/bot)',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.9',
       'Accept-Encoding': 'gzip, deflate, br',
@@ -269,37 +279,15 @@ const DATA_MAPPING = {
 
 // 辅助函数
 function generateSlug(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .substring(0, 100);
+  return sharedGenerateSlug(title);
 }
 
 function cleanTitle(title) {
-  return title
-    .replace(/\s+/g, ' ')
-    .replace(/[^\w\s-:]/g, '')
-    .trim()
-    .substring(0, 200);
+  return cleanTitleText(title, 200);
 }
 
 function generateOneLiner(content) {
-  // 提取第一段或前150个字符
-  const text = content.substring(0, 500);
-  const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
-  let oneLiner = sentences[0] || text.substring(0, 150);
-  
-  // 确保在50-200字符之间
-  if (oneLiner.length < 50) {
-    oneLiner = text.substring(0, 150);
-  }
-  if (oneLiner.length > 200) {
-    oneLiner = oneLiner.substring(0, 197) + '...';
-  }
-  
-  return oneLiner.trim();
+  return buildContentOneLiner(content);
 }
 
 function extractKeyFacts(content) {
@@ -316,9 +304,7 @@ function extractKeyFacts(content) {
   
   // 至少3个，最多8个
   return facts.slice(0, 8).length >= 3 ? facts.slice(0, 8) : [
-    'Extracted from authoritative health source',
-    'Evidence-based information for parents',
-    'Reviewed by healthcare professionals'
+    ...buildDefaultKeyFacts()
   ];
 }
 
@@ -385,35 +371,15 @@ function determineRegion(source) {
 }
 
 function generateMetaTitle(title) {
-  return title.substring(0, 60) + (title.length > 60 ? '...' : '');
+  return buildMetaTitle(title);
 }
 
 function generateMetaDescription(content) {
-  const text = content.replace(/<[^>]+>/g, '').substring(0, 200);
-  return text.substring(0, 157) + '...';
+  return buildMetaDescription(content);
 }
 
 function extractKeywords(content) {
-  const keywords = new Set();
-  const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for'];
-  
-  const words = content
-    .toLowerCase()
-    .match(/\b[a-z]{4,}\b/g) || [];
-  
-  // 统计词频
-  const freq = {};
-  words.forEach(word => {
-    if (!commonWords.includes(word)) {
-      freq[word] = (freq[word] || 0) + 1;
-    }
-  });
-  
-  // 取频率最高的10个词
-  return Object.entries(freq)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([word]) => word);
+  return sharedExtractKeywords(content, 10);
 }
 
 function mapCategory(category) {
@@ -447,4 +413,3 @@ module.exports = {
   SCRAPER_CONFIG,
   DATA_MAPPING
 };
-

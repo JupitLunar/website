@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { filterPublicFacingArticles } from '@/lib/content-surface';
 export const dynamic = 'force-dynamic';
 
 
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Format for AI/LLM consumption
-  const formattedArticles = articles?.map(article => {
+  const formattedArticles = filterPublicFacingArticles(articles || []).map(article => {
     const citations = Array.isArray((article as any).citations) ? (article as any).citations : [];
     const primaryCitation = citations[0];
     const sourceName = primaryCitation?.publisher || primaryCitation?.author || primaryCitation?.title || article.reviewed_by || 'Official health organization';

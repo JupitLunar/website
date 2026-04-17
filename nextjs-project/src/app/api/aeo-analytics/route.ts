@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 import { createClient } from '@supabase/supabase-js';
+import { requireApiSecret } from '@/lib/api-auth';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -12,6 +13,15 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
  */
 export async function GET(request: NextRequest) {
     try {
+        const unauthorized = requireApiSecret(request, {
+            secretNames: ['INTERNAL_API_SECRET', 'REVALIDATION_SECRET'],
+            context: 'AEO analytics endpoint',
+        });
+
+        if (unauthorized) {
+            return unauthorized;
+        }
+
         const { searchParams } = new URL(request.url);
         const period = searchParams.get('period') || '24h'; // 24h, 7d, 30d
         const metric = searchParams.get('metric') || 'all'; // all, usage, quality, citations
