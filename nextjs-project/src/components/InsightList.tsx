@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { filterCleanKeywords } from '@/lib/supabase';
+import { isInsightArticleReviewer } from '@/lib/content-surface';
 
 interface InsightListProps {
   articles: any[];
@@ -30,27 +31,35 @@ export default function InsightList({ articles, hasActiveFilters, clearFiltersUr
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {articles.map((article: any) => {
         const cleanKeywords = filterCleanKeywords(article.keywords || []);
+        const visibleKeyFacts = Array.isArray(article.key_facts)
+          ? article.key_facts.filter((fact: string) => fact && !fact.startsWith('__AEO')).slice(0, 2)
+          : [];
+        const reviewLabel = getReviewLabel(article.reviewed_by);
+
         return (
           <Link
             key={article.id}
             href={`/insight/${article.slug}`}
-            className="group premium-card flex flex-col"
+            className="group flex h-full flex-col rounded-[28px] border border-slate-200/80 bg-white/90 p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md"
             aria-label={`Read insight: ${article.title}`}
           >
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold ${getHubColor(article.hub)}`}>
+            <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+              <span className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] font-semibold ${getHubColor(article.hub)}`}>
                 {getHubName(article.hub)}
               </span>
-              <span className="text-[11px] uppercase tracking-[0.2em]">
+              <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[10px] font-medium text-slate-500">
+                {reviewLabel}
+              </span>
+              <span className="ml-auto text-[11px] uppercase tracking-[0.2em]">
                 {formatDate(article.date_published || article.created_at)}
               </span>
             </div>
 
-            <h2 className="text-2xl font-light text-slate-700 mb-3 group-hover:text-slate-900 transition-colors line-clamp-2">
+            <h2 className="mb-3 line-clamp-2 text-2xl font-light text-slate-700 transition-colors group-hover:text-slate-900">
               {article.title}
             </h2>
 
-            <p className="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-3 flex-1">
+            <p className="mb-4 flex-1 line-clamp-3 text-sm leading-relaxed text-slate-500">
               {article.one_liner || article.meta_description}
             </p>
 
@@ -79,18 +88,27 @@ export default function InsightList({ articles, hasActiveFilters, clearFiltersUr
               </div>
             )}
 
-            {article.key_facts && Array.isArray(article.key_facts) && article.key_facts.length > 0 && (
-              <p className="text-xs text-slate-400 mb-6 line-clamp-2">
-                Key points: {article.key_facts.filter((f: string) => !f.startsWith('__AEO')).slice(0, 2).join(' | ')}
-              </p>
+            {visibleKeyFacts.length > 0 && (
+              <div className="mb-6 rounded-2xl border border-slate-100 bg-slate-50/80 px-4 py-3">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Key signals</p>
+                <p className="line-clamp-3 text-sm leading-relaxed text-slate-600">
+                  {visibleKeyFacts.join(' | ')}
+                </p>
+              </div>
             )}
 
-            <div className="mt-auto pt-4 border-t border-slate-200/70 flex items-center justify-between text-xs text-slate-400">
-              <span>
-                {article.age_range ? `Age: ${article.age_range}` : 'All stages'}
+            <div className="mt-auto flex items-center justify-between border-t border-slate-200/70 pt-4 text-xs text-slate-400">
+              <span className="inline-flex items-center gap-2">
+                <span>{article.age_range ? `Age ${article.age_range}` : 'All stages'}</span>
+                {isInsightArticleReviewer(article.reviewed_by) && (
+                  <span className="hidden sm:inline text-slate-300">•</span>
+                )}
+                {isInsightArticleReviewer(article.reviewed_by) && (
+                  <span className="hidden sm:inline">Public explainer</span>
+                )}
               </span>
               <span className="inline-flex items-center gap-2 text-slate-500 group-hover:text-violet-500 transition-colors">
-                Read insight
+                Open insight
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                 </svg>
@@ -135,4 +153,10 @@ function formatDate(dateString: string | null) {
     month: 'long',
     day: 'numeric'
   });
+}
+
+function getReviewLabel(reviewedBy: string | null | undefined) {
+  if (reviewedBy === 'Medical Review Board') return 'Medical review';
+  if (reviewedBy === 'AI Content Generator') return 'Editorial explainer';
+  return 'Public article';
 }

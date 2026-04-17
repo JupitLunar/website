@@ -35,7 +35,7 @@ async function loadKnowledge() {
 }
 
 export const metadata = {
-  title: 'Feeding Foundations 0–18 Months | JupitLunar',
+  title: 'Feeding Foundations 0–18 Months | Mom AI Agent',
   description:
     'Readiness cues, texture progression, and cup transition strategies for infants and toddlers. Built from CDC, AAP, and Health Canada guidance for North American families.',
 };

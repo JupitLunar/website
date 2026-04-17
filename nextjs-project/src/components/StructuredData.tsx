@@ -44,7 +44,7 @@ export function DatasetStructuredData({ articles }: { articles: any[] }) {
     '@type': 'Dataset',
     name: 'Baby Care & Parenting Articles Database',
     description: 'Comprehensive database of evidence-based baby care articles from authoritative medical sources worldwide',
-    url: 'https://www.momaiagent.com/latest-articles',
+    url: 'https://www.momaiagent.com/articles',
     keywords: [
       'baby care',
       'parenting',
@@ -56,7 +56,7 @@ export function DatasetStructuredData({ articles }: { articles: any[] }) {
     ],
     creator: {
       '@type': 'Organization',
-      name: 'JupitLunar',
+      name: 'Mom AI Agent',
       url: 'https://www.momaiagent.com'
     },
     distribution: {

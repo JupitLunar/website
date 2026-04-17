@@ -34,7 +34,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${siteUrl}/trust`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.8,
+    },
+    {
+      url: `${siteUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.75,
+    },
+    {
+      url: `${siteUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/methodology`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/clinical-review-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/data-use-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
     },
     {
       url: `${siteUrl}/products/dearbaby`,
@@ -44,6 +74,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${siteUrl}/products/solidstart`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/foods`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
@@ -81,10 +117,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Get all articles (authoritative content)
-  const [articles, hubs] = await Promise.all([
-    contentManager.getAllArticles().catch(() => []),
-    contentManager.getContentHubs().catch(() => []),
-  ]);
+  const articles = await contentManager.getAllArticles().catch(() => []);
 
   // Get AI-generated insight articles
   let insightArticles: any[] = [];
@@ -110,15 +143,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       insightArticles = [];
     }
   }
-
-  const hubRoutes: MetadataRoute.Sitemap = Array.isArray(hubs)
-    ? hubs.map((hub: any) => ({
-      url: `${siteUrl}/hub/${hub.slug}`,
-      lastModified: hub.updated_at ? new Date(hub.updated_at) : new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    }))
-    : [];
 
   // 基于内容类型和新鲜度的智能优先级
   const articleRoutes: MetadataRoute.Sitemap = Array.isArray(articles)
@@ -188,5 +212,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
     : [];
 
-  return [...baseRoutes, ...hubRoutes, ...articleRoutes, ...insightRoutes];
+  return [...baseRoutes, ...articleRoutes, ...insightRoutes];
 }

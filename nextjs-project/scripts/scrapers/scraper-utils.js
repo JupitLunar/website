@@ -204,6 +204,81 @@ function generateSlug(title) {
     .replace(/^-+|-+$/g, ''); // 移除首尾的连字符
 }
 
+function stripHtml(text = '') {
+  return text.replace(/<[^>]+>/g, ' ');
+}
+
+function normalizeText(text = '') {
+  return stripHtml(text).replace(/\s+/g, ' ').trim();
+}
+
+function clampText(text = '', maxLength = 160) {
+  const normalized = normalizeText(text);
+  if (!normalized) return '';
+  if (normalized.length <= maxLength) return normalized;
+
+  const sliced = normalized.slice(0, maxLength);
+  const lastSpace = sliced.lastIndexOf(' ');
+  return `${(lastSpace > 40 ? sliced.slice(0, lastSpace) : sliced).trim()}...`;
+}
+
+function cleanTitleText(title = '', maxLength = 200) {
+  const cleaned = normalizeText(title)
+    .replace(/[|]{2,}/g, '|')
+    .replace(/\s+[|:-]\s*$/, '');
+
+  return cleaned.slice(0, maxLength).trim();
+}
+
+function buildContentOneLiner(content = '', sourceName = '') {
+  const normalized = normalizeText(content);
+  if (!normalized) {
+    return sourceName
+      ? `Structured summary from ${sourceName} for clearer caregiver guidance.`
+      : 'Structured summary from a public health source for clearer caregiver guidance.';
+  }
+
+  const sentences = normalized.match(/[^.!?]+[.!?]+/g) || [];
+  let candidate = sentences.find(sentence => sentence.trim().length >= 60) || sentences[0] || normalized;
+  candidate = clampText(candidate, 180);
+
+  if (candidate.length < 50) {
+    candidate = clampText(normalized, 180);
+  }
+
+  if (candidate.length < 50) {
+    return sourceName
+      ? `Structured summary from ${sourceName} for clearer caregiver guidance.`
+      : 'Structured summary from a public health source for clearer caregiver guidance.';
+  }
+
+  return candidate;
+}
+
+function buildMetaTitle(title = '', suffix = 'Mom AI Agent', maxLength = 68) {
+  const cleanTitle = cleanTitleText(title, 200);
+  if (!cleanTitle) return suffix;
+
+  const full = `${cleanTitle} | ${suffix}`;
+  if (full.length <= maxLength) return full;
+
+  if (cleanTitle.length <= maxLength) return cleanTitle;
+  return clampText(cleanTitle, maxLength);
+}
+
+function buildMetaDescription(content = '', sourceName = '') {
+  const summary = buildContentOneLiner(content, sourceName);
+  return clampText(summary || content, 160);
+}
+
+function buildDefaultKeyFacts({ sourceName, region } = {}) {
+  return [
+    sourceName ? `Source: ${sourceName}` : 'Source: Public guidance',
+    region ? `Region: ${region}` : 'Region: Global',
+    'Structured summary prepared for clearer caregiver reference'
+  ];
+}
+
 /**
  * 提取关键词
  */
@@ -213,7 +288,9 @@ function extractKeywords(content, limit = 10) {
     'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had',
     'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might',
     'can', 'your', 'you', 'they', 'them', 'their', 'this', 'that', 'with',
-    'from', 'about', 'when', 'what', 'which', 'who', 'how', 'if', 'as', 'by'
+    'from', 'about', 'when', 'what', 'which', 'who', 'how', 'if', 'as', 'by',
+    'baby', 'babies', 'parent', 'parents', 'care', 'health', 'children',
+    'information', 'guidance', 'source', 'sources', 'article', 'articles'
   ]);
 
   const words = content
@@ -391,11 +468,15 @@ module.exports = {
   validateContent,
   extractArticle,
   generateSlug,
+  cleanTitleText,
+  buildContentOneLiner,
+  buildMetaTitle,
+  buildMetaDescription,
+  buildDefaultKeyFacts,
   extractKeywords,
   delay,
   fetchWithRetry
 };
-
 
 
 

@@ -4,11 +4,14 @@ import { unstable_cache } from 'next/cache';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Script from 'next/script';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { filterCleanKeywords } from '@/lib/supabase';
 import SocialShare from '@/components/SocialShare';
 import CitationBox from '@/components/CitationBox';
 
 import { generateMedicalWebPageSchema } from '@/lib/aeo-optimizations';
+import { filterPublicFacingArticles, isPublicFacingArticle } from '@/lib/content-surface';
 // AEO Helper: Extract FAQ data from keywords
 function extractAEOData(keywords: string[]) {
   const faqs: { question: string; answer: string }[] = [];
@@ -146,7 +149,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const aeoData = extractAEOData(article.keywords || []);
 
   return {
-    title: `${article.title} | Insights | Mom AI Agent`,
+    title: `${article.title} | Insights`,
     description: article.meta_description || article.one_liner,
     keywords: aeoData.cleanKeywords,
     authors: [{ name: 'Mom AI Agent Editorial Team' }],
@@ -203,7 +206,7 @@ const getInsightSlugs = unstable_cache(
       .in('reviewed_by', ['AI Content Generator', 'Medical Review Board'])
       .eq('status', 'published');
 
-    return articles || [];
+    return filterPublicFacingArticles(articles || []);
   },
   ['insights-slugs'],
   { tags: ['insights'], revalidate: 300 }
@@ -223,7 +226,11 @@ const getInsightBySlug = unstable_cache(
       .eq('status', 'published')
       .single();
 
-    return article || null;
+    if (!article || !isPublicFacingArticle(article)) {
+      return null;
+    }
+
+    return article;
   },
   ['insight-by-slug'],
   { tags: ['insights'], revalidate: 300 }
@@ -244,7 +251,7 @@ const getRelatedInsights = unstable_cache(
       .order('created_at', { ascending: false })
       .limit(6);
 
-    return relatedArticles || [];
+    return filterPublicFacingArticles(relatedArticles || []);
   },
   ['insights-related'],
   { tags: ['insights'], revalidate: 300 }
@@ -284,6 +291,31 @@ function formatDate(dateString: string | null) {
   });
 }
 
+function getReviewLabel(reviewedBy: string | null | undefined) {
+  if (reviewedBy === 'Medical Review Board') return 'Medical review';
+  if (reviewedBy === 'AI Content Generator') return 'Editorial explainer';
+  return 'Public article';
+}
+
+function sanitizeEntity(entity: string) {
+  return entity
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getVisibleAuthorityEntities(entities: string[] | null | undefined) {
+  if (!entities || entities.length === 0) return [];
+
+  return entities
+    .map(sanitizeEntity)
+    .filter((entity) => entity.length >= 3)
+    .filter((entity, index, all) => all.indexOf(entity) === index)
+    .filter((entity) => !/^aeo/i.test(entity))
+    .filter((entity) => !/optimized|integration|test/i.test(entity))
+    .slice(0, 6);
+}
+
 // Related Articles Component
 async function RelatedArticlesSection({ currentArticle }: { currentArticle: any }) {
   const currentKeywords = filterCleanKeywords(currentArticle.keywords || []);
@@ -320,14 +352,14 @@ async function RelatedArticlesSection({ currentArticle }: { currentArticle: any 
         <svg className="w-6 h-6 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
-        Related Insights
+        Continue in this topic
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {topRelated.map((related: any) => (
           <Link
             key={related.id}
             href={`/insight/${related.slug}`}
-            className="group premium-card flex flex-col"
+            className="group flex flex-col rounded-[28px] border border-slate-200/80 bg-white/90 p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-md"
             aria-label={`Read insight: ${related.title}`}
           >
             <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
@@ -363,6 +395,12 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
 
   // Extract AEO data from keywords
   const aeoData = extractAEOData(article.keywords || []);
+  const visibleKeywords = aeoData.cleanKeywords.slice(0, 8);
+  const visibleKeyFacts = Array.isArray(article.key_facts)
+    ? article.key_facts.filter((fact: string) => fact && !fact.startsWith('__AEO'))
+    : [];
+  const authorityEntities = getVisibleAuthorityEntities(article.entities || []);
+  const reviewLabel = getReviewLabel(article.reviewed_by);
 
   // Generate JSON-LD schemas
   const schemas = generateArticleSchema(article, aeoData);
@@ -410,6 +448,9 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold ${getHubColor(article.hub)}`}>
               {getHubName(article.hub)}
             </span>
+            <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[10px] font-medium text-slate-500">
+              {reviewLabel}
+            </span>
             {article.age_range && (
               <span className="text-xs uppercase tracking-[0.2em] text-slate-400">
                 Age {article.age_range}
@@ -436,6 +477,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
             {article.date_modified && (
               <span>Updated {formatDate(article.date_modified)}</span>
             )}
+            <span>Hub {getHubName(article.hub)}</span>
           </div>
 
           {/* Quick Answer Box - AEO Critical Section */}
@@ -448,7 +490,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
                   </svg>
                 </span>
                 <div>
-                  <h2 className="text-sm font-semibold text-violet-800 uppercase tracking-wider mb-2">Quick Answer</h2>
+                  <h2 className="text-sm font-semibold text-violet-800 uppercase tracking-wider mb-2">Bottom Line</h2>
                   <p className="text-slate-700 leading-relaxed" itemProp="description">
                     {aeoData.quickAnswer}
                   </p>
@@ -465,7 +507,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
           )}
 
           {/* Key Facts / Key Takeaways */}
-          {article.key_facts && Array.isArray(article.key_facts) && article.key_facts.length > 0 && (
+          {visibleKeyFacts.length > 0 && (
             <div className="bg-white/80 border border-slate-200 rounded-2xl p-6 shadow-sm">
               <h2 className="text-lg font-medium text-slate-700 mb-4 flex items-center gap-2">
                 <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -474,7 +516,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
                 Key Takeaways
               </h2>
               <ul className="space-y-3 text-slate-600">
-                {article.key_facts.filter((f: string) => !f.startsWith('__AEO')).map((fact: string, idx: number) => (
+                {visibleKeyFacts.map((fact: string, idx: number) => (
                   <li key={idx} className="flex items-start">
                     <span className="mr-3 mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0"></span>
                     <span>{fact}</span>
@@ -485,12 +527,42 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
           )}
         </header>
 
+        <section className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Content Type</p>
+            <p className="text-sm font-medium text-slate-700">{reviewLabel}</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-500">
+              This page is part of the public insight layer inside the Mom AI Agent answer hub.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Best Use</p>
+            <p className="text-sm font-medium text-slate-700">Understand the topic, then widen if needed</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-500">
+              Start here for context, then move into search, FAQ, or the foods database when you need a more specific path.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Trust Layer</p>
+            <p className="text-sm font-medium text-slate-700">Public guidance with platform boundaries</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate-500">
+              Review the trust center to inspect the source model, evidence boundaries, and how these explainers are produced.
+            </p>
+          </div>
+        </section>
+
         {/* Article Body */}
         <div className="prose prose-slate lg:prose-lg max-w-none mb-12" itemProp="articleBody">
           {article.body_md ? (
-            <div
-              dangerouslySetInnerHTML={{ __html: article.body_md }}
-            />
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ node, ...props }) => <a {...props} className="text-violet-600 hover:text-violet-700" />,
+                table: ({ node, ...props }) => <table {...props} className="w-full border-collapse text-sm" />,
+              }}
+            >
+              {article.body_md}
+            </ReactMarkdown>
           ) : (
             <p className="text-slate-500">Content coming soon...</p>
           )}
@@ -560,7 +632,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
         )}
 
         {/* Keywords Section - AEO Enhancement */}
-        {aeoData.cleanKeywords.length > 0 && (
+        {visibleKeywords.length > 0 && (
           <section className="mb-12">
             <h2 className="text-2xl font-light text-slate-700 mb-4 flex items-center gap-3">
               <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -569,7 +641,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
               Related Topics
             </h2>
             <div className="flex flex-wrap gap-2">
-              {aeoData.cleanKeywords.map((keyword: string, idx: number) => (
+              {visibleKeywords.map((keyword: string, idx: number) => (
                 <Link
                   key={idx}
                   href={`/insight?keyword=${encodeURIComponent(keyword)}`}
@@ -588,7 +660,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
             <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            Next Step
+            Continue in the Answer Hub
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             <Link
@@ -596,24 +668,30 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
               className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
             >
               <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">FAQ</span>
-              <h3 className="text-lg font-medium text-slate-700 mb-2">Need a faster version?</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">Jump to the feeding and safety FAQ for shorter answers when you do not need the full article.</p>
+              <h3 className="text-lg font-medium text-slate-700 mb-2">Need a faster summary?</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Jump to the FAQ when you want a shorter answer path than a full explainer.</p>
             </Link>
             <Link
-              href="/products/dearbaby"
+              href="/search"
               className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
             >
-              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">DearBaby</span>
-              <h3 className="text-lg font-medium text-slate-700 mb-2">Need to track this daily?</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">Use DearBaby when this guidance needs to turn into feed logs, sleep patterns, or growth notes.</p>
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Answer hub</span>
+              <h3 className="text-lg font-medium text-slate-700 mb-2">Need a wider answer path?</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">Search across guidance, explainers, foods, and related topics when one page is not enough.</p>
             </Link>
             <Link
-              href="/products/solidstart"
+              href={article.hub === 'feeding' ? '/foods' : '/topics'}
               className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm hover:shadow-md transition-all"
             >
-              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">Solid Start</span>
-              <h3 className="text-lg font-medium text-slate-700 mb-2">Need food planning next?</h3>
-              <p className="text-sm text-slate-500 leading-relaxed">Use Solid Start when the next step is recipes, BLW prep, allergen routines, or first-food planning.</p>
+              <span className="block text-xs uppercase tracking-[0.25em] text-slate-400 mb-3">{article.hub === 'feeding' ? 'Foods database' : 'Topics library'}</span>
+              <h3 className="text-lg font-medium text-slate-700 mb-2">
+                {article.hub === 'feeding' ? 'Need a food-by-food view next?' : 'Need the primary guidance layer?'}
+              </h3>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                {article.hub === 'feeding'
+                  ? 'Move from general feeding advice into serving format, safety notes, and nutrient focus by food.'
+                  : 'Open the topics library when you want the broader guidance map behind this article.'}
+              </p>
             </Link>
           </div>
         </section>
@@ -641,46 +719,40 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
         <div className="grid gap-6 md:grid-cols-2 mt-12">
           <div className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm">
             <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-[0.25em] mb-2">
-              Evidence Sources
+              Review and Source Layer
             </h3>
             <p className="text-sm text-slate-500 mb-3">
-              This insight is generated using RAG (Retrieval-Augmented Generation) from verified health guidelines.
+              This page is part of the public evidence hub and is framed to help caregivers move from a question into a next step.
             </p>
             <div className="flex flex-wrap gap-2 mb-4">
-              {/* Filter known authoritative entities */}
-              {article.entities?.filter((e: string) =>
-                ['CDC', 'AAP', 'WHO', 'Health Canada', 'NHS', 'FDA', 'NIH', 'Mayo Clinic'].includes(e)
-              ).map((org: string, idx: number) => (
+              <span className="px-2 py-1 bg-violet-50 text-violet-700 text-[10px] font-bold rounded border border-violet-100 uppercase tracking-wider">
+                {reviewLabel}
+              </span>
+              {authorityEntities.map((org: string, idx: number) => (
                 <span key={idx} className="px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded border border-emerald-100 uppercase tracking-wider">
                   {org}
                 </span>
               ))}
-              {/* Fallback or additional sources */}
-              {(!article.entities || article.entities.length === 0) && (
-                <>
-                  <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">AAP</span>
-                  <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">CDC</span>
-                  <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded">WHO</span>
-                </>
+              {authorityEntities.length === 0 && (
+                <span className="px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded border border-slate-200 uppercase tracking-wider">
+                  Trust center details
+                </span>
               )}
-              <span className="px-2 py-1 bg-violet-50 text-violet-700 text-[10px] font-bold rounded border border-violet-100 uppercase tracking-wider">
-                RAG-Verified
-              </span>
             </div>
             <Link
               href="/trust"
               className="inline-flex items-center text-sm text-violet-500 hover:text-violet-600 font-medium"
-              aria-label="Learn about our AI generation methodology"
+              aria-label="Review the trust center and source model"
             >
-              Verify Methodology →
+              Review trust and methodology →
             </Link>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm">
             <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-[0.25em] mb-2">
-              Medical Disclaimer
+              Platform Boundary
             </h3>
             <p className="text-sm text-slate-500">
-              This content is educational and does not replace professional medical advice. Always consult your pediatrician for personal health concerns.
+              This content is educational and does not replace professional medical advice. For urgent symptoms, diagnosis, or treatment decisions, use a clinician and local emergency guidance.
             </p>
             <Link
               href="/trust"

@@ -33,7 +33,7 @@ async function loadKnowledge() {
 }
 
 export const metadata = {
-  title: 'Allergen Readiness & Early Introduction | JupitLunar',
+  title: 'Allergen Readiness & Early Introduction | Mom AI Agent',
   description:
     'Evidence-based allergen introduction plan for infants: peanut, egg, dairy and fish exposure, plus vitamin D support and mixed feeding strategies.',
 };

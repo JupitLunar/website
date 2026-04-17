@@ -11,10 +11,14 @@ CREATE TABLE kb_faqs (
   answer_html TEXT, -- Pre-rendered HTML for performance
 
   -- Categorization
-  category TEXT NOT NULL, -- 'feeding', 'sleep', 'health-safety', 'development', 'behavior', 'daily-care'
+  category TEXT NOT NULL, -- 'platform-trust', 'feeding', 'sleep', 'fever-safety', 'postpartum', 'nutrition'
   subcategory TEXT, -- e.g., 'allergens', 'solid-introduction', 'nap-transitions'
   age_range TEXT[] DEFAULT '{}', -- e.g., ['0-6 months', '6-12 months', '12-24 months']
   locale TEXT NOT NULL DEFAULT 'Global', -- 'Global', 'USA', 'Canada'
+  source_layer TEXT,
+  source_kind TEXT CHECK (source_kind IN ('platform', 'authority')),
+  source_label TEXT,
+  source_url TEXT,
 
   -- Relationships
   source_ids TEXT[] DEFAULT '{}', -- Foreign keys to kb_sources
@@ -112,6 +116,6 @@ Always consult your pediatrician before starting solids, especially if your baby
 );
 
 COMMENT ON TABLE kb_faqs IS 'Stores FAQ content with source attribution, topic relationships, and age-targeting for AEO optimization';
-COMMENT ON COLUMN kb_faqs.category IS 'Main category: feeding, sleep, health-safety, development, behavior, daily-care';
+COMMENT ON COLUMN kb_faqs.category IS 'Main category: platform-trust, feeding, sleep, fever-safety, postpartum, nutrition';
 COMMENT ON COLUMN kb_faqs.related_topic_slugs IS 'Topic pages where this FAQ should appear (e.g., feeding-foundations, allergen-readiness)';
 COMMENT ON COLUMN kb_faqs.priority IS 'Sort order - lower number = higher priority / appears first';

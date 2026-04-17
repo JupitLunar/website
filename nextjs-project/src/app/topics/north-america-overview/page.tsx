@@ -47,7 +47,7 @@ async function loadKnowledge() {
 }
 
 export const metadata = {
-  title: 'North America Infant Feeding Overview | JupitLunar',
+  title: 'North America Infant Feeding Overview | Mom AI Agent',
   description:
     'Single-page executive summary for 0–24 month feeding in the U.S. and Canada: TL;DR guidance, age-stage matrix, safety guardrails, and micronutrient quick reference built from CDC, Health Canada, AAP, and CPS sources.',
 };

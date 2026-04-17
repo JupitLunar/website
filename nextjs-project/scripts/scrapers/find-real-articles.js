@@ -8,7 +8,7 @@ async function testArticle(url) {
     const response = await axios.get(url, {
       timeout: 10000,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; JupitLunarBot/1.0)'
+        'User-Agent': 'Mozilla/5.0 (compatible; MomAIAgentBot/1.0)'
       }
     });
 

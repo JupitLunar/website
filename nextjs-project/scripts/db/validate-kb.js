@@ -10,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const DEFAULT_FILE = path.resolve(__dirname, '../supabase/seed/knowledge_base.json');
+const DEFAULT_FILE = path.resolve(__dirname, '../../supabase/seed/knowledge_base.json');
 
 const RISK_LEVELS = new Set(['none', 'low', 'medium', 'high']);
 const RULE_CATEGORIES = new Set([

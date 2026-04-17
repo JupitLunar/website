@@ -27,7 +27,7 @@ export default function CitationBox({
   title,
   url,
   lastReviewed,
-  siteName = 'JupitLunar',
+  siteName = 'Mom AI Agent',
 }: CitationBoxProps) {
   const [copied, setCopied] = useState<string | null>(null);
 

@@ -1,0 +1,242 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Mom AI Agent Logo Mom AI Agent Evidence Intelligence Platform for Mom & Baby" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Mom AI Agent Logo" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Mom AI Agent
+          - generic [ref=e9]: Evidence Intelligence Platform for Mom & Baby
+      - generic [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - button "Products" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]: Products
+          - img [ref=e15]
+        - button "Topics" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: Topics
+          - img [ref=e20]
+        - link "Programs" [ref=e22] [cursor=pointer]:
+          - /url: /programs
+        - link "Insights" [ref=e23] [cursor=pointer]:
+          - /url: /insight
+        - button "About" [ref=e25] [cursor=pointer]:
+          - generic [ref=e26]: About
+          - img [ref=e27]
+        - link [ref=e29] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e30]
+        - link "Try DearBaby" [ref=e32] [cursor=pointer]:
+          - /url: /products/dearbaby
+  - main [ref=e33]:
+    - generic [ref=e34]:
+      - generic [ref=e38]:
+        - img [ref=e40]
+        - heading "Food Database" [level=1] [ref=e42]
+        - paragraph [ref=e43]: Evidence-based feeding guides for your baby's journey
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - img [ref=e46]
+            - generic [ref=e49]: 30+ Foods
+          - generic [ref=e50]:
+            - img [ref=e51]
+            - generic [ref=e53]: Age-Specific Guides
+          - generic [ref=e54]:
+            - img [ref=e55]
+            - generic [ref=e57]: Safety Assessed
+        - generic [ref=e59]:
+          - textbox "Search foods... (e.g., 'avocado', 'iron-rich')" [ref=e60]
+          - img [ref=e62]
+      - generic [ref=e66]:
+        - complementary [ref=e67]:
+          - generic [ref=e69]:
+            - heading "Filters" [level=2] [ref=e71]:
+              - img [ref=e72]
+              - text: Filters
+            - generic [ref=e74]:
+              - heading "Starting Age" [level=3] [ref=e75]
+              - generic [ref=e76]:
+                - generic [ref=e77] [cursor=pointer]:
+                  - checkbox "6m+" [ref=e78]
+                  - generic [ref=e79]: 6m+
+                - generic [ref=e80] [cursor=pointer]:
+                  - checkbox "9m+" [ref=e81]
+                  - generic [ref=e82]: 9m+
+                - generic [ref=e83] [cursor=pointer]:
+                  - checkbox "12m+" [ref=e84]
+                  - generic [ref=e85]: 12m+
+                - generic [ref=e86] [cursor=pointer]:
+                  - checkbox "18m+" [ref=e87]
+                  - generic [ref=e88]: 18m+
+                - generic [ref=e89] [cursor=pointer]:
+                  - checkbox "24m+" [ref=e90]
+                  - generic [ref=e91]: 24m+
+            - generic [ref=e93]:
+              - heading "Choking Risk" [level=3] [ref=e94]
+              - generic [ref=e95]:
+                - generic [ref=e96] [cursor=pointer]:
+                  - checkbox "✓ No Risk" [ref=e97]
+                  - generic [ref=e98]:
+                    - generic [ref=e99]: ✓
+                    - text: No Risk
+                - generic [ref=e100] [cursor=pointer]:
+                  - checkbox "🟢 Low Risk" [ref=e101]
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: 🟢
+                    - text: Low Risk
+                - generic [ref=e104] [cursor=pointer]:
+                  - checkbox "🟡 Medium Risk" [ref=e105]
+                  - generic [ref=e106]:
+                    - generic [ref=e107]: 🟡
+                    - text: Medium Risk
+                - generic [ref=e108] [cursor=pointer]:
+                  - checkbox "🔴 High Risk" [ref=e109]
+                  - generic [ref=e110]:
+                    - generic [ref=e111]: 🔴
+                    - text: High Risk
+            - generic [ref=e113]:
+              - heading "Feeding Method" [level=3] [ref=e114]
+              - generic [ref=e115]:
+                - generic [ref=e116] [cursor=pointer]:
+                  - checkbox "Baby-Led Weaning" [ref=e117]
+                  - generic [ref=e118]: Baby-Led Weaning
+                - generic [ref=e119] [cursor=pointer]:
+                  - checkbox "puree" [ref=e120]
+                  - generic [ref=e121]: puree
+                - generic [ref=e122] [cursor=pointer]:
+                  - checkbox "both" [ref=e123]
+                  - generic [ref=e124]: both
+            - generic [ref=e126]:
+              - heading "Nutrition Focus" [level=3] [ref=e127]
+              - generic [ref=e128]:
+                - generic [ref=e129] [cursor=pointer]:
+                  - checkbox "Iron-rich" [ref=e130]
+                  - generic [ref=e131]: Iron-rich
+                - generic [ref=e132] [cursor=pointer]:
+                  - checkbox "Vitamin C" [ref=e133]
+                  - generic [ref=e134]: Vitamin C
+                - generic [ref=e135] [cursor=pointer]:
+                  - checkbox "Protein" [ref=e136]
+                  - generic [ref=e137]: Protein
+                - generic [ref=e138] [cursor=pointer]:
+                  - checkbox "Healthy Fats" [ref=e139]
+                  - generic [ref=e140]: Healthy Fats
+                - generic [ref=e141] [cursor=pointer]:
+                  - checkbox "Fiber" [ref=e142]
+                  - generic [ref=e143]: Fiber
+                - generic [ref=e144] [cursor=pointer]:
+                  - checkbox "Calcium" [ref=e145]
+                  - generic [ref=e146]: Calcium
+        - main [ref=e147]:
+          - heading "Loading..." [level=2] [ref=e149]
+      - generic [ref=e188]:
+        - generic [ref=e189]:
+          - heading "How to Use This Database" [level=2] [ref=e190]
+          - paragraph [ref=e191]: Evidence-based guidance from CDC, AAP, and Health Canada
+        - generic [ref=e192]:
+          - generic [ref=e193]:
+            - generic [ref=e195]: 1️⃣
+            - heading "Search by Food" [level=3] [ref=e196]
+            - paragraph [ref=e197]: Use the search bar to find specific foods or browse by category
+          - generic [ref=e198]:
+            - generic [ref=e200]: 2️⃣
+            - heading "Filter by Age & Risk" [level=3] [ref=e201]
+            - paragraph [ref=e202]: Use filters to find age-appropriate foods with your preferred risk level
+          - generic [ref=e203]:
+            - generic [ref=e205]: 3️⃣
+            - heading "View Preparation Guides" [level=3] [ref=e206]
+            - paragraph [ref=e207]: Click on any food to see age-specific cutting and preparation instructions
+        - generic [ref=e208]:
+          - link "Feeding app Turn food lookups into a calmer solid-start plan Use Solid Start for recipes, BLW planning, allergen guidance, and lunchbox ideas once you know the food basics." [ref=e209] [cursor=pointer]:
+            - /url: /products/solidstart
+            - generic [ref=e210]: Feeding app
+            - heading "Turn food lookups into a calmer solid-start plan" [level=3] [ref=e211]
+            - paragraph [ref=e212]: Use Solid Start for recipes, BLW planning, allergen guidance, and lunchbox ideas once you know the food basics.
+          - link "FAQ path Need bigger-picture feeding answers? Jump into the baby feeding FAQ for solids readiness, allergen timing, portions, and food safety questions." [ref=e213] [cursor=pointer]:
+            - /url: /faq
+            - generic [ref=e214]: FAQ path
+            - heading "Need bigger-picture feeding answers?" [level=3] [ref=e215]
+            - paragraph [ref=e216]: Jump into the baby feeding FAQ for solids readiness, allergen timing, portions, and food safety questions.
+          - link "Trust See how our food guidance is sourced Review the CDC, AAP, WHO, CPS, and Health Canada content process behind the database." [ref=e217] [cursor=pointer]:
+            - /url: /trust
+            - generic [ref=e218]: Trust
+            - heading "See how our food guidance is sourced" [level=3] [ref=e219]
+            - paragraph [ref=e220]: Review the CDC, AAP, WHO, CPS, and Health Canada content process behind the database.
+  - contentinfo [ref=e221]:
+    - generic [ref=e222]:
+      - generic [ref=e223]:
+        - generic [ref=e224]:
+          - link "Mom AI Agent Logo Mom AI Agent Evidence Intelligence Platform for Mom & Baby" [ref=e225] [cursor=pointer]:
+            - /url: /
+            - img "Mom AI Agent Logo" [ref=e228]
+            - generic [ref=e229]:
+              - generic [ref=e230]: Mom AI Agent
+              - text: Evidence Intelligence Platform for Mom & Baby
+          - paragraph [ref=e231]: Source-linked guidance, product workflows, and explainable answers for feeding, sleep, safety, development, and postpartum care.
+          - generic [ref=e232]:
+            - link "Try DearBaby" [ref=e233] [cursor=pointer]:
+              - /url: /products/dearbaby
+            - link "Explore Insights" [ref=e234] [cursor=pointer]:
+              - /url: /insight
+            - link "Partner With Us" [ref=e235] [cursor=pointer]:
+              - /url: /contact
+        - generic [ref=e236]:
+          - heading "Explore" [level=3] [ref=e237]
+          - list [ref=e238]:
+            - listitem [ref=e239]:
+              - link "Topics Library" [ref=e240] [cursor=pointer]:
+                - /url: /topics
+            - listitem [ref=e241]:
+              - link "Insights" [ref=e242] [cursor=pointer]:
+                - /url: /insight
+            - listitem [ref=e243]:
+              - link "Foods Database" [ref=e244] [cursor=pointer]:
+                - /url: /foods
+            - listitem [ref=e245]:
+              - link "DearBaby" [ref=e246] [cursor=pointer]:
+                - /url: /products/dearbaby
+            - listitem [ref=e247]:
+              - link "Solid Start" [ref=e248] [cursor=pointer]:
+                - /url: /products/solidstart
+            - listitem [ref=e249]:
+              - link "FAQ" [ref=e250] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e251]:
+          - heading "Trust" [level=3] [ref=e252]
+          - list [ref=e253]:
+            - listitem [ref=e254]:
+              - link "Trust Center" [ref=e255] [cursor=pointer]:
+                - /url: /trust
+            - listitem [ref=e256]:
+              - link "Methodology" [ref=e257] [cursor=pointer]:
+                - /url: /methodology
+            - listitem [ref=e258]:
+              - link "Clinical Review Policy" [ref=e259] [cursor=pointer]:
+                - /url: /clinical-review-policy
+            - listitem [ref=e260]:
+              - link "Data Use Policy" [ref=e261] [cursor=pointer]:
+                - /url: /data-use-policy
+            - listitem [ref=e262]:
+              - link "Privacy" [ref=e263] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e264]:
+              - link "Disclaimer" [ref=e265] [cursor=pointer]:
+                - /url: /disclaimer
+        - generic [ref=e266]:
+          - heading "Stay Updated" [level=3] [ref=e267]
+          - paragraph [ref=e268]: Get product updates, source refreshes, and new guidance paths in your inbox.
+          - generic [ref=e269]:
+            - textbox "Enter your email" [ref=e270]
+            - button "Subscribe" [ref=e271] [cursor=pointer]
+      - generic [ref=e272]:
+        - paragraph [ref=e273]: © 2025 Mom AI Agent. All rights reserved.
+        - generic [ref=e274]:
+          - link "support@momaiagent.com" [ref=e275] [cursor=pointer]:
+            - /url: mailto:support@momaiagent.com
+          - link "LinkedIn" [ref=e276] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/dearbabyai
+          - link "Instagram" [ref=e277] [cursor=pointer]:
+            - /url: https://www.instagram.com/dearbabyai
+  - button "Open contact chatbot":
+    - img
+  - alert [ref=e278]

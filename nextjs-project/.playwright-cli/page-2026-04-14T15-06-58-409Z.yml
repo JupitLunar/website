@@ -1,0 +1,581 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Mom AI Agent Logo Mom AI Agent Evidence Intelligence Platform for Mom & Baby" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Mom AI Agent Logo" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Mom AI Agent
+          - generic [ref=e9]: Evidence Intelligence Platform for Mom & Baby
+      - generic [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - button "Products" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]: Products
+          - img [ref=e15]
+        - button "Topics" [ref=e18] [cursor=pointer]:
+          - generic [ref=e19]: Topics
+          - img [ref=e20]
+        - link "Programs" [ref=e22] [cursor=pointer]:
+          - /url: /programs
+        - link "Insights" [ref=e23] [cursor=pointer]:
+          - /url: /insight
+        - button "About" [ref=e25] [cursor=pointer]:
+          - generic [ref=e26]: About
+          - img [ref=e27]
+        - link [ref=e29] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e30]
+        - link "Try DearBaby" [ref=e32] [cursor=pointer]:
+          - /url: /products/dearbaby
+  - main [ref=e33]:
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - generic:
+          - img "Moon Tree Background"
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - img [ref=e43]
+            - generic [ref=e45]: Evidence Intelligence Platform for Mom & Baby
+          - heading "Evidence Intelligence for Mom & Baby" [level=1] [ref=e46]:
+            - text: Evidence Intelligence for
+            - text: Mom & Baby
+          - paragraph [ref=e47]: An Evidence Intelligence Platform for Mom & Baby, bringing together structured answers, trusted source pathways, and daily-use apps for feeding, sleep, safety, and postpartum care.
+          - generic [ref=e48]:
+            - paragraph [ref=e49]: Guidance framework informed by leading health organizations
+            - generic [ref=e50]:
+              - generic [ref=e51]: CDC
+              - generic [ref=e52]: American Academy of Pediatrics
+              - generic [ref=e53]: WHO
+              - generic [ref=e54]: Health Canada
+              - generic [ref=e55]: Canadian Paediatric Society
+          - generic [ref=e56]:
+            - generic [ref=e57]:
+              - img [ref=e59]
+              - heading "Evidence" [level=3] [ref=e61]
+              - paragraph [ref=e62]: Public-health and clinical references are translated into source-linked answers, age-aware rules, and reusable care guidance.
+            - generic [ref=e63]:
+              - img [ref=e65]
+              - heading "Method" [level=3] [ref=e67]
+              - paragraph [ref=e68]: Recommendations are designed to be explainable, traceable, and reviewable instead of generic parenting copy with hidden logic.
+            - generic [ref=e69]:
+              - img [ref=e71]
+              - heading "Products" [level=3] [ref=e73]
+              - paragraph [ref=e74]: Families start with an answer, move into DearBaby or Solid Start, and keep a trackable next action inside the same platform.
+          - generic [ref=e75]:
+            - link "Try DearBaby tracking app" [ref=e76] [cursor=pointer]:
+              - /url: /products/dearbaby
+              - text: Try DearBaby
+            - link "Explore Evidence Hub" [ref=e77] [cursor=pointer]:
+              - /url: /search
+            - link "Partner With Us" [ref=e78] [cursor=pointer]:
+              - /url: /contact
+              - text: Partner With Us →
+          - generic [ref=e79]:
+            - button "Get Feeding Roadmap" [ref=e80] [cursor=pointer]
+            - generic [ref=e81]: •
+            - button "Ask the Answer Hub" [ref=e82] [cursor=pointer]
+            - generic [ref=e83]: •
+            - link "Review Methodology" [ref=e84] [cursor=pointer]:
+              - /url: /trust
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - paragraph [ref=e87]: Apps
+              - paragraph [ref=e88]: Platform lens
+              - paragraph [ref=e89]: Consumer tools for tracking, feeding, and daily family routines
+            - generic [ref=e90]:
+              - paragraph [ref=e91]: Sources
+              - paragraph [ref=e92]: Knowledge layer
+              - paragraph [ref=e93]: Structured guidance linked back to public-health and clinical references
+            - generic [ref=e94]:
+              - paragraph [ref=e95]: Workflows
+              - paragraph [ref=e96]: Partner path
+              - paragraph [ref=e97]: A system that can extend into clinics, care teams, and family programs
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: Evidence
+          - heading "Authority turned into answers families can actually use" [level=2] [ref=e102]
+          - paragraph [ref=e103]: These pages are organized around common caregiver search intent, turning high-stress questions into a clearer knowledge system with structured answers and visible sources.
+        - generic [ref=e104]:
+          - link "Intent path Starting solids at 6 months Readiness signs, first foods, and how to introduce solids without overwhelm. Open guide" [ref=e105] [cursor=pointer]:
+            - /url: /insight/pain-new-mom-feeding-first-foods
+            - paragraph [ref=e106]: Intent path
+            - heading "Starting solids at 6 months" [level=3] [ref=e107]
+            - paragraph [ref=e108]: Readiness signs, first foods, and how to introduce solids without overwhelm.
+            - generic [ref=e109]:
+              - text: Open guide
+              - img [ref=e110]
+          - link "Intent path Baby fever when to worry Temperature thresholds, red flags, and when urgent care matters most. Open guide" [ref=e112] [cursor=pointer]:
+            - /url: /insight/pain-midnight-emergency-fever-steps
+            - paragraph [ref=e113]: Intent path
+            - heading "Baby fever when to worry" [level=3] [ref=e114]
+            - paragraph [ref=e115]: Temperature thresholds, red flags, and when urgent care matters most.
+            - generic [ref=e116]:
+              - text: Open guide
+              - img [ref=e117]
+          - link "Intent path How to introduce peanut safely A step-by-step allergen intro plan based on NIAID and pediatric guidance. Open guide" [ref=e119] [cursor=pointer]:
+            - /url: /insight/pain-allergy-introduction-safety
+            - paragraph [ref=e120]: Intent path
+            - heading "How to introduce peanut safely" [level=3] [ref=e121]
+            - paragraph [ref=e122]: A step-by-step allergen intro plan based on NIAID and pediatric guidance.
+            - generic [ref=e123]:
+              - text: Open guide
+              - img [ref=e124]
+          - link "Intent path Newborn sleep schedule Age-based sleep expectations, wake windows, and settling routines. Open guide" [ref=e126] [cursor=pointer]:
+            - /url: /insight
+            - paragraph [ref=e127]: Intent path
+            - heading "Newborn sleep schedule" [level=3] [ref=e128]
+            - paragraph [ref=e129]: Age-based sleep expectations, wake windows, and settling routines.
+            - generic [ref=e130]:
+              - text: Open guide
+              - img [ref=e131]
+          - link "Intent path Baby food database Cut sizes, textures, safety notes, and age guidance for first foods and beyond. Open guide" [ref=e133] [cursor=pointer]:
+            - /url: /foods
+            - paragraph [ref=e134]: Intent path
+            - heading "Baby food database" [level=3] [ref=e135]
+            - paragraph [ref=e136]: Cut sizes, textures, safety notes, and age guidance for first foods and beyond.
+            - generic [ref=e137]:
+              - text: Open guide
+              - img [ref=e138]
+          - link "Intent path Postpartum recovery guidance Warning signs, recovery milestones, and evidence-based maternal care support. Open guide" [ref=e140] [cursor=pointer]:
+            - /url: /insight?hub=mom-health
+            - paragraph [ref=e141]: Intent path
+            - heading "Postpartum recovery guidance" [level=3] [ref=e142]
+            - paragraph [ref=e143]: Warning signs, recovery milestones, and evidence-based maternal care support.
+            - generic [ref=e144]:
+              - text: Open guide
+              - img [ref=e145]
+      - generic [ref=e148]:
+        - generic [ref=e149]:
+          - paragraph [ref=e150]: Method
+          - heading "How guidance becomes explainable, reviewable, and trackable" [level=2] [ref=e151]
+          - paragraph [ref=e152]: Mom AI Agent is designed to show how evidence is selected, structured, limited, and turned into next-step guidance across the platform.
+        - generic [ref=e153]:
+          - link "Platform policy Trust Center See the source hierarchy, platform boundaries, and how guidance moves from public references into reusable answer objects. Open page" [ref=e154] [cursor=pointer]:
+            - /url: /trust
+            - paragraph [ref=e155]: Platform policy
+            - heading "Trust Center" [level=3] [ref=e156]
+            - paragraph [ref=e157]: See the source hierarchy, platform boundaries, and how guidance moves from public references into reusable answer objects.
+            - generic [ref=e158]:
+              - text: Open page
+              - img [ref=e159]
+          - link "Platform policy Methodology Review how evidence is selected, weighted, structured, refreshed, and prepared for explainable recommendations. Open page" [ref=e161] [cursor=pointer]:
+            - /url: /methodology
+            - paragraph [ref=e162]: Platform policy
+            - heading "Methodology" [level=3] [ref=e163]
+            - paragraph [ref=e164]: Review how evidence is selected, weighted, structured, refreshed, and prepared for explainable recommendations.
+            - generic [ref=e165]:
+              - text: Open page
+              - img [ref=e166]
+          - link "Platform policy Clinical Review Policy Understand what is clinically reviewed, what is educational, and how medical-risk content is escalated or limited. Open page" [ref=e168] [cursor=pointer]:
+            - /url: /clinical-review-policy
+            - paragraph [ref=e169]: Platform policy
+            - heading "Clinical Review Policy" [level=3] [ref=e170]
+            - paragraph [ref=e171]: Understand what is clinically reviewed, what is educational, and how medical-risk content is escalated or limited.
+            - generic [ref=e172]:
+              - text: Open page
+              - img [ref=e173]
+      - generic [ref=e176]:
+        - generic [ref=e177]:
+          - paragraph [ref=e178]: Products
+          - heading "Move from answer into action, tracking, and handoff" [level=2] [ref=e179]
+          - paragraph [ref=e180]: Mom AI Agent works as both a knowledge layer and a product ecosystem for day-to-day parenting decisions.
+        - generic [ref=e181]:
+          - link "Tracking app DearBaby tracking app Track feeds, sleep, diapers, and growth in a calmer daily workflow connected to the wider guidance platform. Open path" [ref=e182] [cursor=pointer]:
+            - /url: /products/dearbaby
+            - paragraph [ref=e183]: Tracking app
+            - heading "DearBaby tracking app" [level=3] [ref=e184]
+            - paragraph [ref=e185]: Track feeds, sleep, diapers, and growth in a calmer daily workflow connected to the wider guidance platform.
+            - generic [ref=e186]:
+              - text: Open path
+              - img [ref=e187]
+          - link "Feeding app Solid Start feeding app Recipes, BLW planning, allergen guidance, and meal ideas for families starting solids with more structure. Open path" [ref=e189] [cursor=pointer]:
+            - /url: /products/solidstart
+            - paragraph [ref=e190]: Feeding app
+            - heading "Solid Start feeding app" [level=3] [ref=e191]
+            - paragraph [ref=e192]: Recipes, BLW planning, allergen guidance, and meal ideas for families starting solids with more structure.
+            - generic [ref=e193]:
+              - text: Open path
+              - img [ref=e194]
+          - link "Answer hub Ask evidence-based parenting questions Browse common questions about sleep, fever, solids, postpartum recovery, and safety. Open path" [ref=e196] [cursor=pointer]:
+            - /url: /faq
+            - paragraph [ref=e197]: Answer hub
+            - heading "Ask evidence-based parenting questions" [level=3] [ref=e198]
+            - paragraph [ref=e199]: Browse common questions about sleep, fever, solids, postpartum recovery, and safety.
+            - generic [ref=e200]:
+              - text: Open path
+              - img [ref=e201]
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - heading "Ask Mom AI Agent" [level=2] [ref=e206]
+          - paragraph [ref=e207]: Ask a caregiving question and get a structured answer with next steps and source links
+        - generic [ref=e208]:
+          - generic [ref=e210]:
+            - textbox "Ask about feeding, sleep, safety, postpartum recovery, or first foods..." [ref=e211]
+            - button [disabled] [ref=e212]:
+              - img [ref=e213]
+          - generic [ref=e215]:
+            - paragraph [ref=e216]: "Try asking:"
+            - generic [ref=e217]:
+              - button "Infant development milestones" [ref=e218] [cursor=pointer]
+              - button "Breastfeeding challenges" [ref=e219] [cursor=pointer]
+              - button "Childbirth preparation" [ref=e220] [cursor=pointer]
+              - button "Postpartum depression signs" [ref=e221] [cursor=pointer]
+              - button "Starting solid foods" [ref=e222] [cursor=pointer]
+              - button "Newborn sleep patterns" [ref=e223] [cursor=pointer]
+              - button "Baby vaccination schedule" [ref=e224] [cursor=pointer]
+              - button "Managing baby colic" [ref=e225] [cursor=pointer]
+              - button "6-month-old food guide" [ref=e226] [cursor=pointer]
+              - button "Diaper rash prevention" [ref=e227] [cursor=pointer]
+      - generic [ref=e229]:
+        - generic [ref=e230]:
+          - paragraph [ref=e231]: AEO summary
+          - heading "A direct summary for caregivers and answer engines" [level=2] [ref=e232]
+          - paragraph [ref=e233]: "This section exists to make Mom AI Agent easier to understand quickly: what it is, who it serves, and why its answers are structured around cited health guidance."
+        - generic [ref=e234]:
+          - article [ref=e235]:
+            - heading "What Mom AI Agent is" [level=3] [ref=e236]
+            - paragraph [ref=e237]: Mom AI Agent is an Evidence Intelligence Platform for Mom & Baby that combines structured guidance, product workflows, and source-linked support for maternal and infant care.
+          - article [ref=e238]:
+            - heading "Who it helps" [level=3] [ref=e239]
+            - paragraph [ref=e240]: It is built for parents, caregivers, clinicians, and partner programs that need clear feeding, sleep, safety, and postpartum guidance without piecing together scattered resources.
+          - article [ref=e241]:
+            - heading "Why answer engines can trust it" [level=3] [ref=e242]
+            - paragraph [ref=e243]: The site publishes citations, structured guides, FAQ signals, and machine-readable schema so recommendations can be traced back to visible source material instead of generic parenting copy.
+      - generic [ref=e245]:
+        - generic [ref=e246]:
+          - paragraph [ref=e247]: FAQ signals
+          - heading "Caregiver pain points we answer daily" [level=2] [ref=e248]
+          - paragraph [ref=e249]: These are recurring caregiver questions we structure into clearer answer paths, each linked to the underlying public-health or clinical source.
+        - generic [ref=e250]:
+          - article [ref=e251]:
+            - paragraph [ref=e252]: Feeding
+            - heading "Is my 6-month-old ready for solids?" [level=3] [ref=e253]
+            - paragraph [ref=e254]: Look for steady head control, the ability to sit with support, interest in food, and the tongue-thrust reflex fading. If you are unsure, confirm with your pediatrician before offering solids.
+            - generic [ref=e255]:
+              - paragraph [ref=e256]:
+                - text: "Source:"
+                - 'link "CDC: When, What, and How to Introduce Solid Foods" [ref=e257] [cursor=pointer]':
+                  - /url: https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html
+              - paragraph [ref=e258]: Structured within the Mom AI Agent knowledge system
+            - link "View structured guide" [ref=e259] [cursor=pointer]:
+              - /url: /insight/pain-new-mom-feeding-first-foods
+              - text: View structured guide
+              - img [ref=e260]
+          - article [ref=e262]:
+            - paragraph [ref=e263]: Safety
+            - heading "When is a baby fever dangerous?" [level=3] [ref=e264]
+            - paragraph [ref=e265]: For babies under 3 months, a rectal temperature of 100.4°F (38°C) or higher needs urgent medical evaluation. For older babies, watch hydration, breathing, responsiveness, and other red flags in addition to temperature.
+            - generic [ref=e266]:
+              - paragraph [ref=e267]:
+                - text: "Source:"
+                - 'link "AAP HealthyChildren.org: Fever and Your Baby" [ref=e268] [cursor=pointer]':
+                  - /url: https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/Fever-and-Your-Baby.aspx
+              - paragraph [ref=e269]: Structured within the Mom AI Agent knowledge system
+            - link "View structured guide" [ref=e270] [cursor=pointer]:
+              - /url: /insight/pain-midnight-emergency-fever-steps
+              - text: View structured guide
+              - img [ref=e271]
+          - article [ref=e273]:
+            - paragraph [ref=e274]: Feeding
+            - heading "How do I safely introduce allergens like peanut?" [level=3] [ref=e275]
+            - paragraph [ref=e276]: Choose a low-stress day, offer a pea-sized amount of a safe texture (e.g., thinned peanut butter), and observe for 2–3 hours. If tolerated, keep offering 2–3 times per week to maintain tolerance unless your clinician advises otherwise.
+            - generic [ref=e277]:
+              - paragraph [ref=e278]:
+                - text: "Source:"
+                - link "NIAID Addendum Guidelines for Peanut Allergy Prevention" [ref=e279] [cursor=pointer]:
+                  - /url: https://www.niaid.nih.gov/diseases-conditions/guidelines-clinicians-and-patients-food-allergy
+              - paragraph [ref=e280]: Structured within the Mom AI Agent knowledge system
+            - link "View structured guide" [ref=e281] [cursor=pointer]:
+              - /url: /insight/pain-allergy-introduction-safety
+              - text: View structured guide
+              - img [ref=e282]
+        - link "Browse the full FAQ →" [ref=e285] [cursor=pointer]:
+          - /url: /faq
+      - generic [ref=e287]:
+        - generic [ref=e288]:
+          - heading "Everything You Need" [level=2] [ref=e289]
+          - paragraph [ref=e290]: A connected set of resources for feeding, safety, development, and maternal-infant decision support
+        - generic [ref=e291]:
+          - link "Food Database Age-appropriate foods with safety ratings, preparation guides, and nutritional insights Explore Foods" [ref=e293] [cursor=pointer]:
+            - /url: /foods
+            - generic [ref=e294]:
+              - img [ref=e296]
+              - heading "Food Database" [level=3] [ref=e298]
+              - paragraph [ref=e299]: Age-appropriate foods with safety ratings, preparation guides, and nutritional insights
+              - generic [ref=e300]:
+                - text: Explore Foods
+                - img [ref=e301]
+          - link "Safety Guidelines Choking prevention, food storage, and travel safety protocols Safety First" [ref=e304] [cursor=pointer]:
+            - /url: /topics/safety-and-hygiene
+            - generic [ref=e305]:
+              - img [ref=e307]
+              - heading "Safety Guidelines" [level=3] [ref=e309]
+              - paragraph [ref=e310]: Choking prevention, food storage, and travel safety protocols
+              - generic [ref=e311]:
+                - text: Safety First
+                - img [ref=e312]
+          - link "Feeding Milestones Developmental readiness, texture progression, and portion guidance Learn Milestones" [ref=e315] [cursor=pointer]:
+            - /url: /topics/feeding-foundations
+            - generic [ref=e316]:
+              - img [ref=e318]
+              - heading "Feeding Milestones" [level=3] [ref=e320]
+              - paragraph [ref=e321]: Developmental readiness, texture progression, and portion guidance
+              - generic [ref=e322]:
+                - text: Learn Milestones
+                - img [ref=e323]
+          - link "Allergen Introduction Evidence-based protocols for safe allergen introduction Safe Introduction" [ref=e326] [cursor=pointer]:
+            - /url: /topics/allergen-readiness
+            - generic [ref=e327]:
+              - img [ref=e329]
+              - heading "Allergen Introduction" [level=3] [ref=e331]
+              - paragraph [ref=e332]: Evidence-based protocols for safe allergen introduction
+              - generic [ref=e333]:
+                - text: Safe Introduction
+                - img [ref=e334]
+      - generic [ref=e337]:
+        - generic [ref=e338]:
+          - heading "Our Mobile Apps" [level=2] [ref=e339]
+          - paragraph [ref=e340]: Move from research into daily-use product workflows for tracking, feeding, and calmer routines
+        - generic [ref=e341]:
+          - generic [ref=e342]:
+            - generic [ref=e343]:
+              - img [ref=e345]
+              - generic [ref=e347]:
+                - heading "DearBaby" [level=3] [ref=e348]
+                - paragraph [ref=e349]: Baby Tracker & Sleep
+            - paragraph [ref=e350]: A daily tracking app for feeds, sleep, diapers, and growth, designed to turn fragmented notes into a calmer family routine.
+            - generic [ref=e351]:
+              - paragraph [ref=e352]: Best for
+              - paragraph [ref=e353]: Newborn and infant tracking, feeding logs, sleep patterns, diaper counts, and families who want a more organized daily record.
+            - generic [ref=e354]:
+              - generic [ref=e357]: Log nursing, bottle & nap with one tap
+              - generic [ref=e360]: View growth charts and routine-oriented reminders
+              - generic [ref=e363]: Allergy-aware weaning tips & Apple Watch sync
+            - generic [ref=e364]:
+              - generic [ref=e365]:
+                - link "Download DearBaby app from App Store" [ref=e366] [cursor=pointer]:
+                  - /url: https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368
+                  - text: Download Free
+                - link "Learn more about DearBaby app features and benefits" [ref=e367] [cursor=pointer]:
+                  - /url: /products/dearbaby
+                  - text: Learn More
+              - link "View DearBaby app on App Store" [ref=e368] [cursor=pointer]:
+                - /url: https://apps.apple.com/us/app/dearbaby-grow-feed-sleep-track/id6747565368
+                - text: View on App Store →
+          - generic [ref=e369]:
+            - generic [ref=e370]:
+              - img [ref=e372]
+              - generic [ref=e374]:
+                - 'heading "DearBaby: Solid Start" [level=3] [ref=e375]'
+                - paragraph [ref=e376]: Baby Recipes · BLW Lunchbox
+            - paragraph [ref=e377]: Purées, mashed foods, soft pieces, and beginner finger foods in a calm interface for families introducing solids around 6+ months.
+            - generic [ref=e378]:
+              - paragraph [ref=e379]: Best for
+              - paragraph [ref=e380]: Families starting solids, comparing first foods, building BLW meals, and looking for more structured feeding support.
+            - generic [ref=e381]:
+              - generic [ref=e384]: Recipes by stage with step-by-step guidance
+              - generic [ref=e387]: Lunchbox builder for balanced meals
+              - generic [ref=e390]: Favorites & collections organized by month
+            - generic [ref=e391]:
+              - generic [ref=e392]:
+                - link "Download Solid Start app from App Store" [ref=e393] [cursor=pointer]:
+                  - /url: https://apps.apple.com/us/app/dearbaby-solid-start/id6749838104
+                  - text: Download Free
+                - link "Learn more about Solid Start app features and baby feeding guidance" [ref=e394] [cursor=pointer]:
+                  - /url: /products/solidstart
+                  - text: Learn More
+              - link "View Solid Start app on App Store" [ref=e395] [cursor=pointer]:
+                - /url: https://apps.apple.com/us/app/dearbaby-solid-start/id6749838104
+                - text: View on App Store →
+      - generic [ref=e397]:
+        - generic [ref=e398]:
+          - heading "Evidence-First Knowledge Engine" [level=2] [ref=e399]
+          - paragraph [ref=e400]: Built on a structured knowledge layer that connects content, search, product workflows, and source-linked answer delivery
+        - generic [ref=e401]:
+          - generic [ref=e402]:
+            - heading "Structured Knowledge Base" [level=3] [ref=e403]
+            - paragraph [ref=e404]: Structured Care Topics
+            - paragraph [ref=e405]: A growing library of caregiver questions, feeding topics, safety concerns, and maternal-infant guidance paths organized for reuse.
+          - generic [ref=e406]:
+            - heading "Verified Sources" [level=3] [ref=e407]
+            - paragraph [ref=e408]: Source-Linked Guidance
+            - paragraph [ref=e409]: Recommendations point back to public-health authorities, clinical references, and visible source material wherever possible.
+          - generic [ref=e410]:
+            - heading "Delivery Infrastructure" [level=3] [ref=e411]
+            - paragraph [ref=e412]: Structured Answer Delivery
+            - paragraph [ref=e413]: The platform connects search, content objects, and answer pathways so knowledge can flow into consumer tools and future partner workflows.
+        - generic [ref=e414]:
+          - heading "What Care Teams Are Saying" [level=3] [ref=e415]
+          - generic [ref=e416]:
+            - generic [ref=e417]:
+              - paragraph [ref=e418]: “The knowledge base mirrors our clinic protocol. I can pull citations instantly and give parents a calm, evidence-backed plan in minutes.”
+              - paragraph [ref=e419]: — Katherine, RN & IBCLC
+            - generic [ref=e420]:
+              - paragraph [ref=e421]: "“Our AI assistant finally references real sources. The `/api/ai-feed` endpoint is the fastest way I’ve shipped credible parenting answers.”"
+              - paragraph [ref=e422]: — Leon, Product Lead
+      - generic [ref=e424]:
+        - generic [ref=e425]:
+          - heading "Built for transparency, structure, and long-term trust" [level=2] [ref=e426]
+          - paragraph [ref=e427]: Professional trust comes from visible boundaries, clear sourcing, and a platform model that explains how guidance is assembled.
+        - generic [ref=e428]:
+          - generic [ref=e429]:
+            - img [ref=e431]
+            - heading "Official Guidelines" [level=3] [ref=e433]
+            - paragraph [ref=e434]: Guidance pathways are built with reference to organizations such as CDC, AAP, WHO, CPS, and Health Canada.
+          - generic [ref=e435]:
+            - img [ref=e437]
+            - heading "Regularly Updated" [level=3] [ref=e439]
+            - paragraph [ref=e440]: Content, source links, and answer structures are designed to be reviewable and maintainable as the knowledge base grows.
+          - generic [ref=e441]:
+            - img [ref=e443]
+            - heading "Transparent Sources" [level=3] [ref=e445]
+            - paragraph [ref=e446]: Source visibility is part of the product experience so families and partners can understand where guidance comes from.
+        - link "Learn about our trust and methodology model" [ref=e448] [cursor=pointer]:
+          - /url: /trust
+          - text: Learn about our trust and methodology model
+          - img [ref=e449]
+      - generic [ref=e453]:
+        - paragraph [ref=e454]: Latest evidence
+        - heading "Fast answers sourced from clinical guidelines" [level=2] [ref=e455]
+        - paragraph [ref=e456]: Every summary below links to the full article, citations, and machine-readable schema so AI agents and parents see the same facts.
+      - generic [ref=e480]:
+        - generic [ref=e481]:
+          - paragraph [ref=e482]: Human trust
+          - heading "Proof from real workflows, not generic praise" [level=2] [ref=e483]
+          - paragraph [ref=e484]: Each proof point ties a user type, a real care scenario, and the operational value they saw from using source-linked answers and product workflows.
+        - generic [ref=e485]:
+          - article [ref=e486]:
+            - img [ref=e487]
+            - paragraph [ref=e489]: Used the feeding roadmap and answer hub during the first month of solids.
+            - paragraph [ref=e490]: “The plan told us what to do this week, why it mattered, and what to watch for next. We stopped second-guessing every meal.”
+            - paragraph [ref=e492]: Reduced meal logging and feeding research from roughly 45 minutes a day to under 15.
+            - generic [ref=e493]:
+              - paragraph [ref=e494]: Olivia M.
+              - paragraph [ref=e495]: First-time mom • Seattle, WA
+          - article [ref=e496]:
+            - img [ref=e497]
+            - paragraph [ref=e499]: Uses source-linked summaries with families who arrive with conflicting feeding advice.
+            - paragraph [ref=e500]: “Families bring one structured summary instead of ten screenshots. We get to the real decision faster and stay aligned on next steps.”
+            - paragraph [ref=e502]: Cuts visit-time spent reconciling outside guidance and improves adherence to first-food and allergen plans.
+            - generic [ref=e503]:
+              - paragraph [ref=e504]: Dr. Hannah Li
+              - paragraph [ref=e505]: Pediatric NP • Toronto, ON
+          - article [ref=e506]:
+            - img [ref=e507]
+            - paragraph [ref=e509]: Used Solid Start and the FAQ path while introducing allergens to twins.
+            - paragraph [ref=e510]: “The allergen schedule, safety notes, and next-action prompts turned a stressful routine into a repeatable one.”
+            - paragraph [ref=e512]: Reduced night-before planning stress and made weekly allergen exposure more consistent.
+            - generic [ref=e513]:
+              - paragraph [ref=e514]: Marcus & Dee
+              - paragraph [ref=e515]: Parents of twins • Austin, TX
+        - link "Review sourcing process" [ref=e517] [cursor=pointer]:
+          - /url: /trust
+          - text: Review sourcing process
+          - img [ref=e518]
+      - generic [ref=e521]:
+        - generic [ref=e522]:
+          - paragraph [ref=e523]: Free download
+          - heading "The Pediatric Feeding Roadmap" [level=2] [ref=e524]
+          - paragraph [ref=e525]: A 24-week plan that merges CDC/AAP timelines, allergen dosing, and BLW cut sizes. Delivered instantly to your inbox with links to every cited source inside Mom AI Agent.
+          - list [ref=e526]:
+            - listitem [ref=e527]: Week-by-week iron, vitamin C, and allergen prompts
+            - listitem [ref=e529]: Safe texture progression checklist + choking red flags
+            - listitem [ref=e531]: Direct links to the BLW lunchbox builder and source-linked feeding guidance
+        - generic [ref=e533]:
+          - generic [ref=e534]:
+            - generic [ref=e535]:
+              - generic [ref=e536]: Parent name (optional)
+              - textbox "Parent name (optional)" [ref=e537]:
+                - /placeholder: e.g., Taylor
+            - generic [ref=e538]:
+              - generic [ref=e539]: Email
+              - textbox "Email" [ref=e540]:
+                - /placeholder: you@email.com
+            - button "Send me the roadmap" [ref=e541] [cursor=pointer]
+          - paragraph [ref=e542]: We’ll send the PDF and an optional weekly prompt. Unsubscribe anytime.
+      - generic [ref=e545]:
+        - heading "Choose Your Next Step" [level=2] [ref=e546]
+        - paragraph [ref=e547]: "Move into the part of the platform you need now: foods, topics, source-linked answers, or daily-use apps"
+        - generic [ref=e548]:
+          - link "Browse Foods" [ref=e549] [cursor=pointer]:
+            - /url: /foods
+          - link "Open Topics Library" [ref=e550] [cursor=pointer]:
+            - /url: /topics
+  - contentinfo [ref=e551]:
+    - generic [ref=e552]:
+      - generic [ref=e553]:
+        - generic [ref=e554]:
+          - link "Mom AI Agent Logo Mom AI Agent Evidence Intelligence Platform for Mom & Baby" [ref=e555] [cursor=pointer]:
+            - /url: /
+            - img "Mom AI Agent Logo" [ref=e558]
+            - generic [ref=e559]:
+              - generic [ref=e560]: Mom AI Agent
+              - text: Evidence Intelligence Platform for Mom & Baby
+          - paragraph [ref=e561]: Source-linked guidance, product workflows, and explainable answers for feeding, sleep, safety, development, and postpartum care.
+          - generic [ref=e562]:
+            - link "Try DearBaby" [ref=e563] [cursor=pointer]:
+              - /url: /products/dearbaby
+            - link "Explore Insights" [ref=e564] [cursor=pointer]:
+              - /url: /insight
+            - link "Partner With Us" [ref=e565] [cursor=pointer]:
+              - /url: /contact
+        - generic [ref=e566]:
+          - heading "Explore" [level=3] [ref=e567]
+          - list [ref=e568]:
+            - listitem [ref=e569]:
+              - link "Topics Library" [ref=e570] [cursor=pointer]:
+                - /url: /topics
+            - listitem [ref=e571]:
+              - link "Insights" [ref=e572] [cursor=pointer]:
+                - /url: /insight
+            - listitem [ref=e573]:
+              - link "Foods Database" [ref=e574] [cursor=pointer]:
+                - /url: /foods
+            - listitem [ref=e575]:
+              - link "DearBaby" [ref=e576] [cursor=pointer]:
+                - /url: /products/dearbaby
+            - listitem [ref=e577]:
+              - link "Solid Start" [ref=e578] [cursor=pointer]:
+                - /url: /products/solidstart
+            - listitem [ref=e579]:
+              - link "FAQ" [ref=e580] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e581]:
+          - heading "Trust" [level=3] [ref=e582]
+          - list [ref=e583]:
+            - listitem [ref=e584]:
+              - link "Trust Center" [ref=e585] [cursor=pointer]:
+                - /url: /trust
+            - listitem [ref=e586]:
+              - link "Methodology" [ref=e587] [cursor=pointer]:
+                - /url: /methodology
+            - listitem [ref=e588]:
+              - link "Clinical Review Policy" [ref=e589] [cursor=pointer]:
+                - /url: /clinical-review-policy
+            - listitem [ref=e590]:
+              - link "Data Use Policy" [ref=e591] [cursor=pointer]:
+                - /url: /data-use-policy
+            - listitem [ref=e592]:
+              - link "Privacy" [ref=e593] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e594]:
+              - link "Disclaimer" [ref=e595] [cursor=pointer]:
+                - /url: /disclaimer
+        - generic [ref=e596]:
+          - heading "Stay Updated" [level=3] [ref=e597]
+          - paragraph [ref=e598]: Get product updates, source refreshes, and new guidance paths in your inbox.
+          - generic [ref=e599]:
+            - textbox "Enter your email" [ref=e600]
+            - button "Subscribe" [ref=e601] [cursor=pointer]
+      - generic [ref=e602]:
+        - paragraph [ref=e603]: © 2025 Mom AI Agent. All rights reserved.
+        - generic [ref=e604]:
+          - link "support@momaiagent.com" [ref=e605] [cursor=pointer]:
+            - /url: mailto:support@momaiagent.com
+          - link "LinkedIn" [ref=e606] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/dearbabyai
+          - link "Instagram" [ref=e607] [cursor=pointer]:
+            - /url: https://www.instagram.com/dearbabyai
+  - button "Open contact chatbot":
+    - img

@@ -9,7 +9,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 export async function GET() {
   if (!supabaseUrl || !supabaseKey) {
     const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
-    const emptyRss = `<?xml version="1.0" encoding="UTF-8" ?>\n<rss version="2.0"><channel><title>Latest Baby Care Articles - JupitLunar</title><link>${baseUrl}/latest-articles</link><description>Feed unavailable in this build context.</description><lastBuildDate>${new Date().toUTCString()}</lastBuildDate></channel></rss>`;
+    const emptyRss = `<?xml version="1.0" encoding="UTF-8" ?>\n<rss version="2.0"><channel><title>Latest Baby Care Articles - Mom AI Agent</title><link>${baseUrl}/latest-articles</link><description>Feed unavailable in this build context.</description><lastBuildDate>${new Date().toUTCString()}</lastBuildDate></channel></rss>`;
     return new Response(emptyRss, {
       headers: {
         'Content-Type': 'application/xml',
@@ -31,7 +31,7 @@ export async function GET() {
   const rss = `<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Latest Baby Care Articles - JupitLunar</title>
+    <title>Latest Baby Care Articles - Mom AI Agent</title>
     <link>${baseUrl}/latest-articles</link>
     <description>Evidence-based baby care and parenting articles from trusted medical sources worldwide</description>
     <language>en-us</language>

@@ -35,12 +35,12 @@ export function generateMedicalWebPageSchema(article: any) {
       "url": `${siteUrl}/about`,
       "memberOf": {
         "@type": "Organization",
-        "name": "JupitLunar"
+        "name": "Mom AI Agent"
       }
     },
     "publisher": {
       "@type": "Organization",
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "logo": {
         "@type": "ImageObject",
         "url": `${siteUrl}/Assets/Logo.png`,
@@ -56,8 +56,8 @@ export function generateMedicalWebPageSchema(article: any) {
     },
     "reviewedBy": {
       "@type": "Organization",
-      "name": article.reviewed_by === 'AI Content Generator' ? "Mom AI Agent RAG Analysis System" : "Medical Review Board",
-      "description": `This content was ${article.reviewed_by === 'AI Content Generator' ? 'generated using RAG (Retrieval-Augmented Generation) from' : 'reviewed for medical accuracy against'} official guidelines from organizations including ${filterCleanKeywords(article.keywords).slice(0, 3).join(', ')}.`
+      "name": article.reviewed_by === 'AI Content Generator' ? "Mom AI Agent Retrieval Pipeline" : "Mom AI Agent Editorial Workflow",
+      "description": `This content was ${article.reviewed_by === 'AI Content Generator' ? 'generated from retrieved source material referencing' : 'prepared and checked against'} official guidance from organizations including ${filterCleanKeywords(article.keywords).slice(0, 3).join(', ')}.`
     },
     "mentions": (article.entities || []).slice(0, 8).map((entity: string) => ({
       "@type": "Thing",
@@ -117,12 +117,12 @@ export function generateClaimReviewSchema({
     },
     "author": {
       "@type": "Organization",
-      "name": "JupitLunar Editorial Team",
+      "name": "Mom AI Agent Editorial Team",
       "url": "https://www.momaiagent.com"
     },
     "publisher": {
       "@type": "Organization",
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "logo": {
         "@type": "ImageObject",
         "url": "https://www.momaiagent.com/Assets/Logo.png"
@@ -274,7 +274,7 @@ export function generateMachineReadableFAQ(article: any) {
       },
       "author": {
         "@type": "Organization",
-        "name": "JupitLunar Editorial Team"
+        "name": "Mom AI Agent Editorial Team"
       }
     })),
     "about": {

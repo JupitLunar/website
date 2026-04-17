@@ -44,7 +44,7 @@ async function loadKnowledge() {
 }
 
 export const metadata = {
-  title: 'Feeding Safety & Hygiene | JupitLunar',
+  title: 'Feeding Safety & Hygiene | Mom AI Agent',
   description:
     'Authoritative safety and hygiene checklist for North American parents: choking prevention, cold-storage rules, travel tips, and food handling guidance.',
 };
@@ -134,7 +134,7 @@ export default async function FeedingSafetyPage() {
         <section className="space-y-3 rounded-3xl border border-slate-200 bg-white px-8 py-6 shadow-sm">
           <h2 className="text-xl font-semibold text-slate-900">Need personalised support?</h2>
           <p className="text-sm text-slate-600">
-            JupitLunar summarises reputable public health guidance but we are not a substitute for licensed medical
+            Mom AI Agent summarises reputable public health guidance but we are not a substitute for licensed medical
             professionals. Contact your pediatrician, registered dietitian, or the local health authority for
             case-specific advice. If you suspect choking, call emergency services immediately.
           </p>

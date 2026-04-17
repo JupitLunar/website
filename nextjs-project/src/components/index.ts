@@ -4,7 +4,6 @@ export { default as USCanadaComparison } from './USCanadaComparison';
 export { default as CitationBox } from './CitationBox';
 export { default as FoodCard } from './FoodCard';
 export { default as FoodFilters } from './FoodFilters';
-export { default as Header } from './Header';
 export { default as LatestArticlesTable } from './LatestArticlesTable';
 export { default as MedicalDisclaimer } from './MedicalDisclaimer';
 export { default as NewsletterSignup } from './NewsletterSignup';

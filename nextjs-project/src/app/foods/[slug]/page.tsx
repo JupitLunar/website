@@ -573,7 +573,7 @@ export default async function FoodDetailPage({ params }: PageProps) {
             title={`${food.name} for Babies and Toddlers`}
             url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com'}/foods/${slug}`}
             lastReviewed={food.last_reviewed_at}
-            siteName="JupitLunar"
+            siteName="Mom AI Agent"
           />
         </div>
       </section>

@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { clientCache, cacheKeys, withCache } from './cache';
+import { filterPublicFacingArticles, INSIGHT_REVIEWERS } from './content-surface';
 import type {
   ContentHub,
   ContentType,
@@ -200,7 +201,7 @@ export const contentManager = {
       .limit(limit);
 
     if (error) throw error;
-    return data || [];
+    return filterPublicFacingArticles(data || []);
   },
 
   // Get articles by type
@@ -224,11 +225,31 @@ export const contentManager = {
     let queryBuilder = supabase
       .from('articles')
       .select('*', { count: 'exact' })
-      .eq('status', 'published');
+      .eq('status', 'published')
+      .neq('reviewed_by', INSIGHT_REVIEWERS[0])
+      .neq('reviewed_by', INSIGHT_REVIEWERS[1]);
 
-    // Apply text search using generated search vector
+    // Use tolerant text matching instead of relying on a specific tsvector setup.
     if (searchQuery) {
-      queryBuilder = queryBuilder.textSearch('search_vector', searchQuery);
+      const terms = searchQuery
+        .trim()
+        .replace(/[,%()]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 5);
+
+      if (terms.length > 0) {
+        const searchClauses = terms.flatMap((term) => {
+          const likeValue = `%${term}%`;
+          return [
+            `title.ilike.${likeValue}`,
+            `one_liner.ilike.${likeValue}`,
+            `meta_description.ilike.${likeValue}`,
+            `body_md.ilike.${likeValue}`,
+          ];
+        });
+        queryBuilder = queryBuilder.or(searchClauses.join(','));
+      }
     }
 
     // Apply filters
@@ -252,12 +273,70 @@ export const contentManager = {
 
     if (error) throw error;
 
+    const filteredData = filterPublicFacingArticles(data || []);
     const total = count || 0;
     const total_pages = Math.ceil(total / limit);
     const page = Math.floor(offset / limit) + 1;
 
     return {
-      data: data || [],
+      data: filteredData,
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages,
+        has_next: page < total_pages,
+        has_prev: page > 1
+      }
+    };
+  },
+
+  async searchInsightArticles(query: SearchQuery): Promise<PaginatedResponse<any>> {
+    const { query: searchQuery, limit = 20, offset = 0, sort_by = 'date_published', sort_order = 'desc' } = query;
+
+    let queryBuilder = supabase
+      .from('articles')
+      .select('*', { count: 'exact' })
+      .eq('status', 'published')
+      .in('reviewed_by', [...INSIGHT_REVIEWERS]);
+
+    if (searchQuery) {
+      const terms = searchQuery
+        .trim()
+        .replace(/[,%()]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 5);
+
+      if (terms.length > 0) {
+        const searchClauses = terms.flatMap((term) => {
+          const likeValue = `%${term}%`;
+          return [
+            `title.ilike.${likeValue}`,
+            `one_liner.ilike.${likeValue}`,
+            `meta_description.ilike.${likeValue}`,
+            `body_md.ilike.${likeValue}`,
+          ];
+        });
+        queryBuilder = queryBuilder.or(searchClauses.join(','));
+      }
+    }
+
+    queryBuilder = queryBuilder
+      .order(sort_by, { ascending: sort_order === 'asc' })
+      .range(offset, offset + limit - 1);
+
+    const { data, error, count } = await queryBuilder;
+
+    if (error) throw error;
+
+    const filteredData = filterPublicFacingArticles(data || []);
+    const total = count || 0;
+    const total_pages = Math.ceil(total / limit);
+    const page = Math.floor(offset / limit) + 1;
+
+    return {
+      data: filteredData,
       pagination: {
         page,
         limit,
@@ -346,7 +425,7 @@ export const contentManager = {
 
     // 缓存30分钟（内容中心很少变化）
     clientCache.set(cacheKey, data, 30 * 60 * 1000);
-    return data;
+    return filterPublicFacingArticles(data || []);
   },
 
   // Get recent articles

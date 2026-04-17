@@ -8,7 +8,15 @@
 const { chromium } = require('playwright');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
-const { generateSlug, extractKeywords, delay } = require('./scraper-utils');
+const {
+  generateSlug,
+  extractKeywords,
+  buildContentOneLiner,
+  buildMetaTitle,
+  buildMetaDescription,
+  buildDefaultKeyFacts,
+  delay
+} = require('./scraper-utils');
 const { articleExists: checkArticleExists } = require('./article-dedup');
 
 const dotenv = require('dotenv');
@@ -288,10 +296,7 @@ async function saveArticle(articleData, siteInfo) {
       return { success: false, reason: existsCheck.reason };
     }
 
-    const oneLiner = articleData.content.substring(0, 200);
-    const paddedOneLiner = oneLiner.length < 50 
-      ? oneLiner + ' Evidence-based information from trusted health organizations.'
-      : oneLiner;
+    const oneLiner = buildContentOneLiner(articleData.content, siteInfo.name);
 
     const article = {
       slug,
@@ -299,12 +304,11 @@ async function saveArticle(articleData, siteInfo) {
       hub: 'feeding',
       lang: siteInfo.language || 'en',
       title: articleData.title.substring(0, 200),
-      one_liner: paddedOneLiner.substring(0, 200),
-      key_facts: [
-        `Source: ${siteInfo.name}`,
-        `Region: ${siteInfo.region}`,
-        'Evidence-based information for parents'
-      ],
+      one_liner: oneLiner,
+      key_facts: buildDefaultKeyFacts({
+        sourceName: siteInfo.name,
+        region: siteInfo.region
+      }),
       body_md: articleData.content,
       entities: extractKeywords(articleData.content),
       age_range: '0-12 months',
@@ -312,8 +316,8 @@ async function saveArticle(articleData, siteInfo) {
       last_reviewed: new Date().toISOString().split('T')[0],
       reviewed_by: 'Playwright Scraper Bot',
       license: `Source: ${siteInfo.name} (${siteInfo.organization}) | Region: ${siteInfo.region} | URL: ${articleData.url}`,
-      meta_title: articleData.title.substring(0, 60),
-      meta_description: articleData.content.substring(0, 157) + '...',
+      meta_title: buildMetaTitle(articleData.title),
+      meta_description: buildMetaDescription(articleData.content, siteInfo.name),
       keywords: extractKeywords(articleData.content),
       status: 'draft'
     };
@@ -488,4 +492,3 @@ if (require.main === module) {
 }
 
 module.exports = { main };
-

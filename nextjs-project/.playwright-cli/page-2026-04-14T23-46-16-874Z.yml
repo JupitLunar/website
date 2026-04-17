@@ -1,0 +1,344 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Mom AI Agent Logo Mom AI AgentEvidence Intelligence Platform for Mom & Baby" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Mom AI Agent Logo" [ref=e6]
+        - generic [ref=e7]: Mom AI AgentEvidence Intelligence Platform for Mom & Baby
+      - generic [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - button "Products" [ref=e11]:
+          - text: Products
+          - img [ref=e12]
+        - button "Topics" [ref=e15]:
+          - text: Topics
+          - img [ref=e16]
+        - link "Programs" [ref=e18] [cursor=pointer]:
+          - /url: /programs
+        - link "Insights" [ref=e19] [cursor=pointer]:
+          - /url: /insight
+        - button "About" [ref=e21]:
+          - text: About
+          - img [ref=e22]
+        - link [ref=e24] [cursor=pointer]:
+          - /url: /search
+          - img [ref=e25]
+        - link "Ask the Hub" [ref=e27] [cursor=pointer]:
+          - /url: /search
+      - button [ref=e28]:
+        - img
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - img "Moon Tree Background" [ref=e33]
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - img [ref=e38]
+            - text: Evidence Intelligence Platform for Mom & Baby
+          - heading "Evidence Intelligence for Mom & Baby" [level=1] [ref=e40]:
+            - text: Evidence Intelligence for
+            - text: Mom & Baby
+          - paragraph [ref=e41]: Mom AI Agent is the public website for source-linked parenting answers. DearBaby is the product family. JupitLunar is the company behind both.
+          - generic [ref=e42]:
+            - paragraph [ref=e43]: Guidance framework informed by leading health organizations
+            - generic [ref=e44]: CDCAmerican Academy of PediatricsWHOHealth CanadaCanadian Paediatric Society
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - img [ref=e48]
+              - heading "Evidence" [level=3] [ref=e50]
+              - paragraph [ref=e51]: Public-health and clinical references are translated into source-linked answers, age-aware rules, and reusable care guidance.
+            - generic [ref=e52]:
+              - img [ref=e54]
+              - heading "Method" [level=3] [ref=e56]
+              - paragraph [ref=e57]: Recommendations are designed to be explainable, traceable, and reviewable instead of generic parenting copy with hidden logic.
+            - generic [ref=e58]:
+              - img [ref=e60]
+              - heading "Products" [level=3] [ref=e62]
+              - paragraph [ref=e63]: Families start with an answer, move into DearBaby or Solid Start, and keep a trackable next action inside the same platform.
+          - generic [ref=e64]:
+            - link "Search the Mom AI Agent answer hub" [ref=e65] [cursor=pointer]:
+              - /url: /search
+              - text: Search the Answer Hub
+            - link "Browse the foods database" [ref=e66] [cursor=pointer]:
+              - /url: /foods
+              - text: Browse Foods Database
+            - link "Discuss partnerships with JupitLunar" [ref=e67] [cursor=pointer]:
+              - /url: /contact
+              - text: Partnerships via JupitLunar →
+          - generic [ref=e68]:
+            - button "Get Feeding Roadmap" [ref=e69]
+            - text: •
+            - button "Browse Popular Questions" [ref=e70]
+            - text: •
+            - link "Review Methodology" [ref=e71] [cursor=pointer]:
+              - /url: /trust
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - paragraph [ref=e74]: Mom AI Agent
+              - paragraph [ref=e75]: Public website
+              - paragraph [ref=e76]: The source-linked answer hub, topics library, foods database, and trust center.
+            - generic [ref=e77]:
+              - paragraph [ref=e78]: DearBaby
+              - paragraph [ref=e79]: Consumer apps
+              - paragraph [ref=e80]: Daily tracking and first-food workflows for families who want more structure.
+            - generic [ref=e81]:
+              - paragraph [ref=e82]: JupitLunar
+              - paragraph [ref=e83]: Operating company
+              - paragraph [ref=e84]: Builds the website, products, and partner-facing workflow layer behind the platform.
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - paragraph [ref=e88]: Evidence
+          - heading "Authority turned into answers families can actually use" [level=2] [ref=e89]
+          - paragraph [ref=e90]: These pages are organized around common caregiver search intent, turning high-stress questions into a clearer knowledge system with structured answers and visible sources.
+        - generic [ref=e91]:
+          - link "Intent path Starting solids at 6 months Readiness signs, first foods, and how to introduce solids without overwhelm. Open guide" [ref=e92] [cursor=pointer]:
+            - /url: /insight/pain-new-mom-feeding-first-foods
+            - paragraph [ref=e93]: Intent path
+            - heading "Starting solids at 6 months" [level=3] [ref=e94]
+            - paragraph [ref=e95]: Readiness signs, first foods, and how to introduce solids without overwhelm.
+            - generic [ref=e96]:
+              - text: Open guide
+              - img [ref=e97]
+          - link "Intent path Baby fever when to worry Temperature thresholds, red flags, and when urgent care matters most. Open guide" [ref=e99] [cursor=pointer]:
+            - /url: /insight/pain-midnight-emergency-fever-steps
+            - paragraph [ref=e100]: Intent path
+            - heading "Baby fever when to worry" [level=3] [ref=e101]
+            - paragraph [ref=e102]: Temperature thresholds, red flags, and when urgent care matters most.
+            - generic [ref=e103]:
+              - text: Open guide
+              - img [ref=e104]
+          - link "Intent path How to introduce peanut safely A step-by-step allergen intro plan based on NIAID and pediatric guidance. Open guide" [ref=e106] [cursor=pointer]:
+            - /url: /insight/pain-allergy-introduction-safety
+            - paragraph [ref=e107]: Intent path
+            - heading "How to introduce peanut safely" [level=3] [ref=e108]
+            - paragraph [ref=e109]: A step-by-step allergen intro plan based on NIAID and pediatric guidance.
+            - generic [ref=e110]:
+              - text: Open guide
+              - img [ref=e111]
+          - link "Intent path Newborn sleep schedule Age-based sleep expectations, wake windows, and settling routines. Open guide" [ref=e113] [cursor=pointer]:
+            - /url: /insight
+            - paragraph [ref=e114]: Intent path
+            - heading "Newborn sleep schedule" [level=3] [ref=e115]
+            - paragraph [ref=e116]: Age-based sleep expectations, wake windows, and settling routines.
+            - generic [ref=e117]:
+              - text: Open guide
+              - img [ref=e118]
+          - link "Intent path Baby food database Cut sizes, textures, safety notes, and age guidance for first foods and beyond. Open guide" [ref=e120] [cursor=pointer]:
+            - /url: /foods
+            - paragraph [ref=e121]: Intent path
+            - heading "Baby food database" [level=3] [ref=e122]
+            - paragraph [ref=e123]: Cut sizes, textures, safety notes, and age guidance for first foods and beyond.
+            - generic [ref=e124]:
+              - text: Open guide
+              - img [ref=e125]
+          - link "Intent path Postpartum recovery guidance Warning signs, recovery milestones, and evidence-based maternal care support. Open guide" [ref=e127] [cursor=pointer]:
+            - /url: /insight?hub=mom-health
+            - paragraph [ref=e128]: Intent path
+            - heading "Postpartum recovery guidance" [level=3] [ref=e129]
+            - paragraph [ref=e130]: Warning signs, recovery milestones, and evidence-based maternal care support.
+            - generic [ref=e131]:
+              - text: Open guide
+              - img [ref=e132]
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - paragraph [ref=e137]: Trust
+          - heading "Built for transparency, structure, and long-term trust" [level=2] [ref=e138]
+          - paragraph [ref=e139]: Professional trust comes from visible source paths, explicit boundaries, and a clearer explanation of how the website and products relate to each other.
+        - generic [ref=e140]:
+          - article [ref=e141]:
+            - paragraph [ref=e142]: Trust proof
+            - heading "Visible source path" [level=3] [ref=e143]
+            - paragraph [ref=e144]: Key guidance paths point back to CDC, AAP, WHO, Health Canada, CPS, and other public-health or clinical references visible on-page.
+            - link "Review source model" [ref=e145] [cursor=pointer]:
+              - /url: /trust
+              - text: Review source model
+              - img [ref=e146]
+          - article [ref=e148]:
+            - paragraph [ref=e149]: Trust proof
+            - heading "Clear product boundary" [level=3] [ref=e150]
+            - paragraph [ref=e151]: Mom AI Agent is the website. DearBaby and DearBaby Solid Start are the consumer products. JupitLunar is the company operating both layers.
+            - link "See product paths" [ref=e152] [cursor=pointer]:
+              - /url: /products/dearbaby
+              - text: See product paths
+              - img [ref=e153]
+          - article [ref=e155]:
+            - paragraph [ref=e156]: Trust proof
+            - heading "Explicit safety boundary" [level=3] [ref=e157]
+            - paragraph [ref=e158]: The site states what is educational, what is not medical advice, and where urgent or individualized concerns should move to a clinician.
+            - link "Read boundaries" [ref=e159] [cursor=pointer]:
+              - /url: /clinical-review-policy
+              - text: Read boundaries
+              - img [ref=e160]
+        - link "Review sourcing process" [ref=e163] [cursor=pointer]:
+          - /url: /trust
+          - text: Review sourcing process
+          - img [ref=e164]
+      - generic [ref=e167]:
+        - generic [ref=e168]:
+          - paragraph [ref=e169]: Products
+          - heading "Move from answer into calmer daily workflows" [level=2] [ref=e170]
+          - paragraph [ref=e171]: The homepage now introduces only the two product paths. Deeper feature detail stays inside each product page.
+        - generic [ref=e172]:
+          - link "Tracking app DearBaby tracking app Track feeds, sleep, diapers, and growth in a calmer daily workflow connected to the wider guidance platform. Learn more" [ref=e173] [cursor=pointer]:
+            - /url: /products/dearbaby
+            - paragraph [ref=e174]: Tracking app
+            - heading "DearBaby tracking app" [level=3] [ref=e175]
+            - paragraph [ref=e176]: Track feeds, sleep, diapers, and growth in a calmer daily workflow connected to the wider guidance platform.
+            - generic [ref=e177]:
+              - text: Learn more
+              - img [ref=e178]
+          - link "Feeding app Solid Start feeding app Recipes, BLW planning, allergen guidance, and meal ideas for families starting solids with more structure. Learn more" [ref=e180] [cursor=pointer]:
+            - /url: /products/solidstart
+            - paragraph [ref=e181]: Feeding app
+            - heading "Solid Start feeding app" [level=3] [ref=e182]
+            - paragraph [ref=e183]: Recipes, BLW planning, allergen guidance, and meal ideas for families starting solids with more structure.
+            - generic [ref=e184]:
+              - text: Learn more
+              - img [ref=e185]
+      - generic [ref=e188]:
+        - generic [ref=e189]:
+          - paragraph [ref=e190]: FAQ signals
+          - heading "Caregiver pain points we answer daily" [level=2] [ref=e191]
+          - paragraph [ref=e192]: These are recurring caregiver questions we structure into clearer answer paths, each linked to the underlying public-health or clinical source.
+        - generic [ref=e193]:
+          - article [ref=e194]:
+            - paragraph [ref=e195]: Feeding
+            - heading "Is my 6-month-old ready for solids?" [level=3] [ref=e196]
+            - paragraph [ref=e197]: Look for steady head control, the ability to sit with support, interest in food, and the tongue-thrust reflex fading. If you are unsure, confirm with your pediatrician before offering solids.
+            - generic [ref=e198]:
+              - paragraph [ref=e199]:
+                - text: "Source:"
+                - 'link "CDC: When, What, and How to Introduce Solid Foods" [ref=e200] [cursor=pointer]':
+                  - /url: https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks/when-what-and-how-to-introduce-solid-foods.html
+              - paragraph [ref=e201]: Structured within the Mom AI Agent knowledge system
+            - link "View structured guide" [ref=e202] [cursor=pointer]:
+              - /url: /insight/pain-new-mom-feeding-first-foods
+              - text: View structured guide
+              - img [ref=e203]
+          - article [ref=e205]:
+            - paragraph [ref=e206]: Safety
+            - heading "When is a baby fever dangerous?" [level=3] [ref=e207]
+            - paragraph [ref=e208]: For babies under 3 months, a rectal temperature of 100.4°F (38°C) or higher needs urgent medical evaluation. For older babies, watch hydration, breathing, responsiveness, and other red flags in addition to temperature.
+            - generic [ref=e209]:
+              - paragraph [ref=e210]:
+                - text: "Source:"
+                - 'link "AAP HealthyChildren.org: Fever and Your Baby" [ref=e211] [cursor=pointer]':
+                  - /url: https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/Fever-and-Your-Baby.aspx
+              - paragraph [ref=e212]: Structured within the Mom AI Agent knowledge system
+            - link "View structured guide" [ref=e213] [cursor=pointer]:
+              - /url: /insight/pain-midnight-emergency-fever-steps
+              - text: View structured guide
+              - img [ref=e214]
+          - article [ref=e216]:
+            - paragraph [ref=e217]: Feeding
+            - heading "How do I safely introduce allergens like peanut?" [level=3] [ref=e218]
+            - paragraph [ref=e219]: Choose a low-stress day, offer a pea-sized amount of a safe texture (e.g., thinned peanut butter), and observe for 2–3 hours. If tolerated, keep offering 2–3 times per week to maintain tolerance unless your clinician advises otherwise.
+            - generic [ref=e220]:
+              - paragraph [ref=e221]:
+                - text: "Source:"
+                - link "NIAID Addendum Guidelines for Peanut Allergy Prevention" [ref=e222] [cursor=pointer]:
+                  - /url: https://www.niaid.nih.gov/diseases-conditions/guidelines-clinicians-and-patients-food-allergy
+              - paragraph [ref=e223]: Structured within the Mom AI Agent knowledge system
+            - link "View structured guide" [ref=e224] [cursor=pointer]:
+              - /url: /insight/pain-allergy-introduction-safety
+              - text: View structured guide
+              - img [ref=e225]
+        - link "Browse the full FAQ →" [ref=e228] [cursor=pointer]:
+          - /url: /faq
+      - generic [ref=e230]:
+        - generic [ref=e231]:
+          - paragraph [ref=e232]: Free download
+          - heading "The Pediatric Feeding Roadmap" [level=2] [ref=e233]
+          - paragraph [ref=e234]: A 24-week plan that merges CDC/AAP timelines, allergen dosing, and BLW cut sizes. Delivered instantly to your inbox with links to every cited source inside Mom AI Agent.
+          - list [ref=e235]:
+            - listitem [ref=e236]: Week-by-week iron, vitamin C, and allergen prompts
+            - listitem [ref=e237]: Safe texture progression checklist + choking red flags
+            - listitem [ref=e238]: Direct links to the BLW lunchbox builder and source-linked feeding guidance
+        - generic [ref=e239]:
+          - generic [ref=e240]:
+            - generic [ref=e241]:
+              - text: Parent name (optional)
+              - textbox "Parent name (optional)" [ref=e242]:
+                - /placeholder: e.g., Taylor
+            - generic [ref=e243]:
+              - text: Email
+              - textbox "Email" [ref=e244]:
+                - /placeholder: you@email.com
+            - button "Send me the roadmap" [ref=e245]
+          - paragraph [ref=e246]: We’ll send the PDF and an optional weekly prompt. Unsubscribe anytime.
+  - contentinfo [ref=e247]:
+    - generic [ref=e248]:
+      - generic [ref=e249]:
+        - generic [ref=e250]:
+          - link "Mom AI Agent Logo Mom AI AgentEvidence Intelligence Platform for Mom & Baby" [ref=e251] [cursor=pointer]:
+            - /url: /
+            - img "Mom AI Agent Logo" [ref=e254]
+            - generic [ref=e255]: Mom AI AgentEvidence Intelligence Platform for Mom & Baby
+          - paragraph [ref=e256]: Mom AI Agent is the public website. DearBaby and DearBaby Solid Start are consumer apps built by JupitLunar for tracking, feeding, and calmer daily family routines.
+          - generic [ref=e257]:
+            - link "Ask Mom AI Agent" [ref=e258] [cursor=pointer]:
+              - /url: /search
+            - link "Explore Insights" [ref=e259] [cursor=pointer]:
+              - /url: /insight
+            - link "Partner With Us" [ref=e260] [cursor=pointer]:
+              - /url: /contact
+        - generic [ref=e261]:
+          - heading "Explore" [level=3] [ref=e262]
+          - list [ref=e263]:
+            - listitem [ref=e264]:
+              - link "Topics Library" [ref=e265] [cursor=pointer]:
+                - /url: /topics
+            - listitem [ref=e266]:
+              - link "Insights" [ref=e267] [cursor=pointer]:
+                - /url: /insight
+            - listitem [ref=e268]:
+              - link "Foods Database" [ref=e269] [cursor=pointer]:
+                - /url: /foods
+            - listitem [ref=e270]:
+              - link "DearBaby" [ref=e271] [cursor=pointer]:
+                - /url: /products/dearbaby
+            - listitem [ref=e272]:
+              - link "Solid Start" [ref=e273] [cursor=pointer]:
+                - /url: /products/solidstart
+            - listitem [ref=e274]:
+              - link "FAQ" [ref=e275] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e276]:
+          - heading "Trust" [level=3] [ref=e277]
+          - list [ref=e278]:
+            - listitem [ref=e279]:
+              - link "Trust Center" [ref=e280] [cursor=pointer]:
+                - /url: /trust
+            - listitem [ref=e281]:
+              - link "Methodology" [ref=e282] [cursor=pointer]:
+                - /url: /methodology
+            - listitem [ref=e283]:
+              - link "Clinical Review Policy" [ref=e284] [cursor=pointer]:
+                - /url: /clinical-review-policy
+            - listitem [ref=e285]:
+              - link "Data Use Policy" [ref=e286] [cursor=pointer]:
+                - /url: /data-use-policy
+            - listitem [ref=e287]:
+              - link "Privacy" [ref=e288] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e289]:
+              - link "Disclaimer" [ref=e290] [cursor=pointer]:
+                - /url: /disclaimer
+        - generic [ref=e291]:
+          - heading "Stay Updated" [level=3] [ref=e292]
+          - paragraph [ref=e293]: Get website updates, source refreshes, and product news from Mom AI Agent and DearBaby.
+          - generic [ref=e294]:
+            - textbox "Enter your email" [ref=e295]
+            - button "Subscribe" [ref=e296]
+      - generic [ref=e297]:
+        - paragraph [ref=e298]: © 2026 JupitLunar. Mom AI Agent and DearBaby are product brands.
+        - generic [ref=e299]:
+          - link "support@momaiagent.com" [ref=e300] [cursor=pointer]:
+            - /url: mailto:support@momaiagent.com
+          - link "DearBaby on LinkedIn" [ref=e301] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/dearbabyai
+          - link "DearBaby on Instagram" [ref=e302] [cursor=pointer]:
+            - /url: https://www.instagram.com/dearbabyai
+  - button "Open contact chatbot":
+    - img

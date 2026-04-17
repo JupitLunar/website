@@ -427,7 +427,13 @@ export interface KnowledgeGuide {
   updated_at: string;
 }
 
-export type FAQCategory = 'feeding' | 'sleep' | 'health-safety' | 'development' | 'behavior' | 'daily-care';
+export type FAQCategory =
+  | 'platform-trust'
+  | 'feeding'
+  | 'sleep'
+  | 'fever-safety'
+  | 'postpartum'
+  | 'nutrition';
 
 export interface KnowledgeFAQ {
   id: string;
@@ -439,6 +445,10 @@ export interface KnowledgeFAQ {
   subcategory?: string;
   age_range: string[];
   locale: KnowledgeLocale;
+  source_layer?: string;
+  source_kind?: 'platform' | 'authority';
+  source_label?: string;
+  source_url?: string;
   source_ids: string[];
   related_food_ids: string[];
   related_rule_ids: string[];

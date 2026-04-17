@@ -30,8 +30,7 @@ export const BREADCRUMB_PATHS = {
     home: { name: 'Home', url: '/' },
     topics: { name: 'Topics', url: '/topics' },
     insights: { name: 'Insights', url: '/insight' },
-    products: { name: 'Products', url: '/products' },
-    trust: { name: 'Trust & Methods', url: '/trust' },
+    trust: { name: 'Trust Center', url: '/trust' },
     faq: { name: 'FAQ', url: '/faq' },
     contact: { name: 'Contact', url: '/contact' },
 };

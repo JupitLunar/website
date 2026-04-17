@@ -118,7 +118,7 @@ export function generateFAQSchema(faqs: Array<{ question: string; answer: string
         text: faq.answer,
         author: {
           '@type': 'Organization',
-          name: 'JupitLunar',
+          name: 'Mom AI Agent',
         },
         dateCreated: new Date().toISOString(),
       },
@@ -217,7 +217,7 @@ export function generateClaimReviewSchema(claim: {
       '@type': 'Claim',
       claimInterpreter: {
         '@type': 'Organization',
-        name: 'JupitLunar',
+        name: 'Mom AI Agent',
       },
       appearance: {
         '@type': 'CreativeWork',
@@ -226,7 +226,7 @@ export function generateClaimReviewSchema(claim: {
     },
     author: {
       '@type': 'Organization',
-      name: claim.reviewedBy || 'JupitLunar Editorial Team',
+      name: claim.reviewedBy || 'Mom AI Agent Editorial Team',
     },
     datePublished: claim.reviewDate || new Date().toISOString(),
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com',
@@ -263,7 +263,7 @@ export function generateTopicCollectionSchema(topic: {
     dateModified: topic.lastReviewed || new Date().toISOString(),
     isPartOf: {
       '@type': 'WebSite',
-      name: 'JupitLunar',
+      name: 'Mom AI Agent',
       url: baseUrl,
     },
     ...(topic.itemCount && {

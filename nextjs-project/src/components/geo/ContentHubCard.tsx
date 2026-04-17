@@ -37,7 +37,7 @@ const ContentHubCard: React.FC<ContentHubCardProps> = ({ hub }) => {
   };
 
   return (
-    <Link href={`/hub/${hub.slug}`} className="block transition-transform hover:scale-105">
+    <Link href={`/insight?hub=${hub.slug}`} className="block transition-transform hover:scale-105">
       <Card className={`${colorClasses[hub.id]} border-2 transition-all duration-200 hover:shadow-lg`}>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">

@@ -38,12 +38,12 @@ export function generateArticleStructuredData(article: any) {
       "description": "Evidence-based parenting content curators",
       "memberOf": {
         "@type": "Organization",
-        "name": "JupitLunar"
+        "name": "Mom AI Agent"
       }
     },
     "publisher": {
       "@type": "Organization",
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "logo": {
         "@type": "ImageObject",
         "url": logoUrl,
@@ -168,13 +168,13 @@ export function generateArticleStructuredData(article: any) {
     .map((citation: any) => citation.url)
     .filter((url: string | undefined) => typeof url === 'string');
   const maintenanceLinks = [
-    `${siteUrl}/latest-articles`,
+    `${siteUrl}/articles`,
     `${siteUrl}/api/latest-articles?format=simplified`
   ];
   structuredData.significantLink = Array.from(new Set([...maintenanceLinks, ...citationLinks]));
   structuredData.maintainer = {
     "@type": "Organization",
-    "name": "JupitLunar Editorial Operations",
+    "name": "Mom AI Agent Editorial Operations",
     "url": `${siteUrl}/trust`
   };
 
@@ -222,7 +222,7 @@ export function generateArticleStructuredData(article: any) {
       "recipeIngredient": ingredientList,
       "recipeInstructions": instructions,
       "recipeCuisine": article.region,
-      "author": "JupitLunar",
+      "author": "Mom AI Agent",
       "datePublished": article.date_published,
       "keywords": article.entities?.join(', '),
       "nutrition": article.nutrition || undefined,
@@ -314,7 +314,7 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "url": siteUrl,
       "owns": [
         {
@@ -337,7 +337,7 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
     "inLanguage": "en",
     "isPartOf": {
       "@type": "WebSite",
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "url": siteUrl
     }
   };
@@ -364,7 +364,7 @@ export function generateWebsiteStructuredData() {
     "@type": "WebSite",
     "name": "Mom AI Agent",
     "alternateName": "momaiagent.com",
-    "description": "Evidence-Based Parenting Guide for North America - Trusted advice from CDC, AAP, WHO, and Health Canada",
+    "description": "Source-linked parenting guidance for feeding, sleep, safety, and postpartum questions across the Mom AI Agent website.",
     "url": siteUrl,
     "potentialAction": {
       "@type": "SearchAction",
@@ -376,15 +376,14 @@ export function generateWebsiteStructuredData() {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "JupitLunar",
+      "name": "Mom AI Agent",
       "logo": {
         "@type": "ImageObject",
         "url": logoUrl
       },
       "sameAs": [
         "https://www.linkedin.com/company/dearbabyai",
-        "https://www.instagram.com/dearbabyai",
-        "https://www.tiktok.com/@dearbabygrow"
+        "https://www.instagram.com/dearbabyai"
       ]
     },
     "inLanguage": "en"
@@ -404,7 +403,7 @@ export function generateHomePageStructuredData({
     "@id": `${siteUrl}/#homepage`,
     "name": "Mom AI Agent - Evidence-Based Maternal & Infant Care Guide for North America",
     "url": `${siteUrl}/`,
-    "description": "Ask Mom AI Agent for instant maternal and infant health guidance backed by CDC, AAP, WHO, and Health Canada sources. Download feeding roadmaps, explore food databases, and review curated parenting research.",
+    "description": "Search feeding, sleep, safety, postpartum, and first-food guidance across the Mom AI Agent answer hub, topic library, and foods database.",
     "isPartOf": {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
@@ -456,7 +455,7 @@ export function generateHomePageStructuredData({
       "name": "What does Mom AI Agent deliver to new parents?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Mom AI Agent combines 75+ pediatric guidelines into one searchable assistant so you can get safe feeding, sleep, and safety answers in seconds, download a personalized feeding roadmap, and review cited sources before taking action."
+        "text": "Mom AI Agent helps families search source-linked guidance, topic explainers, and product pathways for feeding, sleep, safety, postpartum, and first-food questions."
       }
     },
     "significantLink": featuredArticles.slice(0, 5).map(article => ({
@@ -505,8 +504,8 @@ export function generateOrganizationStructuredData() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "JupitLunar",
-    "description": "Health technology company providing evidence-based parenting solutions through Mom AI Agent platform",
+    "name": "Mom AI Agent",
+    "description": "Public-facing parenting guidance website operated by JupitLunar with connected DearBaby consumer products.",
     "url": siteUrl,
     "logo": {
       "@type": "ImageObject",
@@ -519,11 +518,8 @@ export function generateOrganizationStructuredData() {
         "@type": "ContactPoint",
         "contactType": "customer service",
         "email": "support@momaiagent.com",
-        "telephone": "+1-587-200-1550",
         "areaServed": "US/CA",
-        "availableLanguage": ["en", "zh"],
-        "contactOption": ["TollFree"],
-        "hoursAvailable": "Mo-Fr 09:00-18:00"
+        "availableLanguage": ["en", "zh"]
       }
     ],
     "address": {
@@ -534,8 +530,7 @@ export function generateOrganizationStructuredData() {
     },
     "sameAs": [
       "https://www.linkedin.com/company/dearbabyai",
-      "https://www.instagram.com/dearbabyai",
-      "https://www.tiktok.com/@dearbabygrow"
+      "https://www.instagram.com/dearbabyai"
     ],
     "foundingDate": "2024",
     "areaServed": "North America",
@@ -547,10 +542,6 @@ export function generateOrganizationStructuredData() {
       "Parenting Technology",
       "Baby-Led Weaning",
       "Early Allergen Guidance"
-    ],
-    "hasCredential": [
-      "Editorial reviewers: RN, IBCLC, IBCLC-certified lactation consultants",
-      "RAG pipeline cites CDC, AAP, WHO, Health Canada documents"
     ]
   };
 }
@@ -597,7 +588,7 @@ export function generateProductStructuredData(product: {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "JupitLunar"
+      "name": "Mom AI Agent"
     }
   };
 }
@@ -637,7 +628,7 @@ export function generateClaimReviewStructuredData(claim: {
     },
     "author": {
       "@type": "Organization",
-      "name": "JupitLunar Editorial Team",
+      "name": "Mom AI Agent Editorial Team",
       "url": siteUrl
     },
     "reviewRating": {

@@ -14,14 +14,14 @@ const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com
 
 export const metadata: Metadata = {
   title: {
-    default: 'Mom AI Agent - Evidence-Based Parenting Guide for North America',
+    default: 'Mom AI Agent | Evidence Intelligence Platform for Mom & Baby',
     template: '%s | Mom AI Agent'
   },
-  description: 'Get expert maternal and infant care guidance powered by Mom AI Agent. Evidence-based feeding schedules, safety tips, and pediatric health advice from CDC, AAP, WHO, and Health Canada sources. Explore DearBaby and Solid Start apps.',
-  keywords: ['Mom AI Agent', 'evidence-based parenting', 'North America baby care', 'CDC AAP guidelines', 'maternal care', 'infant care', 'baby feeding', 'parenting guide', 'pediatric health', 'DearBaby', 'baby development', 'feeding schedules'],
+  description: 'Mom AI Agent is an Evidence Intelligence Platform for Mom & Baby, combining source-linked guidance, parenting answers, trust materials, and structured knowledge across feeding, sleep, safety, and postpartum care.',
+  keywords: ['Mom AI Agent', 'evidence intelligence platform', 'mom and baby guidance', 'maternal care', 'infant care', 'baby feeding', 'sleep guidance', 'postpartum support', 'trust center', 'foods database'],
   authors: [{ name: 'Mom AI Agent Editorial Team' }],
-  creator: 'JupitLunar',
-  publisher: 'JupitLunar',
+  creator: 'Mom AI Agent',
+  publisher: 'Mom AI Agent',
   formatDetection: {
     email: false,
     address: false,
@@ -29,14 +29,13 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(siteUrl),
   alternates: {
-    canonical: '/',
     languages: {
       'x-default': `${siteUrl}/`,
     },
   },
   openGraph: {
-    title: 'Mom AI Agent - Evidence-Based Parenting Guide',
-    description: 'Evidence-based parenting guidance for North American families. Trusted advice from CDC, AAP, WHO, and Health Canada. Powered by Mom AI Agent.',
+    title: 'Mom AI Agent | Evidence Intelligence Platform for Mom & Baby',
+    description: 'Source-linked guidance, parenting answers, trust materials, and structured knowledge for feeding, sleep, safety, and postpartum care.',
     url: siteUrl,
     siteName: 'Mom AI Agent',
     locale: 'en_US',
@@ -46,15 +45,20 @@ export const metadata: Metadata = {
         url: `${siteUrl}/og-image.svg`,
         width: 1200,
         height: 630,
-        alt: 'Mom AI Agent - Evidence-Based Parenting Guide'
+        alt: 'Mom AI Agent | Evidence Intelligence Platform for Mom & Baby'
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mom AI Agent - Evidence-Based Parenting Guide',
-    description: 'Evidence-based parenting guidance for North American families. Trusted advice from CDC, AAP, WHO, and Health Canada.',
+    title: 'Mom AI Agent | Evidence Intelligence Platform for Mom & Baby',
+    description: 'Source-linked guidance, parenting answers, trust materials, and structured knowledge for feeding, sleep, safety, and postpartum care.',
     images: [`${siteUrl}/og-image.svg`],
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/Logo.png',
   },
   robots: {
     index: true,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
+import { requireApiSecret } from '@/lib/api-auth';
 
 /**
  * Cache Purge API Endpoint
@@ -17,18 +18,19 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function POST(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
-    const secret = searchParams.get('secret');
     const path = searchParams.get('path');
     const paths = searchParams.get('paths');
     const tag = searchParams.get('tag');
     const tags = searchParams.get('tags');
 
-    // Verify secret
-    if (secret !== process.env.REVALIDATION_SECRET) {
-        return NextResponse.json(
-            { success: false, message: 'Invalid secret' },
-            { status: 401 }
-        );
+    const unauthorized = requireApiSecret(request, {
+        secretNames: ['REVALIDATION_SECRET'],
+        context: 'cache purge endpoint',
+        allowQueryParam: 'secret',
+    });
+
+    if (unauthorized) {
+        return unauthorized;
     }
 
     const purgedPaths: string[] = [];
@@ -100,7 +102,17 @@ export async function POST(request: NextRequest) {
 }
 
 // GET method for documentation
-export async function GET() {
+export async function GET(request: NextRequest) {
+    const unauthorized = requireApiSecret(request, {
+        secretNames: ['REVALIDATION_SECRET'],
+        context: 'cache purge endpoint',
+        allowQueryParam: 'secret',
+    });
+
+    if (unauthorized) {
+        return unauthorized;
+    }
+
     return NextResponse.json({
         endpoint: '/api/cache/purge',
         method: 'POST',

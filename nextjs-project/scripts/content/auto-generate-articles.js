@@ -37,6 +37,10 @@ const openai = new OpenAI({ apiKey: openaiApiKey });
 
 // 导入主题列表
 const { MATERNAL_INFANT_TOPICS } = require('./topics-list');
+const {
+  buildContentOneLiner,
+  buildDefaultKeyFacts
+} = require('../scrapers/scraper-utils');
 
 // 导入 trending topics 获取函数
 const { fetchTrendingTopics } = require('../scrapers/fetch-trending-topics');
@@ -509,7 +513,7 @@ async function insertArticle(articleData, topicInfo) {
 
   // 验证必需字段
   if (article.one_liner.length < 50) {
-    article.one_liner = article.one_liner + ' Evidence-based information from trusted health organizations.';
+    article.one_liner = buildContentOneLiner(article.one_liner || article.body_md, 'public health sources');
   }
   if (article.one_liner.length > 200) {
     article.one_liner = article.one_liner.substring(0, 197) + '...';
@@ -518,9 +522,7 @@ async function insertArticle(articleData, topicInfo) {
   if (article.key_facts.length < 3) {
     article.key_facts = [
       ...article.key_facts,
-      'Based on CDC, AAP, and WHO guidelines',
-      'Evidence-based recommendations',
-      'Consult your pediatrician for personalized advice'
+      ...buildDefaultKeyFacts({ sourceName: 'public health sources', region: article.region || 'Global' })
     ].slice(0, 8);
   }
 

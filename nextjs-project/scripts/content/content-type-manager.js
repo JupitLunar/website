@@ -133,7 +133,7 @@ function generateContentTemplate(decision) {
   "age_range": "6-12 months",
   "region": "Global",
   "last_reviewed": "2025-01-06",
-  "reviewed_by": "JupitLunar Editorial Team",
+  "reviewed_by": "Mom AI Agent Editorial Team",
   "meta_title": "SEO优化的标题",
   "meta_description": "SEO优化的描述",
   "keywords": ["seo", "keywords", "array"],

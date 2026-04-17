@@ -30,7 +30,7 @@ export default function AboutPage() {
                   <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
                 </svg>
               </div>
-              <span className="text-sm font-light text-slate-500">About JupitLunar</span>
+              <span className="text-sm font-light text-slate-500">About the public evidence hub</span>
             </motion.div>
 
             <motion.h1
@@ -39,10 +39,10 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              Empowering Every Mom
+              Building a Clearer Public Layer
               <br />
               <span className="bg-gradient-to-r from-slate-400 via-violet-400 to-slate-500 bg-clip-text text-transparent">
-                From Mom to Moms
+                for Mom & Baby
               </span>
             </motion.h1>
 
@@ -52,8 +52,9 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              We don't create medical advice—we organize it. JupitLunar curates official health guidelines
-              from CDC, AAP, and Health Canada, making expert recommendations accessible to every parent.
+              Mom AI Agent is an Evidence Intelligence Platform for Mom & Baby. The website is the public evidence hub:
+              a place to search source-linked guidance, inspect trust documentation, and move into topic, food, and
+              explainer paths without losing the underlying source context.
             </motion.p>
           </motion.div>
         </div>
@@ -70,28 +71,28 @@ export default function AboutPage() {
           >
             <p className="uppercase tracking-[0.4em] text-xs text-slate-400 mb-4">Start here</p>
             <h2 className="text-4xl md:text-5xl font-light text-slate-500 mb-6">
-              The fastest paths through the Mom AI Agent ecosystem
+              The fastest paths through the public platform
             </h2>
             <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed">
-              If you are new here, start with the answer hub for research, DearBaby for tracking, or Solid Start for first-food planning.
+              If you are new here, start with the answer hub, topics library, or trust center. Products exist downstream of the platform, not as the main public story.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <Link href="/" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-violet-50/30 p-6 text-slate-600 hover:text-violet-500 transition-colors shadow-sm">
+            <Link href="/search" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-violet-50/30 p-6 text-slate-600 hover:text-violet-500 transition-colors shadow-sm">
               <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Answer hub</span>
               <h3 className="text-2xl font-light text-slate-500 mb-3">Search feeding, sleep, safety, and postpartum questions</h3>
-              <p className="text-sm leading-relaxed">Use the main Mom AI Agent homepage to find structured answers and cited public-health guidance.</p>
+              <p className="text-sm leading-relaxed">Use the public answer hub to move from one caregiver question into related guidance and source-linked follow-up paths.</p>
             </Link>
-            <Link href="/products/dearbaby" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-indigo-50/30 p-6 text-slate-600 hover:text-indigo-500 transition-colors shadow-sm">
-              <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Tracking app</span>
-              <h3 className="text-2xl font-light text-slate-500 mb-3">Use DearBaby for feeds, sleep, diapers, and growth</h3>
-              <p className="text-sm leading-relaxed">Move from research to daily logging with AI summaries and calmer infant routines.</p>
+            <Link href="/topics" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-indigo-50/30 p-6 text-slate-600 hover:text-indigo-500 transition-colors shadow-sm">
+              <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Topics library</span>
+              <h3 className="text-2xl font-light text-slate-500 mb-3">Browse the structured guidance map behind the answers</h3>
+              <p className="text-sm leading-relaxed">Open the topic layer when a quick answer needs more context, age framing, or a broader decision path.</p>
             </Link>
-            <Link href="/products/solidstart" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-orange-50/30 p-6 text-slate-600 hover:text-orange-500 transition-colors shadow-sm">
-              <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Feeding app</span>
-              <h3 className="text-2xl font-light text-slate-500 mb-3">Use Solid Start for first foods, BLW, and allergen planning</h3>
-              <p className="text-sm leading-relaxed">Get recipes, cut sizes, lunchbox ideas, and a calmer route into starting solids.</p>
+            <Link href="/trust" className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-orange-50/30 p-6 text-slate-600 hover:text-orange-500 transition-colors shadow-sm">
+              <span className="block text-xs uppercase tracking-[0.2em] text-slate-400 mb-3">Trust center</span>
+              <h3 className="text-2xl font-light text-slate-500 mb-3">Inspect source grading, boundaries, and review structure</h3>
+              <p className="text-sm leading-relaxed">Use the trust layer to see what the website is, what it is not, and how evidence is organized across the platform.</p>
             </Link>
           </div>
         </div>
@@ -111,8 +112,7 @@ export default function AboutPage() {
               Our Mission
             </h2>
             <p className="text-xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed">
-              To make official health guidelines from CDC, AAP, and Health Canada easily accessible
-              and understandable for every parent navigating infant and toddler care
+              To make source-linked maternal and infant guidance easier to access, understand, and use in everyday family decisions
             </p>
           </motion.div>
 
@@ -131,8 +131,7 @@ export default function AboutPage() {
               </div>
               <h3 className="font-light text-slate-500 mb-3 text-xl text-center">Content Curation, Not Creation</h3>
               <p className="text-sm text-slate-400 leading-relaxed text-center">
-                We exclusively curate guidance from official health authorities—CDC, AAP, Health Canada, WHO.
-                We don't create medical advice; we organize theirs into accessible formats.
+                We organize guidance from public-health authorities and related clinical references into accessible, source-linked formats.
               </p>
             </motion.div>
 
@@ -150,8 +149,7 @@ export default function AboutPage() {
               </div>
               <h3 className="font-light text-slate-500 mb-3 text-xl text-center">Community-Driven</h3>
               <p className="text-sm text-slate-400 leading-relaxed text-center">
-                Built by mothers, for mothers. We understand the challenges because we've lived them,
-                and we're committed to supporting every step of your journey.
+                Built from lived parenting experience and practical product thinking, with empathy for the uncertainty families navigate every day.
               </p>
             </motion.div>
 
@@ -169,8 +167,7 @@ export default function AboutPage() {
               </div>
               <h3 className="font-light text-slate-500 mb-3 text-xl text-center">Technology-Driven Organization</h3>
               <p className="text-sm text-slate-400 leading-relaxed text-center">
-                We use AI and software engineering to make dense government PDFs and medical guidelines
-                searchable, organized by age, region, and topic—without altering official recommendations.
+                We use software and AI-assisted systems to make dense guidelines easier to search, structure, and revisit without hiding the original source context.
               </p>
             </motion.div>
           </div>
@@ -192,7 +189,7 @@ export default function AboutPage() {
 
             <div className="space-y-6 text-lg text-slate-400 leading-relaxed font-light">
               <p>
-                JupitLunar started from a personal frustration: as a new mom, I spent hours digging through
+                Mom AI Agent started from a personal frustration: as a new mom, I spent hours digging through
                 CDC PDFs, AAP position papers, and Health Canada's website trying to answer simple questions
                 about feeding my baby. The authoritative information existed—it was just scattered and hard to navigate.
               </p>
@@ -204,21 +201,19 @@ export default function AboutPage() {
               </p>
 
               <p>
-                That's why I built JupitLunar—not as a medical advice website, but as an intelligent organizing
+                That's why I built Mom AI Agent—not as a medical advice website, but as an organizing
                 system for authoritative guidance. Think of it as a librarian for government health guidelines,
                 helping you quickly find what the CDC, AAP, or Health Canada says about your specific question.
               </p>
 
               <p>
-                We systematically aggregate guidance from North America's leading health authorities: CDC,
-                American Academy of Pediatrics, Health Canada, WHO, and the Canadian Paediatric Society.
-                Every piece of information is linked directly to its official source, graded for authority level,
-                and updated when guidelines change.
+                We organize guidance from CDC, the American Academy of Pediatrics, Health Canada, WHO, and the Canadian Paediatric Society.
+                The goal is source visibility, practical structure, and a public platform that can support both knowledge surfaces and downstream products.
               </p>
 
               <p>
-                What makes us different is radical transparency. We don't claim to have medical experts on staff.
-                We don't modify official recommendations. We simply organize them by topic, age range, and region,
+                What matters most to us is transparency. We don't claim to replace medical experts or official recommendations.
+                We organize guidance by topic, age range, and region,
                 then present them in formats that are easier to understand and search than the original PDFs.
               </p>
             </div>
@@ -236,9 +231,9 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-light text-slate-500 mb-6">
-              Our Core Values
-            </h2>
+              <h2 className="text-4xl md:text-5xl font-light text-slate-500 mb-6">
+                Public Platform Principles
+              </h2>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -258,8 +253,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-light text-slate-500 mb-2">Source Transparency</h3>
                   <p className="text-slate-400 leading-relaxed font-light">
-                    Every piece of information links directly to its official source. We grade each source
-                    (A/B/C/D) based on authority level and display verification dates publicly.
+                    We aim to keep guidance connected to visible sources, source grades, and review timing so users can understand where information comes from.
                   </p>
                 </div>
               </div>
@@ -281,8 +275,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-light text-slate-500 mb-2">Compassionate</h3>
                   <p className="text-slate-400 leading-relaxed font-light">
-                    We understand that motherhood is both beautiful and challenging. Our content
-                    is delivered with empathy, support, and without judgment.
+                    Parenting can feel high-stakes and exhausting. We want the platform to reduce confusion rather than add to it.
                   </p>
                 </div>
               </div>
@@ -304,8 +297,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-light text-slate-500 mb-2">Organization, Not Interpretation</h3>
                   <p className="text-slate-400 leading-relaxed font-light">
-                    We transform 200-page PDF guidelines into searchable, age-specific formats. But we
-                    never modify the recommendations—if CDC says "6 months," we say "6 months."
+                    We translate dense documents into searchable, age-specific formats while keeping the underlying recommendation visible and easier to trace.
                   </p>
                 </div>
               </div>
@@ -327,8 +319,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-light text-slate-500 mb-2">Guideline Monitoring</h3>
                   <p className="text-slate-400 leading-relaxed font-light">
-                    We monitor official sources for guideline changes every 3 months. When recommendations
-                    are updated, we reflect those changes within 90 days and log all updates publicly.
+                    We maintain recurring review cycles so important guidance changes can be identified and reflected across the platform.
                   </p>
                 </div>
               </div>
@@ -348,7 +339,7 @@ export default function AboutPage() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-light text-slate-500 mb-8">
-              From Mom to Moms
+              From Parent Friction to Platform Design
             </h2>
 
             <p className="text-xl text-slate-400 leading-relaxed font-light max-w-3xl mx-auto mb-8">
@@ -358,9 +349,8 @@ export default function AboutPage() {
             </p>
 
             <p className="text-lg text-slate-400 leading-relaxed font-light max-w-3xl mx-auto">
-              Every feature is guided by one question: "Will this help a parent quickly find what CDC, AAP,
-              or Health Canada says about their specific situation?" We're not trying to replace your
-              pediatrician—we're helping you find the official guidelines before your next appointment.
+              Every feature is guided by one question: "Will this help a parent find a clearer, more source-linked answer?"
+              We're not trying to replace your pediatrician. We're trying to make it easier to move from scattered information to a calmer next step.
             </p>
           </motion.div>
         </div>
@@ -467,7 +457,13 @@ export default function AboutPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    Trust & Methods
+                    Trust Center
+                  </Link>
+                  <Link href="/methodology" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    Methodology
                   </Link>
                   <Link href="/faq" className="flex items-center gap-2 text-slate-600 hover:text-violet-500 transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
