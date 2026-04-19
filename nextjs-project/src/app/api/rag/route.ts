@@ -25,6 +25,19 @@ const STOP_WORDS = new Set([
 const GENERIC_TERMS = new Set([
   'baby', 'babies', 'infant', 'newborn', 'child', 'children', 'month', 'months', 'old', 'care'
 ]);
+const QUERY_EXPANSIONS: Array<{ pattern: RegExp; terms: string[] }> = [
+  { pattern: /产后抑郁|postpartum depression|ppd/i, terms: ['postpartum depression', 'postpartum mental health', 'maternal mental health', 'postpartum recovery'] },
+  { pattern: /产后|postpartum/i, terms: ['postpartum', 'postpartum recovery', 'maternal health'] },
+  { pattern: /抑郁|depression/i, terms: ['depression', 'mental health', 'mood', 'support'] },
+  { pattern: /发烧|fever/i, terms: ['fever', 'temperature', 'baby fever', 'under 3 months'] },
+  { pattern: /过敏|allergy|allergic/i, terms: ['allergy', 'allergen', 'allergic reaction', 'peanut'] },
+  { pattern: /辅食|固体食物|solids|solid food/i, terms: ['solids', 'starting solids', 'first foods', 'feeding'] },
+  { pattern: /母乳|breastfeeding/i, terms: ['breastfeeding', 'latch', 'milk supply'] },
+  { pattern: /睡眠|sleep/i, terms: ['sleep', 'wake windows', 'newborn sleep'] },
+  { pattern: /疫苗|vaccine|vaccination/i, terms: ['vaccine', 'vaccination schedule', 'immunization'] },
+  { pattern: /腹绞痛|colic/i, terms: ['colic', 'crying', 'soothing'] },
+  { pattern: /尿布疹|diaper rash/i, terms: ['diaper rash', 'skin irritation'] },
+];
 
 interface StructuredResponse {
   summary: string;
@@ -76,7 +89,7 @@ function uniq<T>(values: T[]) {
 }
 
 function tokenizeQuery(rawQuery: string) {
-  return uniq(
+  const latinTerms = uniq(
     rawQuery
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, ' ')
@@ -86,6 +99,20 @@ function tokenizeQuery(rawQuery: string) {
       .filter((term) => !GENERIC_TERMS.has(term))
       .slice(0, 6)
   );
+
+  const cjkTerms = uniq(
+    (rawQuery.match(/[\u4e00-\u9fff]{2,}/g) || [])
+      .map((term) => term.trim())
+      .filter(Boolean)
+      .slice(0, 6)
+  );
+
+  const expandedTerms = QUERY_EXPANSIONS
+    .filter(({ pattern }) => pattern.test(rawQuery))
+    .flatMap(({ terms }) => terms)
+    .map((term) => term.toLowerCase());
+
+  return uniq([...latinTerms, ...cjkTerms, ...expandedTerms]).slice(0, 12);
 }
 
 function buildIlikeClauses(fields: string[], rawQuery: string) {
@@ -314,6 +341,11 @@ async function synthesizeRetrievedAnswer(query: string, articles: ArticleHit[], 
 Use only the retrieved context provided by the user.
 Do not invent facts that are not supported by the context.
 If the context is incomplete, say that clearly.
+Answer in the same language as the user's question when practical.
+Behave like a parenting evidence assistant, not a generic chatbot.
+Prefer a direct answer first, then the key evidence-backed points, then practical next steps.
+Do not diagnose, do not give emergency clearance, and do not imply certainty beyond the retrieved evidence.
+If the question suggests a serious postpartum mental health, safety, breathing, bleeding, seizure, or dehydration concern, say clearly that urgent clinician support is needed.
 Return valid JSON only in this shape:
 {
   "summary": "1-2 sentence direct answer",

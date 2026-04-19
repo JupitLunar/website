@@ -465,3 +465,34 @@ export interface KnowledgeFAQ {
   // Joined data
   kb_sources?: KnowledgeSource[];
 }
+
+export interface KnowledgeInsightCitation {
+  title: string;
+  url: string;
+  publisher?: string;
+  author?: string;
+  date?: string;
+}
+
+export interface KnowledgeInsight {
+  id: string;
+  slug: string;
+  title: string;
+  summary?: string;
+  body_excerpt?: string;
+  hub: ContentHub;
+  type: ContentType;
+  locale: KnowledgeLocale;
+  age_range?: string | null;
+  reviewed_by: string;
+  last_reviewed_at: string;
+  date_published: string;
+  updated_at: string;
+  trustworthiness_score: number;
+  evidence_level: 'A' | 'B' | 'C';
+  source_quality: 'government' | 'curated';
+  citation_count: number;
+  primary_sources: string[];
+  citations: KnowledgeInsightCitation[];
+  source_layer: string;
+}

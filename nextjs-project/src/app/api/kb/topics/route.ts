@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { buildFoodUrl, buildSearchUrl, buildTopicUrl, kbJsonHeaders, KB_SITE_URL } from '@/lib/kb-api';
 import { getTopicCatalogItem, TOPIC_CATALOG } from '@/lib/topic-catalog';
 
 export const dynamic = 'force-dynamic';
-
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
 
 function serializeTopic(topic: (typeof TOPIC_CATALOG)[number]) {
   return {
@@ -12,12 +11,13 @@ function serializeTopic(topic: (typeof TOPIC_CATALOG)[number]) {
     title: topic.title,
     focus: topic.focus,
     summary: topic.blurb,
-    url: `${siteUrl}${topic.href}`,
+    url: `${KB_SITE_URL}${topic.href}`,
     paths: {
-      topic: `${siteUrl}${topic.href}`,
-      search: `${siteUrl}/search?q=${encodeURIComponent(topic.title)}`,
-      faq: `${siteUrl}/faq`,
-      trust: `${siteUrl}/trust`,
+      topic: buildTopicUrl(topic.slug),
+      search: buildSearchUrl(topic.title),
+      faq: `${KB_SITE_URL}/faq`,
+      trust: `${KB_SITE_URL}/trust`,
+      foods: `${KB_SITE_URL}/foods`,
     },
   };
 }
@@ -36,13 +36,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         data: serializeTopic(topic),
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Cache-Control': 'public, max-age=1800, s-maxage=43200',
+        meta: {
+          surface: 'topics',
+          public_read_only: true,
         },
-      }
+      },
+      { headers: kbJsonHeaders() }
     );
   }
 
@@ -50,12 +49,11 @@ export async function GET(request: NextRequest) {
     {
       count: TOPIC_CATALOG.length,
       data: TOPIC_CATALOG.map(serializeTopic),
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 'public, max-age=1800, s-maxage=43200',
+      meta: {
+        surface: 'topics',
+        public_read_only: true,
       },
-    }
+    },
+    { headers: kbJsonHeaders() }
   );
 }

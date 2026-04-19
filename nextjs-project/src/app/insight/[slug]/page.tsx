@@ -12,6 +12,7 @@ import CitationBox from '@/components/CitationBox';
 
 import { generateMedicalWebPageSchema } from '@/lib/aeo-optimizations';
 import { filterPublicFacingArticles, isPublicFacingArticle } from '@/lib/content-surface';
+import { getReviewSurfaceLabel } from '@/lib/review-surface';
 // AEO Helper: Extract FAQ data from keywords
 function extractAEOData(keywords: string[]) {
   const faqs: { question: string; answer: string }[] = [];
@@ -291,12 +292,6 @@ function formatDate(dateString: string | null) {
   });
 }
 
-function getReviewLabel(reviewedBy: string | null | undefined) {
-  if (reviewedBy === 'Medical Review Board') return 'Medical review';
-  if (reviewedBy === 'AI Content Generator') return 'Editorial explainer';
-  return 'Public article';
-}
-
 function sanitizeEntity(entity: string) {
   return entity
     .replace(/[_-]+/g, ' ')
@@ -400,7 +395,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
     ? article.key_facts.filter((fact: string) => fact && !fact.startsWith('__AEO'))
     : [];
   const authorityEntities = getVisibleAuthorityEntities(article.entities || []);
-  const reviewLabel = getReviewLabel(article.reviewed_by);
+  const reviewLabel = getReviewSurfaceLabel(article.reviewed_by);
 
   // Generate JSON-LD schemas
   const schemas = generateArticleSchema(article, aeoData);
@@ -544,7 +539,7 @@ export default async function InsightArticlePage({ params }: { params: { slug: s
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
             <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">Trust Layer</p>
-            <p className="text-sm font-medium text-slate-700">Public guidance with platform boundaries</p>
+            <p className="text-sm font-medium text-slate-700">Evidence synthesis with platform boundaries</p>
             <p className="mt-2 text-sm leading-relaxed text-slate-500">
               Review the trust center to inspect the source model, evidence boundaries, and how these explainers are produced.
             </p>

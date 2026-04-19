@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { clientCache, cacheKeys, withCache } from './cache';
-import { filterPublicFacingArticles, INSIGHT_REVIEWERS } from './content-surface';
+import { filterPublicFacingArticles, getPlainTextExcerpt, INSIGHT_REVIEWERS } from './content-surface';
 import type {
   ContentHub,
   ContentType,
@@ -19,7 +19,8 @@ import type {
   KnowledgeFood,
   KnowledgeGuide,
   KnowledgeSource,
-  KnowledgeFAQ
+  KnowledgeFAQ,
+  KnowledgeInsight
 } from '@/types/content';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -783,6 +784,157 @@ export const knowledgeBase = {
         .map((id: string) => sourceMap.get(id))
         .filter(Boolean) as KnowledgeSource[],
     }));
+  },
+
+  async getEvidenceInsights(filters?: {
+    locale?: KnowledgeLocale;
+    hub?: ContentHub;
+    type?: ContentType;
+  }): Promise<KnowledgeInsight[]> {
+    if (!hasPublicSupabaseEnv) return [];
+    const locale = filters?.locale;
+    const hub = filters?.hub;
+    const type = filters?.type;
+    const cacheKey = `kb-insights-${locale || 'all'}-${hub || 'all'}-${type || 'all'}`;
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached as KnowledgeInsight[];
+
+    let query = supabase
+      .from('articles')
+      .select(`
+        id,
+        slug,
+        title,
+        one_liner,
+        meta_description,
+        body_md,
+        hub,
+        type,
+        region,
+        age_range,
+        reviewed_by,
+        last_reviewed,
+        date_published,
+        date_modified,
+        status,
+        citations(url, publisher, title, author, date)
+      `)
+      .eq('status', 'published')
+      .not('last_reviewed', 'is', null)
+      .order('date_modified', { ascending: false });
+
+    if (locale) {
+      if (locale === 'Global') {
+        query = query.eq('region', 'Global');
+      } else {
+        query = query.in('region', [locale, 'Global']);
+      }
+    }
+
+    if (hub) {
+      query = query.eq('hub', hub);
+    }
+
+    if (type) {
+      query = query.eq('type', type);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    const authorityPublishers = [
+      'AAP',
+      'American Academy of Pediatrics',
+      'CDC',
+      'Centers for Disease Control and Prevention',
+      'WHO',
+      'World Health Organization',
+      'Health Canada',
+      'Canadian Paediatric Society',
+      'CPS',
+      'NHS',
+      'NIH',
+      'FDA',
+      'ACOG',
+      'Raising Children Network',
+    ];
+
+    const publishedArticles = filterPublicFacingArticles((data || []) as Array<{ slug?: string | null; title?: string | null; body_md?: string | null; status?: string | null } & Record<string, any>>);
+
+    const insights = publishedArticles
+      .filter((article) => Boolean(article.slug && article.title))
+      .filter((article) => article.reviewed_by !== 'AI Content Generator')
+      .map((article) => {
+        const slug = article.slug as string;
+        const title = article.title as string;
+        const citations = Array.isArray(article.citations) ? article.citations.filter((citation) => citation?.title && citation?.url) : [];
+        const primarySources = Array.from(
+          new Set(citations.map((citation) => citation.publisher).filter((publisher): publisher is string => Boolean(publisher)))
+        );
+        const hasAuthoritySource = primarySources.some((publisher) =>
+          authorityPublishers.some((authority) => publisher.includes(authority))
+        );
+        const citationCount = citations.length;
+        const trustworthiness = Math.min(
+          0.95,
+          0.45 +
+            (hasAuthoritySource ? 0.3 : 0) +
+            (citationCount >= 2 ? 0.1 : 0) +
+            Math.min(0.1, citationCount * 0.03)
+        );
+        const evidenceLevel: KnowledgeInsight['evidence_level'] =
+          hasAuthoritySource && citationCount >= 3 ? 'A' : citationCount >= 2 ? 'B' : 'C';
+
+        return {
+          id: article.id,
+          slug,
+          title,
+          summary: article.one_liner || article.meta_description || getPlainTextExcerpt(article.body_md, 220),
+          body_excerpt: getPlainTextExcerpt(article.body_md, 420),
+          hub: article.hub,
+          type: article.type,
+          locale: article.region as KnowledgeLocale,
+          age_range: article.age_range || null,
+          reviewed_by: article.reviewed_by,
+          last_reviewed_at: article.last_reviewed,
+          date_published: article.date_published,
+          updated_at: article.date_modified,
+          trustworthiness_score: Number(trustworthiness.toFixed(2)),
+          evidence_level: evidenceLevel,
+          source_quality: hasAuthoritySource ? 'government' : 'curated',
+          citation_count: citationCount,
+          primary_sources: primarySources,
+          citations: citations.map((citation) => ({
+            title: citation.title,
+            url: citation.url,
+            publisher: citation.publisher || undefined,
+            author: citation.author || undefined,
+            date: citation.date || undefined,
+          })),
+          source_layer: 'Evidence-qualified article',
+        } satisfies KnowledgeInsight;
+      })
+      .filter((article) => article.citation_count >= 2 && article.primary_sources.length > 0)
+      .filter((article) => article.source_quality === 'government');
+
+    clientCache.set(cacheKey, insights, 15 * 60 * 1000);
+    return insights;
+  },
+
+  async getEvidenceInsightBySlug(slug: string): Promise<KnowledgeInsight | null> {
+    const cacheKey = `kb-insight-${slug}`;
+    const cached = clientCache.get(cacheKey);
+    if (cached) return cached as KnowledgeInsight;
+
+    const insights = await this.getEvidenceInsights();
+    const match = insights.find((insight) => insight.slug === slug) || null;
+
+    if (match) {
+      clientCache.set(cacheKey, match, 30 * 60 * 1000);
+    }
+
+    return match;
   }
 };
 

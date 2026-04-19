@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
 import { ContentType, ContentHub } from '@/types/content';
 import { isInsightArticleReviewer } from '@/lib/content-surface';
+import { getReviewSurfaceLabel } from '@/lib/review-surface';
 
 interface ArticleCardProps {
   article: {
@@ -52,7 +53,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
   const href = isInsightArticleReviewer(article.reviewed_by)
     ? `/insight/${article.slug}`
     : `/${article.slug}`;
-  const reviewLabel = getReviewLabel(article.reviewed_by);
+  const reviewLabel = getReviewSurfaceLabel(article.reviewed_by);
 
   const typeColors = {
     explainer: 'bg-blue-100 text-blue-800',
@@ -171,9 +172,3 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
 };
 
 export default ArticleCard;
-
-function getReviewLabel(reviewedBy: string | null | undefined) {
-  if (reviewedBy === 'Medical Review Board') return 'Medical review';
-  if (reviewedBy === 'AI Content Generator') return 'Explainer';
-  return 'Authority source';
-}

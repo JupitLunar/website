@@ -1,22 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
+import {
+  kbJsonHeaders,
+  parseKnowledgeLocale,
+  serializeKnowledgeFood,
+  uniqueStrings,
+} from '@/lib/kb-api';
 import { knowledgeBase } from '@/lib/supabase';
-import type { KnowledgeFood, KnowledgeLocale, RiskLevel } from '@/types/content';
-
-const SUPPORTED_LOCALES: Record<string, KnowledgeLocale> = {
-  us: 'US',
-  ca: 'CA',
-  global: 'Global',
-};
+import type { KnowledgeSource, RiskLevel } from '@/types/content';
 
 const SUPPORTED_RISKS: RiskLevel[] = ['none', 'low', 'medium', 'high'];
-
-function parseLocale(value: string | null): KnowledgeLocale | undefined {
-  if (!value) return undefined;
-  const key = value.toLowerCase();
-  return SUPPORTED_LOCALES[key];
-}
 
 function parseRisk(value: string | null): RiskLevel | undefined {
   if (!value) return undefined;
@@ -27,10 +21,11 @@ function parseRisk(value: string | null): RiskLevel | undefined {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const locale = parseLocale(searchParams.get('locale'));
+    const locale = parseKnowledgeLocale(searchParams.get('locale'));
     const risk = parseRisk(searchParams.get('risk'));
     const method = searchParams.get('method')?.toLowerCase();
     const ageRange = searchParams.get('age');
+    const slug = searchParams.get('slug');
 
     if (searchParams.get('locale') && !locale) {
       return NextResponse.json(
@@ -43,6 +38,30 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { error: 'Invalid risk level. Use one of: none, low, medium, high.' },
         { status: 400 }
+      );
+    }
+
+    if (slug) {
+      const food = await knowledgeBase.getFoodBySlug(slug);
+      if (!food) {
+        return NextResponse.json({ error: 'Food not found' }, { status: 404 });
+      }
+
+      const sourceMap = await knowledgeBase.getSourcesMap(food.source_ids || []);
+      const sources = (food.source_ids || [])
+        .map((id) => sourceMap.get(id))
+        .filter((item): item is KnowledgeSource => Boolean(item));
+
+      return NextResponse.json(
+        {
+          data: serializeKnowledgeFood(food, sources),
+          meta: {
+            surface: 'foods',
+            locale: locale || food.locale,
+            source_count: sources.length,
+          },
+        },
+        { headers: kbJsonHeaders() }
       );
     }
 
@@ -67,9 +86,33 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ data: foods }, {
-      headers: { 'Content-Type': 'application/json; charset=utf-8' },
-    });
+    const sourceIds = uniqueStrings(foods.flatMap((item) => item.source_ids || []));
+    const sourceMap = await knowledgeBase.getSourcesMap(sourceIds);
+
+    return NextResponse.json(
+      {
+        count: foods.length,
+        filters: {
+          locale: locale || null,
+          risk: risk || null,
+          method: method || null,
+          age: ageRange || null,
+        },
+        data: foods.map((food) =>
+          serializeKnowledgeFood(
+            food,
+            (food.source_ids || [])
+              .map((id) => sourceMap.get(id))
+              .filter((item): item is KnowledgeSource => Boolean(item))
+          )
+        ),
+        meta: {
+          surface: 'foods',
+          public_read_only: true,
+        },
+      },
+      { headers: kbJsonHeaders() }
+    );
   } catch (error) {
     console.error('KB foods API error:', error);
     return NextResponse.json(

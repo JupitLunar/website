@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
           category: hub.category,
           tags: hub.tags || [],
           last_updated: hub.updated_at,
-          url: `${siteUrl}/hub/${hub.slug}`,
+          url: `${siteUrl}/insight?hub=${encodeURIComponent(hub.slug)}`,
           ai_context: {
             content_type: "structured_knowledge",
             authority_sources: hub.sources || [],

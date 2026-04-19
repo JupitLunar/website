@@ -1,67 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { FAQ_DATA } from '@/lib/faq-catalog';
+import {
+  kbJsonHeaders,
+  normaliseUrl,
+  parseKnowledgeLocale,
+  serializeKnowledgeFAQ,
+  serializeKnowledgeSource,
+  uniqueStrings,
+  KB_SITE_URL,
+} from '@/lib/kb-api';
 import { knowledgeBase } from '@/lib/supabase';
 import type { KnowledgeFAQ, KnowledgeLocale, KnowledgeSource } from '@/types/content';
 
 export const dynamic = 'force-dynamic';
 
-const SUPPORTED_LOCALES: Record<string, KnowledgeLocale> = {
-  us: 'US',
-  ca: 'CA',
-  global: 'Global',
-};
-
 const MAX_LIMIT = 100;
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\/$/, '');
-
-function parseLocale(value: string | null): KnowledgeLocale | undefined {
-  if (!value) return undefined;
-  return SUPPORTED_LOCALES[value.toLowerCase()];
-}
 
 function matchesQuery(faq: KnowledgeFAQ, query: string) {
   const normalized = query.trim().toLowerCase();
   if (!normalized) return true;
 
   return faq.question.toLowerCase().includes(normalized) || faq.answer.toLowerCase().includes(normalized);
-}
-
-function serializeSource(source: KnowledgeSource) {
-  return {
-    id: source.id,
-    name: source.name,
-    organization: source.organization,
-    url: source.url,
-    grade: source.grade,
-    retrieved_at: source.retrieved_at,
-    notes: source.notes,
-  };
-}
-
-function serializeFAQ(faq: KnowledgeFAQ, sources: KnowledgeSource[]) {
-  return {
-    id: faq.id,
-    slug: faq.slug,
-    question: faq.question,
-    answer: faq.answer,
-    category: faq.category,
-    subcategory: faq.subcategory,
-    locale: faq.locale,
-    age_range: faq.age_range || [],
-    source_layer: faq.source_layer || null,
-    source_type: faq.source_kind || null,
-    source_label: faq.source_label || null,
-    source_url: faq.source_url || null,
-    related_topic_slugs: faq.related_topic_slugs || [],
-    related_food_ids: faq.related_food_ids || [],
-    related_rule_ids: faq.related_rule_ids || [],
-    related_guide_ids: faq.related_guide_ids || [],
-    priority: faq.priority,
-    last_reviewed_at: faq.last_reviewed_at,
-    updated_at: faq.updated_at,
-    sources: sources.map(serializeSource),
-  };
 }
 
 function isMissingFAQTable(error: unknown) {
@@ -108,13 +68,13 @@ function serializeStaticFAQ(item: (typeof FAQ_DATA)[number], index: number) {
     source_type: item.sourceKind,
     sources: [
       {
-        id: `${slug}-source`,
-        name: item.sourceLabel,
-        organization: item.sourceKind === 'authority' ? item.sourceLabel.split(':')[0] : 'Mom AI Agent',
-        url: item.sourceUrl.startsWith('http') ? item.sourceUrl : `${siteUrl}${item.sourceUrl}`,
-        grade: item.sourceKind === 'authority' ? 'A' : null,
-        retrieved_at: null,
-        notes: null,
+      id: `${slug}-source`,
+      name: item.sourceLabel,
+      organization: item.sourceKind === 'authority' ? item.sourceLabel.split(':')[0] : 'Mom AI Agent',
+      url: item.sourceUrl.startsWith('http') ? item.sourceUrl : `${KB_SITE_URL}${item.sourceUrl}`,
+      grade: item.sourceKind === 'authority' ? 'A' : null,
+      retrieved_at: null,
+      notes: null,
       },
     ],
   };
@@ -138,14 +98,9 @@ function staticFAQResponse(params: {
     if (!match) {
       return NextResponse.json({ error: 'FAQ not found' }, { status: 404 });
     }
-    return NextResponse.json(
+      return NextResponse.json(
       { data: match, source: 'static-fallback', table_status: 'missing' },
-      {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Cache-Control': 'public, max-age=1800, s-maxage=43200',
-        },
-      }
+      { headers: kbJsonHeaders() }
     );
   }
 
@@ -164,13 +119,12 @@ function staticFAQResponse(params: {
       source: 'static-fallback',
       table_status: 'missing',
       data: limited,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 'public, max-age=1800, s-maxage=43200',
+      meta: {
+        surface: 'faqs',
+        public_read_only: true,
       },
-    }
+    },
+    { headers: kbJsonHeaders() }
   );
 }
 
@@ -178,7 +132,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get('slug');
   const category = searchParams.get('category') || undefined;
-  const locale = parseLocale(searchParams.get('locale'));
+  const locale = parseKnowledgeLocale(searchParams.get('locale'));
   const topicSlug = searchParams.get('topic') || undefined;
   const foodId = searchParams.get('foodId') || undefined;
   const query = searchParams.get('query') || '';
@@ -207,13 +161,16 @@ export async function GET(request: NextRequest) {
         .filter((item): item is KnowledgeSource => Boolean(item));
 
       return NextResponse.json(
-        { data: serializeFAQ(faq, sources) },
         {
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Cache-Control': 'public, max-age=1800, s-maxage=43200',
+          data: serializeKnowledgeFAQ(faq, sources),
+          source: 'supabase',
+          table_status: 'present',
+          meta: {
+            surface: 'faqs',
+            public_read_only: true,
           },
-        }
+        },
+        { headers: kbJsonHeaders() }
       );
     }
 
@@ -225,10 +182,10 @@ export async function GET(request: NextRequest) {
     });
 
     const filteredFAQs = faqs.filter((faq) => matchesQuery(faq, query)).slice(0, limit);
-    const sourceIds = Array.from(new Set(filteredFAQs.flatMap((faq) => faq.source_ids || [])));
+    const sourceIds = uniqueStrings(filteredFAQs.flatMap((faq) => faq.source_ids || []));
     const sourceMap = await knowledgeBase.getSourcesMap(sourceIds);
     const filtered = filteredFAQs.map((faq) =>
-      serializeFAQ(
+      serializeKnowledgeFAQ(
         faq,
         (faq.source_ids || [])
           .map((id) => sourceMap.get(id))
@@ -250,13 +207,12 @@ export async function GET(request: NextRequest) {
         source: 'supabase',
         table_status: 'present',
         data: filtered,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Cache-Control': 'public, max-age=1800, s-maxage=43200',
+        meta: {
+          surface: 'faqs',
+          public_read_only: true,
         },
-      }
+      },
+      { headers: kbJsonHeaders() }
     );
   } catch (error) {
     if (isMissingFAQTable(error)) {

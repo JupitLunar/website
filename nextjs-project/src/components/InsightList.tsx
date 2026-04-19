@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { filterCleanKeywords } from '@/lib/supabase';
 import { isInsightArticleReviewer } from '@/lib/content-surface';
+import { getReviewSurfaceLabel } from '@/lib/review-surface';
 
 interface InsightListProps {
   articles: any[];
@@ -34,7 +35,7 @@ export default function InsightList({ articles, hasActiveFilters, clearFiltersUr
         const visibleKeyFacts = Array.isArray(article.key_facts)
           ? article.key_facts.filter((fact: string) => fact && !fact.startsWith('__AEO')).slice(0, 2)
           : [];
-        const reviewLabel = getReviewLabel(article.reviewed_by);
+        const reviewLabel = getReviewSurfaceLabel(article.reviewed_by);
 
         return (
           <Link
@@ -153,10 +154,4 @@ function formatDate(dateString: string | null) {
     month: 'long',
     day: 'numeric'
   });
-}
-
-function getReviewLabel(reviewedBy: string | null | undefined) {
-  if (reviewedBy === 'Medical Review Board') return 'Medical review';
-  if (reviewedBy === 'AI Content Generator') return 'Editorial explainer';
-  return 'Public article';
 }

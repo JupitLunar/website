@@ -9,6 +9,9 @@ import Script from 'next/script';
 import { generateHreflangMetadata, generateBottomLineSummary } from '@/lib/aeo-optimizations';
 import { BottomLineAnswer } from '@/components/BottomLineAnswer';
 import { USCanadaComparison } from '@/components/USCanadaComparison';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { getReviewSurfaceLabel } from '@/lib/review-surface';
 
 // 生成静态路径 - 生成所有文章（已优化构建配置，不再需要限制）
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
@@ -100,14 +103,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-function getReviewLabel(reviewedBy: string | null | undefined) {
-  if (!reviewedBy) return 'Public guidance';
-  if (/authority|who|cdc|aap|canadian|nhs|healthychildren|health canada/i.test(reviewedBy)) {
-    return 'Authority source';
-  }
-  return reviewedBy;
-}
-
 function getHubName(hub: string | null | undefined) {
   const names: Record<string, string> = {
     feeding: 'Feeding & Nutrition',
@@ -119,6 +114,10 @@ function getHubName(hub: string | null | undefined) {
   };
   if (!hub) return 'Guidance';
   return names[hub] || hub;
+}
+
+function hasRenderedHtml(body: string) {
+  return /<(p|div|h1|h2|h3|h4|ul|ol|li|blockquote|table|strong|em|a|br)\b/i.test(body);
 }
 
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
@@ -165,7 +164,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       ? (article as any).how_to_steps.slice(0, 4).map((step: any) => step.title || step.description || '').filter(Boolean)
       : [];
     const sources = citationItems.slice(0, 4).map((citation: any) => citation.title || citation.url).filter(Boolean);
-    const reviewLabel = getReviewLabel(article.reviewed_by);
+    const reviewLabel = getReviewSurfaceLabel(article.reviewed_by);
     const continueHref = article.hub === 'feeding' ? '/foods' : '/topics';
     const continueLabel = article.hub === 'feeding' ? 'Foods database' : 'Topics library';
     const comparisonData = (article as any).us_ca_comparison;
@@ -286,7 +285,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 articleSlug={article.slug}
                 className="mb-10"
               />
-              <div className="prose prose-lg max-w-none">
+              <div className="prose prose-slate lg:prose-lg max-w-none prose-headings:font-semibold prose-headings:text-slate-800 prose-p:leading-8 prose-p:text-slate-700 prose-li:leading-8 prose-li:text-slate-700 prose-strong:text-slate-800 prose-a:text-violet-600 hover:prose-a:text-violet-700">
                 {/* TL;DR - 淡雅样式 */}
                 {tldrItems.length > 0 && (
                   <div className="bg-gradient-to-r from-slate-50 to-indigo-50/20 border-l-4 border-slate-400 p-6 rounded-r-lg mb-8 shadow-sm">
@@ -348,7 +347,22 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 {/* Main Content */}
                 <div className="mb-8">
                   {article.body_md ? (
-                    <div dangerouslySetInnerHTML={{ __html: article.body_md }} />
+                    hasRenderedHtml(article.body_md) ? (
+                      <div
+                        className="article-body-html [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-slate-800 [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-slate-800 [&_p]:my-5 [&_p]:leading-8 [&_p]:text-slate-700 [&_ul]:my-5 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-5 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_li]:leading-8 [&_li]:text-slate-700 [&_a]:text-violet-600 hover:[&_a]:text-violet-700"
+                        dangerouslySetInnerHTML={{ __html: article.body_md }}
+                      />
+                    ) : (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          a: ({ node, ...props }) => <a {...props} className="text-violet-600 hover:text-violet-700" />,
+                          table: ({ node, ...props }) => <table {...props} className="w-full border-collapse text-sm" />,
+                        }}
+                      >
+                        {article.body_md}
+                      </ReactMarkdown>
+                    )
                   ) : (
                     <p className="text-gray-600">Content coming soon...</p>
                   )}

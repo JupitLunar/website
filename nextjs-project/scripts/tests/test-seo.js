@@ -3,86 +3,74 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🧪 Testing SEO & GEO Optimization Features...\n');
+console.log('🧪 Testing SEO & AEO surfaces...\n');
 
-// Test 1: Check robots.ts
+function read(relativePath) {
+  return fs.readFileSync(path.join(__dirname, relativePath), 'utf8');
+}
+
+function assertIncludes(content, label, requiredElements) {
+  let passed = 0;
+
+  requiredElements.forEach((element) => {
+    if (content.includes(element)) {
+      console.log(`   ✅ ${element}`);
+      passed++;
+    } else {
+      console.log(`   ❌ Missing: ${element}`);
+    }
+  });
+
+  console.log(`   📊 ${label}: ${passed}/${requiredElements.length} passed\n`);
+  return passed === requiredElements.length;
+}
+
 function testRobotsTxt() {
   console.log('1. Testing robots.ts...');
   try {
-    const robotsPath = path.join(__dirname, '../../src/app/robots.ts');
-    const robotsContent = fs.readFileSync(robotsPath, 'utf8');
-
-    // Check for correct configuration in typescript file
-    const requiredElements = [
+    const robotsContent = read('../../src/app/robots.ts');
+    return assertIncludes(robotsContent, 'Robots.ts test', [
       "import { MetadataRoute } from 'next';",
-      "export default function robots(): MetadataRoute.Robots",
+      'export default function robots(): MetadataRoute.Robots',
       "userAgent: '*'",
       "allow: '/'",
-      "disallow: ['/admin/', '/api/auth/', '/private/']",
+      "disallow: ['/admin/', '/api/', '/private/', '/search', '/complete', '/tasks']",
       "userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'Amazonbot', 'ClaudeBot', 'PerplexityBot']",
-      "sitemap: `${siteUrl}/sitemap.xml`",
-      "host: siteUrl"
-    ];
-
-    let passed = 0;
-    requiredElements.forEach(element => {
-      if (robotsContent.includes(element)) {
-        console.log(`   ✅ ${element}`);
-        passed++;
-      } else {
-        console.log(`   ❌ Missing: ${element}`);
-      }
-    });
-
-    console.log(`   📊 Robots.ts test: ${passed}/${requiredElements.length} passed\n`);
-    return passed === requiredElements.length;
+      'sitemap: `${siteUrl}/sitemap.xml`',
+      'host: siteUrl',
+    ]);
   } catch (error) {
     console.log(`   ❌ Error reading robots.ts: ${error.message}\n`);
     return false;
   }
 }
 
-// 测试2: 检查sitemap.ts
 function testSitemapTs() {
   console.log('2. Testing sitemap.ts...');
   try {
-    const sitemapPath = path.join(__dirname, '../../src/app/sitemap.ts');
-    const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
-
-    const requiredElements = [
+    const sitemapContent = read('../../src/app/sitemap.ts');
+    return assertIncludes(sitemapContent, 'Sitemap.ts test', [
       'MetadataRoute.Sitemap',
       'contentManager.getAllArticles()',
-      'contentManager.getContentHubs()',
-      "const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.momaiagent.com').replace(/\\/$/, '')",
+      'createAdminClient()',
+      "url: `${siteUrl}/topics`",
+      "url: `${siteUrl}/foods`",
+      "url: `${siteUrl}/insight`",
+      "url: `${siteUrl}/articles`",
       'changeFrequency',
       'priority',
-      'lastModified'
-    ];
-
-    let passed = 0;
-    requiredElements.forEach(element => {
-      if (sitemapContent.includes(element)) {
-        console.log(`   ✅ ${element}`);
-        passed++;
-      } else {
-        console.log(`   ❌ Missing: ${element}`);
-      }
-    });
-
-    console.log(`   📊 Sitemap.ts test: ${passed}/${requiredElements.length} passed\n`);
-    return passed === requiredElements.length;
+      'lastModified',
+    ]);
   } catch (error) {
     console.log(`   ❌ Error reading sitemap.ts: ${error.message}\n`);
     return false;
   }
 }
 
-// 测试3: 检查JSON-LD生成器
 function testJsonLdGenerator() {
   console.log('3. Testing JSON-LD generator...');
   try {
-    const jsonLdPath = path.join(__dirname, '../../src/lib/json-ld.ts');
-    const jsonLdContent = fs.readFileSync(jsonLdPath, 'utf8');
+    const jsonLdContent = read('../../src/lib/json-ld.ts');
 
     const requiredFunctions = [
       'generateArticleStructuredData',
@@ -91,7 +79,7 @@ function testJsonLdGenerator() {
       'generateWebsiteStructuredData',
       'generateOrganizationStructuredData',
       'generateFAQStructuredData',
-      'generateProductStructuredData'
+      'generateProductStructuredData',
     ];
 
     const requiredSchemas = [
@@ -101,11 +89,12 @@ function testJsonLdGenerator() {
       '@type": "WebSite"',
       '@type": "Organization"',
       '@type": "FAQPage"',
-      '@type": "SoftwareApplication"'
+      '@type": "SoftwareApplication"',
+      '@type": "HealthTopicContent"',
     ];
 
     let functionsPassed = 0;
-    requiredFunctions.forEach(func => {
+    requiredFunctions.forEach((func) => {
       if (jsonLdContent.includes(func)) {
         console.log(`   ✅ Function: ${func}`);
         functionsPassed++;
@@ -115,7 +104,7 @@ function testJsonLdGenerator() {
     });
 
     let schemasPassed = 0;
-    requiredSchemas.forEach(schema => {
+    requiredSchemas.forEach((schema) => {
       if (jsonLdContent.includes(schema)) {
         console.log(`   ✅ Schema: ${schema}`);
         schemasPassed++;
@@ -132,15 +121,11 @@ function testJsonLdGenerator() {
   }
 }
 
-// 测试4: 检查动态页面
 function testDynamicPages() {
   console.log('4. Testing dynamic pages...');
   try {
-    const articlePagePath = path.join(__dirname, '../../src/app/[slug]/page.tsx');
-    const hubPagePath = path.join(__dirname, '../../src/app/hub/[hub-slug]/page.tsx');
-
-    const articleContent = fs.readFileSync(articlePagePath, 'utf8');
-    const hubContent = fs.readFileSync(hubPagePath, 'utf8');
+    const articleContent = read('../../src/app/[slug]/page.tsx');
+    const hubContent = read('../../src/app/hub/[hub-slug]/page.tsx');
 
     const articleRequired = [
       'generateMetadata',
@@ -148,18 +133,17 @@ function testDynamicPages() {
       'generateArticleStructuredData',
       'generateBreadcrumbStructuredData',
       'openGraph',
-      'twitter'
+      'twitter',
     ];
 
     const hubRequired = [
-      'generateMetadata',
-      'generateStaticParams',
-      'generateHubStructuredData',
-      'generateBreadcrumbStructuredData'
+      "redirect(`/insight?hub=${encodeURIComponent(params['hub-slug'])}`)",
+      "index: false",
+      "follow: false",
     ];
 
     let articlePassed = 0;
-    articleRequired.forEach(element => {
+    articleRequired.forEach((element) => {
       if (articleContent.includes(element)) {
         console.log(`   ✅ Article page: ${element}`);
         articlePassed++;
@@ -169,16 +153,16 @@ function testDynamicPages() {
     });
 
     let hubPassed = 0;
-    hubRequired.forEach(element => {
+    hubRequired.forEach((element) => {
       if (hubContent.includes(element)) {
-        console.log(`   ✅ Hub page: ${element}`);
+        console.log(`   ✅ Hub redirect page: ${element}`);
         hubPassed++;
       } else {
-        console.log(`   ❌ Hub page missing: ${element}`);
+        console.log(`   ❌ Hub redirect page missing: ${element}`);
       }
     });
 
-    console.log(`   📊 Dynamic pages test: Article ${articlePassed}/${articleRequired.length}, Hub ${hubPassed}/${hubRequired.length}\n`);
+    console.log(`   📊 Dynamic pages test: Article ${articlePassed}/${articleRequired.length}, Hub redirect ${hubPassed}/${hubRequired.length}\n`);
     return articlePassed === articleRequired.length && hubPassed === hubRequired.length;
   } catch (error) {
     console.log(`   ❌ Error reading dynamic pages: ${error.message}\n`);
@@ -186,57 +170,64 @@ function testDynamicPages() {
   }
 }
 
-// 测试5: 检查404页面
-function testNotFoundPage() {
-  console.log('5. Testing 404 page...');
+function testAeoSurfaceFiles() {
+  console.log('5. Testing AEO surface files...');
   try {
-    const notFoundPath = path.join(__dirname, '../../src/app/not-found.tsx');
-    const notFoundContent = fs.readFileSync(notFoundPath, 'utf8');
+    const llmsContent = read('../../src/app/llms.txt/route.ts');
+    const feedContent = read('../../src/app/feed.json/route.ts');
+    const trustContent = read('../../src/app/trust/page.tsx');
 
-    const requiredElements = [
-      'Page Not Found',
-      'Go Home',
-      'content hubs',
-      'pregnancy-birth',
-      'newborn-care',
-      'infant-development',
-      'nutrition-feeding',
-      'health-safety',
-      'parenting-tips'
+    const checks = [
+      'api/ai-feed-v2',
+      'api/kb/query',
+      'api/kb/insights',
+      'jsonfeed.org/version/1.1',
+      'HealthTopicContent',
+      'Trust Center',
     ];
 
-    let passed = 0;
-    requiredElements.forEach(element => {
-      if (notFoundContent.includes(element)) {
-        console.log(`   ✅ ${element}`);
-        passed++;
-      } else {
-        console.log(`   ❌ Missing: ${element}`);
-      }
-    });
+    const combined = `${llmsContent}\n${feedContent}\n${trustContent}`;
+    return assertIncludes(combined, 'AEO surface test', checks);
+  } catch (error) {
+    console.log(`   ❌ Error reading AEO files: ${error.message}\n`);
+    return false;
+  }
+}
 
-    console.log(`   📊 404 page test: ${passed}/${requiredElements.length} passed\n`);
-    return passed === requiredElements.length;
+function testNotFoundPage() {
+  console.log('6. Testing 404 page...');
+  try {
+    const notFoundContent = read('../../src/app/not-found.tsx');
+    return assertIncludes(notFoundContent, '404 page test', [
+      'Page Not Found',
+      'Go Home',
+      'Topics Library',
+      'Insights',
+      'Foods Database',
+      'Trust Center',
+      'index: false',
+      'follow: true',
+    ]);
   } catch (error) {
     console.log(`   ❌ Error reading not-found.tsx: ${error.message}\n`);
     return false;
   }
 }
 
-// 运行所有测试
 function runAllTests() {
   const tests = [
     testRobotsTxt,
     testSitemapTs,
     testJsonLdGenerator,
     testDynamicPages,
-    testNotFoundPage
+    testAeoSurfaceFiles,
+    testNotFoundPage,
   ];
 
   let passedTests = 0;
   const totalTests = tests.length;
 
-  tests.forEach(test => {
+  tests.forEach((test) => {
     if (test()) {
       passedTests++;
     }
@@ -249,12 +240,11 @@ function runAllTests() {
   console.log(`   📈 Success rate: ${Math.round((passedTests / totalTests) * 100)}%`);
 
   if (passedTests === totalTests) {
-    console.log('\n🎉 All SEO & GEO optimization tests passed!');
-    console.log('   Your website is ready for AI crawlers and search engines.');
+    console.log('\n🎉 All SEO & AEO surface tests passed!');
+    console.log('   The site metadata, crawl surfaces, and AI-readable exports match the current architecture.');
   } else {
-    console.log('\n⚠️  Some tests failed. Please review the issues above.');
+    console.log('\n⚠️  Some SEO & AEO tests failed. Please review the issues above.');
   }
 }
 
-// 执行测试
 runAllTests();

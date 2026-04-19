@@ -21,6 +21,8 @@
     "test:kb:public": "node scripts/tests/test-kb-public-api.mjs",
     "test:kb:faq-readiness": "node scripts/tests/audit-kb-faq-readiness.mjs",
     "test:clawhub:preflight": "node scripts/tests/preflight-clawhub-skill.mjs",
+    "package:clawhub:skill": "node scripts/ops/package-clawhub-skill.mjs",
+    "release:clawhub:skill": "npm run package:clawhub:skill && npm run test:kb:public && npm run test:clawhub:preflight",
     "test:cron": "node scripts/tests/test-cron.js",
     "ping:indexnow": "node scripts/ops/indexnow-ping.js",
     "ingest:pain:en": "node scripts/content/ingest-pain-points.js --lang en",

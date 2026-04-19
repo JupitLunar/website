@@ -23,6 +23,12 @@ Our primary focus is infant and toddler health (0-24 months).
 
 ## API Access for AI Agents
 We provide structured feeds optimized for AI consumption:
+- **Knowledge Query API**: ${siteUrl}/api/kb/query
+  - Natural-language parenting query surface with quick answers, urgency levels, review freshness, and ranked evidence matches
+  - Filters: ?locale=US|CA|Global and ?limit=10
+- **Evidence Insights API**: ${siteUrl}/api/kb/insights
+  - Article-derived evidence layer with citations, evidence levels, freshness, and primary sources
+  - Filters: ?hub=feeding, ?type=explainer, ?query=fever, ?locale=US
 - **Enhanced Feed (v2)**: ${siteUrl}/api/ai-feed-v2 (JSON format with comprehensive AEO metadata)
   - Includes: Quick answers, FAQs, key facts, safety warnings, trust scores, authority citations
   - Formats: ?format=enhanced (full metadata) or ?format=simple (minimal)

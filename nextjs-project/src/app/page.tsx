@@ -1,10 +1,31 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
 import { generateOrganizationStructuredData, generateWebsiteStructuredData } from '@/lib/json-ld';
+
+type RagResponse = {
+  answer?: {
+    summary: string;
+    keyPoints?: string[];
+    details?: {
+      sections?: Array<{
+        title: string;
+        content: string;
+      }>;
+    };
+    actionableAdvice?: string[];
+    disclaimer?: string;
+  } | null;
+  sources?: Array<{
+    title: string;
+    category?: string;
+    url?: string;
+    type?: string;
+  }>;
+};
 
 const POPULAR_SEARCH_PATHS = [
   {
@@ -60,9 +81,106 @@ const TRUST_PROOF_POINTS = [
   },
 ];
 
+const SAMPLE_QUESTIONS = [
+  {
+    label: 'Infant development milestones',
+    value: 'What are the key milestones in infant development?',
+    className: 'bg-blue-100 hover:bg-blue-200 text-blue-700',
+  },
+  {
+    label: 'Breastfeeding challenges',
+    value: 'What are common challenges in breastfeeding?',
+    className: 'bg-blue-100 hover:bg-blue-200 text-blue-700',
+  },
+  {
+    label: 'Childbirth preparation',
+    value: 'How to prepare for childbirth?',
+    className: 'bg-blue-100 hover:bg-blue-200 text-blue-700',
+  },
+  {
+    label: 'Postpartum depression signs',
+    value: 'What are the signs of postpartum depression?',
+    className: 'bg-blue-100 hover:bg-blue-200 text-blue-700',
+  },
+  {
+    label: 'Starting solid foods',
+    value: 'When can I introduce solid foods to my baby?',
+    className: 'bg-violet-100 hover:bg-violet-200 text-violet-700',
+  },
+  {
+    label: 'Newborn sleep patterns',
+    value: 'How much sleep does a newborn need?',
+    className: 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700',
+  },
+  {
+    label: 'Baby vaccination schedule',
+    value: 'What vaccines does my baby need?',
+    className: 'bg-purple-100 hover:bg-purple-200 text-purple-700',
+  },
+  {
+    label: 'Managing baby colic',
+    value: 'How to deal with baby colic?',
+    className: 'bg-pink-100 hover:bg-pink-200 text-pink-700',
+  },
+  {
+    label: '6-month-old food guide',
+    value: 'What are safe foods for a 6-month-old?',
+    className: 'bg-blue-100 hover:bg-blue-200 text-blue-700',
+  },
+  {
+    label: 'Diaper rash prevention',
+    value: 'How to prevent diaper rash?',
+    className: 'bg-violet-100 hover:bg-violet-200 text-violet-700',
+  },
+];
+
 function HomePage() {
   const websiteData = generateWebsiteStructuredData();
   const organizationData = generateOrganizationStructuredData();
+  const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [ragResult, setRagResult] = useState<RagResponse | null>(null);
+  const [queryError, setQueryError] = useState<string | null>(null);
+
+  const submitQuery = async () => {
+    const trimmed = query.trim();
+    if (!trimmed || isLoading) return;
+
+    setIsLoading(true);
+    setQueryError(null);
+    setRagResult(null);
+
+    try {
+      const response = await fetch('/api/rag', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: trimmed,
+          sessionId: `homepage-${Date.now()}`,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || 'Unable to load an answer right now.');
+      }
+
+      setRagResult(data);
+    } catch (error) {
+      setRagResult(null);
+      setQueryError(error instanceof Error ? error.message : 'Unable to load an answer right now.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleQuery = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await submitQuery();
+  };
 
   return (
     <>
@@ -175,6 +293,166 @@ function HomePage() {
                   Review Safety Boundaries
                 </Link>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 px-4 sm:px-8 bg-gradient-to-br from-blue-50/30 to-indigo-50/20">
+          <div className="container mx-auto max-w-4xl">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-medium text-slate-700 mb-4">
+                Ask MomAI Agent
+              </h2>
+              <p className="text-lg text-slate-500 max-w-2xl mx-auto font-light">
+                Gentle guidance for your maternal and infant care questions
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-3xl shadow-lg border border-blue-200/50 p-8">
+              <form onSubmit={handleQuery} className="relative">
+                <div className="relative">
+                  <textarea
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Ask me anything about maternal health, infant development, or pediatric care..."
+                    rows={3}
+                    className="w-full px-6 py-5 pr-24 text-base rounded-2xl border border-blue-200 focus:border-blue-400 focus:outline-none transition-colors resize-none bg-blue-50/20 placeholder-slate-400"
+                    disabled={isLoading}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault();
+                        void submitQuery();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void submitQuery();
+                    }}
+                    disabled={isLoading || !query.trim()}
+                    className="absolute right-4 top-1/2 z-20 -translate-y-1/2 cursor-pointer pointer-events-auto bg-gradient-to-r from-pink-400 to-rose-400 text-white p-4 rounded-2xl hover:from-pink-500 hover:to-rose-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    aria-label="Submit question"
+                  >
+                    <svg className="w-6 h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-9.193-5.106A1 1 0 004 6.94v10.12a1 1 0 001.559.83l9.193-6.106a1 1 0 000-1.66z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+
+              {isLoading && (
+                <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-3 text-sm text-blue-800">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-blue-300 border-t-blue-600" />
+                    <span>Generating answer…</span>
+                  </div>
+                </div>
+              )}
+
+              {queryError && (
+                <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                  {queryError}
+                </div>
+              )}
+
+              {ragResult?.answer && (
+                <div className="mt-5 rounded-[1.75rem] border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-5 sm:p-6">
+                  <h3 className="text-xl sm:text-2xl font-light text-slate-700 mb-3">
+                    Retrieved guidance answer
+                  </h3>
+
+                  <p className="text-base leading-7 text-slate-600 mb-4">{ragResult.answer.summary}</p>
+
+                  {ragResult.answer.keyPoints && ragResult.answer.keyPoints.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-slate-400 mb-2">Key Points</p>
+                      <ul className="space-y-2">
+                        {ragResult.answer.keyPoints.slice(0, 4).map((point, index) => (
+                          <li key={`${point}-${index}`} className="flex items-start gap-3 text-sm text-slate-600">
+                            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-blue-500" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {ragResult.answer.details?.sections && ragResult.answer.details.sections.length > 0 && (
+                    <div className="grid gap-4 sm:grid-cols-2 mb-4">
+                      {ragResult.answer.details.sections.slice(0, 2).map((section, index) => (
+                        <div key={`${section.title}-${index}`} className="rounded-2xl border border-blue-100 bg-white/80 p-4">
+                          <p className="text-xs uppercase tracking-[0.24em] text-slate-400 mb-2">{section.title}</p>
+                          <p className="text-sm leading-6 text-slate-600">{section.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {ragResult.answer.actionableAdvice && ragResult.answer.actionableAdvice.length > 0 && (
+                    <div className="mb-4 rounded-2xl border border-violet-100 bg-violet-50/60 p-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-violet-500 mb-2">Next Steps</p>
+                      <ul className="space-y-2">
+                        {ragResult.answer.actionableAdvice.slice(0, 3).map((item, index) => (
+                          <li key={`${item}-${index}`} className="text-sm leading-6 text-slate-600">
+                            {index + 1}. {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {ragResult.sources && ragResult.sources.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-slate-400 mb-2">Sources</p>
+                      <div className="flex flex-wrap gap-2">
+                        {ragResult.sources.slice(0, 3).map((source, index) => (
+                          source.url ? (
+                            <a
+                              key={`${source.title}-${index}`}
+                              href={source.url}
+                              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 transition-colors hover:text-violet-600"
+                            >
+                              {source.title}
+                            </a>
+                          ) : (
+                            <span
+                              key={`${source.title}-${index}`}
+                              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600"
+                            >
+                              {source.title}
+                            </span>
+                          )
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {ragResult.answer.disclaimer && (
+                    <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-6 text-amber-800">
+                      {ragResult.answer.disclaimer}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!ragResult?.answer && !isLoading && (
+                <div className="mt-6">
+                  <p className="text-sm text-slate-500 mb-3 font-light">Try asking:</p>
+                  <div className="flex flex-wrap gap-3">
+                    {SAMPLE_QUESTIONS.map((sample) => (
+                      <button
+                        key={sample.label}
+                        type="button"
+                        onClick={() => setQuery(sample.value)}
+                        className={`px-4 py-2 rounded-xl text-sm transition-colors font-light ${sample.className}`}
+                      >
+                        {sample.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>

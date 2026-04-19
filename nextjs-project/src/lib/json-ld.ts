@@ -291,12 +291,13 @@ export function generateArticleStructuredData(article: any) {
 
 // 生成内容中心的结构化数据
 export function generateHubStructuredData(hub: any, articles: any[]) {
+  const hubUrl = `${siteUrl}/insight?hub=${encodeURIComponent(hub.slug)}`;
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": hub.name,
     "description": hub.description,
-    "url": `${siteUrl}/hub/${hub.slug}`,
+    "url": hubUrl,
     "mainEntity": {
       "@type": "ItemList",
       "numberOfItems": articles.length,
@@ -339,6 +340,10 @@ export function generateHubStructuredData(hub: any, articles: any[]) {
       "@type": "WebSite",
       "name": "Mom AI Agent",
       "url": siteUrl
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": hubUrl
     }
   };
 }
