@@ -34,37 +34,34 @@ function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100">
-      <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
+      <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3" aria-label="Mom AI Agent home">
             <Image
               src="/Assets/Logo.png"
               alt="Mom AI Agent Logo"
               width={80}
               height={80}
-              className="w-20 h-20 object-contain"
+              className="h-14 w-14 object-contain"
             />
-            <div className="flex flex-col">
-              <span className="text-xl font-semibold bg-gradient-to-r from-primary-500/80 to-primary-600/80 bg-clip-text text-transparent">
+            <div className="min-w-0">
+              <span className="block whitespace-nowrap text-lg font-semibold leading-none bg-gradient-to-r from-primary-500/80 to-primary-600/80 bg-clip-text text-transparent">
                 Mom AI Agent
-              </span>
-              <span className="text-xs text-gray-500 font-light">
-                Evidence Intelligence Platform for Mom & Baby
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+          <div className="hidden min-w-0 items-center justify-end gap-4 text-sm font-medium lg:flex xl:gap-5 2xl:gap-6 2xl:text-base">
+            <Link href="/" className="whitespace-nowrap text-gray-600 hover:text-gray-900 transition-colors">
               Home
             </Link>
 
             {/* Access Dropdown */}
             <div className="relative" ref={accessMenuRef}>
               <button
-                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
+                className="flex items-center gap-1 whitespace-nowrap text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsAccessOpen((v) => !v)}
                 aria-haspopup="true"
                 aria-expanded={isAccessOpen}
@@ -124,7 +121,7 @@ function Header() {
 
             <div className="relative" ref={topicsMenuRef}>
               <button
-                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
+                className="flex items-center gap-1 whitespace-nowrap text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsTopicsOpen((v) => !v)}
                 aria-haspopup="true"
                 aria-expanded={isTopicsOpen}
@@ -167,17 +164,17 @@ function Header() {
                 </motion.div>
               )}
             </div>
-            <Link href="/faq" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+            <Link href="/faq" className="whitespace-nowrap text-gray-600 hover:text-gray-900 transition-colors">
               FAQ
             </Link>
-            <Link href="/insight" className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
+            <Link href="/insight" className="whitespace-nowrap text-gray-600 hover:text-gray-900 transition-colors">
               Insights
             </Link>
 
             {/* About Dropdown */}
             <div className="relative" ref={aboutMenuRef}>
               <button
-                className="text-gray-600 hover:text-gray-900 transition-colors flex items-center space-x-1 font-medium"
+                className="flex items-center gap-1 whitespace-nowrap text-gray-600 hover:text-gray-900 transition-colors"
                 onClick={() => setIsAboutOpen((v) => !v)}
                 aria-haspopup="true"
                 aria-expanded={isAboutOpen}
@@ -236,14 +233,14 @@ function Header() {
             </div>
 
             {/* Search & CTA */}
-            <Link href="/search" className="text-gray-600 hover:text-gray-900 transition-colors">
+            <Link href="/search" className="flex-none text-gray-600 hover:text-gray-900 transition-colors" aria-label="Search">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </Link>
             <Link
               href="/search"
-              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg text-sm font-medium shadow-sm hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+              className="inline-flex h-10 min-w-32 flex-none items-center justify-center whitespace-nowrap rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 text-sm font-medium leading-none text-white shadow-sm transition-all duration-300 hover:from-purple-700 hover:to-pink-700"
             >
               Ask the Hub
             </Link>
@@ -251,7 +248,7 @@ function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
+            className="p-2 lg:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -265,7 +262,7 @@ function Header() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="md:hidden py-4 border-t border-gray-200"
+            className="py-4 border-t border-gray-200 lg:hidden"
           >
             <nav className="flex flex-col space-y-3">
               <Link
