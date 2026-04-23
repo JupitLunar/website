@@ -39,6 +39,7 @@
     "scrape:test": "node scripts/scrapers/web-scraper.js --test",
     "scrape:review": "node scripts/scrapers/review-scraped-content.js",
     "scrape:stats": "node scripts/scrapers/scraper-stats.js",
+    "scrape:coverage": "node scripts/scrapers/current-site-coverage-report.js",
     "scrape:report": "node scripts/scrapers/scraper-stats.js --report",
     "scrape:playwright": "node scripts/scrapers/playwright-scraper-full.js",
     "scrape:playwright:nhs": "node scripts/scrapers/playwright-scraper-nhs-only.js",

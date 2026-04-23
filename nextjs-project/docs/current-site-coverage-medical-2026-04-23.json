@@ -1,0 +1,1253 @@
+{
+  "generatedAt": "2026-04-23T22:45:00.723Z",
+  "targets": [
+    "US_AAP",
+    "US_ACOG",
+    "CA_CARING_FOR_KIDS",
+    "US_CDC",
+    "US_USDA_FOODSAFETY",
+    "CA_HEALTH_CANADA",
+    "US_MAYO_CLINIC",
+    "UK_NHS",
+    "UK_NICE",
+    "UK_NHS_START4LIFE",
+    "US_NICHD_SAFE_TO_SLEEP",
+    "US_WOMENS_HEALTH",
+    "AU_PREGNANCY_BIRTH_BABY",
+    "CA_PHAC",
+    "US_STANFORD_CHILDRENS",
+    "US_FDA",
+    "GLOBAL_WHO",
+    "EU_WHO_EUROPE",
+    "SG_HEALTH_HUB",
+    "US_KIDSHEALTH",
+    "NZ_PLUNKET",
+    "AU_RAISING_CHILDREN",
+    "GLOBAL_UNICEF",
+    "US_CLEVELAND_CLINIC"
+  ],
+  "totals": {
+    "discovered": 925,
+    "exactCovered": 826,
+    "recent24h": 229,
+    "probeExtractableUnique": 11,
+    "probeDuplicateTitle": 32,
+    "probeExtractionFailed": 0,
+    "exactCoverageRate": 89.3
+  },
+  "rankings": {
+    "trueMissing": [
+      {
+        "sourceKey": "US_ACOG",
+        "name": "American College of Obstetricians and Gynecologists",
+        "priority": "P0",
+        "authorityClass": "professional-society",
+        "baseHost": "acog.org",
+        "directSeedCount": 10,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 25,
+        "discoveredCandidates": 42,
+        "exactUrlCovered": 39,
+        "exactCoverageRate": 92.9,
+        "remainingCandidates": 3,
+        "remainingExamples": [
+          "https://www.acog.org/womens-health/experts-and-stories/ask-acog/why-does-my-newborn-need-vitamin-k",
+          "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-acetaminophen-during-pregnancy",
+          "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-ibuprofen-or-naproxen-during-pregnancy"
+        ],
+        "dbHostTotal": 40,
+        "dbRecent24h": 23,
+        "probe": {
+          "probed": 3,
+          "extractableUnique": 3,
+          "duplicateTitle": 0,
+          "extractionFailed": 0
+        },
+        "missingExamples": [
+          {
+            "title": "Why does my newborn need vitamin K?",
+            "url": "https://www.acog.org/womens-health/experts-and-stories/ask-acog/why-does-my-newborn-need-vitamin-k"
+          },
+          {
+            "title": "Is it safe to take acetaminophen during pregnancy?",
+            "url": "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-acetaminophen-during-pregnancy"
+          },
+          {
+            "title": "Is it safe to take ibuprofen or naproxen during pregnancy?",
+            "url": "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-ibuprofen-or-naproxen-during-pregnancy"
+          }
+        ]
+      },
+      {
+        "sourceKey": "NZ_PLUNKET",
+        "name": "Plunket",
+        "priority": "P1",
+        "authorityClass": "national-child-health-service",
+        "baseHost": "plunket.org.nz",
+        "directSeedCount": 5,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 25,
+        "discoveredCandidates": 37,
+        "exactUrlCovered": 34,
+        "exactCoverageRate": 91.9,
+        "remainingCandidates": 3,
+        "remainingExamples": [
+          "https://www.plunket.org.nz/child-development/sleep/sleep-4-12-months/sleep-4-12-months",
+          "https://www.plunket.org.nz/child-development/sleep/sleep-1-2-years/sleep-1-2-years",
+          "https://www.plunket.org.nz/child-development/sleep/sleep-3-5-years/sleep-3-5-years"
+        ],
+        "dbHostTotal": 34,
+        "dbRecent24h": 34,
+        "probe": {
+          "probed": 3,
+          "extractableUnique": 3,
+          "duplicateTitle": 0,
+          "extractionFailed": 0
+        },
+        "missingExamples": [
+          {
+            "title": "Sleep: 4-12 months",
+            "url": "https://www.plunket.org.nz/child-development/sleep/sleep-4-12-months/sleep-4-12-months"
+          },
+          {
+            "title": "Sleep: 1-2 years",
+            "url": "https://www.plunket.org.nz/child-development/sleep/sleep-1-2-years/sleep-1-2-years"
+          },
+          {
+            "title": "Sleep: 3-5 years",
+            "url": "https://www.plunket.org.nz/child-development/sleep/sleep-3-5-years/sleep-3-5-years"
+          }
+        ]
+      },
+      {
+        "sourceKey": "CA_CARING_FOR_KIDS",
+        "name": "Caring for Kids (Canadian Paediatric Society)",
+        "priority": "P0",
+        "authorityClass": "professional-society",
+        "baseHost": "caringforkids.cps.ca",
+        "directSeedCount": 7,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 25,
+        "discoveredCandidates": 43,
+        "exactUrlCovered": 38,
+        "exactCoverageRate": 88.4,
+        "remainingCandidates": 5,
+        "remainingExamples": [
+          "https://caringforkids.cps.ca/handouts/breastfeeding",
+          "https://caringforkids.cps.ca/handouts/pregnancy-and-babies/feeding_your_baby_in_the_first_year",
+          "https://caringforkids.cps.ca/handouts/safety-and-injury-prevention/safe_sleep_for_babies",
+          "https://caringforkids.cps.ca/handouts/pregnancy-and-babies",
+          "https://www.caringforkids.cps.ca/handouts/breastfeeding"
+        ],
+        "dbHostTotal": 40,
+        "dbRecent24h": 0,
+        "probe": {
+          "probed": 4,
+          "extractableUnique": 2,
+          "duplicateTitle": 2,
+          "extractionFailed": 0
+        },
+        "missingExamples": [
+          {
+            "title": "Feeding your baby in the first year",
+            "url": "https://caringforkids.cps.ca/handouts/pregnancy-and-babies/feeding_your_baby_in_the_first_year"
+          },
+          {
+            "title": "Pregnancy and Babies",
+            "url": "https://caringforkids.cps.ca/handouts/pregnancy-and-babies"
+          }
+        ]
+      },
+      {
+        "sourceKey": "UK_NHS",
+        "name": "National Health Service (NHS)",
+        "priority": "P0",
+        "authorityClass": "government",
+        "baseHost": "nhs.uk",
+        "directSeedCount": 0,
+        "discoveryDepth": 2,
+        "discoveryMaxPages": 50,
+        "discoveredCandidates": 59,
+        "exactUrlCovered": 56,
+        "exactCoverageRate": 94.9,
+        "remainingCandidates": 3,
+        "remainingExamples": [
+          "https://www.nhs.uk/baby/caring-for-a-newborn",
+          "https://www.nhs.uk/baby/weaning-and-feeding",
+          "https://www.nhs.uk/baby/caring-for-a-newborn/reduce-the-risk-of-sudden-infant-death-syndrome"
+        ],
+        "dbHostTotal": 116,
+        "dbRecent24h": 58,
+        "probe": {
+          "probed": 3,
+          "extractableUnique": 2,
+          "duplicateTitle": 1,
+          "extractionFailed": 0
+        },
+        "missingExamples": [
+          {
+            "title": "Caring for a newborn baby",
+            "url": "https://www.nhs.uk/baby/caring-for-a-newborn"
+          },
+          {
+            "title": "Weaning and feeding",
+            "url": "https://www.nhs.uk/baby/weaning-and-feeding"
+          }
+        ]
+      },
+      {
+        "sourceKey": "UK_NHS_START4LIFE",
+        "name": "NHS Start4Life",
+        "priority": "P0",
+        "authorityClass": "government",
+        "baseHost": "nhs.uk",
+        "directSeedCount": 9,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 35,
+        "discoveredCandidates": 73,
+        "exactUrlCovered": 58,
+        "exactCoverageRate": 79.5,
+        "remainingCandidates": 15,
+        "remainingExamples": [
+          "https://www.nhs.uk/start-for-life/baby/baby-basics/caring-for-your-baby/feeding-your-newborn-baby",
+          "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding",
+          "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding/how-to-make-up-a-feed",
+          "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding/how-to-make-up-a-feed/things-you-need-for-formula-feeding",
+          "https://www.nhs.uk/start-for-life/baby/baby-basics/newborn-and-baby-sleeping-advice-for-parents/helping-your-baby-sleep",
+          "https://www.nhs.uk/best-start-in-life/baby/feeding-your-baby",
+          "https://www.nhs.uk/start-for-life/baby/feeding-your-baby",
+          "https://www.nhs.uk/best-start-in-life/baby/feeding-your-baby/breastfeeding"
+        ],
+        "dbHostTotal": 116,
+        "dbRecent24h": 58,
+        "probe": {
+          "probed": 4,
+          "extractableUnique": 1,
+          "duplicateTitle": 3,
+          "extractionFailed": 0
+        },
+        "missingExamples": [
+          {
+            "title": "Bottle feeding",
+            "url": "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding"
+          }
+        ]
+      }
+    ],
+    "duplicateDominated": [
+      {
+        "sourceKey": "US_AAP",
+        "name": "American Academy of Pediatrics",
+        "priority": "P0",
+        "authorityClass": "professional-society",
+        "baseHost": "healthychildren.org",
+        "directSeedCount": 0,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 30,
+        "discoveredCandidates": 231,
+        "exactUrlCovered": 193,
+        "exactCoverageRate": 83.5,
+        "remainingCandidates": 38,
+        "remainingExamples": [
+          "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/starting-solid-foods.aspx",
+          "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/sample-one-day-menu-for-an-8-to-12-month-old.aspx",
+          "https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/Working-Together-Breastfeeding-and-Solid-Foods.aspx",
+          "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Simple-Steps-to-Prevent-Infections-During-Pregnancy.aspx",
+          "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Blood-Lead-Levels-in-Pregnant-Breastfeeding-Moms.aspx",
+          "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Brushing-for-Two-How-Your-Oral-Health-Effects-Baby.aspx",
+          "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/E-Cigarette-Use-During-Pregnancy-Breastfeeding.aspx",
+          "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Fish-Pregnancy-What-is-Safe-to-Eat.aspx"
+        ],
+        "dbHostTotal": 247,
+        "dbRecent24h": 0,
+        "probe": {
+          "probed": 4,
+          "extractableUnique": 0,
+          "duplicateTitle": 4,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "US_CDC",
+        "name": "Centers for Disease Control and Prevention",
+        "priority": "P0",
+        "authorityClass": "government",
+        "baseHost": "cdc.gov",
+        "directSeedCount": 20,
+        "discoveryDepth": 2,
+        "discoveryMaxPages": 40,
+        "discoveredCandidates": 99,
+        "exactUrlCovered": 87,
+        "exactCoverageRate": 87.9,
+        "remainingCandidates": 12,
+        "remainingExamples": [
+          "https://www.cdc.gov/infant-toddler-nutrition",
+          "https://www.cdc.gov/infant-toddler-nutrition/formula-feeding",
+          "https://www.cdc.gov/infant-toddler-nutrition/breastfeeding",
+          "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks",
+          "https://www.cdc.gov/infant-toddler-nutrition/mealtime",
+          "https://www.cdc.gov/infant-toddler-nutrition/vitamins-minerals",
+          "https://www.cdc.gov/breastfeeding",
+          "https://www.cdc.gov/breastfeeding/php/guidelines-recommendations"
+        ],
+        "dbHostTotal": 124,
+        "dbRecent24h": 0,
+        "probe": {
+          "probed": 4,
+          "extractableUnique": 0,
+          "duplicateTitle": 4,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "CA_HEALTH_CANADA",
+        "name": "Health Canada",
+        "priority": "P0",
+        "authorityClass": "government",
+        "baseHost": "canada.ca",
+        "directSeedCount": 21,
+        "discoveryDepth": 2,
+        "discoveryMaxPages": 40,
+        "discoveredCandidates": 47,
+        "exactUrlCovered": 41,
+        "exactCoverageRate": 87.2,
+        "remainingCandidates": 6,
+        "remainingExamples": [
+          "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding/nutrition-healthy-term-infants-recommendations-birth-six-months.html",
+          "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding/safety-donor-human-milk-canada.html",
+          "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding/safety-homemade-infant-formulas-canada.html",
+          "https://www.canada.ca/en/health-canada/services/food-nutrition/legislation-guidelines/guidance-documents/supplemented-foods-regulations.html",
+          "https://www.canada.ca/en/health-canada/services/food-nutrition/supplemented-foods/regulations-compliance.html",
+          "https://www.canada.ca/en/health-canada/services/food-nutrition/supplemented-foods/technical-documents/list-permitted-food-ingredients.html"
+        ],
+        "dbHostTotal": 73,
+        "dbRecent24h": 0,
+        "probe": {
+          "probed": 4,
+          "extractableUnique": 0,
+          "duplicateTitle": 4,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "UK_NICE",
+        "name": "National Institute for Health and Care Excellence (NICE)",
+        "priority": "P0",
+        "authorityClass": "government-funded",
+        "baseHost": "nice.org.uk",
+        "directSeedCount": 8,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 24,
+        "discoveredCandidates": 9,
+        "exactUrlCovered": 5,
+        "exactCoverageRate": 55.6,
+        "remainingCandidates": 4,
+        "remainingExamples": [
+          "https://www.nice.org.uk/guidance/cg98/chapter/Recommendations",
+          "https://www.nice.org.uk/guidance/ng75/chapter/Recommendations",
+          "https://www.nice.org.uk/guidance/ng247/chapter/Recommendations",
+          "https://www.nice.org.uk/guidance/ng194/chapter/Recommendations"
+        ],
+        "dbHostTotal": 5,
+        "dbRecent24h": 3,
+        "probe": {
+          "probed": 4,
+          "extractableUnique": 0,
+          "duplicateTitle": 4,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "CA_PHAC",
+        "name": "Public Health Agency of Canada",
+        "priority": "P0",
+        "authorityClass": "government",
+        "baseHost": "canada.ca",
+        "directSeedCount": 16,
+        "discoveryDepth": 2,
+        "discoveryMaxPages": 36,
+        "discoveredCandidates": 20,
+        "exactUrlCovered": 18,
+        "exactCoverageRate": 90,
+        "remainingCandidates": 2,
+        "remainingExamples": [
+          "https://www.canada.ca/en/public-health/services/health-promotion/childhood-adolescence/stages-childhood/infancy-birth-two-years/breastfeeding-infant-nutrition.html",
+          "https://www.canada.ca/en/public-health/services/safe-sleep/infancy-birth-two-years-safe-sleep.html"
+        ],
+        "dbHostTotal": 73,
+        "dbRecent24h": 0,
+        "probe": {
+          "probed": 2,
+          "extractableUnique": 0,
+          "duplicateTitle": 2,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "GLOBAL_WHO",
+        "name": "World Health Organization",
+        "priority": "P0",
+        "authorityClass": "multilateral",
+        "baseHost": "who.int",
+        "directSeedCount": 21,
+        "discoveryDepth": 2,
+        "discoveryMaxPages": 40,
+        "discoveredCandidates": 22,
+        "exactUrlCovered": 20,
+        "exactCoverageRate": 90.9,
+        "remainingCandidates": 2,
+        "remainingExamples": [
+          "https://www.who.int/health-topics/breastfeeding",
+          "https://www.who.int/data/nutrition/nlis/info/infant-and-young-child-feeding"
+        ],
+        "dbHostTotal": 71,
+        "dbRecent24h": 2,
+        "probe": {
+          "probed": 2,
+          "extractableUnique": 0,
+          "duplicateTitle": 2,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "AU_PREGNANCY_BIRTH_BABY",
+        "name": "Pregnancy, Birth & Baby",
+        "priority": "P0",
+        "authorityClass": "government-funded",
+        "baseHost": "pregnancybirthbaby.org.au",
+        "directSeedCount": 0,
+        "discoveryDepth": 2,
+        "discoveryMaxPages": 45,
+        "discoveredCandidates": 111,
+        "exactUrlCovered": 110,
+        "exactCoverageRate": 99.1,
+        "remainingCandidates": 1,
+        "remainingExamples": [
+          "https://www.pregnancybirthbaby.org.au/baby"
+        ],
+        "dbHostTotal": 111,
+        "dbRecent24h": 0,
+        "probe": {
+          "probed": 1,
+          "extractableUnique": 0,
+          "duplicateTitle": 1,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "EU_WHO_EUROPE",
+        "name": "World Health Organization (Europe)",
+        "priority": "P0",
+        "authorityClass": "multilateral",
+        "baseHost": "who.int",
+        "directSeedCount": 4,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 15,
+        "discoveredCandidates": 4,
+        "exactUrlCovered": 3,
+        "exactCoverageRate": 75,
+        "remainingCandidates": 1,
+        "remainingExamples": [
+          "https://www.who.int/health-topics/breastfeeding"
+        ],
+        "dbHostTotal": 71,
+        "dbRecent24h": 2,
+        "probe": {
+          "probed": 1,
+          "extractableUnique": 0,
+          "duplicateTitle": 1,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "US_NICHD_SAFE_TO_SLEEP",
+        "name": "NICHD Safe to Sleep",
+        "priority": "P0",
+        "authorityClass": "government",
+        "baseHost": "safetosleep.nichd.nih.gov",
+        "directSeedCount": 7,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 25,
+        "discoveredCandidates": 7,
+        "exactUrlCovered": 6,
+        "exactCoverageRate": 85.7,
+        "remainingCandidates": 1,
+        "remainingExamples": [
+          "https://safetosleep.nichd.nih.gov/resources/caregivers/environment/look"
+        ],
+        "dbHostTotal": 8,
+        "dbRecent24h": 3,
+        "probe": {
+          "probed": 1,
+          "extractableUnique": 0,
+          "duplicateTitle": 1,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "AU_RAISING_CHILDREN",
+        "name": "Raising Children Network",
+        "priority": "P1",
+        "authorityClass": "government-funded",
+        "baseHost": "raisingchildren.net.au",
+        "directSeedCount": 11,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 30,
+        "discoveredCandidates": 9,
+        "exactUrlCovered": 7,
+        "exactCoverageRate": 77.8,
+        "remainingCandidates": 2,
+        "remainingExamples": [
+          "https://raisingchildren.net.au/newborns/sleep/sleep-safety/baby-airway-protection",
+          "https://raisingchildren.net.au/newborns/sleep/where-your-baby-sleeps/co-sleeping"
+        ],
+        "dbHostTotal": 42,
+        "dbRecent24h": 6,
+        "probe": {
+          "probed": 2,
+          "extractableUnique": 0,
+          "duplicateTitle": 2,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      },
+      {
+        "sourceKey": "US_KIDSHEALTH",
+        "name": "KidsHealth (Nemours)",
+        "priority": "P1",
+        "authorityClass": "nonprofit-health-system",
+        "baseHost": "kidshealth.org",
+        "directSeedCount": 6,
+        "discoveryDepth": 1,
+        "discoveryMaxPages": 25,
+        "discoveredCandidates": 8,
+        "exactUrlCovered": 7,
+        "exactCoverageRate": 87.5,
+        "remainingCandidates": 1,
+        "remainingExamples": [
+          "https://kidshealth.org/en/parents/pregnancy-newborn/sleep.html"
+        ],
+        "dbHostTotal": 31,
+        "dbRecent24h": 7,
+        "probe": {
+          "probed": 1,
+          "extractableUnique": 0,
+          "duplicateTitle": 1,
+          "extractionFailed": 0
+        },
+        "missingExamples": []
+      }
+    ],
+    "extractionConstrained": []
+  },
+  "sources": [
+    {
+      "sourceKey": "US_AAP",
+      "name": "American Academy of Pediatrics",
+      "priority": "P0",
+      "authorityClass": "professional-society",
+      "baseHost": "healthychildren.org",
+      "directSeedCount": 0,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 30,
+      "discoveredCandidates": 231,
+      "exactUrlCovered": 193,
+      "exactCoverageRate": 83.5,
+      "remainingCandidates": 38,
+      "remainingExamples": [
+        "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/starting-solid-foods.aspx",
+        "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/sample-one-day-menu-for-an-8-to-12-month-old.aspx",
+        "https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/Working-Together-Breastfeeding-and-Solid-Foods.aspx",
+        "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Simple-Steps-to-Prevent-Infections-During-Pregnancy.aspx",
+        "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Blood-Lead-Levels-in-Pregnant-Breastfeeding-Moms.aspx",
+        "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Brushing-for-Two-How-Your-Oral-Health-Effects-Baby.aspx",
+        "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/E-Cigarette-Use-During-Pregnancy-Breastfeeding.aspx",
+        "https://www.healthychildren.org/English/ages-stages/prenatal/Pages/Fish-Pregnancy-What-is-Safe-to-Eat.aspx"
+      ],
+      "dbHostTotal": 247,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 0,
+        "duplicateTitle": 4,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_ACOG",
+      "name": "American College of Obstetricians and Gynecologists",
+      "priority": "P0",
+      "authorityClass": "professional-society",
+      "baseHost": "acog.org",
+      "directSeedCount": 10,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 25,
+      "discoveredCandidates": 42,
+      "exactUrlCovered": 39,
+      "exactCoverageRate": 92.9,
+      "remainingCandidates": 3,
+      "remainingExamples": [
+        "https://www.acog.org/womens-health/experts-and-stories/ask-acog/why-does-my-newborn-need-vitamin-k",
+        "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-acetaminophen-during-pregnancy",
+        "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-ibuprofen-or-naproxen-during-pregnancy"
+      ],
+      "dbHostTotal": 40,
+      "dbRecent24h": 23,
+      "probe": {
+        "probed": 3,
+        "extractableUnique": 3,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": [
+        {
+          "title": "Why does my newborn need vitamin K?",
+          "url": "https://www.acog.org/womens-health/experts-and-stories/ask-acog/why-does-my-newborn-need-vitamin-k"
+        },
+        {
+          "title": "Is it safe to take acetaminophen during pregnancy?",
+          "url": "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-acetaminophen-during-pregnancy"
+        },
+        {
+          "title": "Is it safe to take ibuprofen or naproxen during pregnancy?",
+          "url": "https://www.acog.org/womens-health/experts-and-stories/ask-acog/is-it-safe-to-take-ibuprofen-or-naproxen-during-pregnancy"
+        }
+      ]
+    },
+    {
+      "sourceKey": "CA_CARING_FOR_KIDS",
+      "name": "Caring for Kids (Canadian Paediatric Society)",
+      "priority": "P0",
+      "authorityClass": "professional-society",
+      "baseHost": "caringforkids.cps.ca",
+      "directSeedCount": 7,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 25,
+      "discoveredCandidates": 43,
+      "exactUrlCovered": 38,
+      "exactCoverageRate": 88.4,
+      "remainingCandidates": 5,
+      "remainingExamples": [
+        "https://caringforkids.cps.ca/handouts/breastfeeding",
+        "https://caringforkids.cps.ca/handouts/pregnancy-and-babies/feeding_your_baby_in_the_first_year",
+        "https://caringforkids.cps.ca/handouts/safety-and-injury-prevention/safe_sleep_for_babies",
+        "https://caringforkids.cps.ca/handouts/pregnancy-and-babies",
+        "https://www.caringforkids.cps.ca/handouts/breastfeeding"
+      ],
+      "dbHostTotal": 40,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 2,
+        "duplicateTitle": 2,
+        "extractionFailed": 0
+      },
+      "missingExamples": [
+        {
+          "title": "Feeding your baby in the first year",
+          "url": "https://caringforkids.cps.ca/handouts/pregnancy-and-babies/feeding_your_baby_in_the_first_year"
+        },
+        {
+          "title": "Pregnancy and Babies",
+          "url": "https://caringforkids.cps.ca/handouts/pregnancy-and-babies"
+        }
+      ]
+    },
+    {
+      "sourceKey": "US_CDC",
+      "name": "Centers for Disease Control and Prevention",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "cdc.gov",
+      "directSeedCount": 20,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 40,
+      "discoveredCandidates": 99,
+      "exactUrlCovered": 87,
+      "exactCoverageRate": 87.9,
+      "remainingCandidates": 12,
+      "remainingExamples": [
+        "https://www.cdc.gov/infant-toddler-nutrition",
+        "https://www.cdc.gov/infant-toddler-nutrition/formula-feeding",
+        "https://www.cdc.gov/infant-toddler-nutrition/breastfeeding",
+        "https://www.cdc.gov/infant-toddler-nutrition/foods-and-drinks",
+        "https://www.cdc.gov/infant-toddler-nutrition/mealtime",
+        "https://www.cdc.gov/infant-toddler-nutrition/vitamins-minerals",
+        "https://www.cdc.gov/breastfeeding",
+        "https://www.cdc.gov/breastfeeding/php/guidelines-recommendations"
+      ],
+      "dbHostTotal": 124,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 0,
+        "duplicateTitle": 4,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_USDA_FOODSAFETY",
+      "name": "FoodSafety.gov",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "foodsafety.gov",
+      "directSeedCount": 0,
+      "discoveryDepth": 0,
+      "discoveryMaxPages": 0,
+      "discoveredCandidates": 0,
+      "exactUrlCovered": 0,
+      "exactCoverageRate": 0,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 0,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "CA_HEALTH_CANADA",
+      "name": "Health Canada",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "canada.ca",
+      "directSeedCount": 21,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 40,
+      "discoveredCandidates": 47,
+      "exactUrlCovered": 41,
+      "exactCoverageRate": 87.2,
+      "remainingCandidates": 6,
+      "remainingExamples": [
+        "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding/nutrition-healthy-term-infants-recommendations-birth-six-months.html",
+        "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding/safety-donor-human-milk-canada.html",
+        "https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/infant-feeding/safety-homemade-infant-formulas-canada.html",
+        "https://www.canada.ca/en/health-canada/services/food-nutrition/legislation-guidelines/guidance-documents/supplemented-foods-regulations.html",
+        "https://www.canada.ca/en/health-canada/services/food-nutrition/supplemented-foods/regulations-compliance.html",
+        "https://www.canada.ca/en/health-canada/services/food-nutrition/supplemented-foods/technical-documents/list-permitted-food-ingredients.html"
+      ],
+      "dbHostTotal": 73,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 0,
+        "duplicateTitle": 4,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_MAYO_CLINIC",
+      "name": "Mayo Clinic",
+      "priority": "P0",
+      "authorityClass": "academic-medical-center",
+      "baseHost": "mayoclinic.org",
+      "directSeedCount": 32,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 30,
+      "discoveredCandidates": 23,
+      "exactUrlCovered": 23,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 24,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "UK_NHS",
+      "name": "National Health Service (NHS)",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "nhs.uk",
+      "directSeedCount": 0,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 50,
+      "discoveredCandidates": 59,
+      "exactUrlCovered": 56,
+      "exactCoverageRate": 94.9,
+      "remainingCandidates": 3,
+      "remainingExamples": [
+        "https://www.nhs.uk/baby/caring-for-a-newborn",
+        "https://www.nhs.uk/baby/weaning-and-feeding",
+        "https://www.nhs.uk/baby/caring-for-a-newborn/reduce-the-risk-of-sudden-infant-death-syndrome"
+      ],
+      "dbHostTotal": 116,
+      "dbRecent24h": 58,
+      "probe": {
+        "probed": 3,
+        "extractableUnique": 2,
+        "duplicateTitle": 1,
+        "extractionFailed": 0
+      },
+      "missingExamples": [
+        {
+          "title": "Caring for a newborn baby",
+          "url": "https://www.nhs.uk/baby/caring-for-a-newborn"
+        },
+        {
+          "title": "Weaning and feeding",
+          "url": "https://www.nhs.uk/baby/weaning-and-feeding"
+        }
+      ]
+    },
+    {
+      "sourceKey": "UK_NICE",
+      "name": "National Institute for Health and Care Excellence (NICE)",
+      "priority": "P0",
+      "authorityClass": "government-funded",
+      "baseHost": "nice.org.uk",
+      "directSeedCount": 8,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 24,
+      "discoveredCandidates": 9,
+      "exactUrlCovered": 5,
+      "exactCoverageRate": 55.6,
+      "remainingCandidates": 4,
+      "remainingExamples": [
+        "https://www.nice.org.uk/guidance/cg98/chapter/Recommendations",
+        "https://www.nice.org.uk/guidance/ng75/chapter/Recommendations",
+        "https://www.nice.org.uk/guidance/ng247/chapter/Recommendations",
+        "https://www.nice.org.uk/guidance/ng194/chapter/Recommendations"
+      ],
+      "dbHostTotal": 5,
+      "dbRecent24h": 3,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 0,
+        "duplicateTitle": 4,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "UK_NHS_START4LIFE",
+      "name": "NHS Start4Life",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "nhs.uk",
+      "directSeedCount": 9,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 35,
+      "discoveredCandidates": 73,
+      "exactUrlCovered": 58,
+      "exactCoverageRate": 79.5,
+      "remainingCandidates": 15,
+      "remainingExamples": [
+        "https://www.nhs.uk/start-for-life/baby/baby-basics/caring-for-your-baby/feeding-your-newborn-baby",
+        "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding",
+        "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding/how-to-make-up-a-feed",
+        "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding/how-to-make-up-a-feed/things-you-need-for-formula-feeding",
+        "https://www.nhs.uk/start-for-life/baby/baby-basics/newborn-and-baby-sleeping-advice-for-parents/helping-your-baby-sleep",
+        "https://www.nhs.uk/best-start-in-life/baby/feeding-your-baby",
+        "https://www.nhs.uk/start-for-life/baby/feeding-your-baby",
+        "https://www.nhs.uk/best-start-in-life/baby/feeding-your-baby/breastfeeding"
+      ],
+      "dbHostTotal": 116,
+      "dbRecent24h": 58,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 1,
+        "duplicateTitle": 3,
+        "extractionFailed": 0
+      },
+      "missingExamples": [
+        {
+          "title": "Bottle feeding",
+          "url": "https://www.nhs.uk/start-for-life/baby/feeding-your-baby/bottle-feeding"
+        }
+      ]
+    },
+    {
+      "sourceKey": "US_NICHD_SAFE_TO_SLEEP",
+      "name": "NICHD Safe to Sleep",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "safetosleep.nichd.nih.gov",
+      "directSeedCount": 7,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 25,
+      "discoveredCandidates": 7,
+      "exactUrlCovered": 6,
+      "exactCoverageRate": 85.7,
+      "remainingCandidates": 1,
+      "remainingExamples": [
+        "https://safetosleep.nichd.nih.gov/resources/caregivers/environment/look"
+      ],
+      "dbHostTotal": 8,
+      "dbRecent24h": 3,
+      "probe": {
+        "probed": 1,
+        "extractableUnique": 0,
+        "duplicateTitle": 1,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_WOMENS_HEALTH",
+      "name": "Office on Women's Health",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "womenshealth.gov",
+      "directSeedCount": 10,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 30,
+      "discoveredCandidates": 22,
+      "exactUrlCovered": 22,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 22,
+      "dbRecent24h": 9,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "AU_PREGNANCY_BIRTH_BABY",
+      "name": "Pregnancy, Birth & Baby",
+      "priority": "P0",
+      "authorityClass": "government-funded",
+      "baseHost": "pregnancybirthbaby.org.au",
+      "directSeedCount": 0,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 45,
+      "discoveredCandidates": 111,
+      "exactUrlCovered": 110,
+      "exactCoverageRate": 99.1,
+      "remainingCandidates": 1,
+      "remainingExamples": [
+        "https://www.pregnancybirthbaby.org.au/baby"
+      ],
+      "dbHostTotal": 111,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 1,
+        "extractableUnique": 0,
+        "duplicateTitle": 1,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "CA_PHAC",
+      "name": "Public Health Agency of Canada",
+      "priority": "P0",
+      "authorityClass": "government",
+      "baseHost": "canada.ca",
+      "directSeedCount": 16,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 36,
+      "discoveredCandidates": 20,
+      "exactUrlCovered": 18,
+      "exactCoverageRate": 90,
+      "remainingCandidates": 2,
+      "remainingExamples": [
+        "https://www.canada.ca/en/public-health/services/health-promotion/childhood-adolescence/stages-childhood/infancy-birth-two-years/breastfeeding-infant-nutrition.html",
+        "https://www.canada.ca/en/public-health/services/safe-sleep/infancy-birth-two-years-safe-sleep.html"
+      ],
+      "dbHostTotal": 73,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 2,
+        "extractableUnique": 0,
+        "duplicateTitle": 2,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_STANFORD_CHILDRENS",
+      "name": "Stanford Children's Health",
+      "priority": "P0",
+      "authorityClass": "academic-medical-center",
+      "baseHost": "stanfordchildrens.org",
+      "directSeedCount": 22,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 24,
+      "discoveredCandidates": 29,
+      "exactUrlCovered": 29,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 33,
+      "dbRecent24h": 0,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_FDA",
+      "name": "U.S. Food and Drug Administration",
+      "priority": "P0",
+      "authorityClass": "government-regulatory",
+      "baseHost": "fda.gov",
+      "directSeedCount": 12,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 25,
+      "discoveredCandidates": 12,
+      "exactUrlCovered": 12,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 17,
+      "dbRecent24h": 6,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "GLOBAL_WHO",
+      "name": "World Health Organization",
+      "priority": "P0",
+      "authorityClass": "multilateral",
+      "baseHost": "who.int",
+      "directSeedCount": 21,
+      "discoveryDepth": 2,
+      "discoveryMaxPages": 40,
+      "discoveredCandidates": 22,
+      "exactUrlCovered": 20,
+      "exactCoverageRate": 90.9,
+      "remainingCandidates": 2,
+      "remainingExamples": [
+        "https://www.who.int/health-topics/breastfeeding",
+        "https://www.who.int/data/nutrition/nlis/info/infant-and-young-child-feeding"
+      ],
+      "dbHostTotal": 71,
+      "dbRecent24h": 2,
+      "probe": {
+        "probed": 2,
+        "extractableUnique": 0,
+        "duplicateTitle": 2,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "EU_WHO_EUROPE",
+      "name": "World Health Organization (Europe)",
+      "priority": "P0",
+      "authorityClass": "multilateral",
+      "baseHost": "who.int",
+      "directSeedCount": 4,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 15,
+      "discoveredCandidates": 4,
+      "exactUrlCovered": 3,
+      "exactCoverageRate": 75,
+      "remainingCandidates": 1,
+      "remainingExamples": [
+        "https://www.who.int/health-topics/breastfeeding"
+      ],
+      "dbHostTotal": 71,
+      "dbRecent24h": 2,
+      "probe": {
+        "probed": 1,
+        "extractableUnique": 0,
+        "duplicateTitle": 1,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "SG_HEALTH_HUB",
+      "name": "HealthHub Singapore",
+      "priority": "P1",
+      "authorityClass": "government",
+      "baseHost": "healthhub.sg",
+      "directSeedCount": 6,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 20,
+      "discoveredCandidates": 6,
+      "exactUrlCovered": 6,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 6,
+      "dbRecent24h": 6,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_KIDSHEALTH",
+      "name": "KidsHealth (Nemours)",
+      "priority": "P1",
+      "authorityClass": "nonprofit-health-system",
+      "baseHost": "kidshealth.org",
+      "directSeedCount": 6,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 25,
+      "discoveredCandidates": 8,
+      "exactUrlCovered": 7,
+      "exactCoverageRate": 87.5,
+      "remainingCandidates": 1,
+      "remainingExamples": [
+        "https://kidshealth.org/en/parents/pregnancy-newborn/sleep.html"
+      ],
+      "dbHostTotal": 31,
+      "dbRecent24h": 7,
+      "probe": {
+        "probed": 1,
+        "extractableUnique": 0,
+        "duplicateTitle": 1,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "NZ_PLUNKET",
+      "name": "Plunket",
+      "priority": "P1",
+      "authorityClass": "national-child-health-service",
+      "baseHost": "plunket.org.nz",
+      "directSeedCount": 5,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 25,
+      "discoveredCandidates": 37,
+      "exactUrlCovered": 34,
+      "exactCoverageRate": 91.9,
+      "remainingCandidates": 3,
+      "remainingExamples": [
+        "https://www.plunket.org.nz/child-development/sleep/sleep-4-12-months/sleep-4-12-months",
+        "https://www.plunket.org.nz/child-development/sleep/sleep-1-2-years/sleep-1-2-years",
+        "https://www.plunket.org.nz/child-development/sleep/sleep-3-5-years/sleep-3-5-years"
+      ],
+      "dbHostTotal": 34,
+      "dbRecent24h": 34,
+      "probe": {
+        "probed": 3,
+        "extractableUnique": 3,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": [
+        {
+          "title": "Sleep: 4-12 months",
+          "url": "https://www.plunket.org.nz/child-development/sleep/sleep-4-12-months/sleep-4-12-months"
+        },
+        {
+          "title": "Sleep: 1-2 years",
+          "url": "https://www.plunket.org.nz/child-development/sleep/sleep-1-2-years/sleep-1-2-years"
+        },
+        {
+          "title": "Sleep: 3-5 years",
+          "url": "https://www.plunket.org.nz/child-development/sleep/sleep-3-5-years/sleep-3-5-years"
+        }
+      ]
+    },
+    {
+      "sourceKey": "AU_RAISING_CHILDREN",
+      "name": "Raising Children Network",
+      "priority": "P1",
+      "authorityClass": "government-funded",
+      "baseHost": "raisingchildren.net.au",
+      "directSeedCount": 11,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 30,
+      "discoveredCandidates": 9,
+      "exactUrlCovered": 7,
+      "exactCoverageRate": 77.8,
+      "remainingCandidates": 2,
+      "remainingExamples": [
+        "https://raisingchildren.net.au/newborns/sleep/sleep-safety/baby-airway-protection",
+        "https://raisingchildren.net.au/newborns/sleep/where-your-baby-sleeps/co-sleeping"
+      ],
+      "dbHostTotal": 42,
+      "dbRecent24h": 6,
+      "probe": {
+        "probed": 2,
+        "extractableUnique": 0,
+        "duplicateTitle": 2,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "GLOBAL_UNICEF",
+      "name": "UNICEF",
+      "priority": "P1",
+      "authorityClass": "multilateral",
+      "baseHost": "unicef.org",
+      "directSeedCount": 8,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 28,
+      "discoveredCandidates": 6,
+      "exactUrlCovered": 6,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 6,
+      "dbRecent24h": 6,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "US_CLEVELAND_CLINIC",
+      "name": "Cleveland Clinic",
+      "priority": "P2",
+      "authorityClass": "academic-medical-center",
+      "baseHost": "my.clevelandclinic.org",
+      "directSeedCount": 9,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 20,
+      "discoveredCandidates": 6,
+      "exactUrlCovered": 6,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 6,
+      "dbRecent24h": 6,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    }
+  ]
+}

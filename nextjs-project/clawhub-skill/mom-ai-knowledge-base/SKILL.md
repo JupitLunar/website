@@ -84,10 +84,10 @@ Keep the response compact, but use this order whenever the API provides enough s
 
 1. `Direct answer`
 2. `Why this applies`
-3. `Evidence`
-4. `Age / locale scope`
-5. `Urgency`
-6. `Read next`
+3. `Age / locale scope`
+4. `Urgency`
+5. `Read next`
+6. `Evidence / source`
 
 If the answer is very short, compress the labels into natural prose, but preserve the same content.
 
@@ -103,6 +103,7 @@ When `/api/kb/query` provides these fields, use them directly rather than improv
 - `quick_answer.review`
 - `safety.urgency_level`
 - `safety.escalation_reason_codes`
+- `llm_fallback`
 
 ## Evidence Rules
 
@@ -181,7 +182,7 @@ This skill should answer in this order:
 
 - The public `/api/kb/*` skill workflow is the authoritative answer layer.
 - Do not mix a generic LLM fallback into the main source-linked answer.
-- If another app layer uses an LLM fallback after `meta.answer_layer = "none"` or after a weak public match, label it clearly as non-authoritative exploratory guidance.
+- If `/api/kb/query` returns `llm_fallback`, treat it as a separate non-authoritative exploratory fallback after the authority-plus-insight-plus-topic stack was insufficient for a strong direct answer.
 - Never describe that fallback as source-linked retrieval.
 
 Keep answers constrained to current `/api/kb/*` results, even though the underlying site content system is broader.
@@ -208,3 +209,5 @@ Read [references/api.md](references/api.md) when you need endpoint details, resp
 Read [references/architecture.md](references/architecture.md) when you need the current content-system boundary, what the skill can and cannot assume, or how the skill should evolve once article-derived evidence surfaces are added.
 
 Read [references/high-risk-examples.md](references/high-risk-examples.md) when the question is high-risk and you need to match the intended tone, urgency ladder, and evidence-boundary behavior.
+
+Read [references/current-site-deep-search-playbook.md](references/current-site-deep-search-playbook.md) when the task is crawl operations, current-site deep search, source coverage tracking, duplicate-title ingestion policy, or documenting which authority sites have and have not been systematically searched.

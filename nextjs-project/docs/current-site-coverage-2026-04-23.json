@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-04-23T22:06:08.568Z",
+  "targets": [
+    "UK_NICE",
+    "GLOBAL_UNICEF",
+    "GLOBAL_LA_LECHE_LEAGUE"
+  ],
+  "totals": {
+    "discovered": 121,
+    "exactCovered": 113,
+    "recent24h": 10,
+    "probeExtractableUnique": 0,
+    "probeDuplicateTitle": 7,
+    "probeExtractionFailed": 1,
+    "exactCoverageRate": 93.4
+  },
+  "sources": [
+    {
+      "sourceKey": "UK_NICE",
+      "name": "National Institute for Health and Care Excellence (NICE)",
+      "priority": "P0",
+      "authorityClass": "government-funded",
+      "baseHost": "nice.org.uk",
+      "directSeedCount": 8,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 24,
+      "discoveredCandidates": 9,
+      "exactUrlCovered": 5,
+      "exactCoverageRate": 55.6,
+      "remainingCandidates": 4,
+      "remainingExamples": [
+        "https://www.nice.org.uk/guidance/cg98/chapter/Recommendations",
+        "https://www.nice.org.uk/guidance/ng75/chapter/Recommendations",
+        "https://www.nice.org.uk/guidance/ng247/chapter/Recommendations",
+        "https://www.nice.org.uk/guidance/ng194/chapter/Recommendations"
+      ],
+      "dbHostTotal": 5,
+      "dbRecent24h": 3,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 0,
+        "duplicateTitle": 4,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "GLOBAL_UNICEF",
+      "name": "UNICEF",
+      "priority": "P1",
+      "authorityClass": "multilateral",
+      "baseHost": "unicef.org",
+      "directSeedCount": 8,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 28,
+      "discoveredCandidates": 6,
+      "exactUrlCovered": 6,
+      "exactCoverageRate": 100,
+      "remainingCandidates": 0,
+      "remainingExamples": [],
+      "dbHostTotal": 6,
+      "dbRecent24h": 6,
+      "probe": {
+        "probed": 0,
+        "extractableUnique": 0,
+        "duplicateTitle": 0,
+        "extractionFailed": 0
+      },
+      "missingExamples": []
+    },
+    {
+      "sourceKey": "GLOBAL_LA_LECHE_LEAGUE",
+      "name": "La Leche League International",
+      "priority": "P2",
+      "authorityClass": "nonprofit",
+      "baseHost": "llli.org",
+      "directSeedCount": 15,
+      "discoveryDepth": 1,
+      "discoveryMaxPages": 36,
+      "discoveredCandidates": 106,
+      "exactUrlCovered": 102,
+      "exactCoverageRate": 96.2,
+      "remainingCandidates": 4,
+      "remainingExamples": [
+        "https://llli.org/breastfeeding-info",
+        "https://llli.org/breastfeeding-info/storingmilk",
+        "https://llli.org/breastfeeding-info/skin-skin-contact",
+        "https://llli.org/breastfeeding-info/baby-wearing"
+      ],
+      "dbHostTotal": 131,
+      "dbRecent24h": 1,
+      "probe": {
+        "probed": 4,
+        "extractableUnique": 0,
+        "duplicateTitle": 3,
+        "extractionFailed": 1
+      },
+      "missingExamples": []
+    }
+  ]
+}

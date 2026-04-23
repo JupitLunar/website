@@ -8,6 +8,7 @@
 const cheerio = require('cheerio');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
+const fs = require('fs');
 const { getAllSources, getSourcesByRegion, getAllRegions } = require('./global-sources-config');
 const {
   extractArticle,
@@ -45,18 +46,24 @@ function getArg(flag, fallback) {
 
 const argLimit = parseInt(getArg('--limit', '500'));
 const argRegions = getArg('--regions', '');
+const argSources = getArg('--sources', '');
+const argPriority = (getArg('--priority', '') || '').toUpperCase();
 const quickMode = process.argv.includes('--quick');
+const medicalOnly = process.argv.includes('--medical-only');
 
 // 配置
 const CONFIG = {
   delayBetweenRequests: quickMode ? 500 : 1500,  // 快速模式下减少延迟
   delayBetweenArticles: quickMode ? 1000 : 2500,
   maxArticlesPerRun: argLimit,
-  minContentLength: 300,
-  maxContentLength: 150000,
-  minParagraphs: 3,
+  minContentLength: 150,
+  maxContentLength: 200000,
+  minParagraphs: 1,
   debugMode: process.env.DEBUG === 'true',
   targetRegions: argRegions ? argRegions.split(',') : [],
+  targetSources: argSources ? argSources.split(',') : [],
+  priority: argPriority || null,
+  medicalOnly,
   topicFilterEnabled: true,
   usePuppeteerFallback: true,
   puppeteerDomains: [
@@ -64,7 +71,8 @@ const CONFIG = {
     'cdc.gov',
     'nhs.uk',
     'canada.ca',
-    'mayoclinic.org'
+    'mayoclinic.org',
+    'stanfordchildrens.org'
   ],
   fetchRetryCount: 3,
   fetchRetryDelay: 2000
@@ -74,8 +82,11 @@ const CONFIG = {
 const REGION_MAPPING = {
   'US': 'US',
   'CA': 'CA',
+  'MX': 'Global',
   'UK': 'Global',
   'AU': 'Global',
+  'NZ': 'Global',
+  'SG': 'Global',
   'EU': 'Global',
   'Global': 'Global'
 };
@@ -84,6 +95,8 @@ const REGION_MAPPING = {
 const EXCLUDE_PATTERNS = [
   /default\.aspx$/i,
   /\/Pages\/?$/i,
+  /\/site\.html?$/i,
+  /%7b[^/]+%7d/i,
   /find-pediatrician/i,
   /contributors/i,
   /podcast/i,
@@ -106,8 +119,11 @@ const EXCLUDE_PATTERNS = [
 ];
 
 const EXCLUDE_HOSTS = [
+  'tools.cdc.gov',
+  'espanol.womenshealth.gov',
   'facebook.com',
   'instagram.com',
+  'linkedin.com',
   'twitter.com',
   'x.com',
   'youtube.com',
@@ -127,17 +143,61 @@ const TOPIC_PATTERNS = [
   /lactation/i,
   /bottle/i,
   /infant[-\s]?nutrition/i,
-  /vitamin|iron/i
+  /vitamin|iron/i,
+  /newborn|neonatal|infant|baby/i,
+  /pregnan|postpartum|maternal/i,
+  /safe[-\s]?sleep|sleep[-\s]?related|sids|crib|bassinet|tummy[-\s]?time/i,
+  /mental[-\s]?health|depression|anxiety/i,
+  /medication|medicine|drug|lactmed/i,
+  /allergy|anaphylaxis|vaccine|immunization|rsv|flu|fever/i,
+  /food[-\s]?safety|choking|poison|injury|safety/i,
+  /development|milestone/i,
+  /research|clinical|guideline|recommendation|policy/i
 ];
 
-async function fetchPage(url) {
+const PRIORITY_RANK = {
+  P0: 0,
+  P1: 1,
+  P2: 2,
+  P3: 3
+};
+
+function normalizeCandidateUrl(rawUrl) {
+  if (!rawUrl) return null;
+  try {
+    const parsed = new URL(rawUrl);
+    parsed.hash = '';
+    const removableParams = [];
+    parsed.searchParams.forEach((value, key) => {
+      if (/^utm_/i.test(key) || /^fbclid$/i.test(key) || /^gclid$/i.test(key) || /^_ga$/i.test(key) || /^_gl$/i.test(key)) {
+        removableParams.push(key);
+      }
+    });
+    removableParams.forEach((key) => parsed.searchParams.delete(key));
+    if (parsed.pathname.length > 1) {
+      parsed.pathname = parsed.pathname.replace(/\/+$/, '');
+    }
+    return parsed.toString();
+  } catch {
+    return rawUrl;
+  }
+}
+
+async function fetchPage(url, source = null, mode = 'default') {
+  const discoveryMode = mode === 'discovery';
   try {
     return await fetchWithRetry(url, CONFIG.fetchRetryCount, CONFIG.fetchRetryDelay, {
       headers: {
-        'Accept-Language': 'en-US,en;q=0.9'
+        'Accept-Language': 'en-US,en;q=0.9',
+        ...((source && source.requestHeaders) || {})
       },
-      usePuppeteerFallback: CONFIG.usePuppeteerFallback,
-      puppeteerDomains: CONFIG.puppeteerDomains
+      timeout: discoveryMode ? Math.min(source?.requestTimeout || 30000, 20000) : (source?.requestTimeout || 30000),
+      usePuppeteerFallback: discoveryMode ? Boolean(source?.discoveryUsePuppeteer) : CONFIG.usePuppeteerFallback,
+      forcePuppeteer: discoveryMode ? false : Boolean(source?.forcePuppeteer),
+      preferPlaywright: Boolean(source?.preferPlaywright),
+      puppeteerDomains: CONFIG.puppeteerDomains,
+      puppeteerTimeout: source?.browserTimeout || 45000,
+      browserHeadless: source?.browserHeadless ?? true
     });
   } catch {
     return null;
@@ -147,9 +207,18 @@ async function fetchPage(url) {
 function shouldExclude(url, source) {
   try {
     const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return true;
+    }
     const host = parsed.hostname.toLowerCase();
     if (EXCLUDE_HOSTS.some(domain => host.endsWith(domain))) {
       return true;
+    }
+    if (source?.baseUrl && !source.allowExternalLinks) {
+      const sourceHost = new URL(source.baseUrl).hostname.toLowerCase();
+      if (host !== sourceHost && !host.endsWith(`.${sourceHost}`)) {
+        return true;
+      }
     }
     if (host.endsWith('llli.org') && isNonEnglishLLLI(parsed.pathname)) {
       return true;
@@ -162,7 +231,32 @@ function shouldExclude(url, source) {
     return true;
   }
 
+  if (/\/espanol(\/|$)/i.test(url)) {
+    return true;
+  }
+
+  if (source && Array.isArray(source.excludePatterns)) {
+    if (source.excludePatterns.some(pattern => pattern.test(url))) {
+      return true;
+    }
+  }
+
+  const pageRule = getPageRule(source, url);
+  if (pageRule?.exclude) {
+    return true;
+  }
+
   return EXCLUDE_PATTERNS.some(pattern => pattern.test(url));
+}
+
+function getPageRule(source, url) {
+  if (!source || !Array.isArray(source.pageRules) || !url) return null;
+  return source.pageRules.find((rule) => {
+    if (!rule?.match) return false;
+    if (rule.match instanceof RegExp) return rule.match.test(url);
+    if (typeof rule.match === 'string') return url.includes(rule.match);
+    return false;
+  }) || null;
 }
 
 function isNonEnglishLLLI(pathname) {
@@ -187,106 +281,210 @@ function shouldForcePuppeteer(url) {
 async function discoverArticlesFromSource(source) {
   console.log(`🔍 [${source.region}] 发现 ${source.name} 文章...`);
 
-  const articles = new Set();
+  const articles = new Map();
+  const discoveryQueue = [];
+  const seenDiscoveryPages = new Set();
+  const discoveryDepth = source.discoveryDepth || 0;
+  const discoveryMaxPages = source.discoveryMaxPages || 0;
+  const discoveryLinkPattern = source.discoveryLinkPattern || source.linkPattern;
 
-  if (source.categories && source.categories.length > 0) {
+  function addArticle(url, extra = {}) {
+    if (!url) return;
+    url = normalizeCandidateUrl(url.trim());
+    if (!url) return;
+    const existing = articles.get(url) || {};
+    articles.set(url, {
+      ...existing,
+      ...extra,
+      url
+    });
+  }
+
+  function enqueueDiscovery(url, depth = 0) {
+    if (!url || depth > discoveryDepth) return;
+    url = normalizeCandidateUrl(url);
+    if (!url) return;
+    if (seenDiscoveryPages.has(url)) return;
+    seenDiscoveryPages.add(url);
+    discoveryQueue.push({ url, depth });
+  }
+
+  function maybeAddArticle(url, extra = {}) {
+    if (!url) return;
+    url = normalizeCandidateUrl(url);
+    if (!url) return;
+    if (shouldExclude(url, source) || !matchesTopic(url)) return;
+    if (source.linkPattern && !source.linkPattern.test(url)) return;
+    addArticle(url, extra);
+  }
+
+  function collectLinksFromHtml(html, pageUrl, depth = 0) {
+    if (!html) return;
+    const $ = cheerio.load(html);
+
+    $('a[href]').each((i, elem) => {
+      const href = $(elem).attr('href');
+      if (!href) return;
+
+      let fullUrl;
+      try {
+        fullUrl = href.startsWith('http')
+          ? href
+          : href.startsWith('/')
+            ? `${source.baseUrl}${href}`
+            : new URL(href, pageUrl).href;
+      } catch {
+        return;
+      }
+
+      if (discoveryLinkPattern && !discoveryLinkPattern.test(fullUrl)) {
+        return;
+      }
+
+      maybeAddArticle(fullUrl);
+
+      if (depth < discoveryDepth && !shouldExclude(fullUrl, source) && matchesTopic(fullUrl)) {
+        enqueueDiscovery(fullUrl, depth + 1);
+      }
+    });
+  }
+
+  if (Array.isArray(source.directSeeds) && source.directSeeds.length > 0) {
+    source.directSeeds.forEach((seedUrl) => {
+      if (!shouldExclude(seedUrl, source) && matchesTopic(seedUrl)) {
+        addArticle(seedUrl, { directSeed: true });
+        enqueueDiscovery(seedUrl, 0);
+      }
+    });
+  }
+
+  if (!source.directSeedOnly && source.categories && source.categories.length > 0) {
     for (const category of source.categories) {
       const categoryUrl = category.startsWith('http')
         ? category
         : `${source.baseUrl}${category}`;
 
-      const html = await fetchPage(categoryUrl);
+      const html = await fetchPage(categoryUrl, source, 'discovery');
       if (!html) continue;
 
-      const $ = cheerio.load(html);
-
-      // 查找所有链接
-      $('a[href]').each((i, elem) => {
-        const href = $(elem).attr('href');
-        if (!href) return;
-
-        const fullUrl = href.startsWith('http')
-          ? href
-          : href.startsWith('/')
-            ? `${source.baseUrl}${href}`
-            : `${source.baseUrl}/${href}`;
-
-        // 使用 linkPattern + 主题过滤
-        if (source.linkPattern && source.linkPattern.test(fullUrl)) {
-          if (!shouldExclude(fullUrl, source) && matchesTopic(fullUrl)) {
-            articles.add(fullUrl);
-          }
-        }
-      });
+      // Also treat the seed page itself as a candidate when it looks like a content page.
+      if (!shouldExclude(categoryUrl, source) && matchesTopic(categoryUrl)) {
+        addArticle(categoryUrl);
+      }
+      enqueueDiscovery(categoryUrl, 0);
+      collectLinksFromHtml(html, categoryUrl, 0);
 
       await delay(CONFIG.delayBetweenRequests);
     }
   }
 
-  if (source.sitemapUrl) {
-    const sitemapXml = await fetchPage(source.sitemapUrl);
+  if (!source.directSeedOnly && source.sitemapUrl) {
+    const sitemapXml = await fetchPage(source.sitemapUrl, source, 'discovery');
     if (sitemapXml) {
-      const urls = sitemapXml
-        .split('<loc>')
-        .slice(1)
-        .map(part => part.split('</loc>')[0].trim())
-        .filter(Boolean);
-      urls.forEach((fullUrl) => {
+      const urlBlocks = sitemapXml.match(/<url>[\s\S]*?<\/url>/g) || [];
+      urlBlocks.forEach((block) => {
+        const fullUrl = (block.match(/<loc>([\s\S]*?)<\/loc>/i) || [])[1]?.trim();
+        const lastmod = (block.match(/<lastmod>([\s\S]*?)<\/lastmod>/i) || [])[1]?.trim();
+        if (!fullUrl) return;
         if (source.linkPattern && !source.linkPattern.test(fullUrl)) return;
         if (shouldExclude(fullUrl, source) || !matchesTopic(fullUrl)) return;
-        articles.add(fullUrl);
-      });
-    }
-  }
-
-  if (source.searchUrl) {
-    const html = await fetchPage(source.searchUrl);
-    if (html) {
-      const $ = cheerio.load(html);
-      $('a[href]').each((i, elem) => {
-        const href = $(elem).attr('href');
-        if (!href) return;
-
-        const fullUrl = href.startsWith('http')
-          ? href
-          : href.startsWith('/')
-            ? `${source.baseUrl}${href}`
-            : `${source.baseUrl}/${href}`;
-
-        if (source.linkPattern && source.linkPattern.test(fullUrl)) {
-          if (!shouldExclude(fullUrl, source) && matchesTopic(fullUrl)) {
-            articles.add(fullUrl);
-          }
+        addArticle(fullUrl, { lastmod: lastmod || null });
+        if (discoveryDepth > 0) {
+          enqueueDiscovery(fullUrl, 0);
         }
       });
     }
   }
 
-  if ((!source.categories || source.categories.length === 0) && !source.sitemapUrl && !source.searchUrl) {
+  if (!source.directSeedOnly && source.searchUrl) {
+    const html = await fetchPage(source.searchUrl, source, 'discovery');
+    if (html) {
+      collectLinksFromHtml(html, source.searchUrl, 0);
+      enqueueDiscovery(source.searchUrl, 0);
+    }
+  }
+
+  if (discoveryDepth > 0) {
+    let processedPages = 0;
+    while (discoveryQueue.length > 0) {
+      if (discoveryMaxPages > 0 && processedPages >= discoveryMaxPages) {
+        break;
+      }
+
+      const { url, depth } = discoveryQueue.shift();
+      const html = await fetchPage(url, source, 'discovery');
+      if (!html) {
+        continue;
+      }
+
+      collectLinksFromHtml(html, url, depth);
+      processedPages += 1;
+      await delay(CONFIG.delayBetweenRequests);
+    }
+  }
+
+  if ((!source.categories || source.categories.length === 0) && !source.sitemapUrl && !source.searchUrl && (!source.directSeeds || source.directSeeds.length === 0)) {
     console.log(`  ⚠️  无分类配置，跳过`);
     return [];
   }
 
-  const articleList = Array.from(articles);
+  const articleList = Array.from(articles.values());
   console.log(`  ✅ 发现 ${articleList.length} 篇文章`);
 
-  return articleList.map(url => ({
-    url,
-    source: source.name,
-    organization: source.organization,
-    region: source.region,
-    language: source.language
+  return articleList.map((entry) => ({
+    ...(function buildArticle() {
+      const pageRule = getPageRule(source, entry.url);
+      return {
+        url: entry.url,
+        source: source.name,
+        organization: source.organization,
+        grade: source.grade,
+        region: source.region,
+        language: source.language,
+        sourceKey: source.key,
+        sourcePriority: source.priority || 'P2',
+        authorityClass: source.authorityClass || null,
+        lastmod: entry.lastmod || null,
+        extractOptions: {
+          ...(source.extractOptions || {}),
+          ...((pageRule && pageRule.extractOptions) || {})
+        },
+        forcePuppeteer: pageRule?.forcePuppeteer ?? Boolean(source.forcePuppeteer),
+        requestHeaders: {
+          ...(source.requestHeaders || {}),
+          ...((pageRule && pageRule.requestHeaders) || {})
+        },
+        requestTimeout: pageRule?.requestTimeout ?? source.requestTimeout ?? 30000,
+        browserTimeout: pageRule?.browserTimeout ?? source.browserTimeout ?? 45000,
+        browserHeadless: pageRule?.browserHeadless ?? source.browserHeadless ?? true,
+        preferPlaywright: pageRule?.preferPlaywright ?? source.preferPlaywright ?? false
+      };
+    })()
   }));
 }
 
 // 抓取文章内容（使用共享工具）
 async function scrapeArticle(articleInfo) {
+  const extractionOptions = {
+    ...(articleInfo.extractOptions || {}),
+    minContentLength: articleInfo.extractOptions?.minContentLength ?? CONFIG.minContentLength,
+    maxContentLength: articleInfo.extractOptions?.maxContentLength ?? CONFIG.maxContentLength,
+    minParagraphs: articleInfo.extractOptions?.minParagraphs ?? CONFIG.minParagraphs,
+    debugMode: CONFIG.debugMode
+  };
+
   const html = await fetchWithRetry(articleInfo.url, CONFIG.fetchRetryCount, CONFIG.fetchRetryDelay, {
     headers: {
-      'Accept-Language': 'en-US,en;q=0.9'
+      'Accept-Language': 'en-US,en;q=0.9',
+      ...(articleInfo.requestHeaders || {})
     },
+    timeout: articleInfo.requestTimeout || 30000,
+    forcePuppeteer: Boolean(articleInfo.forcePuppeteer),
+    preferPlaywright: Boolean(articleInfo.preferPlaywright),
     usePuppeteerFallback: CONFIG.usePuppeteerFallback,
-    puppeteerDomains: CONFIG.puppeteerDomains
+    puppeteerDomains: CONFIG.puppeteerDomains,
+    puppeteerTimeout: articleInfo.browserTimeout || 45000,
+    browserHeadless: articleInfo.browserHeadless ?? true
   });
   if (!html) {
     console.log(`    📌 原因: 无法获取HTML`);
@@ -295,9 +493,16 @@ async function scrapeArticle(articleInfo) {
 
   // 使用共享工具提取文章
   const result = extractArticle(html, {
-    minContentLength: CONFIG.minContentLength,
-    maxContentLength: CONFIG.maxContentLength,
-    minParagraphs: CONFIG.minParagraphs,
+    ...extractionOptions,
+    disallowedTitlePatterns: [
+      /^(error page|not found|page not found|site index|document|infant and toddler health)$/i,
+      /access denied/i
+    ],
+    disallowedContentPatterns: [
+      /404[\s\S]{0,80}not found/i,
+      /the page you requested could not be found/i,
+      /site index/i
+    ],
     debugMode: CONFIG.debugMode
   });
 
@@ -307,15 +512,26 @@ async function scrapeArticle(articleInfo) {
         headers: {
           'Accept-Language': 'en-US,en;q=0.9'
         },
+        timeout: articleInfo.requestTimeout || 30000,
         forcePuppeteer: true,
-        puppeteerDomains: CONFIG.puppeteerDomains
+        preferPlaywright: Boolean(articleInfo.preferPlaywright),
+        puppeteerDomains: CONFIG.puppeteerDomains,
+        puppeteerTimeout: articleInfo.browserTimeout || 45000,
+        browserHeadless: articleInfo.browserHeadless ?? true
       });
 
       if (rendered && rendered !== html) {
         const retryResult = extractArticle(rendered, {
-          minContentLength: CONFIG.minContentLength,
-          maxContentLength: CONFIG.maxContentLength,
-          minParagraphs: CONFIG.minParagraphs,
+          ...extractionOptions,
+          disallowedTitlePatterns: [
+            /^(error page|not found|page not found|site index|document|infant and toddler health)$/i,
+            /access denied/i
+          ],
+          disallowedContentPatterns: [
+            /404[\s\S]{0,80}not found/i,
+            /the page you requested could not be found/i,
+            /site index/i
+          ],
           debugMode: CONFIG.debugMode
         });
 
@@ -341,32 +557,95 @@ async function scrapeArticle(articleInfo) {
   };
 }
 
-// 检查文章是否已存在（增强的去重逻辑）
-async function articleExists(url, title) {
-  // 检查 1: 通过 URL
-  const { data: urlMatch } = await supabase
+function getWebsiteHost(url) {
+  if (!url) return '';
+  try {
+    return new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
+
+function getWebsiteSlugSuffix(url) {
+  const host = getWebsiteHost(url);
+  return (host || 'source')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'source';
+}
+
+function extractStoredUrlFromLicense(license) {
+  if (!license) return '';
+  const match = license.match(/URL:\s*(https?:\/\/\S+)/i);
+  return match ? match[1].trim() : '';
+}
+
+async function findSlugMatches(baseSlug) {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('id, slug, license')
+    .or(`slug.eq.${baseSlug},slug.ilike.${baseSlug}-%`);
+
+  if (error) {
+    throw error;
+  }
+
+  return data || [];
+}
+
+async function urlAlreadyExists(url) {
+  const { data, error } = await supabase
     .from('articles')
     .select('id')
     .ilike('license', `%${url}%`)
     .limit(1);
 
-  if (urlMatch && urlMatch.length > 0) {
-    return { exists: true, reason: 'URL已存在' };
+  if (error) {
+    throw error;
   }
 
-  // 检查 2: 通过标题（防止同一文章不同URL）
-  const slug = generateSlug(title);
-  const { data: slugMatch } = await supabase
-    .from('articles')
-    .select('id')
-    .eq('slug', slug)
-    .limit(1);
+  return Boolean(data && data.length > 0);
+}
 
-  if (slugMatch && slugMatch.length > 0) {
-    return { exists: true, reason: 'slug已存在（标题重复）' };
+// Resolve crawl identity with website-aware title dedupe:
+// same URL -> block
+// same website + same title -> block
+// different website + same title -> allow, with hostname suffix appended to slug
+async function resolveArticleIdentity(url, title) {
+  const websiteHost = getWebsiteHost(url);
+
+  // 检查 1: 通过 URL
+  const alreadyExistsByUrl = await urlAlreadyExists(url);
+  if (alreadyExistsByUrl) {
+    return { exists: true, reason: 'URL已存在', slug: null };
   }
 
-  return { exists: false };
+  const baseSlug = generateSlug(title) || 'article';
+  const slugMatches = await findSlugMatches(baseSlug);
+
+  const sameWebsiteMatch = slugMatches.find((row) => {
+    const existingHost = getWebsiteHost(extractStoredUrlFromLicense(row.license));
+    return existingHost && websiteHost && existingHost === websiteHost;
+  });
+
+  if (sameWebsiteMatch) {
+    return { exists: true, reason: '同网站标题已存在', slug: null };
+  }
+
+  if (slugMatches.length === 0) {
+    return { exists: false, slug: baseSlug };
+  }
+
+  const websiteSuffix = getWebsiteSlugSuffix(url);
+  let candidate = `${baseSlug}-${websiteSuffix}`;
+  let attempt = 2;
+  const usedSlugs = new Set(slugMatches.map((row) => row.slug));
+
+  while (usedSlugs.has(candidate)) {
+    candidate = `${baseSlug}-${websiteSuffix}-${attempt}`;
+    attempt += 1;
+  }
+
+  return { exists: false, slug: candidate };
 }
 
 // generateSlug 和 extractKeywords 现在从 scraper-utils 导入
@@ -376,25 +655,160 @@ function mapRegion(region) {
   return REGION_MAPPING[region] || 'Global';
 }
 
+function determineHub(articleData) {
+  const titleHaystack = `${articleData.url || ''} ${articleData.title || ''}`.toLowerCase();
+  const fullHaystack = `${titleHaystack} ${articleData.content || ''}`.toLowerCase();
+
+  if (/(postpartum|postnatal|maternal|pregnan|birth control|after pregnancy|mental health|depression|anxiety|sterilization|labor and delivery)/.test(titleHaystack)) {
+    return 'mom-health';
+  }
+  if (/(safe sleep|sleep-related|sids|bassinet|crib|bed sharing|bedsharing|sleep surface|tummy time|nap|sleep)/.test(titleHaystack)) {
+    return 'sleep';
+  }
+  if (/(feeding|nutrition|breastfeed|breast milk|lactation|formula|milk production|solid food|wean|infant formula|bottle feeding)/.test(titleHaystack)) {
+    return 'feeding';
+  }
+  if (/(milestone|development|crawling|walking|language|speech|weight gain|growth)/.test(titleHaystack)) {
+    return 'development';
+  }
+  if (/(choking|safety|food safety|injury|fever|rsv|flu|vaccine|immuniz|recall|poison|emergency|warning|listeria)/.test(titleHaystack)) {
+    return 'safety';
+  }
+
+  if (/(safe sleep|sleep-related|sids|bassinet|crib|bed sharing|bedsharing|sleep surface|tummy time|nap|sleep)/.test(fullHaystack)) {
+    return 'sleep';
+  }
+  if (/(feeding|nutrition|breastfeed|breast milk|lactation|formula|milk production|solid food|wean|infant formula|bottle feeding)/.test(fullHaystack)) {
+    return 'feeding';
+  }
+  if (/(milestone|development|crawling|walking|language|speech|weight gain|growth)/.test(fullHaystack)) {
+    return 'development';
+  }
+  if (/(choking|safety|food safety|injury|fever|rsv|flu|vaccine|immuniz|recall|poison|emergency|warning|listeria)/.test(fullHaystack)) {
+    return 'safety';
+  }
+  if (/(postpartum|postnatal|maternal|pregnan|birth control|after pregnancy|mental health|depression|anxiety|sterilization|labor and delivery)/.test(fullHaystack)) {
+    return 'mom-health';
+  }
+  return 'development';
+}
+
+function determineType(articleData) {
+  const haystack = `${articleData.url || ''} ${articleData.title || ''}`.toLowerCase();
+  if (/(study|trial|systematic review|meta-analysis|cochrane|research)/.test(haystack)) {
+    return 'research';
+  }
+  if (/(how to|tips|guide|steps|handling|prepare|clean|sanitize)/.test(haystack)) {
+    return 'howto';
+  }
+  if (/(news|alert|advisory|recall|update)/.test(haystack)) {
+    return 'news';
+  }
+  return 'explainer';
+}
+
+function determineAgeRange(articleData) {
+  const haystack = `${articleData.url || ''} ${articleData.title || ''} ${articleData.content || ''}`.toLowerCase();
+  if (/(postpartum|pregnan|labor|delivery|maternal|breastfeed|lactation)/.test(haystack)) {
+    return 'pregnancy-postpartum';
+  }
+  if (/(newborn|neonatal|0 to 3 months|first weeks)/.test(haystack)) {
+    return '0-3 months';
+  }
+  if (/(infant|baby|0-12 months|first year)/.test(haystack)) {
+    return '0-12 months';
+  }
+  return '0-24 months';
+}
+
+function parseDate(dateLike) {
+  if (!dateLike) return null;
+  const parsed = new Date(dateLike);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function sortArticlesForScraping(articles) {
+  return [...articles].sort((a, b) => {
+    const priorityDelta = (PRIORITY_RANK[a.sourcePriority] ?? 9) - (PRIORITY_RANK[b.sourcePriority] ?? 9);
+    if (priorityDelta !== 0) return priorityDelta;
+
+    const aDate = parseDate(a.lastmod);
+    const bDate = parseDate(b.lastmod);
+    if (aDate && bDate) return bDate - aDate;
+    if (aDate) return -1;
+    if (bDate) return 1;
+    return a.url.localeCompare(b.url);
+  });
+}
+
+function saveLocalSnapshot(articleData) {
+  const safeSource = (articleData.sourceKey || articleData.source || 'source')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  const safeSlug = generateSlug(articleData.title).slice(0, 80) || 'article';
+  const outputDir = path.resolve(__dirname, '../../data/scraped');
+  fs.mkdirSync(outputDir, { recursive: true });
+  const filename = `${safeSource}_${safeSlug}_${Date.now()}.json`;
+  const outputPath = path.join(outputDir, filename);
+
+  const payload = {
+    source: {
+      id: articleData.sourceKey || safeSource,
+      name: articleData.source,
+      organization: articleData.organization,
+      grade: articleData.grade || null,
+      priority: articleData.sourcePriority || null,
+      authorityClass: articleData.authorityClass || null
+    },
+    page: {
+      url: articleData.url,
+      type: determineType(articleData),
+      category: determineHub(articleData)
+    },
+    content: {
+      title: articleData.title,
+      paragraphs: articleData.paragraphs || [],
+      text: articleData.content
+    },
+    metadata: {
+      discoveredLastmod: articleData.lastmod || null,
+      publishedDate: articleData.publishedDate || null,
+      modifiedDate: articleData.modifiedDate || null,
+      scrapedAt: new Date().toISOString(),
+      contentLength: articleData.content?.length || 0,
+      paragraphCount: articleData.paragraphCount || 0
+    }
+  };
+
+  fs.writeFileSync(outputPath, JSON.stringify(payload, null, 2));
+  return outputPath;
+}
+
 // 保存文章到数据库
 async function saveArticle(articleData) {
   try {
-    const slug = generateSlug(articleData.title);
     const mappedRegion = mapRegion(articleData.region);
+    const hub = determineHub(articleData);
+    const type = determineType(articleData);
+    const ageRange = determineAgeRange(articleData);
+    const publishedDate = articleData.publishedDate || articleData.lastmod || new Date().toISOString();
+    const modifiedDate = articleData.modifiedDate || articleData.lastmod || publishedDate;
 
-    // 双重检查是否已存在
-    const existsCheck = await articleExists(articleData.url, articleData.title);
-    if (existsCheck.exists) {
-      return { success: false, reason: existsCheck.reason };
+    // 允许不同网站的相同标题入库，但同网站同标题仍然去重
+    const identity = await resolveArticleIdentity(articleData.url, articleData.title);
+    if (identity.exists) {
+      return { success: false, reason: identity.reason };
     }
+    const slug = identity.slug;
 
     // 确保 one_liner 至少 50 字符
     const oneLiner = buildContentOneLiner(articleData.content, articleData.source);
 
     const article = {
       slug,
-      type: 'explainer',
-      hub: 'feeding',
+      type,
+      hub,
       lang: articleData.language || 'en',
       title: articleData.title.substring(0, 200),
       one_liner: oneLiner,
@@ -404,11 +818,13 @@ async function saveArticle(articleData) {
       }),
       body_md: articleData.content,
       entities: extractKeywords(articleData.content),
-      age_range: '0-12 months',
+      age_range: ageRange,
       region: mappedRegion,  // 使用映射后的 region
       last_reviewed: new Date().toISOString().split('T')[0],
       reviewed_by: 'Web Scraper Bot',
       license: `Source: ${articleData.source} (${articleData.organization}) | Region: ${articleData.region} | URL: ${articleData.url}`,
+      date_published: publishedDate,
+      date_modified: modifiedDate,
       meta_title: buildMetaTitle(articleData.title),
       meta_description: buildMetaDescription(articleData.content, articleData.source),
       keywords: extractKeywords(articleData.content),
@@ -457,9 +873,32 @@ async function main() {
   console.log('='.repeat(70) + '\n');
 
   const allSources = getAllSources();
-  const targetSources = CONFIG.targetRegions.length > 0
+  let targetSources = CONFIG.targetRegions.length > 0
     ? allSources.filter(s => CONFIG.targetRegions.includes(s.region))
     : allSources;
+
+  if (CONFIG.targetSources.length > 0) {
+    const allowed = new Set(CONFIG.targetSources);
+    targetSources = targetSources.filter(s => allowed.has(s.key));
+  }
+
+  if (CONFIG.priority) {
+    targetSources = targetSources.filter(s => (s.priority || '').toUpperCase() === CONFIG.priority);
+  }
+
+  if (CONFIG.medicalOnly) {
+    const allowedAuthorities = new Set([
+      'government',
+      'government-regulatory',
+      'professional-society',
+      'academic-medical-center',
+      'government-funded',
+      'multilateral',
+      'national-child-health-service',
+      'nonprofit-health-system'
+    ]);
+    targetSources = targetSources.filter(s => allowedAuthorities.has(s.authorityClass));
+  }
 
   console.log(`📦 总来源数: ${allSources.length}`);
   console.log(`🎯 本次目标: ${targetSources.length} 个来源\n`);
@@ -506,15 +945,16 @@ async function main() {
   console.log('='.repeat(70) + '\n');
 
   const articlesToScrape = [];
-  for (const article of allArticles) {
+  const prioritizedArticles = sortArticlesForScraping(allArticles);
+  for (const article of prioritizedArticles) {
     if (articlesToScrape.length >= CONFIG.maxArticlesPerRun) break;
 
     // 只检查 URL
-    const existsCheck = await articleExists(article.url, '');
-    if (!existsCheck.exists) {
+    const alreadyExistsByUrl = await urlAlreadyExists(article.url);
+    if (!alreadyExistsByUrl) {
       articlesToScrape.push(article);
     } else if (CONFIG.debugMode) {
-      // console.log(`  ⏭️  跳过: ${article.url} (${existsCheck.reason})`);
+      // console.log(`  ⏭️  跳过: ${article.url} (URL已存在)`);
     }
 
     // 在收集到足够文章后停止检查
@@ -552,7 +992,9 @@ async function main() {
     const result = await saveArticle(articleData);
 
     if (result.success) {
-      console.log(`  💾 已保存 (ID: ${result.id})\n`);
+      const snapshotPath = saveLocalSnapshot(articleData);
+      console.log(`  💾 已保存 (ID: ${result.id})`);
+      console.log(`  🗂️  本地快照: ${snapshotPath}\n`);
       stats.successful++;
       stats.byRegion[articleInfo.region].successful++;
     } else {
@@ -600,4 +1042,16 @@ if (require.main === module) {
   main().catch(console.error);
 }
 
-module.exports = { main };
+module.exports = {
+  main,
+  discoverArticlesFromSource,
+  scrapeArticle,
+  normalizeCandidateUrl,
+  shouldExclude,
+  matchesTopic,
+  saveArticle,
+  saveLocalSnapshot,
+  determineHub,
+  determineType,
+  determineAgeRange
+};

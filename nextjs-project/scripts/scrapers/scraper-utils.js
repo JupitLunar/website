@@ -12,6 +12,12 @@ const cheerio = require('cheerio');
  * 尝试多种选择器
  */
 function extractTitle($) {
+  const genericTitlePatterns = [
+    /^infant and toddler health$/i,
+    /^site help$/i,
+    /^page not found$/i,
+    /^document$/i
+  ];
   const titleSelectors = [
     'h1',
     'h2.title',
@@ -29,7 +35,7 @@ function extractTitle($) {
     } else {
       title = $(selector).first().text().trim();
     }
-    if (title && title.length > 5) {
+    if (title && title.length > 5 && !genericTitlePatterns.some((pattern) => pattern.test(title))) {
       return title;
     }
   }
@@ -41,14 +47,42 @@ function extractTitle($) {
  * 智能提取主要内容
  * 使用多种策略查找和提取内容
  */
-function extractContent($) {
+function extractContent($, options = {}) {
+  const {
+    contentSelectors: overrideContentSelectors = [],
+    noiseSelectors: extraNoiseSelectors = [],
+    excludeTextPatterns = [],
+    minBlockLength = 20,
+    minHeadingLength = 12,
+    maxBlockLength = 2000,
+    preserveForm = false
+  } = options;
+
   // 移除噪音标签（扩展版）
-  $('script, style, nav, header, footer, aside, iframe, .advertisement, .social-share, .comment, .related, .sidebar, .navigation, .menu, .breadcrumb, .share, .author-bio, form, button, .ad, .banner, #comments').remove();
+  const baseNoiseSelector = preserveForm
+    ? 'script, style, nav, header, footer, aside, iframe, .advertisement, .social-share, .comment, .related, .sidebar, .navigation, .menu, .breadcrumb, .share, .author-bio, button, .ad, .banner, #comments, .modal, .sr-only, .visually-hidden, [aria-hidden=\"true\"], .gc-nav, .pagedetails, .followus, .social-media, .on-this-page, .page-link, .context-menu, .printSection, .cmp-ad, .cookie-banner'
+    : 'script, style, nav, header, footer, aside, iframe, .advertisement, .social-share, .comment, .related, .sidebar, .navigation, .menu, .breadcrumb, .share, .author-bio, form, button, .ad, .banner, #comments, .modal, .sr-only, .visually-hidden, [aria-hidden=\"true\"], .gc-nav, .pagedetails, .followus, .social-media, .on-this-page, .page-link, .context-menu, .printSection, .cmp-ad, .cookie-banner';
+  [
+    baseNoiseSelector,
+    ...extraNoiseSelectors
+  ].forEach((selector) => {
+    try {
+      $(selector).remove();
+    } catch {
+      // ignore invalid selectors
+    }
+  });
 
   const paragraphs = [];
   
   // 策略 1: 查找主要内容容器
-  const contentSelectors = [
+  const defaultContentSelectors = [
+    '.mwsgeneric-base-html',
+    '#maincontent',
+    '.nhsuk-grid-column-two-thirds',
+    '.topic-content',
+    '.gc-servinfo',
+    '#PageContent_C001_Col00',
     'article',
     '.article-content',
     '.post-content', 
@@ -62,11 +96,33 @@ function extractContent($) {
   ];
 
   let mainContent = null;
-  for (const selector of contentSelectors) {
-    const elem = $(selector).first();
-    if (elem.length > 0 && elem.text().trim().length > 100) {
-      mainContent = elem;
-      break;
+  let bestLength = 0;
+
+  // When a source provides site-specific selectors, preserve their priority order.
+  if (overrideContentSelectors.length > 0) {
+    for (const selector of overrideContentSelectors) {
+      const elem = $(selector).first();
+      const textLength = elem.length > 0 ? elem.text().trim().length : 0;
+      if (textLength >= 120) {
+        mainContent = elem;
+        bestLength = textLength;
+        break;
+      }
+      if (textLength > bestLength) {
+        mainContent = elem;
+        bestLength = textLength;
+      }
+    }
+  }
+
+  if (!mainContent || bestLength < 120) {
+    for (const selector of defaultContentSelectors) {
+      const elem = $(selector).first();
+      const textLength = elem.length > 0 ? elem.text().trim().length : 0;
+      if (textLength > bestLength) {
+        mainContent = elem;
+        bestLength = textLength;
+      }
     }
   }
 
@@ -74,23 +130,40 @@ function extractContent($) {
   const container = mainContent || $('body');
   
   // 提取段落、列表项、表格单元格等
-  container.find('p, li, td, dd, blockquote, .text-content').each((i, elem) => {
+  container.find('h2, h3, h4, p, li, td, dd, blockquote, .text-content, .field-content, .content, .summary, .article-body-copy, .component-content p').each((i, elem) => {
     const $elem = $(elem);
-    const text = $elem.text().trim();
+    const tagName = ($elem.get(0)?.tagName || '').toLowerCase();
+    const text = $elem.text().replace(/\s+/g, ' ').trim();
     
     // 过滤条件：
-    // - 太短的段落（<30字符）
+    // - 太短的段落（普通文本<20字符；标题<12字符）
     // - 太长的段落（>2000字符，可能是整页内容）
     // - 包含过多链接的段落（可能是导航）
     const linkRatio = $elem.find('a').length / Math.max(1, text.split(/\s+/).length);
+    const minLength = ['h2', 'h3', 'h4'].includes(tagName) ? minHeadingLength : minBlockLength;
+    const blockedByText = excludeTextPatterns.some((pattern) => pattern.test(text));
     
-    if (text.length >= 30 && text.length <= 2000 && linkRatio < 0.3) {
+    if (!blockedByText && text.length >= minLength && text.length <= maxBlockLength && linkRatio < 0.4) {
       // 避免重复段落
       if (!paragraphs.includes(text)) {
         paragraphs.push(text);
       }
     }
   });
+
+  // Fallback: if structured blocks are sparse, collect readable div text blocks.
+  if (paragraphs.length < 3) {
+    container.find('div, section').each((i, elem) => {
+      const $elem = $(elem);
+      if ($elem.find('div, section').length > 8) return;
+      const text = $elem.text().replace(/\s+/g, ' ').trim();
+      const linkRatio = $elem.find('a').length / Math.max(1, text.split(/\s+/).length);
+      const blockedByText = excludeTextPatterns.some((pattern) => pattern.test(text));
+      if (!blockedByText && text.length >= Math.max(40, minBlockLength) && text.length <= 1200 && linkRatio < 0.35 && !paragraphs.includes(text)) {
+        paragraphs.push(text);
+      }
+    });
+  }
 
   return {
     paragraphs,
@@ -105,15 +178,19 @@ function extractContent($) {
  */
 function validateContent(title, content, options = {}) {
   const {
-    minContentLength = 300,
-    maxContentLength = 50000,
-    minParagraphs = 3,
+    minContentLength = 150,
+    maxContentLength = 200000,
+    minParagraphs = 1,
+    disallowedTitlePatterns = [],
+    disallowedContentPatterns = [],
     debugMode = false
   } = options;
 
   const hasTitle = title && title.length > 5;
   const hasMinLength = content.length >= minContentLength;
   const hasMaxLength = content.length <= maxContentLength;
+  const hasAllowedTitle = !disallowedTitlePatterns.some((pattern) => pattern.test(title || ''));
+  const hasAllowedContent = !disallowedContentPatterns.some((pattern) => pattern.test(content || ''));
   
   // 计算段落数
   const paragraphs = content.split('\n\n').filter(p => p.trim().length > 30);
@@ -134,6 +211,8 @@ function validateContent(title, content, options = {}) {
   if (!hasMinLength) failures.push(`内容太短: ${content.length} < ${minContentLength} 字符`);
   if (!hasMaxLength) failures.push(`内容太长: ${content.length} > ${maxContentLength} 字符`);
   if (!hasEnoughParagraphs) failures.push(`段落太少: ${paragraphs.length} < ${minParagraphs} 段`);
+  if (!hasAllowedTitle) failures.push('标题命中错误页/索引页规则');
+  if (!hasAllowedContent) failures.push('内容命中错误页/索引页规则');
 
   if (failures.length > 0) {
     return {
@@ -165,7 +244,9 @@ function extractArticle(html, options = {}) {
   
   // 提取标题和内容
   const title = extractTitle($);
-  const { paragraphs, content, paragraphCount, wordCount } = extractContent($);
+  const { paragraphs, content, paragraphCount, wordCount } = extractContent($, options);
+  const publishedDate = extractPublishedDate($);
+  const modifiedDate = extractModifiedDate($);
   
   // 验证质量
   const validation = validateContent(title, content, options);
@@ -185,10 +266,52 @@ function extractArticle(html, options = {}) {
       content,
       paragraphs,
       paragraphCount,
-      wordCount
+      wordCount,
+      publishedDate,
+      modifiedDate
     },
     stats: validation.stats
   };
+}
+
+function extractMetaDate($, selectors = []) {
+  for (const selector of selectors) {
+    const value = $(selector).attr('content')
+      || $(selector).attr('datetime')
+      || $(selector).text()
+      || '';
+    const trimmed = value.trim();
+    if (!trimmed) continue;
+
+    const parsed = new Date(trimmed);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toISOString();
+    }
+  }
+  return null;
+}
+
+function extractPublishedDate($) {
+  return extractMetaDate($, [
+    'meta[property="article:published_time"]',
+    'meta[name="article:published_time"]',
+    'meta[name="pubdate"]',
+    'meta[name="publish-date"]',
+    'meta[name="publication_date"]',
+    'meta[itemprop="datePublished"]',
+    'time[datetime]',
+    '[itemprop="datePublished"]'
+  ]);
+}
+
+function extractModifiedDate($) {
+  return extractMetaDate($, [
+    'meta[property="article:modified_time"]',
+    'meta[name="article:modified_time"]',
+    'meta[name="lastmod"]',
+    'meta[itemprop="dateModified"]',
+    '[itemprop="dateModified"]'
+  ]);
 }
 
 /**
@@ -327,15 +450,19 @@ async function fetchWithRetry(url, retries = 3, delayMs = 1000, options = {}) {
     timeout = 30000,
     usePuppeteerFallback = false,
     forcePuppeteer = false,
+    preferPlaywright = false,
     puppeteerDomains = [],
     puppeteerTimeout = 45000,
+    browserHeadless = true,
     blockPatterns = DEFAULT_BLOCK_PATTERNS
   } = options;
   
   if (forcePuppeteer) {
-    const rendered = await fetchWithPuppeteer(url, {
+    const rendered = await fetchWithBrowser(url, {
+      preferPlaywright,
       headers: { 'User-Agent': DEFAULT_USER_AGENT, ...headers },
-      timeout: puppeteerTimeout
+      timeout: puppeteerTimeout,
+      browserHeadless
     });
     if (rendered) return rendered;
   }
@@ -345,6 +472,9 @@ async function fetchWithRetry(url, retries = 3, delayMs = 1000, options = {}) {
       const response = await axios.get(url, {
         headers: {
           'User-Agent': DEFAULT_USER_AGENT,
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+          'Upgrade-Insecure-Requests': '1',
+          'Connection': 'keep-alive',
           ...headers
         },
         timeout,
@@ -354,9 +484,11 @@ async function fetchWithRetry(url, retries = 3, delayMs = 1000, options = {}) {
       if (response.status === 200) {
         const html = response.data || '';
         if (usePuppeteerFallback && shouldUsePuppeteer(url, html, puppeteerDomains, blockPatterns)) {
-          const rendered = await fetchWithPuppeteer(url, {
+          const rendered = await fetchWithBrowser(url, {
+            preferPlaywright,
             headers: { 'User-Agent': DEFAULT_USER_AGENT, ...headers },
-            timeout: puppeteerTimeout
+            timeout: puppeteerTimeout,
+            browserHeadless
           });
           return rendered || html;
         }
@@ -368,15 +500,37 @@ async function fetchWithRetry(url, retries = 3, delayMs = 1000, options = {}) {
       }
       
       if (usePuppeteerFallback && (response.status === 403 || response.status === 429)) {
-        const rendered = await fetchWithPuppeteer(url, {
+        const rendered = await fetchWithBrowser(url, {
+          preferPlaywright,
           headers: { 'User-Agent': DEFAULT_USER_AGENT, ...headers },
-          timeout: puppeteerTimeout
+          timeout: puppeteerTimeout,
+          browserHeadless
         });
         if (rendered) return rendered;
       }
       
     } catch (error) {
       if (i === retries - 1) {
+        if (usePuppeteerFallback) {
+          try {
+            const parsed = new URL(url);
+            const host = parsed.hostname.toLowerCase();
+            const matched = Array.isArray(puppeteerDomains) && puppeteerDomains.length > 0
+              ? puppeteerDomains.some(domain => host.endsWith(domain))
+              : true;
+            if (matched) {
+              const rendered = await fetchWithBrowser(url, {
+                preferPlaywright,
+                headers: { 'User-Agent': DEFAULT_USER_AGENT, ...headers },
+                timeout: puppeteerTimeout,
+                browserHeadless
+              });
+              if (rendered) return rendered;
+            }
+          } catch {
+            // noop
+          }
+        }
         console.error(`    ❌ 请求失败 (${retries}次重试后): ${error.message}`);
         return null;
       }
@@ -387,17 +541,26 @@ async function fetchWithRetry(url, retries = 3, delayMs = 1000, options = {}) {
   return null;
 }
 
-const DEFAULT_USER_AGENT = 'Mozilla/5.0 (compatible; ScraperBot/1.0; +https://momaiagent.com/bot)';
+async function fetchWithBrowser(url, options = {}) {
+  if (options.preferPlaywright) {
+    return fetchWithPlaywright(url, options);
+  }
+  return fetchWithPuppeteer(url, options);
+}
+
+const DEFAULT_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
 const DEFAULT_BLOCK_PATTERNS = [
   /access denied/i,
   /bot detection/i,
   /captcha/i,
-  /cloudflare/i,
+  /attention required/i,
+  /checking your browser/i,
   /pardon the interruption/i,
   /please enable javascript/i,
   /perimeterx/i,
-  /akamai/i
+  /akamai bot/i,
+  /generated by akamai/i
 ];
 
 function shouldUsePuppeteer(url, html, domains, blockPatterns) {
@@ -416,7 +579,7 @@ function shouldUsePuppeteer(url, html, domains, blockPatterns) {
 }
 
 async function fetchWithPuppeteer(url, options = {}) {
-  const { headers = {}, timeout = 45000 } = options;
+  const { headers = {}, timeout = 45000, browserHeadless = true } = options;
   let browser;
   
   try {
@@ -451,6 +614,39 @@ async function fetchWithPuppeteer(url, options = {}) {
     return html || null;
   } catch (error) {
     console.error(`    ❌ Puppeteer抓取失败: ${error.message}`);
+    return await fetchWithPlaywright(url, { headers, timeout, browserHeadless });
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
+}
+
+async function fetchWithPlaywright(url, options = {}) {
+  const { headers = {}, timeout = 45000, browserHeadless = true } = options;
+  let browser;
+
+  try {
+    const { chromium } = require('playwright');
+    browser = await chromium.launch({
+      headless: browserHeadless,
+      args: ['--disable-blink-features=AutomationControlled']
+    });
+    const page = await browser.newPage({
+      userAgent: headers['User-Agent'] || DEFAULT_USER_AGENT,
+      locale: 'en-US'
+    });
+
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': headers['Accept-Language'] || 'en-US,en;q=0.9'
+    });
+
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout });
+    await page.waitForTimeout(browserHeadless ? 2500 : 3500);
+    const html = await page.content();
+    return html || null;
+  } catch (error) {
+    console.error(`    ❌ Playwright抓取失败: ${error.message}`);
     return null;
   } finally {
     if (browser) {
@@ -467,6 +663,8 @@ module.exports = {
   extractContent,
   validateContent,
   extractArticle,
+  extractPublishedDate,
+  extractModifiedDate,
   generateSlug,
   cleanTitleText,
   buildContentOneLiner,
@@ -477,11 +675,3 @@ module.exports = {
   delay,
   fetchWithRetry
 };
-
-
-
-
-
-
-
-

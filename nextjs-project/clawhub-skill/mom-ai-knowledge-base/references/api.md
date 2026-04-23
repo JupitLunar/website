@@ -12,6 +12,12 @@ This reference covers the current public `KB` surfaces.
 - It does not search the full website `articles` or `/insight/*` corpus.
 - If coverage feels narrower than the site, that is expected under the current public skill boundary.
 
+Internal crawl note:
+
+- the crawler now allows the same article title to be stored more than once when the website hostname is different
+- same-website duplicate titles are still blocked
+- stored `articles.slug` values may therefore carry a hostname suffix such as `-cdc-gov`, `-stanfordchildrens-org`, or `-canada-ca`
+
 ## Decision Order
 
 Start here unless there is a clear reason not to:
@@ -48,6 +54,7 @@ Returns:
 - `quick_answer`
 - `safety`
 - `meta.answer_layer`
+- `llm_fallback`
 - `matches.faqs`
 - `matches.foods`
 - `matches.guides`
@@ -78,6 +85,21 @@ Important `quick_answer` fields:
 - `evidence_signals.evidence_level`
 - `evidence_signals.primary_sources`
 
+Important `llm_fallback` fields:
+
+- `used`
+- `non_authoritative`
+- `reason`
+- `question`
+- `answer`
+- `source_url`
+- `citations`
+- `primary_sources`
+- `evidence_level`
+- `trustworthiness_score`
+- `freshness_days`
+- `disclaimer`
+
 Use when:
 
 - the user asks a direct parenting question
@@ -96,6 +118,7 @@ Interpretation notes:
   - `none` means there was no strong public match.
 - Use top `matches` to confirm scope, age, locale, and evidence fit before answering with confidence.
 - A good skill answer does not require a `kb` win every time. It requires the strongest public source-linked match from the current answer stack.
+- If `llm_fallback` is present, it is supplementary only and should not be described as the authoritative public answer layer.
 
 ### `GET /api/kb`
 
@@ -231,10 +254,10 @@ Use this response order whenever the API supports it:
 
 1. `Direct answer`: the shortest defensible answer
 2. `Why this applies`: what in the retrieved record makes it relevant
-3. `Evidence`: `source_label`, `source_url`, or joined `sources`
-4. `Age / locale scope`: say who or what region it applies to
-5. `Urgency`: one of `Emergency now`, `Same-day clinician`, `Routine clinician`, `Home guidance only`
-6. `Read next`: one concrete page or path
+3. `Age / locale scope`: say who or what region it applies to
+4. `Urgency`: one of `Emergency now`, `Same-day clinician`, `Routine clinician`, `Home guidance only`
+5. `Read next`: one concrete page or path
+6. `Evidence`: `source_label`, `source_url`, or joined `sources`
 
 Avoid:
 
@@ -257,8 +280,8 @@ This is more accurate than treating every successful answer as a structured KB w
 
 ## LLM fallback
 
-- A generic LLM fallback is not part of the current authoritative `/api/kb/*` answer contract.
-- If another app layer uses an LLM fallback after `meta.answer_layer = none`, keep it separate from the source-linked answer.
+- `/api/kb/query` may return a separate `llm_fallback` object when the authority-plus-insight-plus-topic stack does not produce a strong direct answer.
+- Keep it separate from the source-linked answer.
 - Label it clearly as non-authoritative exploratory guidance.
 
 ## Response notes
